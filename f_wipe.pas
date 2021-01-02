@@ -28,32 +28,6 @@ unit f_wipe;
 
 interface
 
-{
-    f_wipe.h, f_wipe.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {	Mission start screen wipe/melt, special effects. }
-  { Mission begin melt/wipe screen special effect. }
-  {	 }
-  {----------------------------------------------------------------------------- }
-
 function wipe_StartScreen(x, y, width, height: integer): integer;
 
 function wipe_EndScreen(x, y, width, height: integer): integer;
@@ -71,9 +45,13 @@ type
 
 implementation
 
-uses doomdef, d_delphi,
-  m_rnd, m_fixed,
-  i_video, v_video,
+uses
+  doomdef,
+  d_delphi,
+  m_rnd,
+  m_fixed,
+  i_video,
+  v_video,
   z_zone;
 
 //
@@ -84,7 +62,7 @@ uses doomdef, d_delphi,
 var
   go: boolean = false;
 
-var  
+var
   wipe_scr_start: PByteArray;
   wipe_scr_end: PByteArray;
   wipe_scr: PByteArray;
