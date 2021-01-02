@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=1
 Release=0
-Build=106
+Build=107
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Jimmy Valavanis
 FileDescription=DoomXS
-FileVersion=0.1.0.106
+FileVersion=0.1.0.107
 InternalName=Doom
 LegalCopyright=Copyright (c) 2021, Jim Valavanis
 LegalTrademarks=Copyright (c) 2021, Jim Valavanis

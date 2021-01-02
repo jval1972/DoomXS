@@ -37,7 +37,6 @@ uses
   d_delphi in 'd_delphi.pas',
   d_net in 'd_net.pas',
   d_player in 'd_player.pas',
-  d_textur in 'd_textur.pas',
   d_think in 'd_think.pas',
   d_ticcmd in 'd_ticcmd.pas',
   doomdata in 'doomdata.pas',
