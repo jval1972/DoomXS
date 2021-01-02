@@ -33,7 +33,8 @@ uses
 // of other structs: items (internal inventory),
 // animation states (closely tied to the sprites
 // used to represent them, unfortunately).
-  d_items, p_pspr_h,
+  d_items,
+  p_pspr_h,
 // In addition, the player is just a special
 // case of the generic moving object/actor.
   p_mobj_h,
@@ -41,32 +42,8 @@ uses
 // is buffered within the player data struct,
 // as commands per game tick.
   d_ticcmd,
-  m_fixed, doomdef;
-
-{
-    d_player.h
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  { }
-  { }
-  {----------------------------------------------------------------------------- }
+  m_fixed,
+  doomdef;
 
   { }
   { Player states. }
@@ -234,7 +211,6 @@ type
   Pwbstartstruct_t = ^wbstartstruct_t;
 
 var
-// VJ -> moved from g_game
   players: array[0..MAXPLAYERS - 1] of player_t;
 
 implementation
