@@ -25,34 +25,33 @@
 //------------------------------------------------------------------------------
 
 unit d_delphi;
-// Delphi specific routines
 
 interface
 
 type
   PPointer = ^Pointer;
-  
+
   PString = ^string;
 
-  PBoolean = ^Boolean;
+  PBoolean = ^boolean;
 
-  PInteger = ^Integer;
-  
-  PLongWord = ^LongWord;
-  
+  PInteger = ^integer;
+
+  PLongWord = ^longword;
+
   TWordArray = packed array[0..$FFFF] of word;
   PWordArray = ^TWordArray;
 
   TIntegerArray = packed array[0..$FFFF] of integer;
   PIntegerArray = ^TIntegerArray;
 
-  TLongWordArray = packed array[0..$FFFF] of LongWord;
+  TLongWordArray = packed array[0..$FFFF] of longword;
   PLongWordArray = ^TLongWordArray;
 
-  TSmallintArray = packed array[0..$FFFF] of Smallint;
+  TSmallintArray = packed array[0..$FFFF] of smallint;
   PSmallintArray = ^TSmallintArray;
 
-  TByteArray = packed array[0..$FFFF] of Byte;
+  TByteArray = packed array[0..$FFFF] of byte;
   PByteArray = ^TByteArray;
 
   TBooleanArray = packed array[0..$FFFF] of boolean;
@@ -66,19 +65,19 @@ type
   TPointerArray = packed array[0..$FFFF] of pointer;
   PPointerArray = ^TPointerArray;
 
-  PSmallInt = ^SmallInt;
+  PSmallInt = ^smallint;
   TSmallIntPArray = packed array[0..$FFFF] of PSmallIntArray;
   PSmallIntPArray = ^TSmallIntPArray;
 
-  PWord = ^Word;
+  PWord = ^word;
   TWordPArray = packed array[0..$FFFF] of PWordArray;
   PWordPArray = ^TWordPArray;
 
-  PByte = ^Byte;
+  PByte = ^byte;
   TBytePArray = packed array[0..$FFFF] of PByteArray;
   PBytePArray = ^TBytePArray;
 
-  TOutProc = procedure (const s: string);
+  TOutProc = procedure(const s: string);
 
 var
   outproc: TOutProc = nil;
@@ -115,29 +114,29 @@ function boolval(const p: pointer): boolean; overload;
 
 function intval(const b: boolean): integer;
 
-function decide(const contition: boolean;
-  const iftrue: integer; const iffalse: integer): integer; overload;
+function decide(const contition: boolean; const iftrue: integer;
+  const iffalse: integer): integer; overload;
 
-function decide(const contition: boolean;
-  const iftrue: boolean; const iffalse: boolean): boolean; overload;
+function decide(const contition: boolean; const iftrue: boolean;
+  const iffalse: boolean): boolean; overload;
 
-function decide(const contition: boolean;
-  const iftrue: string; const iffalse: string): string; overload;
+function decide(const contition: boolean; const iftrue: string;
+  const iffalse: string): string; overload;
 
-function decide(const contition: boolean;
-  const iftrue: pointer; const iffalse: pointer): pointer; overload;
+function decide(const contition: boolean; const iftrue: pointer;
+  const iffalse: pointer): pointer; overload;
 
-function decide(const contition: integer;
-  const iftrue: integer; const iffalse: integer): integer; overload;
+function decide(const contition: integer; const iftrue: integer;
+  const iffalse: integer): integer; overload;
 
-function decide(const contition: integer;
-  const iftrue: boolean; const iffalse: boolean): boolean; overload;
+function decide(const contition: integer; const iftrue: boolean;
+  const iffalse: boolean): boolean; overload;
 
-function decide(const contition: integer;
-  const iftrue: string; const iffalse: string): string; overload;
+function decide(const contition: integer; const iftrue: string;
+  const iffalse: string): string; overload;
 
-function decide(const contition: integer;
-  const iftrue: pointer; const iffalse: pointer): pointer; overload;
+function decide(const contition: integer; const iftrue: pointer;
+  const iffalse: pointer): pointer; overload;
 
 function incp(var p: pointer; const size: integer = 1): pointer;
 
@@ -165,10 +164,10 @@ type
     f: file;
     constructor Create(const FileName: string; mode: word);
     destructor Destroy; override;
-    function Read(var Buffer; Count: Longint): Longint; virtual;
-    function Write(const Buffer; Count: Longint): Longint; virtual;
-    function Seek(Offset: Longint; Origin: Word): Longint; virtual;
-    function Size: Longint;
+    function Read(var Buffer; Count: longint): longint; virtual;
+    function Write(const Buffer; Count: longint): longint; virtual;
+    function Seek(Offset: longint; Origin: word): longint; virtual;
+    function Size: longint;
   end;
 
   TCachedFile = class(TFile)
@@ -181,14 +180,15 @@ type
     fSize: integer;
     fInitialized: boolean;
   protected
-    procedure SetSize(NewSize: Longint); //override;
+    procedure SetSize(NewSize: longint); //override;
     procedure ResetBuffer; virtual;
   public
-    constructor Create(const FileName: string; mode: word; ABufSize: integer = $FFFF); virtual;
+    constructor Create(const FileName: string; mode: word;
+      ABufSize: integer = $FFFF); virtual;
     destructor Destroy; override;
-    function Read(var Buffer; Count: Longint): Longint; override;
-    function Write(const Buffer; Count: Longint): Longint; override;
-    function Seek(Offset: Longint; Origin: Word): Longint; override;
+    function Read(var Buffer; Count: longint): longint; override;
+    function Write(const Buffer; Count: longint): longint; override;
+    function Seek(Offset: longint; Origin: word): longint; override;
   end;
 
 procedure fprintf(var f: file; const str: string); overload;
@@ -203,21 +203,21 @@ function tan(const x: single): single;
 
 function strupper(const S: string): string;
 
-function toupper(ch: Char): Char;
+function toupper(ch: char): char;
 
-function tolower(ch: Char): Char;
+function tolower(ch: char): char;
 
 function _SHL(const x: integer; const bits: integer): integer;
 
-function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
+function _SHLW(const x: longword; const bits: longword): longword;
 
 function _SHR(const x: integer; const bits: integer): integer;
 
-function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
+function _SHRW(const x: longword; const bits: longword): longword;
 
 function StringVal(const Str: PChar): string;
 
-procedure ZeroMemory(var X; Count: Integer);
+procedure ZeroMemory(var X; Count: integer);
 
 implementation
 
@@ -233,11 +233,12 @@ begin
   if Assigned(outproc) then
     outproc(str)
   else if IsConsole then
-    write(str);
+    Write(str);
 end;
 
 procedure printf(const Fmt: string; const Args: array of const);
-var s: string;
+var
+  s: string;
 begin
   sprintf(s, Fmt, Args);
   printf(s);
@@ -249,7 +250,8 @@ begin
 end;
 
 procedure fprintf(var f: file; const Fmt: string; const Args: array of const);
-var s: string;
+var
+  s: string;
 begin
   sprintf(s, Fmt, Args);
   fprintf(f, s);
@@ -267,27 +269,27 @@ end;
 
 function itoa(i: integer): string;
 begin
-  result := IntToStr(i);
+  Result := IntToStr(i);
 end;
 
 function atoi(const s: string): integer;
 begin
-  result := StrToIntDef(s, 0);
+  Result := StrToIntDef(s, 0);
 end;
 
 function StrToFloatDef(const s: string; def: single): single;
 var
   code: integer;
 begin
-  val(s, result, code);
+  val(s, Result, code);
   if code <> 0 then
-    result := def;
+    Result := def;
 end;
 
 function atof(const s: string): single;
 var
   s2: string;
-  i: Integer;
+  i: integer;
 begin
   s2 := s;
   for i := 1 to length(s2) do
@@ -295,35 +297,36 @@ begin
     if s2[i] in ['.', ','] then
       s2[i] := SysUtils.DecimalSeparator;
   end;
-  result := StrToFloatDef(s2, 0.0);
+  Result := StrToFloatDef(s2, 0.0);
 end;
 
 function memcpy(dst: pointer; const src: pointer; len: integer): pointer;
 begin
   move(src^, dst^, len);
-  result := dst;
+  Result := dst;
 end;
 
 function memcpy(dst: pointer; const src: string; len: integer): pointer;
-var i: integer;
+var
+  i: integer;
 begin
   if len >= Length(src) then
   begin
     for i := 1 to Length(src) do
-      PByteArray(dst)[i] := ord(src[i]);
+      PByteArray(dst)[i] := Ord(src[i]);
     for i := Length(src) + 1 to len do
       PByteArray(dst)[i] := 0;
   end
   else
     for i := 1 to len do
-      PByteArray(dst)[i] := ord(src[i]);
-  result := dst;
+      PByteArray(dst)[i] := Ord(src[i]);
+  Result := dst;
 end;
 
 function memmove(dst: pointer; const src: pointer; len: integer): pointer;
 begin
   move(src^, dst^, len);
-  result := dst;
+  Result := dst;
 end;
 
 function memset(buf: pointer; c: integer; len: integer): pointer;
@@ -343,127 +346,127 @@ var
   i: integer;
   len: integer;
 begin
-  result := IntToStr(x);
-  len := Length(result);
+  Result := IntToStr(x);
+  len := Length(Result);
   for i := len + 1 to z do
-    result := '0' + result;
+    Result := '0' + Result;
 end;
 
 function boolval(const x: integer): boolean;
 begin
-  result := x <> 0;
+  Result := x <> 0;
 end;
 
 function boolval(const c: char): boolean;
 begin
-  result := c <> #0;
+  Result := c <> #0;
 end;
 
 function boolval(const p: pointer): boolean;
 begin
-  result := p <> nil;
+  Result := p <> nil;
 end;
 
 function intval(const b: boolean): integer;
 begin
   if b then
-    result := 1
+    Result := 1
   else
-    result := 0;
+    Result := 0;
 end;
 
-function decide(const contition: boolean;
-  const iftrue: integer; const iffalse: integer): integer;
+function decide(const contition: boolean; const iftrue: integer;
+  const iffalse: integer): integer;
 begin
   if contition then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: boolean;
-  const iftrue: boolean; const iffalse: boolean): boolean;
+function decide(const contition: boolean; const iftrue: boolean;
+  const iffalse: boolean): boolean;
 begin
   if contition then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: boolean;
-  const iftrue: string; const iffalse: string): string;
+function decide(const contition: boolean; const iftrue: string;
+  const iffalse: string): string;
 begin
   if contition then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: boolean;
-  const iftrue: pointer; const iffalse: pointer): pointer;
+function decide(const contition: boolean; const iftrue: pointer;
+  const iffalse: pointer): pointer;
 begin
   if contition then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: integer;
-  const iftrue: integer; const iffalse: integer): integer;
+function decide(const contition: integer; const iftrue: integer;
+  const iffalse: integer): integer;
 begin
   if contition <> 0 then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: integer;
-  const iftrue: boolean; const iffalse: boolean): boolean;
+function decide(const contition: integer; const iftrue: boolean;
+  const iffalse: boolean): boolean;
 begin
   if contition <> 0 then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: integer;
-  const iftrue: string; const iffalse: string): string;
+function decide(const contition: integer; const iftrue: string;
+  const iffalse: string): string;
 begin
   if contition <> 0 then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
-function decide(const contition: integer;
-  const iftrue: pointer; const iffalse: pointer): pointer;
+function decide(const contition: integer; const iftrue: pointer;
+  const iffalse: pointer): pointer;
 begin
   if contition <> 0 then
-    result := iftrue
+    Result := iftrue
   else
-    result := iffalse;
+    Result := iffalse;
 end;
 
 function incp(var p: pointer; const size: integer = 1): pointer;
 begin
-  result := Pointer(integer(p) + size);
-  p := result;
+  Result := Pointer(integer(p) + size);
+  p := Result;
 end;
 
 function pOperation(const p1, p2: pointer; const op: char; size: integer): integer;
 begin
   case op of
-    '+': result := (Integer(p1) + Integer(p2)) div size;
-    '-': result := (Integer(p1) - Integer(p2)) div size;
-  else
-    result := 0;
+    '+': Result := (integer(p1) + integer(p2)) div size;
+    '-': Result := (integer(p1) - integer(p2)) div size;
+    else
+      Result := 0;
   end;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////
 constructor TFile.Create(const FileName: string; mode: word);
 begin
-  assign(f, FileName);
+  Assign(f, FileName);
   {$I-}
   if mode = fCreate then
     rewrite(f, 1)
@@ -474,50 +477,51 @@ end;
 
 destructor TFile.Destroy;
 begin
-  close(f);
-  Inherited;
+  Close(f);
+  inherited;
 end;
 
-function TFile.Read(var Buffer; Count: Longint): Longint;
+function TFile.Read(var Buffer; Count: longint): longint;
 begin
-  BlockRead(f, Buffer, Count, result);
+  BlockRead(f, Buffer, Count, Result);
 end;
 
-function TFile.Write(const Buffer; Count: Longint): Longint;
+function TFile.Write(const Buffer; Count: longint): longint;
 begin
-  BlockWrite(f, Buffer, Count, result);
+  BlockWrite(f, Buffer, Count, Result);
 end;
 
-function TFile.Seek(Offset: Longint; Origin: Word): Longint;
+function TFile.Seek(Offset: longint; Origin: word): longint;
 begin
   case Origin of
     sFromBeginning:
-      result := Offset;
+      Result := Offset;
     sFromCurrent:
-      result := FilePos(f) + Offset;
+      Result := FilePos(f) + Offset;
     sFromEnd:
-      result := FileSize(f) - Offset;
-  else
-    result := 0;
+      Result := FileSize(f) - Offset;
+    else
+      Result := 0;
   end;
-  system.Seek(f, result);
+  system.Seek(f, Result);
 end;
 
-function TFile.Size: Longint;
+function TFile.Size: longint;
 begin
-  result := FileSize(f);
+  Result := FileSize(f);
 end;
 
-constructor TCachedFile.Create(const FileName: string; mode: word; ABufSize: integer = $FFFF);
+constructor TCachedFile.Create(const FileName: string; mode: word;
+  ABufSize: integer = $FFFF);
 begin
-  fInitialized := false;
-  Inherited Create(FileName, mode);
+  fInitialized := False;
+  inherited Create(FileName, mode);
   fBufSize := ABufSize;
   GetMem(fBuffer, fBufSize);
   fPosition := 0;
   ResetBuffer;
-  fSize := Inherited Size;
-  fInitialized := true;
+  fSize := inherited Size;
+  fInitialized := True;
 end;
 
 procedure TCachedFile.ResetBuffer;
@@ -529,53 +533,54 @@ end;
 destructor TCachedFile.Destroy;
 begin
   FreeMem(fBuffer, fBufSize);
-  Inherited;
+  inherited;
 end;
 
-function TCachedFile.Read(var Buffer; Count: Longint): Longint;
-var x: Longint;
+function TCachedFile.Read(var Buffer; Count: longint): longint;
+var
+  x: longint;
 begin
-// Buffer hit
+  // Buffer hit
   if (fPosition >= fBufferStart) and (fPosition + Count <= fBufferEnd) then
   begin
-    x := LongInt(fBuffer) + fPosition - fBufferStart;
+    x := longint(fBuffer) + fPosition - fBufferStart;
     Move(Pointer(x)^, Buffer, Count);
     fPosition := fPosition + Count;
-    result := Count;
+    Result := Count;
   end
-// Non Buffer hit, cache buffer
+  // Non Buffer hit, cache buffer
   else if Count <= fBufSize then
   begin
-    fPosition := Inherited Seek(fPosition, sFromBeginning);
-    x := Inherited Read(fBuffer^, fBufSize);
+    fPosition := inherited Seek(fPosition, sFromBeginning);
+    x := inherited Read(fBuffer^, fBufSize);
     if x < Count then
-      result := x
+      Result := x
     else
-      result := Count;
+      Result := Count;
     Move(fBuffer^, Buffer, Count);
     fBufferStart := fPosition;
     fBufferEnd := fPosition + x;
-    fPosition := fPosition + result;
+    fPosition := fPosition + Result;
   end
-// Keep old buffer
+  // Keep old buffer
   else
   begin
-    fPosition := Inherited Seek(fPosition, sFromBeginning);
-    result := Inherited Read(Buffer, Count);
-    fPosition := fPosition + result;
+    fPosition := inherited Seek(fPosition, sFromBeginning);
+    Result := inherited Read(Buffer, Count);
+    fPosition := fPosition + Result;
   end;
 end;
 
-function TCachedFile.Write(const Buffer; Count: Longint): Longint;
+function TCachedFile.Write(const Buffer; Count: longint): longint;
 begin
-  fPosition := Inherited Seek(fPosition, sFromBeginning);
-  result := Inherited Write(Buffer, Count);
-  fPosition := fPosition + result;
+  fPosition := inherited Seek(fPosition, sFromBeginning);
+  Result := inherited Write(Buffer, Count);
+  fPosition := fPosition + Result;
   if fSize < fPosition then
     fSize := fPosition;
 end;
 
-function TCachedFile.Seek(Offset: Longint; Origin: Word): Longint;
+function TCachedFile.Seek(Offset: longint; Origin: word): longint;
 begin
   if fInitialized then
   begin
@@ -584,15 +589,15 @@ begin
       sFromCurrent: Inc(fPosition, Offset);
       sFromEnd: fPosition := fSize + Offset;
     end;
-    result := fPosition;
+    Result := fPosition;
   end
   else
-    result := Inherited Seek(Offset, Origin);
+    Result := inherited Seek(Offset, Origin);
 end;
 
-procedure TCachedFile.SetSize(NewSize: Longint);
+procedure TCachedFile.SetSize(NewSize: longint);
 begin
-  Inherited;
+  inherited;
   fSize := NewSize;
 end;
 
@@ -602,12 +607,12 @@ var
 begin
   ZeroMemory(buf, SizeOf(buf));
   GetEnvironmentVariable(PChar(env), buf, 255);
-  result := Trim(StringVal(buf));
+  Result := Trim(StringVal(buf));
 end;
 
 function fexists(const filename: string): boolean;
 begin
-  result := FileExists(filename);
+  Result := FileExists(filename);
 end;
 
 procedure fdelete(const filename: string);
@@ -618,7 +623,7 @@ end;
 
 function fext(const filename: string): string;
 begin
-  result := ExtractFileExt(filename);
+  Result := ExtractFileExt(filename);
 end;
 
 function tan(const x: single): single;
@@ -630,17 +635,17 @@ begin
   if b <> 0 then
   begin
     a := sin(x);
-    result := a / b;
+    Result := a / b;
   end
   else
-    result := 0.0;
+    Result := 0.0;
 end;
 
 
 function strupper(const S: string): string;
 var
-  Ch: Char;
-  L: Integer;
+  Ch: char;
+  L: integer;
   Source, Dest: PChar;
 begin
   L := Length(S);
@@ -650,7 +655,8 @@ begin
   while L <> 0 do
   begin
     Ch := Source^;
-    if (Ch >= 'a') and (Ch <= 'z') then Dec(Ch, 32);
+    if (Ch >= 'a') and (Ch <= 'z') then
+      Dec(Ch, 32);
     Dest^ := Ch;
     Inc(Source);
     Inc(Dest);
@@ -659,52 +665,50 @@ begin
 end;
 
 
-function toupper(ch: Char): Char;
+function toupper(ch: char): char;
 asm
-{ ->    AL      Character       }
-{ <-    AL      Result          }
+         { ->    AL      Character       }
+         { <-    AL      Result          }
 
-        CMP     AL,'a'
-        JB      @@exit
-        CMP     AL,'z'
-        JA      @@exit
-        SUB     AL,'a' - 'A'
-@@exit:
+         CMP     AL,'a'
+         JB      @@exit
+         CMP     AL,'z'
+         JA      @@exit
+         SUB     AL,'a' - 'A'
+         @@exit:
 end;
 
-function tolower(ch: Char): Char;
+function tolower(ch: char): char;
 asm
-{ ->    AL      Character       }
-{ <-    AL      Result          }
+         { ->    AL      Character       }
+         { <-    AL      Result          }
 
-        CMP     AL,'A'
-        JB      @@exit
-        CMP     AL,'Z'
-        JA      @@exit
-        SUB     AL,'A' - 'a'
-@@exit:
+         CMP     AL,'A'
+         JB      @@exit
+         CMP     AL,'Z'
+         JA      @@exit
+         SUB     AL,'A' - 'a'
+         @@exit:
 end;
 
 function _SHL(const x: integer; const bits: integer): integer;
 begin
-  result := x * (1 shl bits);
+  Result := x * (1 shl bits);
 end;
 
-function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
+function _SHLW(const x: longword; const bits: longword): longword;
 begin
-//  result := x * (1 shl bits);
-  result := x shl bits;
+  Result := x shl bits;
 end;
 
 function _SHR(const x: integer; const bits: integer): integer;
 begin
-  result := x div (1 shl bits);
+  Result := x div (1 shl bits);
 end;
 
-function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
+function _SHRW(const x: longword; const bits: longword): longword;
 begin
-//  result := x div (1 shl bits);
-  result := x shr bits;
+  Result := x shr bits;
 end;
 
 function StringVal(const Str: PChar): string;
@@ -712,7 +716,7 @@ begin
   Result := Str;
 end;
 
-procedure ZeroMemory(var X; Count: Integer);
+procedure ZeroMemory(var X; Count: integer);
 begin
   FillChar(X, Count, Chr(0));
 end;
