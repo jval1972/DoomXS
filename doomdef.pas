@@ -28,32 +28,6 @@ unit doomdef;
 
 interface
 
-{
-    doomdef.h, doomdef.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {  Internally used data structures for virtually everything, }
-  {   key definitions, lots of other stuff. }
-  { }
-  {----------------------------------------------------------------------------- }
-
 //
 // Global parameters/defines.
 //
@@ -95,30 +69,8 @@ const
   MAXWIDTH = 1600;
   MAXHEIGHT = 1200;
 
-{  SCREENWIDTH = 512;
-  SCREENHEIGHT = 384;}
-{  SCREENWIDTH = 240;
-  SCREENHEIGHT = 160;}
-{  SCREENWIDTH = 320;
-  SCREENHEIGHT = 240;}
-{  SCREENWIDTH = 640;
-  SCREENHEIGHT = 400;}
-{  SCREENWIDTH = 320;
-  SCREENHEIGHT = 200;}
-{  SCREENWIDTH = 384;
-  SCREENHEIGHT = 288;}
-{  SCREENWIDTH = 640;
-  SCREENHEIGHT = 480;}
-{  SCREENWIDTH = 1280;
-  SCREENHEIGHT = 1024;}
-
-  SCREENWIDTH = 1024;
-  SCREENHEIGHT = 768;
-{  SCREENWIDTH = 384;
-  SCREENHEIGHT = 288;}
-{var
-  SCREENWIDTH: integer = 1024;
-  SCREENHEIGHT: integer = 768;}
+  SCREENWIDTH = 320;
+  SCREENHEIGHT = 200;
 
 const
 // The maximum number of players, multiplayer/networking.
@@ -265,13 +217,9 @@ const
   KEY_PAGEUP = $80 + $46;
   KEY_INS = $80 + $47;
 
-
   KEY_LALT = KEY_RALT;
 
-
 implementation
-
-initialization
 
 end.
 
