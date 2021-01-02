@@ -796,7 +796,6 @@ initialization
   castorder[17].name := '';
   castorder[17]._type := mobjtype_t(0);
 
-
   laststage := 0;
 
 end.
