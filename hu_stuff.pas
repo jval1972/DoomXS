@@ -28,32 +28,10 @@ unit hu_stuff;
 
 interface
 
-uses doomdef,
-  d_event, r_defs;
-
-{
-    hu_stuff.h, hu_stuff.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION:  Head up display }
-  { }
-  {----------------------------------------------------------------------------- }
+uses
+  doomdef,
+  d_event,
+  r_defs;
 
 const
 //
@@ -120,16 +98,20 @@ var
 
 implementation
 
-uses d_delphi,
-  z_zone, w_wad,
+uses
+  d_delphi,
+  z_zone,
+  w_wad,
   doomstat,
   am_map,
-  dstrings, d_englsh,
+  dstrings,
+  d_englsh,
   d_player,
   g_game,
   hu_lib,
   m_menu,
-  s_sound, sounds,
+  s_sound,
+  sounds,
   st_stuff;
 
 function HU_TITLE: string;
@@ -164,7 +146,6 @@ var
   message_counter: integer;
 
   headsupactive: boolean;
-
 
 const
   HU_TITLEHEIGHT = 1;
