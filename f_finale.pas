@@ -28,32 +28,9 @@ unit f_finale;
 
 interface
 
-uses doomtype, d_event;
-
-{
-    f_finale.h, f_finale.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  { Game completion, final screen animation. }
-  { }
-  {----------------------------------------------------------------------------- }
+uses
+  doomtype,
+  d_event;
 
 function F_Responder(ev: Pevent_t): boolean;
 
@@ -67,13 +44,18 @@ procedure F_StartFinale;
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   am_map,
-  d_player, d_main,
+  d_player,
+  d_main,
   g_game,
-  info_h, info,
+  info_h,
+  info,
   p_pspr,
-  r_data, r_defs, r_things,
+  r_data,
+  r_defs,
+  r_things,
 // Functions.
   i_system,
   z_zone,
@@ -81,8 +63,11 @@ uses d_delphi,
   w_wad,
   s_sound,
 // Data.
-  dstrings, d_englsh, sounds,
-  doomdef, doomstat,
+  dstrings,
+  d_englsh,
+  sounds,
+  doomdef,
+  doomstat,
   hu_stuff;
 
 var
