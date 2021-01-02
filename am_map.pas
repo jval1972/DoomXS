@@ -1,25 +1,25 @@
 //------------------------------------------------------------------------------
-//
+
 //  DoomXS - A basic Windows source port of Doom
 //  based on original Linux Doom as published by "id Software"
 //  Copyright (C) 1993-1996 by id Software, Inc.
 //  Copyright (C) 2021 by Jim Valavanis
-//
+
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
 //  as published by the Free Software Foundation; either version 2
 //  of the License, or (at your option) any later version.
-//
+
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//
+
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
-//
+
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
@@ -28,81 +28,87 @@ unit am_map;
 
 interface
 
-uses d_delphi,
+uses
+  d_delphi,
   z_zone,
-  doomdef, doomdata,
+  doomdef,
+  doomdata,
   d_player,
   r_defs,
   d_event,
-  st_stuff, p_local, w_wad, m_cheat, i_system, v_video,
-  dstrings, m_fixed;
+  st_stuff,
+  p_local,
+  w_wad,
+  m_cheat,
+  i_system,
+  v_video,
+  dstrings,
+  m_fixed;
 
 const
-     AM_MSGHEADER = (ord('a') shl 24) + (ord('m') shl 16);
-     AM_MSGENTERED = AM_MSGHEADER or (ord('e') shl 8);
-     AM_MSGEXITED = AM_MSGHEADER or (ord('x') shl 8);
+  AM_MSGHEADER = (Ord('a') shl 24) + (Ord('m') shl 16);
+  AM_MSGENTERED = AM_MSGHEADER or (Ord('e') shl 8);
+  AM_MSGEXITED = AM_MSGHEADER or (Ord('x') shl 8);
 
-     rcsid = '$Id: am_map.c,v 1.4 1997/02/03 21:24:33 b1 Exp $';
-
-  { Called by main loop. }
+{ Called by main loop. }
 const
-     REDS = 256 - (5 * 16);
-     REDRANGE = 16;
-     BLUES = (256 - (4 * 16)) + 8;
-     BLUERANGE = 8;
-     GREENS = 7 * 16;
-     GREENRANGE = 16;
-     GRAYS = 6 * 16;
-     GRAYSRANGE = 16;
-     BROWNS = 4 * 16;
-     BROWNRANGE = 16;
-     YELLOWS = (256 - 32) + 7;
-     YELLOWRANGE = 1;
-     BLACK = 0;
-     WHITE = 256 - 47;
+  REDS = 256 - (5 * 16);
+  REDRANGE = 16;
+  BLUES = (256 - (4 * 16)) + 8;
+  BLUERANGE = 8;
+  GREENS = 7 * 16;
+  GREENRANGE = 16;
+  GRAYS = 6 * 16;
+  GRAYSRANGE = 16;
+  BROWNS = 4 * 16;
+  BROWNRANGE = 16;
+  YELLOWS = (256 - 32) + 7;
+  YELLOWRANGE = 1;
+  BLACK = 0;
+  WHITE = 256 - 47;
 
   { Automap colors }
-     BACKGROUND = BLACK;
-     YOURCOLORS = WHITE;
-     YOURRANGE = 0;
-     WALLCOLORS = REDS;
-     WALLRANGE = REDRANGE;
-     TSWALLCOLORS = GRAYS;
-     TSWALLRANGE = GRAYSRANGE;
-     FDWALLCOLORS = BROWNS;
-     FDWALLRANGE = BROWNRANGE;
-     CDWALLCOLORS = YELLOWS;
-     CDWALLRANGE = YELLOWRANGE;
-     THINGCOLORS = GREENS;
-     THINGRANGE = GREENRANGE;
-     SECRETWALLCOLORS = WALLCOLORS;
-     SECRETWALLRANGE = WALLRANGE;
-     GRIDCOLORS = GRAYS + (GRAYSRANGE div 2);
-     GRIDRANGE = 0;
-     XHAIRCOLORS = GRAYS;
+  BACKGROUND = BLACK;
+  YOURCOLORS = WHITE;
+  YOURRANGE = 0;
+  WALLCOLORS = REDS;
+  WALLRANGE = REDRANGE;
+  TSWALLCOLORS = GRAYS;
+  TSWALLRANGE = GRAYSRANGE;
+  FDWALLCOLORS = BROWNS;
+  FDWALLRANGE = BROWNRANGE;
+  CDWALLCOLORS = YELLOWS;
+  CDWALLRANGE = YELLOWRANGE;
+  THINGCOLORS = GREENS;
+  THINGRANGE = GREENRANGE;
+  SECRETWALLCOLORS = WALLCOLORS;
+  SECRETWALLRANGE = WALLRANGE;
+  GRIDCOLORS = GRAYS + (GRAYSRANGE div 2);
+  GRIDRANGE = 0;
+  XHAIRCOLORS = GRAYS;
 
-     AM_PANDOWNKEY = KEY_DOWNARROW;
-     AM_PANUPKEY = KEY_UPARROW;
-     AM_PANRIGHTKEY = KEY_RIGHTARROW;
-     AM_PANLEFTKEY = KEY_LEFTARROW;
-     AM_ZOOMINKEY = '=';
-     AM_ZOOMOUTKEY = '-';
-     AM_STARTKEY = KEY_TAB;
-     AM_ENDKEY = KEY_TAB;
-     AM_GOBIGKEY = '0';
-     AM_FOLLOWKEY = 'f';
-     AM_GRIDKEY = 'g';
-     AM_MARKKEY = 'm';
-     AM_CLEARMARKKEY = 'c';
+  AM_PANDOWNKEY = KEY_DOWNARROW;
+  AM_PANUPKEY = KEY_UPARROW;
+  AM_PANRIGHTKEY = KEY_RIGHTARROW;
+  AM_PANLEFTKEY = KEY_LEFTARROW;
+  AM_ZOOMINKEY = '=';
+  AM_ZOOMOUTKEY = '-';
+  AM_STARTKEY = KEY_TAB;
+  AM_ENDKEY = KEY_TAB;
+  AM_GOBIGKEY = '0';
+  AM_FOLLOWKEY = 'f';
+  AM_GRIDKEY = 'g';
+  AM_MARKKEY = 'm';
+  AM_CLEARMARKKEY = 'c';
 
-     AM_NUMMARKPOINTS = 10;
+  AM_NUMMARKPOINTS = 10;
 
   { scale on entry }
-     INITSCALEMTOF = FRACUNIT div 5;
+  INITSCALEMTOF = FRACUNIT div 5;
 
-    { how much the automap moves window per tic in frame-buffer coordinates }
-    { moves 140 pixels in 1 second }
-      F_PANINC = 4;
+  { how much the automap moves window per tic in frame-buffer coordinates }
+  { moves 140 pixels in 1 second }
+  F_PANINC = 4;
 
 { how much zoom-in per tic }
 function M_ZOOMIN: integer;
@@ -111,12 +117,12 @@ function M_ZOOMIN: integer;
 function M_ZOOMOUT: integer;
 
 { translates between frame-buffer and map distances }
-function FTOM(x : integer) : integer;
-function MTOF(x : integer) : integer;
+function FTOM(x: integer): integer;
+function MTOF(x: integer): integer;
 
 { translates between frame-buffer and map coordinates }
-function CXMTOF(x : integer) : integer;
-function CYMTOF(y : integer) : integer;
+function CXMTOF(x: integer): integer;
+function CYMTOF(y: integer): integer;
 
 { the following is crap }
 
@@ -124,43 +130,43 @@ const
   LINE_NEVERSEE = ML_DONTDRAW;
 
 type
-       fpoint_t = record
-            x : integer;
-            y : integer;
-         end;
-       Pfpoint_t = ^fpoint_t;
+  fpoint_t = record
+    x: integer;
+    y: integer;
+  end;
+  Pfpoint_t = ^fpoint_t;
 
-       fline_t = record
-            a : fpoint_t;
-            b : fpoint_t;
-         end;
-       Pfline_t = ^fline_t;
+  fline_t = record
+    a: fpoint_t;
+    b: fpoint_t;
+  end;
+  Pfline_t = ^fline_t;
 
-       mpoint_t = record
-            x : fixed_t;
-            y : fixed_t;
-         end;
-       Pmpoint_t = ^mpoint_t;
+  mpoint_t = record
+    x: fixed_t;
+    y: fixed_t;
+  end;
+  Pmpoint_t = ^mpoint_t;
 
-       mline_t = record
-            a : mpoint_t;
-            b : mpoint_t;
-         end;
-       Pmline_t = ^mline_t;
-       mline_tArray = packed array[0..$FFFF] of mline_t;
-       Pmline_tArray = ^mline_tArray;
+  mline_t = record
+    a: mpoint_t;
+    b: mpoint_t;
+  end;
+  Pmline_t = ^mline_t;
+  mline_tArray = packed array[0..$FFFF] of mline_t;
+  Pmline_tArray = ^mline_tArray;
 
-       islope_t = record
-            slp : fixed_t;
-            islp : fixed_t;
-         end;
-       Pislope_t = ^islope_t;
+  islope_t = record
+    slp: fixed_t;
+    islp: fixed_t;
+  end;
+  Pislope_t = ^islope_t;
 
-    { }
-    { The vector graphics for the automap. }
-    {  A line drawing of the player pointing right, }
-    {   starting from the middle. }
-    { }
+
+{ The vector graphics for the automap. }
+{  A line drawing of the player pointing right, }
+{   starting from the middle. }
+
 const
   NUMPLYRLINES = 7;
 
@@ -192,24 +198,24 @@ var
 
 var
   cheating: integer = 0;
-  grid: boolean = false;
+  grid: boolean = False;
 
-  leveljuststarted: integer = 1; 	// kluge until AM_LevelInit() is called
+  leveljuststarted: integer = 1;   // kluge until AM_LevelInit() is called
 
-  automapactive: boolean = false;
+  automapactive: boolean = False;
 
   finit_width: integer = SCREENWIDTH;
   finit_height: integer = (200 - 32) * SCREENHEIGHT div 200;
 
-// location of window on screen
+  // location of window on screen
   f_x: integer;
   f_y: integer;
 
-// size of window on screen
+  // size of window on screen
   f_w: integer;
   f_h: integer;
 
-  lightlev: integer; 		// used for funky strobing effect
+  lightlev: integer;     // used for funky strobing effect
   fb: PByteArray;       // pseudo-frame buffer
   amclock: integer;
 
@@ -220,13 +226,13 @@ var
   m_x, m_y: fixed_t;    // LL x,y where the window is on the map (map coords)
   m_x2, m_y2: fixed_t;  // UR x,y where the window is on the map (map coords)
 
-//
-// width/height of window on map (map coords)
-//
+
+  // width/height of window on map (map coords)
+
   m_w: fixed_t;
   m_h: fixed_t;
 
-// based on level size
+  // based on level size
   min_x: fixed_t;
   min_y: fixed_t;
   max_x: fixed_t;
@@ -235,7 +241,7 @@ var
   max_w: fixed_t; // max_x-min_x,
   max_h: fixed_t; // max_y-min_y
 
-// based on player size
+  // based on player size
   min_w: fixed_t;
   min_h: fixed_t;
 
@@ -243,16 +249,16 @@ var
   min_scale_mtof: fixed_t; // used to tell when to stop zooming out
   max_scale_mtof: fixed_t; // used to tell when to stop zooming in
 
-// old stuff for recovery later
+  // old stuff for recovery later
   old_m_w, old_m_h: fixed_t;
   old_m_x, old_m_y: fixed_t;
 
-// old location used by the Follower routine
+  // old location used by the Follower routine
   f_oldloc: mpoint_t;
 
-// used by MTOF to scale from map-to-frame-buffer coords
+  // used by MTOF to scale from map-to-frame-buffer coords
   scale_mtof: fixed_t = INITSCALEMTOF;
-// used by FTOM to scale from frame-buffer-to-map coords (=1/scale_mtof)
+  // used by FTOM to scale from frame-buffer-to-map coords (=1/scale_mtof)
   scale_ftom: fixed_t;
 
   plr: Pplayer_t; // the player represented by an arrow
@@ -263,11 +269,11 @@ type
 var
   marknums: patch_t10; // numbers used for marking by the automap
 
-  markpoints: array[0..AM_NUMMARKPOINTS-1] of mpoint_t; // where the points are
+  markpoints: array[0..AM_NUMMARKPOINTS - 1] of mpoint_t; // where the points are
 
   markpointnum: integer = 0; // next point to be assigned
 
-  followplayer: boolean = true; // specifies whether to follow the player around
+  followplayer: boolean = True; // specifies whether to follow the player around
 
 const
   cheat_amap_seq: string = Chr($b2) + Chr($26) + Chr($26) + Chr($2e) + Chr($ff);
@@ -275,7 +281,7 @@ const
 var
   cheat_amap: cheatseq_t;
 
-  stopped: boolean = true;
+  stopped: boolean = True;
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -283,15 +289,15 @@ var
 
 function AM_Responder(ev: Pevent_t): boolean;
 
-  { Called by main loop. }
+{ Called by main loop. }
 procedure AM_Ticker;
 
-  { Called by main loop, }
-  { called instead of view drawer if automap active. }
+{ Called by main loop, }
+{ called instead of view drawer if automap active. }
 procedure AM_Drawer;
 
-  { Called to force the automap to quit }
-  { if the level is completed while it is up. }
+{ Called to force the automap to quit }
+{ if the level is completed while it is up. }
 procedure AM_Stop;
 
 implementation
@@ -302,85 +308,86 @@ uses tables,
   p_mobj_h, p_setup;
 
 { how much zoom-in per tic }
-function M_ZOOMIN : integer;
+function M_ZOOMIN: integer;
 begin
-  result := trunc(1.02 * FRACUNIT);
+  Result := trunc(1.02 * FRACUNIT);
 end;
 
 { how much zoom-out per tic }
-function M_ZOOMOUT : integer;
+function M_ZOOMOUT: integer;
 begin
-  result := trunc(FRACUNIT / 1.02);
+  Result := trunc(FRACUNIT / 1.02);
 end;
 
-function FTOM(x : integer): integer;
+function FTOM(x: integer): integer;
 begin
-  result := FixedMul(_SHL(x, 16), scale_ftom);
+  Result := FixedMul(_SHL(x, 16), scale_ftom);
 end;
 
-function MTOF(x : integer): integer;
+function MTOF(x: integer): integer;
 begin
-  result := _SHR(FixedMul(x, scale_mtof), 16);
+  Result := _SHR(FixedMul(x, scale_mtof), 16);
 end;
 
-function CXMTOF(x : integer): integer;
+function CXMTOF(x: integer): integer;
 begin
-  result := f_x + MTOF(x - m_x);
+  Result := f_x + MTOF(x - m_x);
 end;
 
-function CYMTOF(y : integer): integer;
+function CYMTOF(y: integer): integer;
 begin
-  result := f_y + (f_h - MTOF(y - m_y))
+  Result := f_y + (f_h - MTOF(y - m_y));
 end;
 
-//
-//
-//
+
+
+
 procedure AM_getIslope(ml: Pmline_t; _is: Pislope_t);
-var dx, dy: integer;
+var
+  dx, dy: integer;
 begin
-    dx := ml.b.x - ml.a.x;
-    dy := ml.a.y - ml.b.y;
+  dx := ml.b.x - ml.a.x;
+  dy := ml.a.y - ml.b.y;
 
-    if dy = 0 then
-    begin
-      if dx < 0 then
-        _is.islp := -MAXINT
-      else
-        _is.islp := MAXINT
-    end
+  if dy = 0 then
+  begin
+    if dx < 0 then
+      _is.islp := -MAXINT
     else
-      _is.islp := FixedDiv(dx, dy);
+      _is.islp := MAXINT;
+  end
+  else
+    _is.islp := FixedDiv(dx, dy);
 
-    if dx = 0 then
-    begin
-      if dy < 0 then
-        _is.slp := -MAXINT
-      else
-        _is.slp := MAXINT
-    end
+  if dx = 0 then
+  begin
+    if dy < 0 then
+      _is.slp := -MAXINT
     else
-      _is.slp := FixedDiv(dy, dx);
+      _is.slp := MAXINT;
+  end
+  else
+    _is.slp := FixedDiv(dy, dx);
 end;
 
-//
-//
-//
+
+
+
 procedure AM_activateNewScale;
 begin
-    m_x := m_x + m_w div 2;
-    m_y := m_y + m_h div 2;
-    m_w := FTOM(f_w);
-    m_h := FTOM(f_h);
-    m_x := m_x - m_w div 2;
-    m_y := m_y - m_h div 2;
-    m_x2 := m_x + m_w;
-    m_y2 := m_y + m_h;
+  m_x := m_x + m_w div 2;
+  m_y := m_y + m_h div 2;
+  m_w := FTOM(f_w);
+  m_h := FTOM(f_h);
+  m_x := m_x - m_w div 2;
+  m_y := m_y - m_h div 2;
+  m_x2 := m_x + m_w;
+  m_y2 := m_y + m_h;
 end;
 
-//
-//
-//
+
+
+
 procedure AM_saveScaleAndLoc;
 begin
   old_m_x := m_x;
@@ -389,22 +396,22 @@ begin
   old_m_h := m_h;
 end;
 
-//
-//
-//
+
+
+
 procedure AM_restoreScaleAndLoc;
 begin
   m_w := old_m_w;
   m_h := old_m_h;
   if not followplayer then
   begin
-  	m_x := old_m_x;
-  	m_y := old_m_y;
+    m_x := old_m_x;
+    m_y := old_m_y;
   end
   else
   begin
-  	m_x := plr.mo.x - m_w div 2;
-  	m_y := plr.mo.y - m_h div 2;
+    m_x := plr.mo.x - m_w div 2;
+    m_y := plr.mo.y - m_h div 2;
   end;
 
   m_x2 := m_x + m_w;
@@ -415,9 +422,9 @@ begin
   scale_ftom := FixedDiv(FRACUNIT, scale_mtof);
 end;
 
-//
+
 // adds a marker at the current location
-//
+
 procedure AM_addMark;
 begin
   markpoints[markpointnum].x := m_x + m_w div 2;
@@ -425,13 +432,14 @@ begin
   markpointnum := (markpointnum + 1) mod AM_NUMMARKPOINTS;
 end;
 
-//
+
 // Determines bounding box of all vertices,
 // sets global variables controlling zoom range.
-//
+
 procedure AM_findMinMaxBoundaries;
-var i: integer;
-    a, b: fixed_t;
+var
+  i: integer;
+  a, b: fixed_t;
 begin
   min_x := MAXINT;
   min_y := MAXINT;
@@ -440,15 +448,15 @@ begin
 
   for i := 0 to numvertexes - 1 do
   begin
-  	if vertexes[i].x < min_x then
-	    min_x := vertexes[i].x
-  	else if vertexes[i].x > max_x then
-	    max_x := vertexes[i].x;
+    if vertexes[i].x < min_x then
+      min_x := vertexes[i].x
+    else if vertexes[i].x > max_x then
+      max_x := vertexes[i].x;
 
-  	if vertexes[i].y < min_y then
-	    min_y := vertexes[i].y
-  	else if vertexes[i].y > max_y then
-	    max_y := vertexes[i].y;
+    if vertexes[i].y < min_y then
+      min_y := vertexes[i].y
+    else if vertexes[i].y > max_y then
+      max_y := vertexes[i].y;
 
   end;
 
@@ -469,15 +477,15 @@ begin
   max_scale_mtof := FixedDiv(f_h * FRACUNIT, 2 * PLAYERRADIUS);
 end;
 
-//
-//
-//
+
+
+
 procedure AM_changeWindowLoc;
 begin
   if (m_paninc.x <> 0) or (m_paninc.y <> 0) then
   begin
-  	followplayer := false;
-  	f_oldloc.x := MAXINT;
+    followplayer := False;
+    f_oldloc.x := MAXINT;
   end;
 
   m_x := m_x + m_paninc.x;
@@ -497,9 +505,9 @@ begin
   m_y2 := m_y + m_h;
 end;
 
-//
-//
-//
+
+
+
 var
   st_notify_AM_initVariables: event_t;
 
@@ -508,7 +516,7 @@ var
   pnum: integer;
   i: integer;
 begin
-  automapactive := true;
+  automapactive := True;
   fb := screens[_FG];
 
   f_oldloc.x := MAXINT;
@@ -524,14 +532,14 @@ begin
   m_w := FTOM(f_w);
   m_h := FTOM(f_h);
 
-    // find player to center on initially
+  // find player to center on initially
   pnum := consoleplayer;
   if not playeringame[pnum] then
-  	for i := 0 to MAXPLAYERS - 1 do
+    for i := 0 to MAXPLAYERS - 1 do
       if playeringame[i] then
       begin
         pnum := i;
-    		break;
+        break;
       end;
 
   plr := @players[pnum];
@@ -550,39 +558,42 @@ begin
   ST_Responder(@st_notify_AM_initVariables);
 end;
 
-//
-//
-//
+
+
+
 procedure AM_loadPics;
-var i: integer;
-    namebuf: string;
+var
+  i: integer;
+  namebuf: string;
 begin
   for i := 0 to AM_NUMMARKPOINTS - 1 do
   begin
     sprintf(namebuf, 'AMMNUM%d', [i]);
-  	marknums[i] := W_CacheLumpName(namebuf, PU_STATIC);
+    marknums[i] := W_CacheLumpName(namebuf, PU_STATIC);
   end;
 end;
 
 procedure AM_unloadPics;
-var i: integer;
+var
+  i: integer;
 begin
   for i := 0 to AM_NUMMARKPOINTS - 1 do
-  	Z_ChangeTag(marknums[i], PU_CACHE);
+    Z_ChangeTag(marknums[i], PU_CACHE);
 end;
 
 procedure AM_clearMarks;
-var i: integer;
+var
+  i: integer;
 begin
   for i := 0 to AM_NUMMARKPOINTS - 1 do
     markpoints[i].x := -1; // means empty
   markpointnum := 0;
 end;
 
-//
+
 // should be called at the start of every level
 // right now, i figure it out myself
-//
+
 procedure AM_LevelInit;
 begin
   leveljuststarted := 0;
@@ -601,23 +612,23 @@ begin
   scale_ftom := FixedDiv(FRACUNIT, scale_mtof);
 end;
 
-//
-//
-//
+
+
+
 var
   st_notify_AM_Stop: event_t;
 
 procedure AM_Stop;
 begin
   AM_unloadPics;
-  automapactive := false;
+  automapactive := False;
   ST_Responder(@st_notify_AM_Stop);
-  stopped := true;
+  stopped := True;
 end;
 
-//
-//
-//
+
+
+
 var
   lastlevel: integer = -1;
   lastepisode: integer = -1;
@@ -626,11 +637,11 @@ procedure AM_Start;
 begin
   if not stopped then
     AM_Stop;
-  stopped := false;
+  stopped := False;
 
   if (lastlevel <> gamemap) or (lastepisode <> gameepisode) then
   begin
-  	AM_LevelInit;
+    AM_LevelInit;
     lastlevel := gamemap;
     lastepisode := gameepisode;
   end;
@@ -638,9 +649,9 @@ begin
   AM_loadPics;
 end;
 
-//
+
 // set the window scale to the maximum size
-//
+
 procedure AM_minOutWindowScale;
 begin
   scale_mtof := min_scale_mtof;
@@ -648,9 +659,9 @@ begin
   AM_activateNewScale;
 end;
 
-//
+
 // set the window scale to the minimum size
-//
+
 procedure AM_maxOutWindowScale;
 begin
   scale_mtof := max_scale_mtof;
@@ -658,165 +669,165 @@ begin
   AM_activateNewScale;
 end;
 
-//
+
 // Handle events (user inputs) in automap mode
-//
+
 var
   cheatstate: integer = 0;
-  bigstate: boolean = false;
+  bigstate: boolean = False;
 
 function AM_Responder(ev: Pevent_t): boolean;
 var
   _message: string;
 begin
-  result := false;
+  Result := False;
 
   if not automapactive then
   begin
-  	if (ev._type = ev_keydown) and (ev.data1 = AM_STARTKEY) then
-	  begin
-	    AM_Start;
-	    viewactive := false;
-	    result := true;
+    if (ev._type = ev_keydown) and (ev.data1 = AM_STARTKEY) then
+    begin
+      AM_Start;
+      viewactive := False;
+      Result := True;
     end;
   end
   else if ev._type = ev_keydown then
   begin
-  	result := true;
+    Result := True;
     case ev.data1 of
-	    AM_PANRIGHTKEY: // pan right
-        begin
-  	      if not followplayer then
-            m_paninc.x := FTOM(F_PANINC)
-    	    else
-            result := false;
-        end;
+      AM_PANRIGHTKEY: // pan right
+      begin
+        if not followplayer then
+          m_paninc.x := FTOM(F_PANINC)
+        else
+          Result := False;
+      end;
       AM_PANLEFTKEY: // pan left
-        begin
-  	      if not followplayer then
-            m_paninc.x := -FTOM(F_PANINC)
-    	    else
-            result := false;
-        end;
-	    AM_PANUPKEY: // pan up
-        begin
-  	      if not followplayer then
-            m_paninc.y := FTOM(F_PANINC)
-    	    else
-            result := false;
-        end;
+      begin
+        if not followplayer then
+          m_paninc.x := -FTOM(F_PANINC)
+        else
+          Result := False;
+      end;
+      AM_PANUPKEY: // pan up
+      begin
+        if not followplayer then
+          m_paninc.y := FTOM(F_PANINC)
+        else
+          Result := False;
+      end;
       AM_PANDOWNKEY: // pan down
-        begin
-  	      if not followplayer then
-            m_paninc.y := -FTOM(F_PANINC)
-    	    else
-            result := false;
-        end;
+      begin
+        if not followplayer then
+          m_paninc.y := -FTOM(F_PANINC)
+        else
+          Result := False;
+      end;
       Ord(AM_ZOOMOUTKEY): // zoom out
-        begin
-    	    mtof_zoommul := M_ZOOMOUT;
-    	    ftom_zoommul := M_ZOOMIN;
-        end;
+      begin
+        mtof_zoommul := M_ZOOMOUT;
+        ftom_zoommul := M_ZOOMIN;
+      end;
       Ord(AM_ZOOMINKEY): // zoom in
-        begin
-    	    mtof_zoommul := M_ZOOMIN;
-    	    ftom_zoommul := M_ZOOMOUT;
-        end;
+      begin
+        mtof_zoommul := M_ZOOMIN;
+        ftom_zoommul := M_ZOOMOUT;
+      end;
       AM_ENDKEY:
-        begin
-    	    bigstate := false;
-    	    viewactive := true;
-    	    AM_Stop;
-        end;
+      begin
+        bigstate := False;
+        viewactive := True;
+        AM_Stop;
+      end;
       Ord(AM_GOBIGKEY):
+      begin
+        bigstate := not bigstate;
+        if bigstate then
         begin
-    	    bigstate := not bigstate;
-    	    if bigstate then
-          begin
-        		AM_saveScaleAndLoc;
-        		AM_minOutWindowScale;
-          end
-    	    else
-            AM_restoreScaleAndLoc;
-        end;
-      Ord(AM_FOLLOWKEY):
-        begin
-    	    followplayer := not followplayer;
-    	    f_oldloc.x := MAXINT;
-          if followplayer then
-      	    plr._message := AMSTR_FOLLOWON
-          else
-            plr._message := AMSTR_FOLLOWOFF;
-	      end;
-      Ord(AM_GRIDKEY):
-        begin
-    	    grid := not grid;
-          if grid then
-      	    plr._message := AMSTR_GRIDON
-          else
-            plr._message := AMSTR_GRIDOFF;
-        end;
-	    Ord(AM_MARKKEY):
-        begin
-    	    sprintf(_message, '%s %d', [AMSTR_MARKEDSPOT, markpointnum]);
-          plr._message := _message;
-    	    AM_addMark;
-        end;
-	    Ord(AM_CLEARMARKKEY):
-        begin
-    	    AM_clearMarks;
-    	    plr._message := AMSTR_MARKSCLEARED;
+          AM_saveScaleAndLoc;
+          AM_minOutWindowScale;
         end
+        else
+          AM_restoreScaleAndLoc;
+      end;
+      Ord(AM_FOLLOWKEY):
+      begin
+        followplayer := not followplayer;
+        f_oldloc.x := MAXINT;
+        if followplayer then
+          plr._message := AMSTR_FOLLOWON
+        else
+          plr._message := AMSTR_FOLLOWOFF;
+      end;
+      Ord(AM_GRIDKEY):
+      begin
+        grid := not grid;
+        if grid then
+          plr._message := AMSTR_GRIDON
+        else
+          plr._message := AMSTR_GRIDOFF;
+      end;
+      Ord(AM_MARKKEY):
+      begin
+        sprintf(_message, '%s %d', [AMSTR_MARKEDSPOT, markpointnum]);
+        plr._message := _message;
+        AM_addMark;
+      end;
+      Ord(AM_CLEARMARKKEY):
+      begin
+        AM_clearMarks;
+        plr._message := AMSTR_MARKSCLEARED;
+      end
       else
       begin
         cheatstate := 0;
-        result := false;
+        Result := False;
       end
     end;
-  	if (not boolval(deathmatch)) and cht_CheckCheat(@cheat_amap, Chr(ev.data1)) then
+    if (not boolval(deathmatch)) and cht_CheckCheat(@cheat_amap, Chr(ev.data1)) then
     begin
-	    result := false;
-	    cheating := (cheating + 1) mod 3;
+      Result := False;
+      cheating := (cheating + 1) mod 3;
     end;
   end
   else if ev._type = ev_keyup then
   begin
-  	result := false;
+    Result := False;
     case ev.data1 of
       AM_PANRIGHTKEY:
-        begin
-  	      if not followplayer then
-            m_paninc.x := 0;
-  	    end;
-	    AM_PANLEFTKEY:
-        begin
-    	    if not followplayer then
-            m_paninc.x := 0;
-	      end;
-	    AM_PANUPKEY:
-        begin
-    	    if not followplayer then
-            m_paninc.y := 0;
-	      end;
-	    AM_PANDOWNKEY:
-        begin
-    	    if not followplayer then
-            m_paninc.y := 0;
-	      end;
-	    Ord(AM_ZOOMOUTKEY),
+      begin
+        if not followplayer then
+          m_paninc.x := 0;
+      end;
+      AM_PANLEFTKEY:
+      begin
+        if not followplayer then
+          m_paninc.x := 0;
+      end;
+      AM_PANUPKEY:
+      begin
+        if not followplayer then
+          m_paninc.y := 0;
+      end;
+      AM_PANDOWNKEY:
+      begin
+        if not followplayer then
+          m_paninc.y := 0;
+      end;
+      Ord(AM_ZOOMOUTKEY),
       Ord(AM_ZOOMINKEY):
-        begin
-    	    mtof_zoommul := FRACUNIT;
-    	    ftom_zoommul := FRACUNIT;
-	      end;
-  	end;
+      begin
+        mtof_zoommul := FRACUNIT;
+        ftom_zoommul := FRACUNIT;
+      end;
+    end;
   end;
 
 end;
 
-//
+
 // Zooming
-//
+
 procedure AM_changeWindowScale;
 begin
   // Change the scaling multipliers
@@ -824,96 +835,97 @@ begin
   scale_ftom := FixedDiv(FRACUNIT, scale_mtof);
 
   if scale_mtof < min_scale_mtof then
-  	AM_minOutWindowScale
+    AM_minOutWindowScale
   else if scale_mtof > max_scale_mtof then
-  	AM_maxOutWindowScale
+    AM_maxOutWindowScale
   else
-  	AM_activateNewScale;
+    AM_activateNewScale;
 end;
 
-//
-//
-//
+
+
+
 procedure AM_doFollowPlayer;
 begin
   if (f_oldloc.x <> plr.mo.x) or (f_oldloc.y <> plr.mo.y) then
   begin
-  	m_x := FTOM(MTOF(plr.mo.x)) - m_w div 2;
-  	m_y := FTOM(MTOF(plr.mo.y)) - m_h div 2;
-  	m_x2 := m_x + m_w;
-  	m_y2 := m_y + m_h;
-	  f_oldloc.x := plr.mo.x;
-  	f_oldloc.y := plr.mo.y;
+    m_x := FTOM(MTOF(plr.mo.x)) - m_w div 2;
+    m_y := FTOM(MTOF(plr.mo.y)) - m_h div 2;
+    m_x2 := m_x + m_w;
+    m_y2 := m_y + m_h;
+    f_oldloc.x := plr.mo.x;
+    f_oldloc.y := plr.mo.y;
   end;
 end;
 
-//
-//
-//
+
+
+
 const
   NUMLITELEVELS = 8;
 
-var nexttic: integer = 0;
-    litelevels: array[0..NUMLITELEVELS - 1] of integer = (0, 4, 7, 10, 12, 14, 15, 15);
-    litelevelscnt: integer = 0;
+var
+  nexttic: integer = 0;
+  litelevels: array[0..NUMLITELEVELS - 1] of integer = (0, 4, 7, 10, 12, 14, 15, 15);
+  litelevelscnt: integer = 0;
 
 procedure AM_updateLightLev;
 begin
   // Change light level
   if amclock > nexttic then
   begin
-  	lightlev := litelevels[litelevelscnt];
+    lightlev := litelevels[litelevelscnt];
     litelevelscnt := (litelevelscnt + 1) mod NUMLITELEVELS;
-  	nexttic := amclock + 6 - (amclock mod 6);
+    nexttic := amclock + 6 - (amclock mod 6);
   end;
 end;
 
 procedure AM_Ticker;
 begin
   if not automapactive then
-	  exit;
+    exit;
 
-  inc(amclock);
+  Inc(amclock);
 
   if followplayer then
-  	AM_doFollowPlayer;
+    AM_doFollowPlayer;
 
   // Change the zoom if necessary
   if ftom_zoommul <> FRACUNIT then
-  	AM_changeWindowScale;
+    AM_changeWindowScale;
 
   // Change x,y location
   if (m_paninc.x <> 0) or (m_paninc.y <> 0) then
-  	AM_changeWindowLoc;
+    AM_changeWindowLoc;
 
-    // Update light level
-    // AM_updateLightLev();
+  // Update light level
+  // AM_updateLightLev();
 
 end;
 
-//
+
 // Clear automap frame buffer.
-//
+
 procedure AM_clearFB(color: integer);
 begin
   FillChar(fb^, f_w * f_h, color);
 end;
 
-//
+
 // Automap clipping of lines.
-//
+
 // Based on Cohen-Sutherland clipping algorithm but with a slightly
 // faster reject and precalculated slopes.  If the speed is needed,
 // use a hash algorithm to handle  the common cases.
-//
-function AM_clipMline(ml:  Pmline_t; fl: Pfline_t): boolean;
+
+function AM_clipMline(ml: Pmline_t; fl: Pfline_t): boolean;
 const
   LEFT = 1;
-  RIGHT	= 2;
+  RIGHT = 2;
   BOTTOM = 4;
   TOP = 8;
 var
-  outcode1, outcode2 ,outside : integer;
+  outcode1, outcode2, outside: integer;
   tmp: fpoint_t;
   dx, dy: integer;
 
@@ -935,12 +947,12 @@ begin
   if ml.a.y > m_y2 then
     outcode1 := TOP
   else if ml.a.y < m_y then
-  	outcode1 := BOTTOM
+    outcode1 := BOTTOM
   else
     outcode1 := 0;
 
   if ml.b.y > m_y2 then
-  	outcode2 := TOP
+    outcode2 := TOP
   else if ml.b.y < m_y then
     outcode2 := BOTTOM
   else
@@ -948,7 +960,7 @@ begin
 
   if (outcode1 and outcode2) <> 0 then
   begin
-    result := false; // trivially outside
+    Result := False; // trivially outside
     exit;
   end;
 
@@ -964,7 +976,7 @@ begin
 
   if (outcode1 and outcode2) <> 0 then
   begin
-    result := false; // trivially outside
+    Result := False; // trivially outside
     exit;
   end;
 
@@ -979,92 +991,86 @@ begin
 
   if (outcode1 and outcode2) <> 0 then
   begin
-    result := false; // trivially outside
+    Result := False; // trivially outside
     exit;
   end;
 
   while (outcode1 or outcode2) <> 0 do
   begin
-  // may be partially inside box
-  // find an outside point
-  	if outcode1 <> 0 then
+    // may be partially inside box
+    // find an outside point
+    if outcode1 <> 0 then
       outside := outcode1
     else
       outside := outcode2;
 
-	// clip to each side
-	  if (outside and TOP) <> 0 then
+    // clip to each side
+    if (outside and TOP) <> 0 then
     begin
-	    dy := fl.a.y - fl.b.y;
-	    dx := fl.b.x - fl.a.x;
-	    tmp.x := fl.a.x + (dx * (fl.a.y)) div dy;
-	    tmp.y := 0;
+      dy := fl.a.y - fl.b.y;
+      dx := fl.b.x - fl.a.x;
+      tmp.x := fl.a.x + (dx * (fl.a.y)) div dy;
+      tmp.y := 0;
     end
-  	else if (outside and BOTTOM) <> 0 then
+    else if (outside and BOTTOM) <> 0 then
     begin
-	    dy := fl.a.y - fl.b.y;
-	    dx := fl.b.x - fl.a.x;
-	    tmp.x := fl.a.x + (dx * (fl.a.y - f_h)) div dy;
-	    tmp.y := f_h - 1;
+      dy := fl.a.y - fl.b.y;
+      dx := fl.b.x - fl.a.x;
+      tmp.x := fl.a.x + (dx * (fl.a.y - f_h)) div dy;
+      tmp.y := f_h - 1;
     end
-  	else if boolval(outside and RIGHT) then
+    else if boolval(outside and RIGHT) then
     begin
-	    dy := fl.b.y - fl.a.y;
-	    dx := fl.b.x - fl.a.x;
-	    tmp.y := fl.a.y + (dy * (f_w - 1 - fl.a.x)) div dx;
-	    tmp.x := f_w - 1;
+      dy := fl.b.y - fl.a.y;
+      dx := fl.b.x - fl.a.x;
+      tmp.y := fl.a.y + (dy * (f_w - 1 - fl.a.x)) div dx;
+      tmp.x := f_w - 1;
     end
     else if (outside and LEFT) <> 0 then
     begin
-	    dy := fl.b.y - fl.a.y;
-	    dx := fl.b.x - fl.a.x;
-	    tmp.y := fl.a.y + (dy * (-fl.a.x)) div dx;
-	    tmp.x := 0;
+      dy := fl.b.y - fl.a.y;
+      dx := fl.b.x - fl.a.x;
+      tmp.y := fl.a.y + (dy * (-fl.a.x)) div dx;
+      tmp.x := 0;
     end;
 
     if outside = outcode1 then
     begin
-	    fl.a := tmp;
-	    DOOUTCODE(outcode1, fl.a.x, fl.a.y);
+      fl.a := tmp;
+      DOOUTCODE(outcode1, fl.a.x, fl.a.y);
     end
-  	else
+    else
     begin
-	    fl.b := tmp;
-	    DOOUTCODE(outcode2, fl.b.x, fl.b.y);
+      fl.b := tmp;
+      DOOUTCODE(outcode2, fl.b.x, fl.b.y);
     end;
 
-	  if (outcode1 and outcode2) <> 0 then
+    if (outcode1 and outcode2) <> 0 then
     begin
-	    result := false; // trivially outside
+      Result := False; // trivially outside
       exit;
     end;
   end;
 
-  result := true;
+  Result := True;
 end;
 
-//
+
 // Classic Bresenham w/ whatever optimizations needed for speed
-//
+
 procedure AM_drawFline(fl: Pfline_t; color: integer);
 var
-  x, y,
-  dx, dy,
-  sx, sy,
-  ax, ay,
-  d: integer;
+  x, y, dx, dy, sx, sy, ax, ay, d: integer;
 
-  procedure PUTDOT(xx,yy,cc: integer);
+  procedure PUTDOT(xx, yy, cc: integer);
   begin
     fb[yy * f_w + xx] := cc;
   end;
 
 begin
   // For debugging only
-  if (fl.a.x < 0) or (fl.a.x >= f_w) or
-	   (fl.a.y < 0) or (fl.a.y >= f_h) or
-	   (fl.b.x < 0) or (fl.b.x >= f_w) or
-	   (fl.b.y < 0) or (fl.b.y >= f_h) then
+  if (fl.a.x < 0) or (fl.a.x >= f_w) or (fl.a.y < 0) or (fl.a.y >= f_h) or
+    (fl.b.x < 0) or (fl.b.x >= f_w) or (fl.b.y < 0) or (fl.b.y >= f_h) then
   begin
     I_Error('AM_drawFline(): fuck!');
     exit;
@@ -1090,40 +1096,42 @@ begin
   if ax > ay then
   begin
     d := ay - ax div 2;
-    while true do
+    while True do
     begin
       PUTDOT(x, y, color);
-	    if x = fl.b.x then exit;
-	    if d >= 0 then
-	    begin
+      if x = fl.b.x then
+        exit;
+      if d >= 0 then
+      begin
         y := y + sy;
         d := d - ax;
-	    end;
-	    x := x + sx;
-	    d := d + ay;
+      end;
+      x := x + sx;
+      d := d + ay;
     end;
   end
   else
   begin
     d := ax - ay div 2;
-  	while true do
+    while True do
     begin
-	    PUTDOT(x, y, color);
-	    if (y = fl.b.y) then exit;
+      PUTDOT(x, y, color);
+      if (y = fl.b.y) then
+        exit;
       if d >= 0 then
       begin
         x := x + sx;
         d := d - ay;
-	    end;
-	    y := y + sy;
-	    d := d + ax;
+      end;
+      y := y + sy;
+      d := d + ax;
     end;
   end;
 end;
 
-//
+
 // Clip lines, draw visible part sof lines.
-//
+
 var
   fl: fline_t;
 
@@ -1133,9 +1141,9 @@ begin
     AM_drawFline(@fl, color); // draws it on frame buffer using fb coords
 end;
 
-//
+
 // Draws flat (floor/ceiling tile) aligned grid lines.
-//
+
 procedure AM_drawGrid(color: integer);
 var
   x, y: fixed_t;
@@ -1145,8 +1153,8 @@ begin
   // Figure out start of vertical gridlines
   start := m_x;
   if ((start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT)) <> 0 then
-    start := start + (MAPBLOCKUNITS * FRACUNIT)
-          - ((start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT));
+    start := start + (MAPBLOCKUNITS * FRACUNIT) -
+      ((start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT));
   _end := m_x + m_w;
 
   // draw vertical gridlines
@@ -1155,17 +1163,17 @@ begin
   x := start;
   while x < _end do
   begin
-  	ml.a.x := x;
-  	ml.b.x := x;
-  	AM_drawMline(@ml, color);
+    ml.a.x := x;
+    ml.b.x := x;
+    AM_drawMline(@ml, color);
     x := x + (MAPBLOCKUNITS * FRACUNIT);
   end;
 
   // Figure out start of horizontal gridlines
   start := m_y;
   if ((start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT)) <> 0 then
-    start := start + (MAPBLOCKUNITS * FRACUNIT)
-          - ((start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT));
+    start := start + (MAPBLOCKUNITS * FRACUNIT) -
+      ((start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT));
   _end := m_y + m_h;
 
   // draw horizontal gridlines
@@ -1181,10 +1189,10 @@ begin
   end;
 end;
 
-//
+
 // Determines visible lines, draws them.
 // This is LineDef based, not LineSeg based.
-//
+
 procedure AM_drawWalls;
 var
   i: integer;
@@ -1192,36 +1200,37 @@ var
 begin
   for i := 0 to numlines - 1 do
   begin
-  	l.a.x := lines[i].v1.x;
-  	l.a.y := lines[i].v1.y;
-  	l.b.x := lines[i].v2.x;
-  	l.b.y := lines[i].v2.y;
-    if (cheating <> 0) or ((lines[i].flags and ML_MAPPED) <> 0) then
+    l.a.x := Lines[i].v1.x;
+    l.a.y := Lines[i].v1.y;
+    l.b.x := Lines[i].v2.x;
+    l.b.y := Lines[i].v2.y;
+    if (cheating <> 0) or ((Lines[i].flags and ML_MAPPED) <> 0) then
     begin
-	    if ((lines[i].flags and LINE_NEVERSEE) <> 0) and (not boolval(cheating)) then
+      if ((Lines[i].flags and LINE_NEVERSEE) <> 0) and (not boolval(cheating)) then
         continue;
-	    if not boolval(lines[i].backsector) then
+      if not boolval(Lines[i].backsector) then
       begin
         AM_drawMline(@l, WALLCOLORS + lightlev);
-	    end
-	    else
-	    begin
-    		if lines[i].special = 39 then
+      end
+      else
+      begin
+        if Lines[i].special = 39 then
         begin // teleporters
           AM_drawMline(@l, WALLCOLORS + WALLRANGE div 2);
         end
-        else if (lines[i].flags and ML_SECRET) <> 0 then // secret door
+        else if (Lines[i].flags and ML_SECRET) <> 0 then // secret door
         begin
-  		    if cheating <> 0 then
+          if cheating <> 0 then
             AM_drawMline(@l, SECRETWALLCOLORS + lightlev)
           else
             AM_drawMline(@l, WALLCOLORS + lightlev);
         end
-        else if lines[i].backsector.floorheight <> lines[i].frontsector.floorheight then
+        else if Lines[i].backsector.floorheight <> Lines[i].frontsector.floorheight then
         begin
           AM_drawMline(@l, FDWALLCOLORS + lightlev); // floor level change
         end
-        else if lines[i].backsector.ceilingheight <> lines[i].frontsector.ceilingheight then
+        else if Lines[i].backsector.ceilingheight <>
+          Lines[i].frontsector.ceilingheight then
         begin
           AM_drawMline(@l, CDWALLCOLORS + lightlev); // ceiling level change
         end
@@ -1231,35 +1240,34 @@ begin
         end;
       end;
     end
-  	else if boolval(plr.powers[Ord(pw_allmap)]) then
+    else if boolval(plr.powers[Ord(pw_allmap)]) then
     begin
-	    if (lines[i].flags and LINE_NEVERSEE) = 0 then
+      if (Lines[i].flags and LINE_NEVERSEE) = 0 then
         AM_drawMline(@l, GRAYS + 3);
     end;
   end;
 end;
 
 
-//
+
 // Rotation in 2D.
 // Used to rotate player arrow line character.
-//
+
 procedure AM_rotate(x: Pfixed_t; y: Pfixed_t; a: angle_t);
 var
   tmpx: fixed_t;
 begin
-  tmpx :=	FixedMul(x^, finecosine[_SHRW(a, ANGLETOFINESHIFT)])
-        - FixedMul(y^, finesine[_SHRW(a, ANGLETOFINESHIFT)]);
+  tmpx := FixedMul(x^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]) -
+    FixedMul(y^, finesine[_SHRW(a, ANGLETOFINESHIFT)]);
 
-  y^ :=	FixedMul(x^, finesine[_SHRW(a, ANGLETOFINESHIFT)])
-      + FixedMul(y^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]);
+  y^ := FixedMul(x^, finesine[_SHRW(a, ANGLETOFINESHIFT)]) +
+    FixedMul(y^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]);
 
   x^ := tmpx;
 end;
 
 procedure AM_drawLineCharacter(lineguy: Pmline_tArray; lineguylines: integer;
-  scale: fixed_t; angle: angle_t; color: integer;
-  x: fixed_t; y: fixed_t);
+  scale: fixed_t; angle: angle_t; color: integer; x: fixed_t; y: fixed_t);
 var
   i: integer;
   l: mline_t;
@@ -1269,7 +1277,7 @@ begin
     l.a.x := lineguy[i].a.x;
     l.a.y := lineguy[i].a.y;
 
-  	if scale <> 0 then
+    if scale <> 0 then
     begin
       l.a.x := FixedMul(scale, l.a.x);
       l.a.y := FixedMul(scale, l.a.y);
@@ -1303,19 +1311,20 @@ end;
 procedure AM_drawPlayers;
 const
   their_colors: array[0..MAXPLAYERS - 1] of integer = (GREENS, GRAYS, BROWNS, REDS);
-var i: integer;
-    p: Pplayer_t;
-    their_color, color: integer;
+var
+  i: integer;
+  p: Pplayer_t;
+  their_color, color: integer;
 begin
   if not netgame then
   begin
     if cheating <> 0 then
       AM_drawLineCharacter
-        (@cheat_player_arrow, NUMCHEATPLYRLINES, 0,
+      (@cheat_player_arrow, NUMCHEATPLYRLINES, 0,
         plr.mo.angle, WHITE, plr.mo.x, plr.mo.y)
     else
       AM_drawLineCharacter
-        (@player_arrow, NUMPLYRLINES, 0, plr.mo.angle,
+      (@player_arrow, NUMPLYRLINES, 0, plr.mo.angle,
         WHITE, plr.mo.x, plr.mo.y);
     exit;
   end;
@@ -1323,29 +1332,30 @@ begin
   their_color := -1;
   for i := 0 to MAXPLAYERS - 1 do
   begin
-    inc(their_color);
+    Inc(their_color);
     p := @players[i];
 
     if (boolval(deathmatch) and (not singledemo)) and (p <> plr) then
-	    continue;
+      continue;
 
     if not playeringame[i] then
-	    continue;
+      continue;
 
     if boolval(p.powers[Ord(pw_invisibility)]) then
       color := 246 // *close* to black
     else
-	    color := their_colors[their_color];
+      color := their_colors[their_color];
 
     AM_drawLineCharacter
-      (@player_arrow, NUMPLYRLINES, 0, p.mo.angle,
-       color, p.mo.x, p.mo.y);
+    (@player_arrow, NUMPLYRLINES, 0, p.mo.angle,
+      color, p.mo.x, p.mo.y);
   end;
 end;
 
 procedure AM_drawThings(colors: integer; colorrange: integer);
-var i: integer;
-    t: Pmobj_t;
+var
+  i: integer;
+  t: Pmobj_t;
 begin
   for i := 0 to numsectors - 1 do
   begin
@@ -1353,15 +1363,16 @@ begin
     while t <> nil do
     begin
       AM_drawLineCharacter
-        (@thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
+      (@thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
         16 * FRACUNIT, t.angle, colors + lightlev, t.x, t.y);
-	    t := t.snext;
-	  end;
+      t := t.snext;
+    end;
   end;
 end;
 
 procedure AM_drawMarks;
-var i, fx, fy, w, h: integer;
+var
+  i, fx, fy, w, h: integer;
 begin
   for i := 0 to AM_NUMMARKPOINTS - 1 do
   begin
@@ -1374,8 +1385,8 @@ begin
       fx := CXMTOF(markpoints[i].x);
       fy := CYMTOF(markpoints[i].y);
       if (fx >= f_x) and (fx <= f_w - w) and (fy >= f_y) and (fy <= f_h - h) then
-        V_DrawPatch(fx, fy, _FG, marknums[i], false);
-//        V_DrawPatch(fx, fy, _FB, marknums[i], true);
+        V_DrawPatch(fx, fy, _FG, marknums[i], False);
+      //        V_DrawPatch(fx, fy, _FB, marknums[i], true);
     end;
   end;
 end;
@@ -1401,83 +1412,94 @@ begin
 
   AM_drawMarks;
 
-  V_MarkRect(f_x, f_y, f_w, f_h, false);
+  V_MarkRect(f_x, f_y, f_w, f_h, False);
 end;
 
 initialization
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
-  player_arrow[0].a.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[0].a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[0].a.y := 0;
   player_arrow[0].b.x := ((8 * PLAYERRADIUS) div 7);
   player_arrow[0].b.y := 0;
 
   player_arrow[1].a.x := ((8 * PLAYERRADIUS) div 7);
   player_arrow[1].a.y := 0;
-  player_arrow[1].b.x := ((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 2;
+  player_arrow[1].b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
   player_arrow[1].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
   player_arrow[2].a.x := ((8 * PLAYERRADIUS) div 7);
   player_arrow[2].a.y := 0;
-  player_arrow[2].b.x := ((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 2;
+  player_arrow[2].b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
   player_arrow[2].b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[3].a.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[3].a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[3].a.y := 0;
-  player_arrow[3].b.x := -((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[3].b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[3].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[4].a.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[4].a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[4].a.y := 0;
-  player_arrow[4].b.x := -((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[4].b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[4].b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[5].a.x := -((8 * PLAYERRADIUS) div 7)+3*((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[5].a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[5].a.y := 0;
-  player_arrow[5].b.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[5].b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[5].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[6].a.x := -((8 * PLAYERRADIUS) div 7)+3*((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[6].a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[6].a.y := 0;
-  player_arrow[6].b.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  player_arrow[6].b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   player_arrow[6].b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
-  cheat_player_arrow[0].a.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[0].a.x :=
+    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[0].a.y := 0;
   cheat_player_arrow[0].b.x := ((8 * PLAYERRADIUS) div 7);
   cheat_player_arrow[0].b.y := 0;
 
   cheat_player_arrow[1].a.x := ((8 * PLAYERRADIUS) div 7);
   cheat_player_arrow[1].a.y := 0;
-  cheat_player_arrow[1].b.x := ((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 2;
+  cheat_player_arrow[1].b.x :=
+    ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
   cheat_player_arrow[1].b.y := ((8 * PLAYERRADIUS) div 7) div 6;
 
   cheat_player_arrow[2].a.x := ((8 * PLAYERRADIUS) div 7);
   cheat_player_arrow[2].a.y := 0;
-  cheat_player_arrow[2].b.x := ((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 2;
+  cheat_player_arrow[2].b.x :=
+    ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
   cheat_player_arrow[2].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[3].a.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[3].a.x :=
+    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[3].a.y := 0;
-  cheat_player_arrow[3].b.x := -((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[3].b.x :=
+    -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[3].b.y := ((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[4].a.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[4].a.x :=
+    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[4].a.y := 0;
-  cheat_player_arrow[4].b.x := -((8 * PLAYERRADIUS) div 7)-((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[4].b.x :=
+    -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[4].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[5].a.x := -((8 * PLAYERRADIUS) div 7)+3*((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[5].a.x :=
+    -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[5].a.y := 0;
-  cheat_player_arrow[5].b.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[5].b.x :=
+    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[5].b.y := ((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[6].a.x := -((8 * PLAYERRADIUS) div 7)+3*((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[6].a.x :=
+    -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[6].a.y := 0;
-  cheat_player_arrow[6].b.x := -((8 * PLAYERRADIUS) div 7)+((8 * PLAYERRADIUS) div 7) div 8;
+  cheat_player_arrow[6].b.x :=
+    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   cheat_player_arrow[6].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
   cheat_player_arrow[7].a.x := -((8 * PLAYERRADIUS) div 7) div 2;
@@ -1487,12 +1509,15 @@ initialization
 
   cheat_player_arrow[8].a.x := -((8 * PLAYERRADIUS) div 7) div 2;
   cheat_player_arrow[8].a.y := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[8].b.x := -((8 * PLAYERRADIUS) div 7) div 2+((8 * PLAYERRADIUS) div 7) div 6;
+  cheat_player_arrow[8].b.x :=
+    -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
   cheat_player_arrow[8].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[9].a.x := -((8 * PLAYERRADIUS) div 7) div 2+((8 * PLAYERRADIUS) div 7) div 6;
+  cheat_player_arrow[9].a.x :=
+    -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
   cheat_player_arrow[9].a.y := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[9].b.x := -((8 * PLAYERRADIUS) div 7) div 2+((8 * PLAYERRADIUS) div 7) div 6;
+  cheat_player_arrow[9].b.x :=
+    -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
   cheat_player_arrow[9].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
   cheat_player_arrow[10].a.x := -((8 * PLAYERRADIUS) div 7) div 6;
@@ -1517,32 +1542,37 @@ initialization
 
   cheat_player_arrow[14].a.x := ((8 * PLAYERRADIUS) div 7) div 6;
   cheat_player_arrow[14].a.y := -((8 * PLAYERRADIUS) div 7) div 7;
-  cheat_player_arrow[14].b.x := ((8 * PLAYERRADIUS) div 7) div 6+((8 * PLAYERRADIUS) div 7) div 32;
-  cheat_player_arrow[14].b.y := -((8 * PLAYERRADIUS) div 7) div 7-((8 * PLAYERRADIUS) div 7) div 32;
+  cheat_player_arrow[14].b.x :=
+    ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 32;
+  cheat_player_arrow[14].b.y :=
+    -((8 * PLAYERRADIUS) div 7) div 7 - ((8 * PLAYERRADIUS) div 7) div 32;
 
-  cheat_player_arrow[15].a.x := ((8 * PLAYERRADIUS) div 7) div 6+((8 * PLAYERRADIUS) div 7) div 32;
-  cheat_player_arrow[15].a.y := -((8 * PLAYERRADIUS) div 7) div 7-((8 * PLAYERRADIUS) div 7) div 32;
-  cheat_player_arrow[15].b.x := ((8 * PLAYERRADIUS) div 7) div 6+((8 * PLAYERRADIUS) div 7) div 10;
+  cheat_player_arrow[15].a.x :=
+    ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 32;
+  cheat_player_arrow[15].a.y :=
+    -((8 * PLAYERRADIUS) div 7) div 7 - ((8 * PLAYERRADIUS) div 7) div 32;
+  cheat_player_arrow[15].b.x :=
+    ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 10;
   cheat_player_arrow[15].b.y := -((8 * PLAYERRADIUS) div 7) div 7;
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
-  triangle_guy[0].a.x := round(-0.867*FRACUNIT);
-  triangle_guy[0].a.y := round(-0.5*FRACUNIT);
-  triangle_guy[0].b.x := round(0.867*FRACUNIT);
-  triangle_guy[0].b.y := round(-0.5*FRACUNIT);
+  triangle_guy[0].a.x := round(-0.867 * FRACUNIT);
+  triangle_guy[0].a.y := round(-0.5 * FRACUNIT);
+  triangle_guy[0].b.x := round(0.867 * FRACUNIT);
+  triangle_guy[0].b.y := round(-0.5 * FRACUNIT);
 
-  triangle_guy[1].a.x := round(0.867*FRACUNIT);
-  triangle_guy[1].a.y := round(-0.5*FRACUNIT);
+  triangle_guy[1].a.x := round(0.867 * FRACUNIT);
+  triangle_guy[1].a.y := round(-0.5 * FRACUNIT);
   triangle_guy[1].b.x := 0;
   triangle_guy[1].b.y := FRACUNIT;
 
   triangle_guy[2].a.x := 0;
   triangle_guy[2].a.y := FRACUNIT;
-  triangle_guy[2].b.x := round(-0.867*FRACUNIT);
-  triangle_guy[2].b.y := round(-0.5*FRACUNIT);
+  triangle_guy[2].b.x := round(-0.867 * FRACUNIT);
+  triangle_guy[2].b.y := round(-0.5 * FRACUNIT);
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   thintriangle_guy[0].a.x := round(-0.5 * FRACUNIT);
   thintriangle_guy[0].a.y := round(-0.7 * FRACUNIT);
   thintriangle_guy[0].b.x := FRACUNIT;
@@ -1550,27 +1580,26 @@ initialization
 
   thintriangle_guy[1].a.x := FRACUNIT;
   thintriangle_guy[1].a.y := 0;
-  thintriangle_guy[1].b.x := round(- 0.5 * FRACUNIT);
-  thintriangle_guy[1].b.y := round(- 0.7 * FRACUNIT);
+  thintriangle_guy[1].b.x := round(-0.5 * FRACUNIT);
+  thintriangle_guy[1].b.y := round(-0.7 * FRACUNIT);
 
-  thintriangle_guy[2].a.x := round(- 0.5 * FRACUNIT);
-  thintriangle_guy[2].a.y := round(- 0.7 * FRACUNIT);
-  thintriangle_guy[2].b.x := round(- 0.5 * FRACUNIT);
-  thintriangle_guy[2].b.y := round(- 0.7 * FRACUNIT);
+  thintriangle_guy[2].a.x := round(-0.5 * FRACUNIT);
+  thintriangle_guy[2].a.y := round(-0.7 * FRACUNIT);
+  thintriangle_guy[2].b.x := round(-0.5 * FRACUNIT);
+  thintriangle_guy[2].b.y := round(-0.7 * FRACUNIT);
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   cheat_amap.sequence := get_cheatseq_string(cheat_amap_seq);
   cheat_amap.p := get_cheatseq_string(0);
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   ZeroMemory(st_notify_AM_initVariables, SizeOf(st_notify_AM_initVariables));
   st_notify_AM_initVariables._type := ev_keyup;
   st_notify_AM_initVariables.data1 := AM_MSGENTERED;
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   ZeroMemory(st_notify_AM_Stop, SizeOf(st_notify_AM_Stop));
   st_notify_AM_Stop._type := ev_keyup;
   st_notify_AM_Stop.data1 := AM_MSGEXITED;
 
 end.
-
