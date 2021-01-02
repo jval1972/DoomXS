@@ -28,38 +28,12 @@ unit g_game;
 
 interface
 
-uses doomdef,
+uses
+  doomdef,
   m_fixed,
-  d_event, d_player, d_ticcmd;
-
-{
-    g_game.h,  g_game.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {   Duh. }
-  {  }
-  {----------------------------------------------------------------------------- }
-
-  { }
-  { GAME }
-  { }
+  d_event,
+  d_player,
+  d_ticcmd;
 
 procedure G_DeathMatchSpawnPlayer(playernum:integer);
 
@@ -106,9 +80,8 @@ function G_IsDemoRecording: boolean;
 
 var
   sendpause: boolean;        // send a pause event next tic
-
   paused: boolean;
-  
+
 //
 // controls (have defaults)
 //
@@ -191,24 +164,48 @@ var
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   z_zone,
-  doomstat, doomdata,
+  doomstat,
+  doomdata,
   am_map,
-  d_net, d_main,
+  d_net,
+  d_main,
   f_finale,
-  info_h, info,
-  i_system, i_io,
-  m_argv, m_misc, m_menu, m_rnd,
-  p_setup, p_saveg, p_tick, p_local, p_mobj_h, p_mobj, p_inter, p_map,
-  wi_stuff, hu_stuff, st_stuff,
+  info_h,
+  info,
+  i_system,
+  i_io,
+  m_argv,
+  m_misc,
+  m_menu,
+  m_rnd,
+  p_setup,
+  p_saveg,
+  p_tick,
+  p_local,
+  p_mobj_h,
+  p_mobj,
+  p_inter,
+  p_map,
+  wi_stuff,
+  hu_stuff,
+  st_stuff,
 // Needs access to LFB.
   v_video,
-  w_wad, s_sound,
+  w_wad,
+  s_sound,
 // Data.
-  dstrings, d_englsh, sounds,
+  dstrings,
+  d_englsh,
+  sounds,
 // SKY handling - still the wrong place.
-  r_data, r_sky, r_defs, r_main, r_draw,
+  r_data,
+  r_sky,
+  r_defs,
+  r_main,
+  r_draw,
   tables;
 
 const
@@ -596,7 +593,7 @@ begin
 end;
 
 //
-// G_Responder  
+// G_Responder
 // Get info needed to make ticcmd_ts for the players.
 //
 function G_Responder(ev: Pevent_t): boolean;
