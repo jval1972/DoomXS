@@ -19,7 +19,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
-//
+/
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
@@ -28,46 +28,15 @@ unit d_main;
 
 interface
 
-uses d_event, doomdef;
-
-{
-    d_main.h, d_main.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { $Log:$ }
-  { }
-  { DESCRIPTION (d_main.h: }
-  {	System specific interface stuff. }
-  { }
-  { DESCRIPTION (d_main.c: }
-  { DOOM main program (D_DoomMain) and game loop (D_DoomLoop), }
-  { plus functions to determine game mode (shareware, registered), }
-  { parse command line parameters, configure game parameters (turbo), }
-  { and call the startup functions. }
-  { }
-  {----------------------------------------------------------------------------- }
+uses
+  d_event,
+  doomdef;
 
 const
-   MAXWADFILES = 20;
+  MAXWADFILES = 20;
 
 var
-  wadfiles : array[0..(MAXWADFILES)-1] of string;
+  wadfiles: array[0..(MAXWADFILES) - 1] of string;
   numwadfiles: integer = 0;
 
 procedure D_ProcessEvents;
@@ -76,20 +45,20 @@ procedure D_DoAdvanceDemo;
 
 procedure D_AddFile(_file: string);
 
-//
+
 // D_DoomMain()
 // Not a globally visible function, just included for source reference,
 // calls all startup code, parses command line options.
 // If not overrided by user input, calls N_AdvanceDemo.
-//
+
 procedure D_DoomMain;
 
 // Called by IO functions when input is detected.
 procedure D_PostEvent(ev: Pevent_t);
 
-//
+
 // BASE LEVEL
-//
+
 procedure D_PageTicker;
 
 procedure D_PageDrawer;
@@ -100,12 +69,12 @@ procedure D_StartTitle;
 
 // wipegamestate can be set to -1 to force a wipe on the next draw
 var
-  wipegamestate: integer; // VJ was gamestate_t = GS_DEMOSCREEN;
+  wipegamestate: integer = Ord(GS_DEMOSCREEN);
 
   nomonsters: boolean;        // checkparm of -nomonsters
   fastparm: boolean;          // checkparm of -fast
   devparm: boolean;       // started game with -devparm
-  singletics: boolean = false; // debug flag to cancel adaptiveness
+  singletics: boolean = False; // debug flag to cancel adaptiveness
   autostart: boolean;
   startskill: skill_t;
   respawnparm: boolean;   // checkparm of -respawn
@@ -120,13 +89,13 @@ var
 implementation
 
 uses d_delphi,
-  classes,
+  Classes,
   doomstat, dstrings, d_englsh,
   sounds, z_zone, w_wad, s_sound, v_video,
   f_finale, f_wipe,
   m_argv, m_misc, m_menu,
   info,
-  i_system, i_sound, i_video, i_io, 
+  i_system, i_sound, i_video, i_io,
   d_ticcmd, d_player, d_net,
   g_game,
   hu_stuff, wi_stuff, st_stuff,
@@ -138,7 +107,7 @@ const
   BGCOLOR = 7;
   FGCOLOR = 8;
 
-//
+
 // D-DoomLoop()
 // Not a globally visible function,
 //  just included for source reference,
@@ -146,30 +115,30 @@ const
 // Manages timing and IO,
 //  calls all ?_Responder, ?_Ticker, and ?_Drawer,
 //  calls I_GetTime, I_StartFrame, and I_StartTic
-//
+
 procedure D_DoomLoop; forward;
 
 
-//
+
 // D_PostEvent
 // Called by the I/O functions when input is detected
-//
+
 procedure D_PostEvent(ev: Pevent_t);
 begin
   events[eventhead] := ev^;
-  inc(eventhead);
+  Inc(eventhead);
   eventhead := eventhead and (MAXEVENTS - 1);
 end;
 
-//
+
 // D_ProcessEvents
 // Send all the events of the given timestamp down the responder chain
-//
+
 procedure D_ProcessEvents;
 var
   ev: Pevent_t;
 begin
-// IF STORE DEMO, DO NOT ACCEPT INPUT
+  // IF STORE DEMO, DO NOT ACCEPT INPUT
   if (gamemode = commercial) and (W_CheckNumForName('map01') < 0) then
     exit;
 
@@ -178,9 +147,9 @@ begin
 
   while eventtail <> eventhead do
   begin
-  	ev := @events[eventtail];
+    ev := @events[eventtail];
     if M_Responder(ev) then
-	     // menu ate the event
+    // menu ate the event
     else
       G_Responder(ev);
     if I_GameFinished then
@@ -188,20 +157,20 @@ begin
       eventtail := eventhead;
       exit;
     end;
-    inc(eventtail);
+    Inc(eventtail);
     eventtail := eventtail and (MAXEVENTS - 1);
   end;
 end;
 
-//
+
 // D_Display
 //  draw current display, possibly wiping it from the previous
-//
+
 
 var
-  viewactivestate: boolean = false;
-  menuactivestate: boolean = false;
-  inhelpscreensstate: boolean = false;
+  viewactivestate: boolean = False;
+  menuactivestate: boolean = False;
+  inhelpscreensstate: boolean = False;
   oldgamestate: integer = -1;
   borderdrawcount: integer;
 
@@ -215,14 +184,15 @@ var
   wipe: boolean;
   redrawsbar: boolean;
 begin
-  if nodrawers then exit; // for comparative timing / profiling
+  if nodrawers then
+    exit; // for comparative timing / profiling
 
-  redrawsbar := false;
+  redrawsbar := False;
 
   // change the view size if needed
   if setsizeneeded then
   begin
-  	R_ExecuteSetViewSize;
+    R_ExecuteSetViewSize;
     oldgamestate := -1; // force background redraw
     borderdrawcount := 3;
   end;
@@ -230,11 +200,11 @@ begin
   // save the current screen if about to wipe
   if Ord(gamestate) <> wipegamestate then
   begin
-    wipe := true;
+    wipe := True;
     wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
   end
   else
-    wipe := false;
+    wipe := False;
 
   if (gamestate = GS_LEVEL) and (gametic <> 0) then
     HU_Erase;
@@ -242,19 +212,19 @@ begin
   // do buffered drawing
   case gamestate of
     GS_LEVEL:
+    begin
+      if gametic <> 0 then
       begin
-      	if gametic <> 0 then
-        begin
-          if  automapactive then
-            AM_Drawer;
-          if wipe or ((viewheight <> SCREENHEIGHT) and fullscreen) then
-            redrawsbar := true;
-          if inhelpscreensstate and (not inhelpscreens) then
-            redrawsbar := true; // just put away the help screen
-          ST_Drawer(viewheight = SCREENHEIGHT{200}, redrawsbar);
-          fullscreen := viewheight = SCREENHEIGHT{200};
-        end;
+        if automapactive then
+          AM_Drawer;
+        if wipe or ((viewheight <> SCREENHEIGHT) and fullscreen) then
+          redrawsbar := True;
+        if inhelpscreensstate and (not inhelpscreens) then
+          redrawsbar := True; // just put away the help screen
+        ST_Drawer(viewheight = SCREENHEIGHT{200}, redrawsbar);
+        fullscreen := viewheight = SCREENHEIGHT{200};
       end;
+    end;
     GS_INTERMISSION:
       WI_Drawer;
     GS_FINALE:
@@ -280,19 +250,20 @@ begin
   // see if the border needs to be initially drawn
   if (gamestate = GS_LEVEL) and (oldgamestate <> Ord(GS_LEVEL)) then
   begin
-    viewactivestate := false; // view was not active
+    viewactivestate := False; // view was not active
     R_FillBackScreen;         // draw the pattern into the back screen
   end;
 
   // see if the border needs to be updated to the screen
-  if (gamestate = GS_LEVEL) and (not automapactive) and (scaledviewwidth <> SCREENWIDTH{320}) then
+  if (gamestate = GS_LEVEL) and (not automapactive) and
+    (scaledviewwidth <> SCREENWIDTH{320}) then
   begin
     if menuactive or menuactivestate or (not viewactivestate) then
-	    borderdrawcount := 3;
+      borderdrawcount := 3;
     if borderdrawcount > 0 then
     begin
       R_DrawViewBorder; // erase old menu stuff
-      dec(borderdrawcount);
+      Dec(borderdrawcount);
     end;
   end;
 
@@ -310,7 +281,7 @@ begin
     else
       y := viewwindowy + 4;
     V_DrawPatch(viewwindowx + (scaledviewwidth - 68) div 2,
-			 y, 0, W_CacheLumpName('M_PAUSE', PU_CACHE), false);
+      y, 0, W_CacheLumpName('M_PAUSE', PU_CACHE), False);
   end;
 
   // menus go directly to the screen
@@ -333,7 +304,7 @@ begin
     repeat
       nowtime := I_GetTime;
       tics := nowtime - wipestart;
-	  until (tics <> 0);
+    until (tics <> 0);
     wipestart := nowtime;
     done := wipe_ScreenWipe(Ord(wipe_Melt), 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
     I_UpdateNoBlit;
@@ -342,9 +313,9 @@ begin
   until done;
 end;
 
-//
+
 //  D_DoomLoop
-//
+
 
 procedure D_DoomLoop;
 begin
@@ -353,10 +324,10 @@ begin
 
   I_InitGraphics;
 
-  while true do
+  while True do
   begin
-  	// frame syncronous IO operations
-	  I_StartFrame;
+    // frame syncronous IO operations
+    I_StartFrame;
 
     // process one or more tics
     if singletics then
@@ -364,12 +335,12 @@ begin
       I_StartTic;
       D_ProcessEvents;
       G_BuildTiccmd(@netcmds[consoleplayer][maketic mod BACKUPTICS]);
-	    if advancedemo then
+      if advancedemo then
         D_DoAdvanceDemo;
       M_Ticker;
       G_Ticker;
-      inc(gametic);
-      inc(maketic);
+      Inc(gametic);
+      Inc(maketic);
     end
     else
       TryRunTics; // will run at least one tic
@@ -383,52 +354,52 @@ begin
   end;
 end;
 
-//
+
 //  DEMO LOOP
-//
+
 var
   demosequence: integer;
   pagetic: integer;
   pagename: string;
 
-//
+
 // D_PageTicker
 // Handles timing for warped projection
-//
+
 procedure D_PageTicker;
 begin
-  dec(pagetic);
+  Dec(pagetic);
   if pagetic < 0 then
     D_AdvanceDemo;
 end;
 
-//
+
 // D_PageDrawer
-//
+
 procedure D_PageDrawer;
 begin
-  V_DrawPatch (0, 0, 0, W_CacheLumpName(pagename, PU_CACHE), true);
+  V_DrawPatch(0, 0, 0, W_CacheLumpName(pagename, PU_CACHE), True);
 end;
 
-//
+
 // D_AdvanceDemo
 // Called after each demo or intro demosequence finishes
-//
+
 procedure D_AdvanceDemo;
 begin
-  advancedemo := true;
+  advancedemo := True;
 end;
 
-//
+
 // This cycles through the demo sequences.
 // FIXME - version dependend demo numbers?
-//
+
 procedure D_DoAdvanceDemo;
 begin
   players[consoleplayer].playerstate := PST_LIVE;  // not reborn
-  advancedemo := false;
-  usergame := false;               // no save / end game here
-  paused := false;
+  advancedemo := False;
+  usergame := False;               // no save / end game here
+  paused := False;
   gameaction := ga_nothing;
 
   if gamemode = retail then
@@ -438,65 +409,65 @@ begin
 
   case demosequence of
     0:
-      begin
-        if gamemode = commercial then
-          pagetic := 35 * 11
-        else
-          pagetic := 170;
-        gamestate := GS_DEMOSCREEN;
-        pagename := 'TITLEPIC';
-        if gamemode = commercial then
-          S_StartMusic(Ord(mus_dm2ttl))
-        else
-          S_StartMusic(Ord(mus_intro));
-      end;
+    begin
+      if gamemode = commercial then
+        pagetic := 35 * 11
+      else
+        pagetic := 170;
+      gamestate := GS_DEMOSCREEN;
+      pagename := 'TITLEPIC';
+      if gamemode = commercial then
+        S_StartMusic(Ord(mus_dm2ttl))
+      else
+        S_StartMusic(Ord(mus_intro));
+    end;
     1:
-      begin
-        G_DeferedPlayDemo('demo1');
-      end;
+    begin
+      G_DeferedPlayDemo('demo1');
+    end;
     2:
+    begin
+      pagetic := 200;
+      gamestate := GS_DEMOSCREEN;
+      pagename := 'CREDIT';
+    end;
+    3:
+    begin
+      G_DeferedPlayDemo('demo2');
+    end;
+    4:
+    begin
+      gamestate := GS_DEMOSCREEN;
+      if gamemode = commercial then
+      begin
+        pagetic := 35 * 11;
+        pagename := 'TITLEPIC';
+        S_StartMusic(Ord(mus_dm2ttl));
+      end
+      else
       begin
         pagetic := 200;
-        gamestate := GS_DEMOSCREEN;
-        pagename := 'CREDIT';
-      end;
-    3:
-      begin
-        G_DeferedPlayDemo('demo2');
-      end;
-    4:
-      begin
-        gamestate := GS_DEMOSCREEN;
-        if gamemode = commercial then
-        begin
-          pagetic := 35 * 11;
-          pagename := 'TITLEPIC';
-          S_StartMusic(Ord(mus_dm2ttl));
-        end
+        if gamemode = retail then
+          pagename := 'CREDIT'
         else
-        begin
-          pagetic := 200;
-          if gamemode = retail then
-            pagename := 'CREDIT'
-          else
-            pagename := 'HELP2';
-        end;
+          pagename := 'HELP2';
       end;
+    end;
     5:
-      begin
-        G_DeferedPlayDemo('demo3');
-      end;
-        // THE DEFINITIVE DOOM Special Edition demo
+    begin
+      G_DeferedPlayDemo('demo3');
+    end;
+    // THE DEFINITIVE DOOM Special Edition demo
     6:
-      begin
-        G_DeferedPlayDemo('demo4');
-      end;
+    begin
+      G_DeferedPlayDemo('demo4');
+    end;
   end;
 end;
 
-//
+
 // D_StartTitle
-//
+
 procedure D_StartTitle;
 begin
   gameaction := ga_nothing;
@@ -505,11 +476,12 @@ begin
 end;
 
 //      print title for every printed line
-var title: string;
+var
+  title: string;
 
-//
+
 // D_AddFile
-//
+
 procedure D_AddFile(_file: string);
 var
   i: integer;
@@ -523,12 +495,12 @@ begin
     end;
 end;
 
-//
+
 // IdentifyVersion
 // Checks availability of IWAD files by name,
 // to determine whether registered/commercial features
 // should be executed (notably loading PWAD's).
-//
+
 procedure IdentifyVersion;
 var
   doom1wad: string;
@@ -570,18 +542,18 @@ begin
   if boolval(M_CheckParm('-shdev')) then
   begin
     gamemode := shareware;
-    devparm := true;
+    devparm := True;
     D_AddFile(DEVDATA + 'doom1.wad');
     D_AddFile(DEVMAPS + 'data_se/texture1.lmp');
     D_AddFile(DEVMAPS + 'data_se/pnames.lmp');
     basedefault := DEVDATA + 'default.cfg';
-	  exit;
+    exit;
   end;
 
   if boolval(M_CheckParm('-regdev')) then
   begin
     gamemode := registered;
-    devparm := true;
+    devparm := True;
     D_AddFile(DEVDATA + 'doom.wad');
     D_AddFile(DEVMAPS + 'data_se/texture1.lmp');
     D_AddFile(DEVMAPS + 'data_se/texture2.lmp');
@@ -593,13 +565,13 @@ begin
   if boolval(M_CheckParm('-comdev')) then
   begin
     gamemode := commercial;
-    devparm := true;
-	(* I don't bother
-	if(plutonia)
-	    D_AddFile (DEVDATA"plutonia.wad");
-	else if(tnt)
-	    D_AddFile (DEVDATA"tnt.wad");
-	else*)
+    devparm := True;
+  (* I don't bother
+  if(plutonia)
+      D_AddFile (DEVDATA"plutonia.wad");
+  else if(tnt)
+      D_AddFile (DEVDATA"tnt.wad");
+  else*)
     D_AddFile(DEVDATA + 'doom2.wad');
 
     D_AddFile(DEVMAPS + 'cdata/texture1.lmp');
@@ -671,9 +643,9 @@ begin
   //I_Error ("Game mode indeterminate\n");
 end;
 
-//
+
 // Find a Response File
-//
+
 // VJ: Changed to handle more that 1 response files
 procedure FindResponseFile;
 var
@@ -694,28 +666,28 @@ begin
     begin
       if myargv[i][1] = '@' then
       begin
-  	    // READ THE RESPONSE FILE INTO MEMORY
+        // READ THE RESPONSE FILE INTO MEMORY
         myargv1 := Copy(myargv[i], 2, length(myargv[i]) - 1);
         {$I-}
-        assign(handle, myargv1);
+        Assign(handle, myargv1);
         reset(handle, 1);
         {$I+}
         if IOResult <> 0 then
         begin
-      		printf(#13#10 + 'No such response file: %s!' + #13#10, [myargv1]);
+          printf(#13#10 + 'No such response file: %s!' + #13#10, [myargv1]);
           halt(1);
         end;
-  	    printf('Found response file %s!' + #13#10, [myargv1]);
+        printf('Found response file %s!' + #13#10, [myargv1]);
 
-  	    size := FileSize(handle);
-  	    seek(handle, 0);
-  	    SetLength(_file, size);
+        size := FileSize(handle);
+        seek(handle, 0);
+        SetLength(_file, size);
         BlockRead(handle, (@_file[1])^, size);
-        close(handle);
+        Close(handle);
 
         infile := '';
         for index := 1 to Length(_file) do
-          if  _file[index] = ' ' then
+          if _file[index] = ' ' then
             infile := infile + #13#10
           else
             infile := infile + _file[i];
@@ -723,7 +695,7 @@ begin
         s.Text := s.Text + infile;
       end
       else
-        s.Add(myargv[i])
+        s.Add(myargv[i]);
     end;
 
     index := 0;
@@ -731,7 +703,7 @@ begin
       if s.Strings[i] <> '' then
       begin
         myargv[index] := s.Strings[i];
-        inc(index);
+        Inc(index);
       end;
     myargc := index;
   finally
@@ -739,9 +711,9 @@ begin
   end;
 end;
 
-//
+
 // D_DoomMain
-//
+
 procedure D_DoomMain;
 var
   p: integer;
@@ -765,7 +737,7 @@ begin
   printf('I_InitializeIO: Initializing input/output streams.' + #13#10);
   I_InitializeIO;
 
-  modifiedgame := false;
+  modifiedgame := False;
 
   nomonsters := boolval(M_CheckParm('-nomonsters'));
   respawnparm := boolval(M_CheckParm('-respawn'));
@@ -779,44 +751,39 @@ begin
 
   case gamemode of
     retail:
-      begin
-        sprintf(title,
-      		 '                         ' +
-      		 'The Ultimate DOOM Startup v%d.%d' +
-      		 '                           ',
-            [VERSION div 100, VERSION mod 100]);
-      end;
-    shareware:
-      begin
-        sprintf(title,
-           '                            ' +
-           'DOOM Shareware Startup v%d.%d' +
-           '                           ',
-            [VERSION div 100, VERSION mod 100]);
-      end;
-    registered:
-      begin
-        sprintf(title,
-           '                            ' +
-           'DOOM Registered Startup v%d.%d' +
-           '                           ',
-            [VERSION div 100, VERSION mod 100]);
-      end;
-    commercial:
-      begin
-        sprintf(title,
-           '                         ' +
-           'DOOM 2: Hell on Earth v%d.%d' +
-           '                           ',
-            [VERSION div 100, VERSION mod 100]);
-      end;
-  else
     begin
       sprintf(title,
-    		 '                         ' +
-         'Public DOOM - v%d.%d' +
-         '                           ',
-          [VERSION div 100, VERSION mod 100]);
+        '                         ' + 'The Ultimate DOOM Startup v%d.%d' +
+        '                           ',
+        [VERSION div 100, VERSION mod 100]);
+    end;
+    shareware:
+    begin
+      sprintf(title,
+        '                            ' + 'DOOM Shareware Startup v%d.%d' +
+        '                           ',
+        [VERSION div 100, VERSION mod 100]);
+    end;
+    registered:
+    begin
+      sprintf(title,
+        '                            ' + 'DOOM Registered Startup v%d.%d' +
+        '                           ',
+        [VERSION div 100, VERSION mod 100]);
+    end;
+    commercial:
+    begin
+      sprintf(title,
+        '                         ' + 'DOOM 2: Hell on Earth v%d.%d' +
+        '                           ',
+        [VERSION div 100, VERSION mod 100]);
+    end;
+    else
+    begin
+      sprintf(title,
+        '                         ' + 'Public DOOM - v%d.%d' +
+        '                           ',
+        [VERSION div 100, VERSION mod 100]);
     end;
   end;
 
@@ -838,7 +805,7 @@ begin
   begin
     scale := 200;
     if p < myargc - 1 then
-	    scale := atoi(myargv[p + 1]);
+      scale := atoi(myargv[p + 1]);
     if scale < 10 then
       scale := 10
     else if scale > 400 then
@@ -852,7 +819,7 @@ begin
 
   // add any files specified on the command line with -file wadfile
   // to the wad list
-  //
+
   // convenience hack to allow -wart e m to add a wad file
   // prepend a tilde to the filename so wadfile will be reloadable
   p := M_CheckParm('-wart');
@@ -860,24 +827,24 @@ begin
   begin
     myargv[p][5] := 'p';     // big hack, change to -warp
 
-  // Map name handling.
+    // Map name handling.
     case gamemode of
       shareware,
       retail,
       registered:
-        begin
-          sprintf(_file, '~' + DEVMAPS + 'E%sM%s.wad',
-            [myargv[p + 1][1], myargv[p + 2][1]]);
-          printf('Warping to Episode %s, Map %s.' + #13#10,
-            [myargv[p + 1], myargv[p + 2]]);
-        end;
-    else
+      begin
+        sprintf(_file, '~' + DEVMAPS + 'E%sM%s.wad',
+          [myargv[p + 1][1], myargv[p + 2][1]]);
+        printf('Warping to Episode %s, Map %s.' + #13#10,
+          [myargv[p + 1], myargv[p + 2]]);
+      end;
+      else
       begin
         p := atoi(myargv[p + 1]);
         if p < 10 then
           sprintf(_file, '~' + DEVMAPS + 'cdata/map0%i.wad', [p])
         else
-          sprintf (_file,'~' + DEVMAPS + 'cdata/map%i.wad', [p]);
+          sprintf(_file, '~' + DEVMAPS + 'cdata/map%i.wad', [p]);
       end;
     end;
 
@@ -887,14 +854,14 @@ begin
   p := M_CheckParm('-file');
   if p <> 0 then
   begin
-  // the parms after p are wadfile/lump names,
-  // until end of parms or another - preceded parm
-	  modifiedgame := true;            // homebrew levels
-    inc(p);
+    // the parms after p are wadfile/lump names,
+    // until end of parms or another - preceded parm
+    modifiedgame := True;            // homebrew levels
+    Inc(p);
     while (p <> myargc) and (myargv[p][1] <> '-') do
     begin
       D_AddFile(myargv[p]);
-      inc(p);
+      Inc(p);
     end;
   end;
 
@@ -905,7 +872,7 @@ begin
 
   if (p <> 0) and (p < myargc - 1) then
   begin
-    sprintf(_file,'%s.lmp', [myargv[p + 1]]);
+    sprintf(_file, '%s.lmp', [myargv[p + 1]]);
     D_AddFile(_file);
     printf('Playing demo %s.lmp.' + #13#10, [myargv[p + 1]]);
   end;
@@ -914,28 +881,28 @@ begin
   startskill := sk_medium;
   startepisode := 1;
   startmap := 1;
-  autostart := false;
+  autostart := False;
 
   p := M_CheckParm('-skill');
   if (p <> 0) and (p < myargc - 1) then
   begin
-    startskill := skill_t(ord(myargv[p + 1][1]) - ord('1'));
-    autostart := true;
+    startskill := skill_t(Ord(myargv[p + 1][1]) - Ord('1'));
+    autostart := True;
   end;
 
-  p := M_CheckParm ('-episode');
+  p := M_CheckParm('-episode');
   if (p <> 0) and (p < myargc - 1) then
   begin
-    startepisode := ord(myargv[p + 1][1]) - ord('0');
+    startepisode := Ord(myargv[p + 1][1]) - Ord('0');
     startmap := 1;
-    autostart := true;
+    autostart := True;
   end;
 
-  p := M_CheckParm ('-timer');
+  p := M_CheckParm('-timer');
   if (p <> 0) and (p < myargc - 1) and boolval(deathmatch) then
   begin
     _time := atoi(myargv[p + 1]);
-  	if _time > 1 then
+    if _time > 1 then
       printf('Levels will end after %d minutes' + #13#10, [_time])
     else
       printf('Levels will end after %d minute' + #13#10, [_time]);
@@ -952,19 +919,19 @@ begin
       startmap := atoi(myargv[p + 1])
     else
     begin
-      startepisode := ord(myargv[p + 1][1]) - ord('0');
-      startmap := ord(myargv[p + 2][1]) - ord('0');
+      startepisode := Ord(myargv[p + 1][1]) - Ord('0');
+      startmap := Ord(myargv[p + 2][1]) - Ord('0');
     end;
-    autostart := true;
+    autostart := True;
   end;
 
   p := M_CheckParm('-fullscreen');
   if (p <> 0) and (p <= myargc - 1) then
-    fullscreen := true;
+    fullscreen := True;
 
   p := M_CheckParm('-nofullscreen');
   if (p <> 0) and (p <= myargc - 1) then
-    fullscreen := false;
+    fullscreen := False;
 
   p := M_CheckParm('-zone');
   if (p <> 0) and (p < myargc - 1) then
@@ -978,7 +945,8 @@ begin
   end;
 
   // init subsystems
-  printf('Z_Init: Init zone memory allocation daemon, allocation %dMB.' + #13#10, [mb_used]);
+  printf('Z_Init: Init zone memory allocation daemon, allocation %dMB.' +
+    #13#10, [mb_used]);
   Z_Init;
 
   printf('I_InitInfo: Initialize information tables.' + #13#10);
@@ -1005,13 +973,14 @@ begin
   if modifiedgame then
   begin
     if gamemode = shareware then
-      I_Error(#13#10 + 'D_DoomMain(): You cannot -file with the shareware version. Register!');
-	// Check for fake IWAD with right name,
-	// but w/o all the lumps of the registered version.
+      I_Error(#13#10 +
+        'D_DoomMain(): You cannot -file with the shareware version. Register!');
+    // Check for fake IWAD with right name,
+    // but w/o all the lumps of the registered version.
     if gamemode in [registered, retail] then
     begin
-	// These are the lumps that will be checked in IWAD,
-	// if any one is not present, execution will be aborted.
+      // These are the lumps that will be checked in IWAD,
+      // if any one is not present, execution will be aborted.
       s_error := #13#10 + 'D_DoomMain(): This is not the registered version.';
       for i := 2 to 3 do
         for j := 1 to 9 do
@@ -1029,7 +998,7 @@ begin
         I_Error(s_error);
     end;
 
-  // If additonal PWAD files are used, print modified banner
+    // If additonal PWAD files are used, print modified banner
     oldoutproc := outproc;
     outproc := @I_IOMessageBox;
     printf(MSG_MODIFIEDGAME);
@@ -1045,7 +1014,7 @@ begin
     retail,
     commercial:
       printf(MSG_COMMERCIAL);
-  else
+    else
     begin
       printf(MSG_UNDETERMINED);
     end;
@@ -1075,32 +1044,19 @@ begin
   printf('ST_Init: Init status bar.' + #13#10);
   ST_Init;
 
-////////////////////////////////////////////////////////////////////////////////
-//    // check for a driver that wants intermission stats
-//    p = M_CheckParm ("-statcopy");
-//    if (p && p<myargc-1)
-//    {
-//	// for statistics driver
-//	extern  void*	statcopy;
-
-//	statcopy = (void*)atoi(myargv[p+1]);
-//	printf ("External statistics registered.\n");
-//    }
-////////////////////////////////////////////////////////////////////////////////
-
   // start the apropriate game based on parms
   p := M_CheckParm('-record');
 
   if (p <> 0) and (p < myargc - 1) then
   begin
     G_RecordDemo(myargv[p + 1]);
-    autostart := true;
+    autostart := True;
   end;
 
   p := M_CheckParm('-playdemo');
   if (p <> 0) and (p < myargc - 1) then
   begin
-    singledemo := true;              // quit after one demo
+    singledemo := True;              // quit after one demo
     G_DeferedPlayDemo(myargv[p + 1]);
     D_DoomLoop;  // never returns
   end;
@@ -1145,7 +1101,5 @@ initialization
 
   for i := 0 to MAXWADFILES - 1 do
     wadfiles[i] := '';
-
-  wipegamestate := Ord(GS_DEMOSCREEN);
 
 end.
