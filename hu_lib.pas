@@ -28,34 +28,10 @@ unit hu_lib;
 
 interface
 
-uses doomdef,
-  r_defs, d_delphi;
-
-{
-    hu_lib.h, hu_lib.c
-}
-
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION:  none }
-  { }
-  {----------------------------------------------------------------------------- }
-
+uses
+  doomdef,
+  r_defs,
+  d_delphi;
 
 const
 // background and foreground screen numbers
@@ -193,7 +169,9 @@ procedure HUlib_eraseIText(it: Phu_itext_t);
 
 implementation
 
-uses v_video, r_draw,
+uses
+  v_video,
+  r_draw,
   am_map {automapactive};
 
 procedure HUlib_init;
@@ -278,7 +256,7 @@ end;
 
 // sorta called by HU_Erase and just better darn get things straight
 var
-  lastautomapactive: boolean;
+  lastautomapactive: boolean = true;
 
 procedure HUlib_eraseTextLine(l: Phu_textline_t);
 var
@@ -465,10 +443,6 @@ begin
   HUlib_eraseTextLine(@it.l);
   it.laston := it._on^;
 end;
-
-
-initialization
-  lastautomapactive := true;
 
 end.
 
