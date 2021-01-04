@@ -28,31 +28,6 @@ unit m_rnd;
 
 interface
 
-{
-    m_random.h, m_random.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  { Random number LUT.}
-  {     }
-  {----------------------------------------------------------------------------- }
-
 // Returns a number from 0 to 255,
 // from a lookup table.
 function M_Random: integer;
@@ -64,8 +39,8 @@ function P_Random: integer;
 procedure M_ClearRandom;
 
 var
-  rndindex: integer;
-  prndindex: integer;
+  rndindex: integer = 0;
+  prndindex: integer = 0;
 
 implementation
 
@@ -111,10 +86,6 @@ begin
   prndindex := 0;
 end;
 
-
 initialization
 
-  M_ClearRandom;
-
 end.
-
