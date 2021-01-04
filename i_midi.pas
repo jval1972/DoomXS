@@ -44,7 +44,7 @@ procedure I_ResumeMidi;
 
 procedure I_PauseMidi;
 
-function _mciGetErrorString(const code: LongWord): string;
+function _mciGetErrorString(const code: longword): string;
 
 implementation
 
@@ -74,7 +74,8 @@ const
 // as soon as playback begins. The window procedure function for the
 // specified window will be notified when playback is complete.
 // Returns 0L on success; otherwise, it returns an MCI error code.
-function playMIDIFile(hWndNotify: HWnd; lpszMIDIFileName: string; doCheckMidiMapper: boolean = false): DWORD;
+function playMIDIFile(hWndNotify: HWnd; lpszMIDIFileName: string;
+  doCheckMidiMapper: boolean = False): DWORD;
 var
   mciOpenParms: MCI_OPEN_PARMS;
   mciPlayParms: MCI_PLAY_PARMS;
@@ -85,9 +86,11 @@ begin
   FillChar(mciOpenParms, SizeOf(mciOpenParms), Chr(0));
   mciOpenParms.lpstrDeviceType := PAnsiChar(rssequencer);
   mciOpenParms.lpstrElementName := PChar(lpszMIDIFileName);
-  result := mciSendCommand(0, MCI_OPEN, MCI_OPEN_TYPE or MCI_OPEN_ELEMENT, DWORD(@mciOpenParms));
+  Result := mciSendCommand(0, MCI_OPEN, MCI_OPEN_TYPE or MCI_OPEN_ELEMENT,
+    DWORD(@mciOpenParms));
   // Failed to open device. Don't close it; just return error.
-  if result <> 0 then exit;
+  if Result <> 0 then
+    exit;
 
   // The device opened successfully; get the device ID.
   wDeviceID := mciOpenParms.wDeviceID;
@@ -96,14 +99,15 @@ begin
   begin
     // Check if the output port is the MIDI mapper.
     mciStatusParms.dwItem := MCI_SEQ_STATUS_PORT;
-    result := mciSendCommand(wDeviceID, MCI_STATUS, MCI_STATUS_ITEM, DWORD(@mciStatusParms));
-    if result <> 0 then
+    Result := mciSendCommand(wDeviceID, MCI_STATUS, MCI_STATUS_ITEM,
+      DWORD(@mciStatusParms));
+    if Result <> 0 then
     begin
       mciSendCommand(wDeviceID, MCI_CLOSE, 0, 0);
       exit;
     end
-    else if LOWORD(mciStatusParms.dwReturn) <> WORD(MIDI_MAPPER) then
-    // The output port is not the MIDI mapper.
+    else if LOWORD(mciStatusParms.dwReturn) <> word(MIDI_MAPPER) then
+      // The output port is not the MIDI mapper.
     begin
       printf(rsErrNoMIDIMapper);
       exit;
@@ -116,8 +120,8 @@ begin
   // the device.
   FillChar(mciPlayParms, SizeOf(mciPlayParms), Chr(0));
   mciPlayParms.dwCallback := DWORD(hWndNotify);
-  result := mciSendCommand(wDeviceID, MCI_PLAY, MCI_NOTIFY, DWORD(@mciPlayParms));
-  if result > 0 then
+  Result := mciSendCommand(wDeviceID, MCI_PLAY, MCI_NOTIFY, DWORD(@mciPlayParms));
+  if Result > 0 then
     mciSendCommand(wDeviceID, MCI_CLOSE, 0, 0);
 end;
 
@@ -127,10 +131,10 @@ begin
   mciSendCommand(wDeviceID, MCI_CLOSE, 0, 0);
 end;
 
-function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM;
-  lParam: LPARAM): LRESULT; stdcall; export;
+function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT;
+  stdcall; export;
 begin
-  result := 0;
+  Result := 0;
   case Msg of
     MM_MCINOTIFY:
       if (wParam = MCI_NOTIFY_SUCCESSFUL) then
@@ -139,18 +143,18 @@ begin
         if MidiID >= MidiFileNames.Count - 1 then
           MidiID := 0
         else
-          inc(MidiID);
+          Inc(MidiID);
         if MidiID < MidiFileNames.Count then
           playMIDIFile(Window, MidiFileNames.Strings[MidiID]);
       end;
     WM_CLOSE:
-      begin
-        DestroyWindow(hWnd);
-        Window := 0;
-        exit;
-      end;
+    begin
+      DestroyWindow(hWnd);
+      Window := 0;
+      exit;
+    end;
   end;
-  result := DefWindowProc(hWnd, Msg, WParam, LParam);
+  Result := DefWindowProc(hWnd, Msg, WParam, LParam);
 end;
 
 procedure AddMidiFileToPlayList(MidiFile: string);
@@ -201,27 +205,18 @@ begin
       WindowClass.hCursor := LoadCursor(0, idc_Arrow);
       RegisterClass(WindowClass);
     end;
-    Window := CreateWindowEx(
-      0,
-      WindowClass.lpszClassName,
-      PChar(rsWndTitle),
-      ws_OverlappedWindow,
-      integer(CW_USEDEFAULT),
-      integer(CW_USEDEFAULT),
-      integer(CW_USEDEFAULT),
-      integer(CW_USEDEFAULT),
-      0,
-      0,
-      HInstance,
-      nil);
+    Window := CreateWindowEx(0, WindowClass.lpszClassName,
+      PChar(rsWndTitle), ws_OverlappedWindow, integer(CW_USEDEFAULT),
+      integer(CW_USEDEFAULT), integer(CW_USEDEFAULT),
+      integer(CW_USEDEFAULT), 0, 0, HInstance, nil);
     ShowWindow(Window, SW_HIDE);
   end;
 
   if (index < MidiFileNames.Count) and (index > -1) then
   begin
     MidiID := index;
-    playMIDIFile(Window, MidiFileNames.Strings[MidiID], true);
-    fIsPlaying := true;
+    playMIDIFile(Window, MidiFileNames.Strings[MidiID], True);
+    fIsPlaying := True;
   end
   else
     printf(rsErrNoMIDIMapper);
@@ -234,13 +229,13 @@ begin
     StopPlaying;
     SendMessage(Window, WM_CLOSE, 0, 0);
     Window := 0;
-    fIsPlaying := false;
+    fIsPlaying := False;
   end;
 end;
 
 function I_IsMidiPlaying: boolean;
 begin
-  result := fIsPlaying;
+  Result := fIsPlaying;
 end;
 
 procedure I_ResumeMidi;
@@ -253,19 +248,19 @@ begin
   mciSendCommand(wDeviceID, MCI_PAUSE, 0, 0);
 end;
 
-function _mciGetErrorString(const code: LongWord): string;
+function _mciGetErrorString(const code: longword): string;
 var
   buf: array[0..127] of char;
-  i:  integer;
+  i: integer;
 begin
-  result := '';
+  Result := '';
   FillChar(buf, 128, Chr(0));
   if mciGetErrorString(code, buf, 128) then
     for i := 0 to 127 do
     begin
       if buf[i] = #0 then
         break;
-      result := result + buf[i];
+      Result := Result + buf[i];
     end;
 end;
 
@@ -273,11 +268,10 @@ initialization
   Window := 0;
   MidiFileNames := TStringList.Create;
   MidiID := 0;
-  fIsPlaying := false;
+  fIsPlaying := False;
 
 finalization
   StopPlaying;
   MidiFileNames.Free;
 
 end.
-
