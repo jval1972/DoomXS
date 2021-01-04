@@ -28,35 +28,6 @@ unit m_cheat;
 
 interface
 
-{
-    m_cheat.h, m_cheat.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {	Cheat code checking. }
-  { }
-  {----------------------------------------------------------------------------- }
-
-  { }
-  { CHEAT SEQUENCE PACKAGE }
-  { }
-
 type
   cheatseq_t = record
     sequence: string;
@@ -76,67 +47,65 @@ function get_cheatseq_string(const x: integer): string; overload; // VJ
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   i_system;
 
 function get_cheatseq_string(const A: array of char): string; // VJ
-var i: integer;
+var
+  i: integer;
 begin
-  result := '';
+  Result := '';
   i := 0;
   repeat
-    result := result + A[i];
-    inc(i);
+    Result := Result + A[i];
+    Inc(i);
   until A[i] = Chr($FF);
 end;
 
 function get_cheatseq_string(const A: string): string;  // VJ
-var i: integer;
+var
+  i: integer;
 begin
-  result := '';
+  Result := '';
   i := 1;
   repeat
-    result := result + A[i];
-    inc(i);
+    Result := Result + A[i];
+    Inc(i);
   until A[i] = Chr($FF);
 end;
 
 function get_cheatseq_string(const x: integer): string; // VJ
 begin
-  result := '';
+  Result := '';
   if x <> 0 then
     I_Error('get_cheatseq_string(): invalid parameter: %d', [x]);
 end;
 
 function SCRAMBLE(a: integer): integer;
 begin
-  result := _SHL(a and 1, 7) +
-            _SHL(a and 2, 5) +
-            (a and 4) +
-            _SHL(a and 8, 1) +
-            _SHR(a and 16, 1) +
-            (a and 32) +
-            _SHR(a and 64, 5) +
-            _SHR(a and 128, 7);
+  Result := _SHL(a and 1, 7) + _SHL(a and 2, 5) +
+    (a and 4) + _SHL(a and 8, 1) + _SHR(a and 16, 1) +
+    (a and 32) + _SHR(a and 64, 5) + _SHR(a and 128, 7);
 end;
 
 var
-  firsttime: boolean = true;
+  firsttime: boolean = True;
   cheat_xlate_table: array[0..255] of char;
 
-//
+
 // Called in st_stuff module, which handles the input.
 // Returns a 1 if the cheat was successful, 0 if failed.
-//
+
 function cht_CheckCheat(cht: Pcheatseq_t; key: char): boolean;
 var
   i: integer;
 begin
-  result := false;
+  Result := False;
 
   if firsttime then
   begin
-    firsttime := false;
+    firsttime := False;
     for i := 0 to 255 do
       cheat_xlate_table[i] := Chr(SCRAMBLE(i));
   end;
@@ -151,7 +120,7 @@ begin
   else if (length(cht.p) > 1) and (cht.p[2] = #0) then
   begin
     cht.p[2] := key;
-    result := true;
+    Result := True;
   end
   else if cheat_xlate_table[Ord(key)] = cht.p[1] then
     Delete(cht.p, 1, 1)
@@ -165,11 +134,11 @@ begin
     else if cht.p[1] = Chr($FF) then // end of sequence character
     begin
       cht.p := cht.sequence;
-      result := true;
+      Result := True;
     end;
   end
   else
-    result := true;
+    Result := True;
 end;
 
 procedure cht_GetParam(cht: Pcheatseq_t; var buffer: string);
