@@ -30,30 +30,8 @@ interface
 
 uses
   SysUtils,
-  windows,
+  Windows,
   d_delphi;
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	System specific interface stuff.
-//	DirectX DOOM graphics
-//
-//-----------------------------------------------------------------------------
 
 // Called by D_DoomMain,
 // determines the hardware configuration
@@ -72,7 +50,7 @@ procedure I_FinishUpdate;
 procedure I_ReadScreen(scr: PByteArray);
 
 var
-  fullscreen: boolean = true;
+  fullscreen: boolean = True;
 
 implementation
 
@@ -82,18 +60,18 @@ uses doomdef,
   v_video;
 
 var
-  curpal: array[0..255] of LongWord;
+  curpal: array[0..255] of longword;
   g_pDD: IDirectDraw7 = nil; // DirectDraw object
   g_pDDSPrimary: IDirectDrawSurface7 = nil;// DirectDraw primary surface
   g_pDDScreen: IDirectDrawSurface7 = nil;   // DirectDraw surface
-  screen: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of LongWord;
+  screen: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of longword;
 
 var
-  s_alttab_disabled: boolean = false;
+  s_alttab_disabled: boolean = False;
 
 procedure I_DisableAltTab;
 var
-  old: Boolean;
+  old: boolean;
 begin
   if s_alttab_disabled then
     Exit;
@@ -103,7 +81,7 @@ begin
     if isLibrary then
       RegisterHotKey(0, $C000, MOD_ALT, VK_TAB)
     else
-      RegisterHotKey(0, 0, MOD_ALT, VK_TAB)
+      RegisterHotKey(0, 0, MOD_ALT, VK_TAB);
   end
   else
     SystemParametersInfo(SPI_SCREENSAVERRUNNING, 1, @old, 0);
@@ -113,7 +91,7 @@ end;
 
 procedure I_EnableAltTab;
 var
-  old: Boolean;
+  old: boolean;
 begin
   if s_alttab_disabled then
   begin
@@ -122,7 +100,7 @@ begin
       if isLibrary then
         UnregisterHotKey(0, $C000)
       else
-        UnregisterHotKey(0, 0)
+        UnregisterHotKey(0, 0);
     end
     else
       SystemParametersInfo(SPI_SCREENSAVERRUNNING, 0, @old, 0);
@@ -159,9 +137,9 @@ procedure I_UpdateNoBlit;
 begin
 end;
 
-//
+
 // I_FinishUpdate
-//
+
 procedure I_FinishUpdate;
 var
   i: integer;
@@ -171,6 +149,7 @@ var
   src: PInteger;
 {$ELSE}
   src: PByte;
+
 {$ENDIF}
 
   function GetTheColor(const a, b: byte): byte;
@@ -178,16 +157,16 @@ var
     if a > b then
     begin
       if a - b < 64 then
-        result := (a div 2 + b div 2)
+        Result := (a div 2 + b div 2)
       else
-        result := a
+        Result := a;
     end
     else
     begin
       if b - a < 64 then
-        result := (a div 2 + b div 2)
+        Result := (a div 2 + b div 2)
       else
-        result := a
+        Result := a;
     end;
   end;
 
@@ -236,20 +215,20 @@ begin
     for i := 0 to SCREENWIDTH * SCREENHEIGHT - 1 do
     begin
       dest^ := curpal[src^];
-      inc(dest);
-      inc(src);
+      Inc(dest);
+      Inc(src);
     end;
   end;
   g_pDDSPrimary.BltFast(0, 0, g_pDDScreen, r, 0);
 end;
 
-//
-// Palette stuff.
-//
 
-//
+// Palette stuff.
+
+
+
 // I_SetPalette
-//
+
 procedure I_SetPalette(palette: PByteArray);
 var
   dest: PLongWord;
@@ -259,10 +238,10 @@ begin
   src := palette;
   while integer(src) < integer(@palette[256 * 3]) do
   begin
-		dest^ := (LongWord(gammatable[usegamma, src[0]]) shl 16) or
-             (LongWord(gammatable[usegamma, src[1]]) shl 8) or
-             (LongWord(gammatable[usegamma, src[2]]));
-    inc(dest);
+    dest^ := (longword(gammatable[usegamma, src[0]]) shl 16) or
+      (longword(gammatable[usegamma, src[1]]) shl 8) or
+      (longword(gammatable[usegamma, src[2]]));
+    Inc(dest);
     incp(pointer(src), 3);
   end;
 end;
@@ -283,9 +262,9 @@ var
 begin
   if g_pDD <> nil then
     exit;
-///////////////////////////////////////////////////////////////////////////
-// Create the main DirectDraw object
-///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
+  // Create the main DirectDraw object
+  ///////////////////////////////////////////////////////////////////////////
   hres := DirectDrawCreateEx(nil, g_pDD, IID_IDirectDraw7, nil);
   if hres <> DD_OK then
     I_ErrorInitGraphics('DirectDrawCreateEx');
@@ -301,8 +280,8 @@ begin
     hres := g_pDD.SetDisplayMode(SCREENWIDTH, SCREENHEIGHT, 32, 0, 0);
     if hres <> DD_OK then
     begin
-    // Fullscreen mode failed, trying window mode
-      fullscreen := false;
+      // Fullscreen mode failed, trying window mode
+      fullscreen := False;
 
       SetWindowPos(hMainWnd, 0, 0, 0, SCREENWIDTH, SCREENHEIGHT, SWP_SHOWWINDOW);
 
@@ -339,7 +318,7 @@ begin
 
   ddsd.dwSize := SizeOf(ddsd);
   ddsd.dwFlags := DDSD_WIDTH or DDSD_HEIGHT or DDSD_LPSURFACE or
-                  DDSD_PITCH or DDSD_PIXELFORMAT or DDSD_CAPS;
+    DDSD_PITCH or DDSD_PIXELFORMAT or DDSD_CAPS;
   ddsd.ddsCaps.dwCaps := DDSCAPS_OFFSCREENPLAIN or DDSCAPS_SYSTEMMEMORY;
 
   ddsd.dwWidth := SCREENWIDTH;
