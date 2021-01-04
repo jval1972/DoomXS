@@ -28,36 +28,8 @@ unit m_menu;
 
 interface
 
-uses d_event;
-
-{
-    m_menu.h, m_menu.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {   Menu widget stuff, episode selection and such. }
-  {     }
-  {----------------------------------------------------------------------------- }
-
-  { }
-  { MENUS }
-  { }
+uses
+  d_event;
 
 { Called by main loop, }
 { saves config file and calls I_Quit when user exits. }
@@ -84,19 +56,19 @@ procedure M_Init;
 procedure M_StartControlPanel;
 
 var
-//
-// defaulted values
-//
+
+  // defaulted values
+
   mouseSensitivity: integer;  // has default
 
-// Show messages has default, 0 = off, 1 = on
+  // Show messages has default, 0 = off, 1 = on
   showMessages: integer;
 
   menuactive: boolean;
 
   inhelpscreens: boolean;
 
-// Blocky mode, has default, 0 = high, 1 = normal
+  // Blocky mode, has default, 0 = high, 1 = normal
   detailLevel: integer;
   screenblocks: integer;  // has default
 
@@ -104,14 +76,19 @@ procedure M_InitMenus;
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   doomdef,
   am_map,
-  dstrings, d_englsh,
-  d_main, d_player,
+  dstrings,
+  d_englsh,
+  d_main,
+  d_player,
   g_game,
   m_argv,
-  i_system, i_io, i_video,
+  i_system,
+  i_io,
+  i_video,
   r_main,
   z_zone,
   v_video,
@@ -119,24 +96,24 @@ uses d_delphi,
   hu_stuff,
   s_sound,
   doomstat,
-// Data.
+  // Data.
   sounds;
 
 var
-// temp for screenblocks (0-9)
+  // temp for screenblocks (0-9)
   screenSize: integer;
 
-// -1 = no quicksave slot picked!
+  // -1 = no quicksave slot picked!
   quickSaveSlot: integer;
 
- // 1 = message to be printed
+  // 1 = message to be printed
   messageToPrint: integer;
-// ...and here is the message string!
+  // ...and here is the message string!
   messageString: string;
 
   messageLastMenuActive: boolean;
 
-// timed message = no input from user
+  // timed message = no input from user
   messageNeedsInput: boolean;
 
 type
@@ -151,11 +128,11 @@ const
 var
   gammamsg: array[0..4] of string;
 
-// we are going to be entering a savegame string
+  // we are going to be entering a savegame string
   saveStringEnter: integer;
   saveSlot: integer;  // which slot to save in
   saveCharIndex: integer; // which char we're editing
-// old save description before edit
+  // old save description before edit
   saveOldString: string;
 
 const
@@ -171,7 +148,7 @@ type
     // 0 = no cursor here, 1 = ok, 2 = arrows ok
     status: smallint;
 
-    name: string[10];
+    Name: string[10];
 
     // choice = menu item #.
     // if status = 2,
@@ -186,13 +163,14 @@ type
   Pmenuitem_tArray = ^menuitem_tArray;
 
   Pmenu_t = ^menu_t;
+
   menu_t = record
     numitems: smallint; // # of menu items
-    prevMenu:Pmenu_t;   // previous menu
+    prevMenu: Pmenu_t;   // previous menu
     menuitems: Pmenuitem_tArray;  // menu items
     routine: PProcedure;  // draw routine
     x: smallint;
-    y: smallint;		// x,y of menu
+    y: smallint;    // x,y of menu
     lastOn: smallint; // last item user was on in menu
   end;
 
@@ -201,16 +179,16 @@ var
   skullAnimCounter: smallint; // skull animation counter
   whichSkull: smallint; // which skull to draw
 
-// graphic name of skulls
-// warning: initializer-string for array of chars is too long
+  // graphic name of skulls
+  // warning: initializer-string for array of chars is too long
   skullName: array[0..1] of string;
 
-// current menudef
+  // current menudef
   currentMenu: Pmenu_t;
 
-//
+
 // PROTOTYPES
-//
+
 procedure M_NewGame(choice: integer); forward;
 procedure M_Episode(choice: integer); forward;
 procedure M_ChooseSkill(choice: integer); forward;
@@ -252,17 +230,18 @@ procedure M_SetupNextMenu(menudef: Pmenu_t); forward;
 procedure M_DrawThermo(x, y, thermWidth, thermDot: integer); forward;
 procedure M_DrawEmptyCell(menu: Pmenu_t; item: integer); forward;
 procedure M_DrawSelCell(menu: Pmenu_t; item: integer); forward;
-procedure M_WriteText(x, y: integer;const _string: string); forward;
-function  M_StringWidth(const _string: string): integer; forward;
-function  M_StringHeight(const _string: string): integer; forward;
-procedure M_StartMessage(const _string: string; routine: PmessageRoutine; input: boolean); forward;
+procedure M_WriteText(x, y: integer; const _string: string); forward;
+function M_StringWidth(const _string: string): integer; forward;
+function M_StringHeight(const _string: string): integer; forward;
+procedure M_StartMessage(const _string: string; routine: PmessageRoutine;
+  input: boolean); forward;
 procedure M_StopMessage; forward;
 procedure M_ClearMenus; forward;
 
 type
-//
-// DOOM MENU
-//
+
+  // DOOM MENU
+
   main_e = (
     newgame,
     options,
@@ -271,32 +250,32 @@ type
     readthis,
     quitdoom,
     main_end
-  );
+    );
 
 var
   MainMenu: array[0..5] of menuitem_t;
   MainDef: menu_t;
 
 type
-//
-// EPISODE SELECT
-//
+
+  // EPISODE SELECT
+
   episodes_e = (
     ep1,
     ep2,
     ep3,
     ep4,
     ep_end
-  );
+    );
 
 var
   EpisodeMenu: array[0..3] of menuitem_t;
   EpiDef: menu_t;
 
 type
-//
-// NEW GAME
-//
+
+  // NEW GAME
+
   newgame_e = (
     killthings,
     toorough,
@@ -304,19 +283,19 @@ type
     violence,
     nightmare,
     newg_end
-  );
+    );
 
 var
   NewGameMenu: array[0..4] of menuitem_t;
   NewDef: menu_t;
 
 type
-//
-// OPTIONS MENU
-//
+
+  // OPTIONS MENU
+
   options_e = (
     endgame,
-    messages,
+    Messages,
     detail,
     scrnsize,
     option_empty1,
@@ -324,20 +303,20 @@ type
     option_empty2,
     soundvol,
     opt_end
-  );
+    );
 
 var
   OptionsMenu: array[0..7] of menuitem_t;
   OptionsDef: menu_t;
 
 type
-//
-// Read This! MENU 1 & 2
-//
+
+  // Read This! MENU 1 & 2
+
   read_e = (
     rdthsempty1,
     read1_end
-  );
+    );
 
 var
   ReadMenu1: array[0..0] of menuitem_t;
@@ -347,32 +326,32 @@ type
   read_e2 = (
     rdthsempty2,
     read2_end
-  );
+    );
 
 var
   ReadMenu2: array[0..0] of menuitem_t;
   ReadDef2: menu_t;
 
 type
-//
-// SOUND VOLUME MENU
-//
+
+  // SOUND VOLUME MENU
+
   sound_e = (
     sfx_vol,
     sfx_empty1,
     music_vol,
     sfx_empty2,
     sound_end
-  );
+    );
 
 var
   SoundMenu: array[0..3] of menuitem_t;
   SoundDef: menu_t;
 
 type
-//
-// LOAD GAME MENU
-//
+
+  // LOAD GAME MENU
+
   load_e = (
     load1,
     load2,
@@ -381,7 +360,7 @@ type
     load5,
     load6,
     load_end
-  );
+    );
 
 var
   LoadMenu: array[0..5] of menuitem_t;
@@ -389,24 +368,24 @@ var
   SaveMenu: array[0..5] of menuitem_t;
   SaveDef: menu_t;
 
-//
+
 // M_ReadSaveStrings
 //  read the strings from the savegame files
-//
+
 procedure M_ReadSaveStrings;
 var
   handle: file;
   i: integer;
-  name: string;
+  Name: string;
 begin
   for i := 0 to Ord(load_end) - 1 do
   begin
     if M_CheckParmCDROM then
-      sprintf(name, 'c:\doomdata\' + SAVEGAMENAME + '%d.dsg', [i])
+      sprintf(Name, 'c:\doomdata\' + SAVEGAMENAME + '%d.dsg', [i])
     else
-      sprintf(name, SAVEGAMENAME + '%d.dsg', [i]);
+      sprintf(Name, SAVEGAMENAME + '%d.dsg', [i]);
 
-    assign(handle, name);
+    Assign(handle, Name);
     {$I-}
     reset(handle, 1);
     {$I+}
@@ -418,19 +397,19 @@ begin
     end;
     SetLength(savegamestrings[i], SAVESTRINGSIZE);
     BlockRead(handle, (@savegamestrings[i][1])^, SAVESTRINGSIZE);
-    close(handle);
+    Close(handle);
     LoadMenu[i].status := 1;
   end;
 end;
 
-//
+
 // M_LoadGame & Cie.
-//
+
 procedure M_DrawLoad;
 var
   i: integer;
 begin
-  V_DrawPatch(72, 28, _FG, W_CacheLumpName('M_LOADG', PU_CACHE), true);
+  V_DrawPatch(72, 28, _FG, W_CacheLumpName('M_LOADG', PU_CACHE), True);
   for i := 0 to Ord(load_end) - 1 do
   begin
     M_DrawSaveLoadBorder(LoadDef.x, LoadDef.y + LINEHEIGHT * i);
@@ -438,47 +417,47 @@ begin
   end;
 end;
 
-//
+
 // Draw border for the savegame description
-//
+
 procedure M_DrawSaveLoadBorder(x, y: integer);
 var
   i: integer;
 begin
-  V_DrawPatch(x - 8, y + 7, _FG, W_CacheLumpName('M_LSLEFT', PU_CACHE), true);
+  V_DrawPatch(x - 8, y + 7, _FG, W_CacheLumpName('M_LSLEFT', PU_CACHE), True);
 
   for i := 0 to 23 do
   begin
-    V_DrawPatch (x, y + 7, _FG, W_CacheLumpName('M_LSCNTR', PU_CACHE), true);
+    V_DrawPatch(x, y + 7, _FG, W_CacheLumpName('M_LSCNTR', PU_CACHE), True);
     x := x + 8;
   end;
 
-  V_DrawPatch(x, y + 7, _FG, W_CacheLumpName('M_LSRGHT', PU_CACHE), true);
+  V_DrawPatch(x, y + 7, _FG, W_CacheLumpName('M_LSRGHT', PU_CACHE), True);
 end;
 
-//
+
 // User wants to load this game
-//
+
 procedure M_LoadSelect(choice: integer);
 var
-  name: string;
+  Name: string;
 begin
   if M_CheckParmCDROM then
-    sprintf(name, 'c:\doomdata\' + SAVEGAMENAME + '%d.dsg', [choice])
+    sprintf(Name, 'c:\doomdata\' + SAVEGAMENAME + '%d.dsg', [choice])
   else
-    sprintf(name,SAVEGAMENAME + '%d.dsg', [choice]);
-  G_LoadGame(name);
+    sprintf(Name, SAVEGAMENAME + '%d.dsg', [choice]);
+  G_LoadGame(Name);
   M_ClearMenus;
 end;
 
-//
+
 // Selected from DOOM menu
-//
+
 procedure M_LoadGame(choice: integer);
 begin
   if netgame then
   begin
-    M_StartMessage(LOADNET, nil, false);
+    M_StartMessage(LOADNET, nil, False);
     exit;
   end;
 
@@ -486,14 +465,14 @@ begin
   M_ReadSaveStrings;
 end;
 
-//
+
 //  M_SaveGame & Cie.
-//
+
 procedure M_DrawSave;
 var
   i: integer;
 begin
-  V_DrawPatch(72, 28, _FG, W_CacheLumpName('M_SAVEG', PU_CACHE), true);
+  V_DrawPatch(72, 28, _FG, W_CacheLumpName('M_SAVEG', PU_CACHE), True);
   for i := 0 to Ord(load_end) - 1 do
   begin
     M_DrawSaveLoadBorder(LoadDef.x, LoadDef.y + LINEHEIGHT * i);
@@ -507,9 +486,9 @@ begin
   end;
 end;
 
-//
+
 // M_Responder calls this when user is finished
-//
+
 procedure M_DoSave(slot: integer);
 begin
   G_SaveGame(slot, savegamestrings[slot]);
@@ -520,9 +499,9 @@ begin
     quickSaveSlot := slot;
 end;
 
-//
+
 // User wants to save. Start string input for M_Responder
-//
+
 procedure M_SaveSelect(choice: integer);
 begin
   // we are going to be intercepting all chars
@@ -535,14 +514,14 @@ begin
   saveCharIndex := Length(savegamestrings[choice]);
 end;
 
-//
+
 // Selected from DOOM menu
-//
+
 procedure M_SaveGame(choice: integer);
 begin
   if not usergame then
   begin
-    M_StartMessage(SAVEDEAD, nil, false);
+    M_StartMessage(SAVEDEAD, nil, False);
     exit;
   end;
 
@@ -553,9 +532,9 @@ begin
   M_ReadSaveStrings;
 end;
 
-//
+
 //      M_QuickSave
-//
+
 var
   tempstring: string;
 
@@ -584,19 +563,19 @@ begin
     M_StartControlPanel;
     M_ReadSaveStrings;
     M_SetupNextMenu(@SaveDef);
-    quickSaveSlot := -2;	// means to pick a slot now
+    quickSaveSlot := -2;  // means to pick a slot now
     exit;
   end;
   sprintf(tempstring, QSPROMPT, [savegamestrings[quickSaveSlot]]);
-  M_StartMessage(tempstring, @M_QuickSaveResponse, true);
+  M_StartMessage(tempstring, @M_QuickSaveResponse, True);
 end;
 
-//
+
 // M_QuickLoad
-//
+
 procedure M_QuickLoadResponse(ch: integer);
 begin
-  if ch = ord('y') then
+  if ch = Ord('y') then
   begin
     M_LoadSelect(quickSaveSlot);
     S_StartSound(nil, Ord(sfx_swtchx));
@@ -607,59 +586,59 @@ procedure M_QuickLoad;
 begin
   if netgame then
   begin
-    M_StartMessage(QLOADNET, nil, false);
+    M_StartMessage(QLOADNET, nil, False);
     exit;
   end;
 
   if quickSaveSlot < 0 then
   begin
-    M_StartMessage(QSAVESPOT, nil, false);
+    M_StartMessage(QSAVESPOT, nil, False);
     exit;
   end;
   sprintf(tempstring, QLPROMPT, [savegamestrings[quickSaveSlot]]);
-  M_StartMessage(tempstring, @M_QuickLoadResponse, true);
+  M_StartMessage(tempstring, @M_QuickLoadResponse, True);
 end;
 
-//
+
 // Read This Menus
 // Had a "quick hack to fix romero bug"
-//
+
 procedure M_DrawReadThis1;
 begin
-  inhelpscreens := true;
+  inhelpscreens := True;
   case gamemode of
     commercial:
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP', PU_CACHE), true);
+      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP', PU_CACHE), True);
     shareware,
     registered,
     retail:
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP1', PU_CACHE), true);
+      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP1', PU_CACHE), True);
   end;
 end;
 
-//
+
 // Read This Menus - optional second page.
-//
+
 procedure M_DrawReadThis2;
 begin
-  inhelpscreens := true;
+  inhelpscreens := True;
   case gamemode of
     retail,
     commercial:
       // This hack keeps us from having to change menus.
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('CREDIT', PU_CACHE), true);
+      V_DrawPatch(0, 0, _FG, W_CacheLumpName('CREDIT', PU_CACHE), True);
     shareware,
     registered:
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP2', PU_CACHE), true);
+      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP2', PU_CACHE), True);
   end;
 end;
 
-//
+
 // Change Sfx & Music volumes
-//
+
 procedure M_DrawSound;
 begin
-  V_DrawPatch(60, 38, _FG, W_CacheLumpName('M_SVOL', PU_CACHE), true);
+  V_DrawPatch(60, 38, _FG, W_CacheLumpName('M_SVOL', PU_CACHE), True);
 
   M_DrawThermo(
     SoundDef.x, SoundDef.y + LINEHEIGHT * (Ord(sfx_vol) + 1), 16, snd_SfxVolume);
@@ -676,8 +655,10 @@ end;
 procedure M_SfxVol(choice: integer);
 begin
   case choice of
-    0: if snd_SfxVolume <> 0 then dec(snd_SfxVolume);
-    1: if snd_SfxVolume < 15 then inc(snd_SfxVolume);
+    0: if snd_SfxVolume <> 0 then
+        Dec(snd_SfxVolume);
+    1: if snd_SfxVolume < 15 then
+        Inc(snd_SfxVolume);
   end;
   S_SetSfxVolume(snd_SfxVolume);
 end;
@@ -685,34 +666,36 @@ end;
 procedure M_MusicVol(choice: integer);
 begin
   case choice of
-    0: if snd_MusicVolume <> 0 then dec(snd_MusicVolume);
-    1: if snd_MusicVolume < 15 then inc(snd_MusicVolume);
+    0: if snd_MusicVolume <> 0 then
+        Dec(snd_MusicVolume);
+    1: if snd_MusicVolume < 15 then
+        Inc(snd_MusicVolume);
   end;
   S_SetMusicVolume(snd_MusicVolume);
 end;
 
-//
+
 // M_DrawMainMenu
-//
+
 procedure M_DrawMainMenu;
 begin
-  V_DrawPatch(94, 2, _FG, W_CacheLumpName('M_DOOM', PU_CACHE), true);
+  V_DrawPatch(94, 2, _FG, W_CacheLumpName('M_DOOM', PU_CACHE), True);
 end;
 
-//
+
 // M_NewGame
-//
+
 procedure M_DrawNewGame;
 begin
-  V_DrawPatch(96, 14, _FG, W_CacheLumpName('M_NEWG', PU_CACHE), true);
-  V_DrawPatch(54, 38, _FG, W_CacheLumpName('M_SKILL', PU_CACHE), true);
+  V_DrawPatch(96, 14, _FG, W_CacheLumpName('M_NEWG', PU_CACHE), True);
+  V_DrawPatch(54, 38, _FG, W_CacheLumpName('M_SKILL', PU_CACHE), True);
 end;
 
 procedure M_NewGame(choice: integer);
 begin
   if netgame and (not demoplayback) then
   begin
-    M_StartMessage(SNEWGAME, nil, false);
+    M_StartMessage(SNEWGAME, nil, False);
     exit;
   end;
 
@@ -722,15 +705,15 @@ begin
     M_SetupNextMenu(@EpiDef);
 end;
 
-//
+
 //      M_Episode
-//
+
 var
   epi: integer;
 
 procedure M_DrawEpisode;
 begin
-  V_DrawPatch(54, 38, _FG, W_CacheLumpName('M_EPISOD', PU_CACHE), true);
+  V_DrawPatch(54, 38, _FG, W_CacheLumpName('M_EPISOD', PU_CACHE), True);
 end;
 
 procedure M_VerifyNightmare(ch: integer);
@@ -746,7 +729,7 @@ procedure M_ChooseSkill(choice: integer);
 begin
   if choice = Ord(nightmare) then
   begin
-    M_StartMessage(SNIGHTMARE, @M_VerifyNightmare, true);
+    M_StartMessage(SNIGHTMARE, @M_VerifyNightmare, True);
     exit;
   end;
 
@@ -758,7 +741,7 @@ procedure M_Episode(choice: integer);
 begin
   if (gamemode = shareware) and boolval(choice) then
   begin
-    M_StartMessage(SWSTRING, nil, false);
+    M_StartMessage(SWSTRING, nil, False);
     M_SetupNextMenu(@ReadDef1);
     exit;
   end;
@@ -774,25 +757,26 @@ begin
   M_SetupNextMenu(@NewDef);
 end;
 
-//
+
 // M_Options
-//
+
 var
   detailNames: array[0..1] of string;
   msgNames: array[0..1] of string;
 
 procedure M_DrawOptions;
 begin
-  V_DrawPatch(108, 15, _FG, W_CacheLumpName('M_OPTTTL', PU_CACHE), true);
+  V_DrawPatch(108, 15, _FG, W_CacheLumpName('M_OPTTTL', PU_CACHE), True);
 
   V_DrawPatch(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * Ord(detail), _FG,
-      W_CacheLumpName(detailNames[detailLevel], PU_CACHE), true);
+    W_CacheLumpName(detailNames[detailLevel], PU_CACHE), True);
 
-  V_DrawPatch(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * Ord(messages), _FG,
-      W_CacheLumpName(msgNames[showMessages], PU_CACHE), true);
+  V_DrawPatch(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * Ord(Messages), _FG,
+    W_CacheLumpName(msgNames[showMessages], PU_CACHE), True);
 
   M_DrawThermo(
-    OptionsDef.x, OptionsDef.y + LINEHEIGHT * (Ord(mousesens) + 1), 10, mouseSensitivity);
+    OptionsDef.x, OptionsDef.y + LINEHEIGHT * (Ord(mousesens) + 1),
+    10, mouseSensitivity);
 
   M_DrawThermo(
     OptionsDef.x, OptionsDef.y + LINEHEIGHT * (Ord(scrnsize) + 1), 9, screenSize);
@@ -803,9 +787,9 @@ begin
   M_SetupNextMenu(@OptionsDef);
 end;
 
-//
+
 //      Toggle messages on/off
-//
+
 procedure M_ChangeMessages(choice: integer);
 begin
   showMessages := 1 - showMessages;
@@ -815,12 +799,12 @@ begin
   else
     players[consoleplayer]._message := MSGON;
 
-  message_dontfuckwithme := true;
+  message_dontfuckwithme := True;
 end;
 
-//
+
 // M_EndGame
-//
+
 procedure M_EndGameResponse(ch: integer);
 begin
   if ch <> Ord('y') then
@@ -841,16 +825,16 @@ begin
 
   if netgame then
   begin
-    M_StartMessage(NETEND, nil, false);
+    M_StartMessage(NETEND, nil, False);
     exit;
   end;
 
-  M_StartMessage(SENDGAME, @M_EndGameResponse, true);
+  M_StartMessage(SENDGAME, @M_EndGameResponse, True);
 end;
 
-//
+
 // M_ReadThis
-//
+
 procedure M_ReadThis(choice: integer);
 begin
   M_SetupNextMenu(@ReadDef1);
@@ -866,9 +850,9 @@ begin
   M_SetupNextMenu(@MainDef);
 end;
 
-//
+
 // M_QuitDOOM
-//
+
 const
   quitsounds: array[0..7] of integer = (
     Ord(sfx_pldeth),
@@ -879,7 +863,7 @@ const
     Ord(sfx_posit1),
     Ord(sfx_posit3),
     Ord(sfx_sgtatk)
-  );
+    );
 
   quitsounds2: array[0..7] of integer = (
     Ord(sfx_vilact),
@@ -890,7 +874,7 @@ const
     Ord(sfx_kntdth),
     Ord(sfx_bspact),
     Ord(sfx_sgtatk)
-  );
+    );
 
 
 procedure M_QuitResponse(ch: integer);
@@ -903,7 +887,7 @@ begin
       S_StartSound(nil, quitsounds2[_SHR(gametic, 2) and 7])
     else
       S_StartSound(nil, quitsounds[_SHR(gametic, 2) and 7]);
-//    I_WaitVBL(105);
+    //    I_WaitVBL(105);
     I_WaitVBL(1000);
   end;
   I_Quit;
@@ -916,22 +900,25 @@ begin
   if language <> english then
     sprintf(endstring, '%s' + #13#10#13#10 + DOSY, [endmsg[0]])
   else
-    sprintf(endstring,'%s' + #13#10#13#10 + DOSY, [endmsg[(gametic mod (NUM_QUITMESSAGES - 2)) + 1]]);
+    sprintf(endstring, '%s' + #13#10#13#10 + DOSY,
+      [endmsg[(gametic mod (NUM_QUITMESSAGES - 2)) + 1]]);
 
-  M_StartMessage(endstring, @M_QuitResponse, true);
+  M_StartMessage(endstring, @M_QuitResponse, True);
 end;
 
 procedure M_ChangeSensitivity(choice: integer);
 begin
   case choice of
-    0: if mouseSensitivity <> 0 then dec(mouseSensitivity);
-    1: if mouseSensitivity < 9 then inc(mouseSensitivity);
+    0: if mouseSensitivity <> 0 then
+        Dec(mouseSensitivity);
+    1: if mouseSensitivity < 9 then
+        Inc(mouseSensitivity);
   end;
 end;
 
 procedure M_ChangeDetail(choice: integer);
 begin
-// FIXME - does not work. Remove anyway?
+  // FIXME - does not work. Remove anyway?
 {  fprintf(stderr, 'M_ChangeDetail(): low detail mode n.a.' + #13#10);
   exit;}
 
@@ -951,61 +938,62 @@ procedure M_SizeDisplay(choice: integer);
 begin
   case choice of
     0:
+    begin
+      if screenSize > 0 then
       begin
-        if screenSize > 0 then
-        begin
-          dec(screenblocks);
-          dec(screenSize);
-        end;
+        Dec(screenblocks);
+        Dec(screenSize);
       end;
+    end;
     1:
+    begin
+      if screenSize < 8 then
       begin
-        if screenSize < 8 then
-        begin
-          inc(screenblocks);
-          inc(screenSize);
-        end;
+        Inc(screenblocks);
+        Inc(screenSize);
       end;
+    end;
   end;
 
   R_SetViewSize(screenblocks, detailLevel);
 end;
 
-//
+
 //      Menu Functions
-//
+
 procedure M_DrawThermo(x, y, thermWidth, thermDot: integer);
 var
   xx: integer;
   i: integer;
 begin
   xx := x;
-  V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERML', PU_CACHE), true);
+  V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERML', PU_CACHE), True);
   xx := xx + 8;
   for i := 0 to thermWidth - 1 do
   begin
-    V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERMM', PU_CACHE), true);
+    V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERMM', PU_CACHE), True);
     xx := xx + 8;
   end;
-  V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERMR', PU_CACHE), true);
+  V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERMR', PU_CACHE), True);
 
   V_DrawPatch((x + 8) + thermDot * 8, y, _FG,
-    W_CacheLumpName('M_THERMO', PU_CACHE), true);
+    W_CacheLumpName('M_THERMO', PU_CACHE), True);
 end;
 
 procedure M_DrawEmptyCell(menu: Pmenu_t; item: integer);
 begin
   V_DrawPatch(menu.x - 10, menu.y + item * LINEHEIGHT - 1, _FG,
-    W_CacheLumpName('M_CELL1', PU_CACHE), true);
+    W_CacheLumpName('M_CELL1', PU_CACHE), True);
 end;
 
 procedure M_DrawSelCell(menu: Pmenu_t; item: integer);
 begin
   V_DrawPatch(menu.x - 10, menu.y + item * LINEHEIGHT - 1, _FG,
-    W_CacheLumpName('M_CELL2', PU_CACHE), true);
+    W_CacheLumpName('M_CELL2', PU_CACHE), True);
 end;
 
-procedure M_StartMessage(const _string: string; routine: PmessageRoutine; input: boolean);
+procedure M_StartMessage(const _string: string; routine: PmessageRoutine;
+  input: boolean);
 begin
   messageLastMenuActive := menuactive;
   messageToPrint := 1;
@@ -1015,7 +1003,7 @@ begin
   else
     messageRoutine := nil;
   messageNeedsInput := input;
-  menuactive := true;
+  menuactive := True;
 end;
 
 procedure M_StopMessage;
@@ -1024,45 +1012,45 @@ begin
   messageToPrint := 0;
 end;
 
-//
+
 // Find string width from hu_font chars
-//
-function  M_StringWidth(const _string: string): integer;
+
+function M_StringWidth(const _string: string): integer;
 var
   i: integer;
   c: integer;
 begin
-  result := 0;
+  Result := 0;
   for i := 1 to Length(_string) do
   begin
     c := Ord(toupper(_string[i])) - Ord(HU_FONTSTART);
     if (c < 0) or (c >= HU_FONTSIZE) then
-      result := result + 4
+      Result := Result + 4
     else
-      result := result + hu_font[c].width;
+      Result := Result + hu_font[c].Width;
   end;
 end;
 
-//
+
 //      Find string height from hu_font chars
-//
-function  M_StringHeight(const _string: string): integer;
+
+function M_StringHeight(const _string: string): integer;
 var
   i: integer;
-  height: integer;
+  Height: integer;
 begin
-  height := hu_font[0].height;
+  Height := hu_font[0].Height;
 
-  result := height;
+  Result := Height;
   for i := 1 to Length(_string) do
     if _string[i] = #13 then
-	    result := result + height;
+      Result := Result + Height;
 end;
 
-//
+
 //      Write a string using the hu_font
-//
-procedure M_WriteText(x, y: integer;const _string: string);
+
+procedure M_WriteText(x, y: integer; const _string: string);
 var
   w: integer;
   ch: integer;
@@ -1079,16 +1067,16 @@ begin
   cx := x;
   cy := y;
 
-  while true do
+  while True do
   begin
     if ch > len then
       break;
-      
+
     c := Ord(_string[ch]);
-    inc(ch);
+    Inc(ch);
 
     if not boolval(c) then
-	    break;
+      break;
 
     if c = 10 then
     begin
@@ -1098,33 +1086,33 @@ begin
 
     if c = 13 then
     begin
-	    cy := cy + 12;
-	    continue;
+      cy := cy + 12;
+      continue;
     end;
 
     c := Ord(toupper(Chr(c))) - Ord(HU_FONTSTART);
     if (c < 0) or (c >= HU_FONTSIZE) then
     begin
       cx := cx + 4;
-	    continue;
+      continue;
     end;
 
-    w := hu_font[c].width;
-//    if (cx + w) > SCREENWIDTH then
+    w := hu_font[c].Width;
+    //    if (cx + w) > SCREENWIDTH then
     if (cx + w) > 320 then
       break;
-    V_DrawPatch(cx, cy, _FG, hu_font[c], true);
+    V_DrawPatch(cx, cy, _FG, hu_font[c], True);
     cx := cx + w;
   end;
 end;
 
-//
-// CONTROL PANEL
-//
 
-//
+// CONTROL PANEL
+
+
+
 // M_Responder
-//
+
 var
   joywait: integer;
   mousewait: integer;
@@ -1145,7 +1133,7 @@ begin
     if ev.data3 = -1 then
     begin
       ch := KEY_UPARROW;
-	    joywait := I_GetTime + 5;
+      joywait := I_GetTime + 5;
     end
     else if ev.data3 = 1 then
     begin
@@ -1156,7 +1144,7 @@ begin
     if ev.data2 = -1 then
     begin
       ch := KEY_LEFTARROW;
-	    joywait := I_GetTime + 2;
+      joywait := I_GetTime + 2;
     end
     else if ev.data2 = 1 then
     begin
@@ -1219,14 +1207,14 @@ begin
     begin
       ch := KEY_BACKSPACE;
       mousewait := I_GetTime + 15;
-    end
+    end;
   end
-	else if ev._type = ev_keydown then
+  else if ev._type = ev_keydown then
     ch := ev.data1;
 
   if ch = -1 then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
@@ -1235,52 +1223,52 @@ begin
   begin
     case ch of
       KEY_BACKSPACE:
+      begin
+        if saveCharIndex > 0 then
         begin
-          if saveCharIndex > 0 then
-          begin
-            dec(saveCharIndex);
-            SetLength(savegamestrings[saveSlot], saveCharIndex);
-          end;
+          Dec(saveCharIndex);
+          SetLength(savegamestrings[saveSlot], saveCharIndex);
         end;
+      end;
       KEY_ESCAPE:
-        begin
-          saveStringEnter := 0;
-          savegamestrings[saveSlot] := saveOldString;
-        end;
+      begin
+        saveStringEnter := 0;
+        savegamestrings[saveSlot] := saveOldString;
+      end;
       KEY_ENTER:
-        begin
-          saveStringEnter := 0;
-          if savegamestrings[saveSlot] <> '' then
-            M_DoSave(saveSlot);
-        end
-    else
+      begin
+        saveStringEnter := 0;
+        if savegamestrings[saveSlot] <> '' then
+          M_DoSave(saveSlot);
+      end
+      else
       begin
         ch := Ord(toupper(Chr(ch)));
         if ch <> 32 then
-        if (ch - Ord(HU_FONTSTART) < 0) or (ch - Ord(HU_FONTSTART) >= HU_FONTSIZE) then
-        else
-        begin
-          if (ch >= 32) and (ch <= 127) and
-             (saveCharIndex < SAVESTRINGSIZE - 1) and
-             (M_StringWidth(savegamestrings[saveSlot]) < (SAVESTRINGSIZE - 2) * 8) then
+          if (ch - Ord(HU_FONTSTART) < 0) or (ch - Ord(HU_FONTSTART) >= HU_FONTSIZE) then
+          else
           begin
-            inc(saveCharIndex);
-            savegamestrings[saveSlot] := savegamestrings[saveSlot] + Chr(ch);
+            if (ch >= 32) and (ch <= 127) and (saveCharIndex <
+              SAVESTRINGSIZE - 1) and (M_StringWidth(savegamestrings[saveSlot]) <
+              (SAVESTRINGSIZE - 2) * 8) then
+            begin
+              Inc(saveCharIndex);
+              savegamestrings[saveSlot] := savegamestrings[saveSlot] + Chr(ch);
+            end;
           end;
-        end;
       end;
     end;
-    result := true;
+    Result := True;
     exit;
   end;
 
   // Take care of any messages that need input
   if boolval(messageToPrint) then
   begin
-    if messageNeedsInput and ( not(
-	    (ch = Ord(' ')) or (ch = Ord('n')) or (ch = Ord('y')) or (ch = KEY_ESCAPE))) then
+    if messageNeedsInput and (not ((ch = Ord(' ')) or (ch = Ord('n')) or
+      (ch = Ord('y')) or (ch = KEY_ESCAPE))) then
     begin
-      result := false;
+      Result := False;
       exit;
     end;
 
@@ -1289,12 +1277,12 @@ begin
     if Assigned(messageRoutine) then
       messageRoutine(ch);
 
-    result := true;
+    Result := True;
 
     if I_GameFinished then
       exit;
-      
-    menuactive := false;
+
+    menuactive := False;
     S_StartSound(nil, Ord(sfx_swtchx));
     exit;
   end;
@@ -1302,7 +1290,7 @@ begin
   if devparm and (ch = KEY_F1) then
   begin
     G_ScreenShot;
-    result := true;
+    Result := True;
     exit;
   end;
 
@@ -1310,119 +1298,119 @@ begin
   if not menuactive then
     case ch of
       KEY_MINUS:    // Screen size down
+      begin
+        if automapactive or chat_on then
         begin
-          if automapactive or chat_on then
-          begin
-            result := false;
-            exit;
-          end;
-          M_SizeDisplay(0);
-          S_StartSound(nil, Ord(sfx_stnmov));
-          result := true;
+          Result := False;
           exit;
         end;
+        M_SizeDisplay(0);
+        S_StartSound(nil, Ord(sfx_stnmov));
+        Result := True;
+        exit;
+      end;
       KEY_EQUALS:   // Screen size up
+      begin
+        if automapactive or chat_on then
         begin
-          if automapactive or chat_on then
-          begin
-            result := false;
-            exit;
-          end;
-          M_SizeDisplay(1);
-          S_StartSound(nil, Ord(sfx_stnmov));
-          result := true;
+          Result := False;
           exit;
         end;
+        M_SizeDisplay(1);
+        S_StartSound(nil, Ord(sfx_stnmov));
+        Result := True;
+        exit;
+      end;
       KEY_F1:      // Help key
-        begin
-          M_StartControlPanel;
-          if gamemode = retail then
-            currentMenu := @ReadDef2
-          else
-            currentMenu := @ReadDef1;
+      begin
+        M_StartControlPanel;
+        if gamemode = retail then
+          currentMenu := @ReadDef2
+        else
+          currentMenu := @ReadDef1;
 
-          itemOn := 0;
-          S_StartSound(nil, Ord(sfx_swtchn));
-          result := true;
-          exit;
-        end;
+        itemOn := 0;
+        S_StartSound(nil, Ord(sfx_swtchn));
+        Result := True;
+        exit;
+      end;
       KEY_F2:  // Save
-        begin
-          M_StartControlPanel;
-          S_StartSound(nil, Ord(sfx_swtchn));
-          M_SaveGame(0);
-          result := true;
-          exit;
-        end;
+      begin
+        M_StartControlPanel;
+        S_StartSound(nil, Ord(sfx_swtchn));
+        M_SaveGame(0);
+        Result := True;
+        exit;
+      end;
       KEY_F3:  // Load
-        begin
-          M_StartControlPanel;
-          S_StartSound(nil, Ord(sfx_swtchn));
-          M_LoadGame(0);
-          result := true;
-          exit;
-        end;
+      begin
+        M_StartControlPanel;
+        S_StartSound(nil, Ord(sfx_swtchn));
+        M_LoadGame(0);
+        Result := True;
+        exit;
+      end;
       KEY_F4:   // Sound Volume
-        begin
-          M_StartControlPanel;
-          currentMenu := @SoundDef;
-          itemOn := Ord(sfx_vol);
-          S_StartSound(nil, Ord(sfx_swtchn));
-          result := true;
-          exit;
-        end;
+      begin
+        M_StartControlPanel;
+        currentMenu := @SoundDef;
+        itemOn := Ord(sfx_vol);
+        S_StartSound(nil, Ord(sfx_swtchn));
+        Result := True;
+        exit;
+      end;
       KEY_F5:   // Detail toggle
-        begin
-          M_ChangeDetail(0);
-          S_StartSound(nil, Ord(sfx_swtchn));
-          result := true;
-          exit;
-        end;
+      begin
+        M_ChangeDetail(0);
+        S_StartSound(nil, Ord(sfx_swtchn));
+        Result := True;
+        exit;
+      end;
       KEY_F6:   // Quicksave
-        begin
-          S_StartSound(nil, Ord(sfx_swtchn));
-          M_QuickSave;
-          result := true;
-          exit;
-        end;
+      begin
+        S_StartSound(nil, Ord(sfx_swtchn));
+        M_QuickSave;
+        Result := True;
+        exit;
+      end;
       KEY_F7:   // End game
-        begin
-          S_StartSound(nil, Ord(sfx_swtchn));
-          M_EndGame(0);
-          result := true;
-          exit;
-        end;
+      begin
+        S_StartSound(nil, Ord(sfx_swtchn));
+        M_EndGame(0);
+        Result := True;
+        exit;
+      end;
       KEY_F8:   // Toggle messages
-        begin
-          M_ChangeMessages(0);
-          S_StartSound(nil, Ord(sfx_swtchn));
-          result := true;
-          exit;
-        end;
+      begin
+        M_ChangeMessages(0);
+        S_StartSound(nil, Ord(sfx_swtchn));
+        Result := True;
+        exit;
+      end;
       KEY_F9:   // Quickload
-        begin
-          S_StartSound(nil, Ord(sfx_swtchn));
-          M_QuickLoad;
-          result := true;
-          exit;
-        end;
+      begin
+        S_StartSound(nil, Ord(sfx_swtchn));
+        M_QuickLoad;
+        Result := True;
+        exit;
+      end;
       KEY_F10:  // Quit DOOM
-        begin
-          S_StartSound(nil, Ord(sfx_swtchn));
-          M_QuitDOOM(0);
-          result := true;
-          exit;
-        end;
+      begin
+        S_StartSound(nil, Ord(sfx_swtchn));
+        M_QuitDOOM(0);
+        Result := True;
+        exit;
+      end;
       KEY_F11:  // gamma toggle
-        begin
-          inc(usegamma);
-          if usegamma > 4 then
-            usegamma := 0;
-          players[consoleplayer]._message := gammamsg[usegamma];
-          I_SetPalette(W_CacheLumpName('PLAYPAL', PU_CACHE));
-          result := true;
-          exit;
-        end;
+      begin
+        Inc(usegamma);
+        if usegamma > 4 then
+          usegamma := 0;
+        players[consoleplayer]._message := gammamsg[usegamma];
+        I_SetPalette(W_CacheLumpName('PLAYPAL', PU_CACHE));
+        Result := True;
+        exit;
+      end;
     end;
 
   // Pop-up menu?
@@ -1432,109 +1420,109 @@ begin
     begin
       M_StartControlPanel;
       S_StartSound(nil, Ord(sfx_swtchn));
-	    result := true;
+      Result := True;
       exit;
     end;
-    result := false;
+    Result := False;
     exit;
   end;
 
   // Keys usable within menu
   case ch of
     KEY_DOWNARROW:
-      begin
-        repeat
-          if itemOn + 1 > currentMenu.numitems - 1 then
-            itemOn := 0
-          else
-            inc(itemOn);
-          S_StartSound(nil, Ord(sfx_pstop));
-        until currentMenu.menuitems[itemOn].status <> -1;
-        result := true;
-        exit;
-      end;
+    begin
+      repeat
+        if itemOn + 1 > currentMenu.numitems - 1 then
+          itemOn := 0
+        else
+          Inc(itemOn);
+        S_StartSound(nil, Ord(sfx_pstop));
+      until currentMenu.menuitems[itemOn].status <> -1;
+      Result := True;
+      exit;
+    end;
     KEY_UPARROW:
-      begin
-        repeat
-          if not boolval(itemOn) then
-            itemOn := currentMenu.numitems - 1
-          else
-            dec(itemOn);
-          S_StartSound(nil, Ord(sfx_pstop));
-        until currentMenu.menuitems[itemOn].status <> -1;
-        result := true;
-        exit;
-      end;
+    begin
+      repeat
+        if not boolval(itemOn) then
+          itemOn := currentMenu.numitems - 1
+        else
+          Dec(itemOn);
+        S_StartSound(nil, Ord(sfx_pstop));
+      until currentMenu.menuitems[itemOn].status <> -1;
+      Result := True;
+      exit;
+    end;
     KEY_LEFTARROW:
+    begin
+      if Assigned(currentMenu.menuitems[itemOn].routine) and
+        (currentMenu.menuitems[itemOn].status = 2) then
       begin
-        if Assigned(currentMenu.menuitems[itemOn].routine) and
-          (currentMenu.menuitems[itemOn].status = 2) then
-        begin
-          S_StartSound(nil, Ord(sfx_stnmov));
-          currentMenu.menuitems[itemOn].routine(0);
-        end;
-        result := true;
-        exit;
+        S_StartSound(nil, Ord(sfx_stnmov));
+        currentMenu.menuitems[itemOn].routine(0);
       end;
+      Result := True;
+      exit;
+    end;
     KEY_RIGHTARROW:
+    begin
+      if Assigned(currentMenu.menuitems[itemOn].routine) and
+        (currentMenu.menuitems[itemOn].status = 2) then
       begin
-        if Assigned(currentMenu.menuitems[itemOn].routine) and
-          (currentMenu.menuitems[itemOn].status = 2) then
-        begin
-          S_StartSound(nil, Ord(sfx_stnmov));
-          currentMenu.menuitems[itemOn].routine(1);
-        end;
-        result := true;
-        exit;
+        S_StartSound(nil, Ord(sfx_stnmov));
+        currentMenu.menuitems[itemOn].routine(1);
       end;
+      Result := True;
+      exit;
+    end;
     KEY_ENTER:
+    begin
+      if Assigned(currentMenu.menuitems[itemOn].routine) and
+        boolval(currentMenu.menuitems[itemOn].status) then
       begin
-        if Assigned(currentMenu.menuitems[itemOn].routine) and
-          boolval(currentMenu.menuitems[itemOn].status) then
+        currentMenu.lastOn := itemOn;
+        if currentMenu.menuitems[itemOn].status = 2 then
         begin
-          currentMenu.lastOn := itemOn;
-          if currentMenu.menuitems[itemOn].status = 2 then
-          begin
-            currentMenu.menuitems[itemOn].routine(1); // right arrow
-            S_StartSound(nil, Ord(sfx_stnmov));
-          end
-          else
-          begin
-            currentMenu.menuitems[itemOn].routine(itemOn);
-            S_StartSound(nil, Ord(sfx_pistol));
-          end;
+          currentMenu.menuitems[itemOn].routine(1); // right arrow
+          S_StartSound(nil, Ord(sfx_stnmov));
+        end
+        else
+        begin
+          currentMenu.menuitems[itemOn].routine(itemOn);
+          S_StartSound(nil, Ord(sfx_pistol));
         end;
-        result := true;
-        exit;
       end;
+      Result := True;
+      exit;
+    end;
     KEY_ESCAPE:
-      begin
-        currentMenu.lastOn := itemOn;
-        M_ClearMenus;
-        S_StartSound(nil, Ord(sfx_swtchx));
-        result := true;
-        exit;
-      end;
+    begin
+      currentMenu.lastOn := itemOn;
+      M_ClearMenus;
+      S_StartSound(nil, Ord(sfx_swtchx));
+      Result := True;
+      exit;
+    end;
     KEY_BACKSPACE:
+    begin
+      currentMenu.lastOn := itemOn;
+      if currentMenu.prevMenu <> nil then
       begin
-        currentMenu.lastOn := itemOn;
-        if currentMenu.prevMenu <> nil then
-        begin
-          currentMenu := currentMenu.prevMenu;
-          itemOn := currentMenu.lastOn;
-          S_StartSound(nil, Ord(sfx_swtchn));
-        end;
-        result := true;
-        exit;
+        currentMenu := currentMenu.prevMenu;
+        itemOn := currentMenu.lastOn;
+        S_StartSound(nil, Ord(sfx_swtchn));
       end;
-  else
+      Result := True;
+      exit;
+    end;
+    else
     begin
       for i := itemOn + 1 to currentMenu.numitems - 1 do
         if currentMenu.menuitems[i].alphaKey = Chr(ch) then
         begin
           itemOn := i;
           S_StartSound(nil, Ord(sfx_pstop));
-          result := true;
+          Result := True;
           exit;
         end;
       for i := 0 to itemOn do
@@ -1542,34 +1530,34 @@ begin
         begin
           itemOn := i;
           S_StartSound(nil, Ord(sfx_pstop));
-          result := true;
+          Result := True;
           exit;
         end;
     end;
   end;
-  
-  result := false;
+
+  Result := False;
 end;
 
-//
+
 // M_StartControlPanel
-//
+
 procedure M_StartControlPanel;
 begin
   // intro might call this repeatedly
   if menuactive then
     exit;
 
-  menuactive := true;
+  menuactive := True;
   currentMenu := @MainDef;// JDC
   itemOn := currentMenu.lastOn; // JDC
 end;
 
-//
+
 // M_Drawer
 // Called after the view has been rendered,
 // but before it has been blitted.
-//
+
 var
   x, y: smallint;
 
@@ -1580,22 +1568,22 @@ var
   _string: string;
   len: integer;
 begin
-  inhelpscreens := false;
+  inhelpscreens := False;
 
   // Horiz. & Vertically center string and print it.
   if boolval(messageToPrint) then
   begin
-//    y := (SCREENHEIGHT - M_StringHeight(messageString)) div 2;
+    //    y := (SCREENHEIGHT - M_StringHeight(messageString)) div 2;
     y := (200 - M_StringHeight(messageString)) div 2;
     len := Length(messageString);
     _string := '';
     for i := 1 to len do
     begin
       if messageString[i] = #13 then
-        y := y + hu_font[0].height
+        y := y + hu_font[0].Height
       else if messageString[i] = #10 then
       begin
-//        x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
+        //        x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
         x := (320 - M_StringWidth(_string)) div 2;
         M_WriteText(x, y, _string);
         _string := '';
@@ -1605,9 +1593,9 @@ begin
     end;
     if _string <> '' then
     begin
-//      x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
+      //      x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
       x := (320 - M_StringWidth(_string)) div 2;
-      y := y + hu_font[0].height;
+      y := y + hu_font[0].Height;
       M_WriteText(x, y, _string);
     end;
     exit;
@@ -1626,42 +1614,42 @@ begin
 
   for i := 0 to max - 1 do
   begin
-    if currentMenu.menuitems[i].name <> '' then
+    if currentMenu.menuitems[i].Name <> '' then
       V_DrawPatch(x, y, _FG,
-        W_CacheLumpName(currentMenu.menuitems[i].name, PU_CACHE), true);
+        W_CacheLumpName(currentMenu.menuitems[i].Name, PU_CACHE), True);
     y := y + LINEHEIGHT;
   end;
 
   // DRAW SKULL
   V_DrawPatch(x + SKULLXOFF, currentMenu.y - 5 + itemOn * LINEHEIGHT, _FG,
-    W_CacheLumpName(skullName[whichSkull], PU_CACHE), true);
+    W_CacheLumpName(skullName[whichSkull], PU_CACHE), True);
 end;
 
-//
+
 // M_ClearMenus
-//
+
 procedure M_ClearMenus;
 begin
-  menuactive := false;
-    // if (!netgame && usergame && paused)
-    //       sendpause = true;
+  menuactive := False;
+  // if (!netgame && usergame && paused)
+  //       sendpause = true;
 end;
 
-//
+
 // M_SetupNextMenu
-//
+
 procedure M_SetupNextMenu(menudef: Pmenu_t);
 begin
   currentMenu := menudef;
   itemOn := currentMenu.lastOn;
 end;
 
-//
+
 // M_Ticker
-//
+
 procedure M_Ticker;
 begin
-  dec(skullAnimCounter);
+  Dec(skullAnimCounter);
   if skullAnimCounter <= 0 then
   begin
     whichSkull := whichSkull xor 1;
@@ -1669,13 +1657,13 @@ begin
   end;
 end;
 
-//
+
 // M_Init
-//
+
 procedure M_Init;
 begin
   currentMenu := @MainDef;
-  menuactive := false;
+  menuactive := False;
   itemOn := currentMenu.lastOn;
   whichSkull := 0;
   skullAnimCounter := 10;
@@ -1690,82 +1678,82 @@ begin
 
   case gamemode of
     commercial:
-      begin
-        // This is used because DOOM 2 had only one HELP
-        //  page. I use CREDIT as second page now, but
-        //  kept this hack for educational purposes.
-        MainMenu[Ord(readthis)] := MainMenu[Ord(quitdoom)];
-        dec(MainDef.numitems);
-        MainDef.y := MainDef.y + 8;
-        NewDef.prevMenu := @MainDef;
-        ReadDef1.routine := M_DrawReadThis1;
-        ReadDef1.x := 330;
-        ReadDef1.y := 165;
-        ReadMenu1[0].routine := @M_FinishReadThis;
-      end;
+    begin
+      // This is used because DOOM 2 had only one HELP
+      //  page. I use CREDIT as second page now, but
+      //  kept this hack for educational purposes.
+      MainMenu[Ord(readthis)] := MainMenu[Ord(quitdoom)];
+      Dec(MainDef.numitems);
+      MainDef.y := MainDef.y + 8;
+      NewDef.prevMenu := @MainDef;
+      ReadDef1.routine := M_DrawReadThis1;
+      ReadDef1.x := 330;
+      ReadDef1.y := 165;
+      ReadMenu1[0].routine := @M_FinishReadThis;
+    end;
     shareware,
-      // Episode 2 and 3 are handled,
-      // branching to an ad screen.
+    // Episode 2 and 3 are handled,
+    // branching to an ad screen.
     registered:
-      begin
-        // We need to remove the fourth episode.
-        dec(EpiDef.numitems);
-      end;
+    begin
+      // We need to remove the fourth episode.
+      Dec(EpiDef.numitems);
+    end;
   end;
 end;
 
 
 procedure M_InitMenus;
 begin
-////////////////////////////////////////////////////////////////////////////////
-//gammamsg
+  ////////////////////////////////////////////////////////////////////////////////
+  //gammamsg
   gammamsg[0] := GAMMALVL0;
   gammamsg[1] := GAMMALVL1;
   gammamsg[2] := GAMMALVL2;
   gammamsg[3] := GAMMALVL3;
   gammamsg[4] := GAMMALVL4;
 
-////////////////////////////////////////////////////////////////////////////////
-//skullName
+  ////////////////////////////////////////////////////////////////////////////////
+  //skullName
   skullName[0] := 'M_SKULL1';
   skullName[1] := 'M_SKULL2';
 
-////////////////////////////////////////////////////////////////////////////////
-// MainMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  // MainMenu
   MainMenu[0].status := 1;
-  MainMenu[0].name := 'M_NGAME';
+  MainMenu[0].Name := 'M_NGAME';
   MainMenu[0].routine := @M_NewGame;
   MainMenu[0].alphaKey := 'n';
 
   MainMenu[1].status := 1;
-  MainMenu[1].name := 'M_OPTION';
+  MainMenu[1].Name := 'M_OPTION';
   MainMenu[1].routine := @M_Options;
   MainMenu[1].alphaKey := 'o';
 
   MainMenu[2].status := 1;
-  MainMenu[2].name := 'M_LOADG';
+  MainMenu[2].Name := 'M_LOADG';
   MainMenu[2].routine := @M_LoadGame;
   MainMenu[2].alphaKey := 'l';
 
   MainMenu[3].status := 1;
-  MainMenu[3].name := 'M_SAVEG';
+  MainMenu[3].Name := 'M_SAVEG';
   MainMenu[3].routine := @M_SaveGame;
   MainMenu[3].alphaKey := 's';
 
   // Another hickup with Special edition.
   MainMenu[4].status := 1;
-  MainMenu[4].name := 'M_RDTHIS';
+  MainMenu[4].Name := 'M_RDTHIS';
   MainMenu[4].routine := @M_ReadThis;
   MainMenu[4].alphaKey := 'r';
 
   MainMenu[5].status := 1;
-  MainMenu[5].name := 'M_QUITG';
+  MainMenu[5].Name := 'M_QUITG';
   MainMenu[5].routine := @M_QuitDOOM;
   MainMenu[5].alphaKey := 'q';
 
-////////////////////////////////////////////////////////////////////////////////
-//MainDef
-  MainDef.numitems := ord(main_end);
+  ////////////////////////////////////////////////////////////////////////////////
+  //MainDef
+  MainDef.numitems := Ord(main_end);
   MainDef.prevMenu := nil;
   MainDef.menuitems := Pmenuitem_tArray(@MainMenu);
   MainDef.routine := @M_DrawMainMenu;  // draw routine
@@ -1773,30 +1761,30 @@ begin
   MainDef.y := 64;
   MainDef.lastOn := 0;
 
-////////////////////////////////////////////////////////////////////////////////
-//EpisodeMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  //EpisodeMenu
   EpisodeMenu[0].status := 1;
-  EpisodeMenu[0].name := 'M_EPI1';
+  EpisodeMenu[0].Name := 'M_EPI1';
   EpisodeMenu[0].routine := @M_Episode;
   EpisodeMenu[0].alphaKey := 'k';
 
   EpisodeMenu[1].status := 1;
-  EpisodeMenu[1].name := 'M_EPI2';
+  EpisodeMenu[1].Name := 'M_EPI2';
   EpisodeMenu[1].routine := @M_Episode;
   EpisodeMenu[1].alphaKey := 't';
 
   EpisodeMenu[2].status := 1;
-  EpisodeMenu[2].name := 'M_EPI3';
+  EpisodeMenu[2].Name := 'M_EPI3';
   EpisodeMenu[2].routine := @M_Episode;
   EpisodeMenu[2].alphaKey := 'i';
 
   EpisodeMenu[3].status := 1;
-  EpisodeMenu[3].name := 'M_EPI4';
+  EpisodeMenu[3].Name := 'M_EPI4';
   EpisodeMenu[3].routine := @M_Episode;
   EpisodeMenu[3].alphaKey := 't';
 
-////////////////////////////////////////////////////////////////////////////////
-//EpiDef
+  ////////////////////////////////////////////////////////////////////////////////
+  //EpiDef
   EpiDef.numitems := Ord(ep_end); // # of menu items
   EpiDef.prevMenu := @MainDef; // previous menu
   EpiDef.menuitems := Pmenuitem_tArray(@EpisodeMenu);  // menu items
@@ -1805,35 +1793,35 @@ begin
   EpiDef.y := 63; // x,y of menu
   EpiDef.lastOn := Ord(ep1); // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//NewGameMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  //NewGameMenu
   NewGameMenu[0].status := 1;
-  NewGameMenu[0].name := 'M_JKILL';
+  NewGameMenu[0].Name := 'M_JKILL';
   NewGameMenu[0].routine := @M_ChooseSkill;
   NewGameMenu[0].alphaKey := 'i';
 
   NewGameMenu[1].status := 1;
-  NewGameMenu[1].name := 'M_ROUGH';
+  NewGameMenu[1].Name := 'M_ROUGH';
   NewGameMenu[1].routine := @M_ChooseSkill;
   NewGameMenu[1].alphaKey := 'h';
 
   NewGameMenu[2].status := 1;
-  NewGameMenu[2].name := 'M_HURT';
+  NewGameMenu[2].Name := 'M_HURT';
   NewGameMenu[2].routine := @M_ChooseSkill;
   NewGameMenu[2].alphaKey := 'h';
 
   NewGameMenu[3].status := 1;
-  NewGameMenu[3].name := 'M_ULTRA';
+  NewGameMenu[3].Name := 'M_ULTRA';
   NewGameMenu[3].routine := @M_ChooseSkill;
   NewGameMenu[3].alphaKey := 'u';
 
   NewGameMenu[4].status := 1;
-  NewGameMenu[4].name := 'M_NMARE';
+  NewGameMenu[4].Name := 'M_NMARE';
   NewGameMenu[4].routine := @M_ChooseSkill;
   NewGameMenu[4].alphaKey := 'n';
 
-////////////////////////////////////////////////////////////////////////////////
-//NewDef
+  ////////////////////////////////////////////////////////////////////////////////
+  //NewDef
   NewDef.numitems := Ord(newg_end); // # of menu items
   NewDef.prevMenu := @EpiDef; // previous menu
   NewDef.menuitems := Pmenuitem_tArray(@NewGameMenu);  // menu items
@@ -1842,50 +1830,50 @@ begin
   NewDef.y := 63; // x,y of menu
   NewDef.lastOn := Ord(hurtme); // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//OptionsMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  //OptionsMenu
   OptionsMenu[0].status := 1;
-  OptionsMenu[0].name := 'M_ENDGAM';
+  OptionsMenu[0].Name := 'M_ENDGAM';
   OptionsMenu[0].routine := @M_EndGame;
   OptionsMenu[0].alphaKey := 'e';
 
   OptionsMenu[1].status := 1;
-  OptionsMenu[1].name := 'M_MESSG';
+  OptionsMenu[1].Name := 'M_MESSG';
   OptionsMenu[1].routine := @M_ChangeMessages;
   OptionsMenu[1].alphaKey := 'm';
 
   OptionsMenu[2].status := 1;
-  OptionsMenu[2].name := 'M_DETAIL';
+  OptionsMenu[2].Name := 'M_DETAIL';
   OptionsMenu[2].routine := @M_ChangeDetail;
   OptionsMenu[2].alphaKey := 'g';
 
   OptionsMenu[3].status := 2;
-  OptionsMenu[3].name := 'M_SCRNSZ';
+  OptionsMenu[3].Name := 'M_SCRNSZ';
   OptionsMenu[3].routine := @M_SizeDisplay;
   OptionsMenu[3].alphaKey := 's';
 
   OptionsMenu[4].status := -1;
-  OptionsMenu[4].name := '';
+  OptionsMenu[4].Name := '';
   OptionsMenu[4].routine := nil;
   OptionsMenu[4].alphaKey := #0;
 
   OptionsMenu[5].status := 2;
-  OptionsMenu[5].name := 'M_MSENS';
+  OptionsMenu[5].Name := 'M_MSENS';
   OptionsMenu[5].routine := @M_ChangeSensitivity;
   OptionsMenu[5].alphaKey := 'm';
 
   OptionsMenu[6].status := -1;
-  OptionsMenu[6].name := '';
+  OptionsMenu[6].Name := '';
   OptionsMenu[6].routine := nil;
   OptionsMenu[6].alphaKey := #0;
 
   OptionsMenu[7].status := 1;
-  OptionsMenu[7].name := 'M_SVOL';
+  OptionsMenu[7].Name := 'M_SVOL';
   OptionsMenu[7].routine := @M_Sound;
   OptionsMenu[7].alphaKey := 's';
 
-////////////////////////////////////////////////////////////////////////////////
-//OptionsDef
+  ////////////////////////////////////////////////////////////////////////////////
+  //OptionsDef
   OptionsDef.numitems := Ord(opt_end); // # of menu items
   OptionsDef.prevMenu := @MainDef; // previous menu
   OptionsDef.menuitems := Pmenuitem_tArray(@OptionsMenu);  // menu items
@@ -1894,15 +1882,15 @@ begin
   OptionsDef.y := 37; // x,y of menu
   OptionsDef.lastOn := 0; // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//ReadMenu1
+  ////////////////////////////////////////////////////////////////////////////////
+  //ReadMenu1
   ReadMenu1[0].status := 1;
-  ReadMenu1[0].name := '';
+  ReadMenu1[0].Name := '';
   ReadMenu1[0].routine := @M_ReadThis2;
   ReadMenu1[0].alphaKey := #0;
 
-////////////////////////////////////////////////////////////////////////////////
-//ReadDef1
+  ////////////////////////////////////////////////////////////////////////////////
+  //ReadDef1
   ReadDef1.numitems := Ord(read1_end); // # of menu items
   ReadDef1.prevMenu := @MainDef; // previous menu
   ReadDef1.menuitems := Pmenuitem_tArray(@ReadMenu1);  // menu items
@@ -1911,15 +1899,15 @@ begin
   ReadDef1.y := 185; // x,y of menu
   ReadDef1.lastOn := 0; // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//ReadMenu2
+  ////////////////////////////////////////////////////////////////////////////////
+  //ReadMenu2
   ReadMenu2[0].status := 1;
-  ReadMenu2[0].name := '';
+  ReadMenu2[0].Name := '';
   ReadMenu2[0].routine := @M_FinishReadThis;
   ReadMenu2[0].alphaKey := #0;
 
-////////////////////////////////////////////////////////////////////////////////
-//ReadDef2
+  ////////////////////////////////////////////////////////////////////////////////
+  //ReadDef2
   ReadDef2.numitems := Ord(read2_end); // # of menu items
   ReadDef2.prevMenu := @ReadDef1; // previous menu
   ReadDef2.menuitems := Pmenuitem_tArray(@ReadMenu2);  // menu items
@@ -1928,30 +1916,30 @@ begin
   ReadDef2.y := 175; // x,y of menu
   ReadDef2.lastOn := 0; // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//SoundMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  //SoundMenu
   SoundMenu[0].status := 2;
-  SoundMenu[0].name := 'M_SFXVOL';
+  SoundMenu[0].Name := 'M_SFXVOL';
   SoundMenu[0].routine := @M_SfxVol;
   SoundMenu[0].alphaKey := 's';
 
   SoundMenu[1].status := -1;
-  SoundMenu[1].name := '';
+  SoundMenu[1].Name := '';
   SoundMenu[1].routine := nil;
   SoundMenu[1].alphaKey := #0;
 
   SoundMenu[2].status := 2;
-  SoundMenu[2].name := 'M_MUSVOL';
+  SoundMenu[2].Name := 'M_MUSVOL';
   SoundMenu[2].routine := @M_MusicVol;
   SoundMenu[2].alphaKey := 'm';
 
   SoundMenu[3].status := -1;
-  SoundMenu[3].name := '';
+  SoundMenu[3].Name := '';
   SoundMenu[3].routine := nil;
   SoundMenu[3].alphaKey := #0;
 
-////////////////////////////////////////////////////////////////////////////////
-//SoundDef
+  ////////////////////////////////////////////////////////////////////////////////
+  //SoundDef
   SoundDef.numitems := Ord(sound_end); // # of menu items
   SoundDef.prevMenu := @OptionsDef; // previous menu
   SoundDef.menuitems := Pmenuitem_tArray(@SoundMenu);  // menu items
@@ -1960,40 +1948,40 @@ begin
   SoundDef.y := 64; // x,y of menu
   SoundDef.lastOn := 0; // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//LoadMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  //LoadMenu
   LoadMenu[0].status := 1;
-  LoadMenu[0].name := '';
+  LoadMenu[0].Name := '';
   LoadMenu[0].routine := @M_LoadSelect;
   LoadMenu[0].alphaKey := '1';
 
   LoadMenu[1].status := 1;
-  LoadMenu[1].name := '';
+  LoadMenu[1].Name := '';
   LoadMenu[1].routine := @M_LoadSelect;
   LoadMenu[1].alphaKey := '2';
 
   LoadMenu[2].status := 1;
-  LoadMenu[2].name := '';
+  LoadMenu[2].Name := '';
   LoadMenu[2].routine := @M_LoadSelect;
   LoadMenu[2].alphaKey := '3';
 
   LoadMenu[3].status := 1;
-  LoadMenu[3].name := '';
+  LoadMenu[3].Name := '';
   LoadMenu[3].routine := @M_LoadSelect;
   LoadMenu[3].alphaKey := '4';
 
   LoadMenu[4].status := 1;
-  LoadMenu[4].name := '';
+  LoadMenu[4].Name := '';
   LoadMenu[4].routine := @M_LoadSelect;
   LoadMenu[4].alphaKey := '5';
 
   LoadMenu[5].status := 1;
-  LoadMenu[5].name := '';
+  LoadMenu[5].Name := '';
   LoadMenu[5].routine := @M_LoadSelect;
   LoadMenu[5].alphaKey := '6';
 
-////////////////////////////////////////////////////////////////////////////////
-//LoadDef
+  ////////////////////////////////////////////////////////////////////////////////
+  //LoadDef
   LoadDef.numitems := Ord(load_end); // # of menu items
   LoadDef.prevMenu := @MainDef; // previous menu
   LoadDef.menuitems := Pmenuitem_tArray(@LoadMenu);  // menu items
@@ -2002,40 +1990,40 @@ begin
   LoadDef.y := 54; // x,y of menu
   LoadDef.lastOn := 0; // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
-//SaveMenu
+  ////////////////////////////////////////////////////////////////////////////////
+  //SaveMenu
   SaveMenu[0].status := 1;
-  SaveMenu[0].name := '';
+  SaveMenu[0].Name := '';
   SaveMenu[0].routine := @M_SaveSelect;
   SaveMenu[0].alphaKey := '1';
 
   SaveMenu[1].status := 1;
-  SaveMenu[1].name := '';
+  SaveMenu[1].Name := '';
   SaveMenu[1].routine := @M_SaveSelect;
   SaveMenu[1].alphaKey := '2';
 
   SaveMenu[2].status := 1;
-  SaveMenu[2].name := '';
+  SaveMenu[2].Name := '';
   SaveMenu[2].routine := @M_SaveSelect;
   SaveMenu[2].alphaKey := '3';
 
   SaveMenu[3].status := 1;
-  SaveMenu[3].name := '';
+  SaveMenu[3].Name := '';
   SaveMenu[3].routine := @M_SaveSelect;
   SaveMenu[3].alphaKey := '4';
 
   SaveMenu[4].status := 1;
-  SaveMenu[4].name := '';
+  SaveMenu[4].Name := '';
   SaveMenu[4].routine := @M_SaveSelect;
   SaveMenu[4].alphaKey := '5';
 
   SaveMenu[5].status := 1;
-  SaveMenu[5].name := '';
+  SaveMenu[5].Name := '';
   SaveMenu[5].routine := @M_SaveSelect;
   SaveMenu[5].alphaKey := '6';
 
-////////////////////////////////////////////////////////////////////////////////
-//SaveDef
+  ////////////////////////////////////////////////////////////////////////////////
+  //SaveDef
   SaveDef.numitems := Ord(load_end); // # of menu items
   SaveDef.prevMenu := @MainDef; // previous menu
   SaveDef.menuitems := Pmenuitem_tArray(@SaveMenu);  // menu items
@@ -2044,13 +2032,13 @@ begin
   SaveDef.y := 54; // x,y of menu
   SaveDef.lastOn := 0; // last item user was on in menu
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   detailNames[0] := 'M_GDHIGH';
   detailNames[1] := 'M_GDLOW';
   msgNames[0] := 'M_MSGOFF';
   msgNames[1] := 'M_MSGON';
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   joywait := 0;
   mousewait := 0;
   mousey := 0;
@@ -2061,4 +2049,3 @@ begin
 end;
 
 end.
-
