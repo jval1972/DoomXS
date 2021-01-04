@@ -404,33 +404,6 @@ type
     MT_MISC86,NUMMOBJTYPES
   );
 
-{  mobjinfo_t = packed record
-    doomednum: smallint;
-    spawnstate: smallint;
-    spawnhealth: smallint;
-    seestate: smallint;
-    seesound: smallint;
-    reactiontime: integer;
-    attacksound: smallint;
-    painstate: smallint;
-    painchance: integer;
-    painsound: smallint;
-    meleestate: smallint;
-    missilestate: smallint;
-    deathstate: smallint;
-    xdeathstate: smallint;
-    deathsound: smallint;
-    speed: integer;
-    radius: integer;
-    height: integer;
-    mass: integer;
-    damage: integer;
-    activesound: smallint;
-    flags: integer;
-    raisestate: smallint;
-  end;
-  Pmobjinfo_t = ^mobjinfo_t;}
-  
   mobjinfo_t = record
     doomednum: integer;
     spawnstate: integer;
