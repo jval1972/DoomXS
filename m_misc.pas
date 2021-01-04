@@ -28,38 +28,6 @@ unit m_misc;
 
 interface
 
-{
-    m_misc.h, m_misc.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  { Main loop menu stuff. }
-  { Default Config File. }
-  { PCX Screenshots. }
-  { }
-  {     }
-  {----------------------------------------------------------------------------- }
-
-  { }
-  { MISC }
-  { }
-
 function M_WriteFile(const name: string; source: pointer; length: integer): boolean;
 
 function M_ReadFile(const name: string; var buffer: Pointer): integer;
@@ -72,18 +40,25 @@ procedure M_SaveDefaults;
 
 implementation
 
-uses classes,
+uses
+  classes,
   d_delphi,
-  doomtype, doomdef,
-  dstrings, d_englsh,
-  d_main, d_player,
+  doomtype,
+  doomdef,
+  dstrings,
+  d_englsh,
+  d_main,
+  d_player,
   g_game,
   hu_stuff,
-  m_menu, m_argv,
-  i_system, i_video,
+  m_menu,
+  m_argv,
+  i_system,
+  i_video,
   s_sound,
   v_video,
-  w_wad, z_zone,
+  w_wad,
+  z_zone,
   doomstat;
 
 function M_WriteFile(const name: string; source: pointer; length: integer): boolean;
@@ -529,4 +504,3 @@ begin
 end;
 
 end.
-
