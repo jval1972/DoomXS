@@ -28,32 +28,8 @@ unit m_bbox;
 
 interface
 
-uses m_fixed;
-
-{
-    m_bbox.h, m_bbox.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {    Nil. }
-  {     }
-  {----------------------------------------------------------------------------- }
+uses
+  m_fixed;
 
 // Bounding box coordinate storage.
 const
@@ -67,10 +43,10 @@ procedure M_ClearBox(box: Pfixed_tArray);
 
 procedure M_AddToBox(box: Pfixed_tArray; x: fixed_t; y: fixed_t);
 
-
 implementation
 
-uses doomtype;
+uses
+  doomtype;
 
 procedure M_ClearBox(box: Pfixed_tArray);
 begin
@@ -93,4 +69,3 @@ begin
 end;
 
 end.
-
