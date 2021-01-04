@@ -28,33 +28,8 @@ unit i_sound;
 
 interface
 
-uses sounds;
-
-{
-    i_sound.h, i_sound.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-//
-// DESCRIPTION:
-//	System interface, sound.
-//
-//-----------------------------------------------------------------------------
+uses
+  sounds;
 
 // Init at program start...
 procedure I_InitSound;
@@ -66,9 +41,9 @@ procedure I_SubmitSound;
 // ... shut down and relase at program termination.
 procedure I_ShutdownSound;
 
-//
+
 //  SFX I/O
-//
+
 
 // Initialize channels?
 procedure I_SetChannels;
@@ -126,50 +101,50 @@ var
 
   SampleFormat: TWAVEFORMATEX;
 
-// The actual lengths of all sound effects.
+  // The actual lengths of all sound effects.
   SoundLengths: array[0..Ord(NUMSFX) - 1] of integer;
-  HighSound: boolean = false;
+  HighSound: boolean = False;
 
-// The sound in channel handles,
-//  determined on registration,
-//  might be used to unregister/stop/modify,
-//  currently unused.
+  // The sound in channel handles,
+  //  determined on registration,
+  //  might be used to unregister/stop/modify,
+  //  currently unused.
   channelhandles: array[0..NUM_CHANNELS - 1] of integer;
 
-// SFX id of the playing sound effect.
-// Used to catch duplicates (like chainsaw).
+  // SFX id of the playing sound effect.
+  // Used to catch duplicates (like chainsaw).
   channelids: array[0..NUM_CHANNELS - 1] of integer;
 
-//actual data buffers
+  //actual data buffers
   ChannelBuffers: array[0..NUM_CHANNELS - 1] of LPDIRECTSOUNDBUFFER;
   ChannelActive: packed array[0..NUM_CHANNELS - 1] of boolean;
 
-//
+
 // Retrieve the raw data lump index
 //  for a given SFX name.
-//
+
 function I_GetSfxLumpNum(sfxinfo: Psfxinfo_t): integer;
 var
   namebuf: string;
 begin
-  sprintf(namebuf, 'ds%s', [sfxinfo.name]);
-  result := W_GetNumForName(namebuf);
+  sprintf(namebuf, 'ds%s', [sfxinfo.Name]);
+  Result := W_GetNumForName(namebuf);
 end;
 
 // This function loads the sound data from the WAD lump,
 //  for single sound.
-//
+
 procedure CacheSFX(sfxid: integer);
 var
-  name: string;
+  Name: string;
   sfx: Psfxinfo_t;
 begin
   sfx := @S_sfx[sfxid];
-  if sfx.data <> nil then
+  if sfx.Data <> nil then
     exit;
   // Get the sound data from the WAD, allocate lump
   //  in zone memory.
-  sprintf(name, 'ds%s', [sfx.name]);
+  sprintf(Name, 'ds%s', [sfx.Name]);
 
   // Now, there is a severe problem with the
   //  sound handling, in it is not (yet/anymore)
@@ -181,17 +156,17 @@ begin
   // I do not do runtime patches to that
   //  variable. Instead, we will use a
   //  default sound for replacement.
-  if W_CheckNumForName(name) = -1 then
+  if W_CheckNumForName(Name) = -1 then
     sfx.lumpnum := W_GetNumForName('dspistol')
   else
-    sfx.lumpnum := W_GetNumForName(name);
+    sfx.lumpnum := W_GetNumForName(Name);
 
   SoundLengths[sfxid] := W_LumpLength(sfx.lumpnum);
 
-  sfx.data := W_CacheLumpNum(sfx.lumpnum, PU_STATIC);
+  sfx.Data := W_CacheLumpNum(sfx.lumpnum, PU_STATIC);
 end;
 
-//
+
 // SFX API
 // Note: this was called by S_Init.
 // However, whatever they did in the
@@ -199,7 +174,7 @@ end;
 // were simply dummies in the Linux
 // version.
 // See soundserver initdata().
-//
+
 procedure I_SetChannels;
 begin
 end;
@@ -216,33 +191,33 @@ end;
 
 function I_ChannelPlaying(channel: integer): boolean;
 var
-  status: LongWord;
+  status: longword;
 begin
   if not boolval(pointer(pDS)) then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
   if not boolval(pointer(ChannelBuffers[channel])) then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
   if not ChannelActive[channel] then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
   ChannelBuffers[channel].GetStatus(status);
   if boolval(status and DSBSTATUS_PLAYING) then
-    result := true
+    Result := True
   else
   begin
-    ChannelActive[channel] := false;
-    result := false;
+    ChannelActive[channel] := False;
+    Result := False;
   end;
 end;
 
@@ -264,12 +239,12 @@ var
 begin
   if not boolval(pointer(pDS)) then
   begin
-    result := HandleCount;
-    inc(HandleCount);
+    Result := HandleCount;
+    Inc(HandleCount);
     exit;
   end;
 
-  ChannelActive[channel] := true;
+  ChannelActive[channel] := True;
   dsb := ChannelBuffers[channel];
   if not boolval(pointer(dsb)) then
     I_Error('I_RestartChannel(): Restarting dead sound at channel %d', [channel]);
@@ -279,11 +254,11 @@ begin
   dsb.SetVolume(DSBVOLUME_MIN + _SHR((DSBVOLUME_MAX - DSBVOLUME_MIN) * (volume + 1), 4));
   dsb.Play(0, 0, 0);
   channelhandles[channel] := HandleCount;
-  result := HandleCount;
-  inc(HandleCount);
+  Result := HandleCount;
+  Inc(HandleCount);
 end;
 
-//
+
 // Starting a sound means adding it
 //  to the current list of active sounds
 //  in the internal channels.
@@ -294,7 +269,7 @@ end;
 //  priority, it is ignored.
 // Pitching (that is, increased speed of playback)
 //  is set, but currently not used by mixing.
-//
+
 function I_StartSound(id: integer; vol: integer; sep: integer;
   pitch: integer; priority: integer): integer;
 var
@@ -307,8 +282,8 @@ var
   freechannel: integer;
   p: pointer;
   p2: pointer;
-  s: LongWord;
-  s2: LongWord;
+  s: longword;
+  s2: longword;
 
   procedure I_ErrorStartSound(const procname: string);
   begin
@@ -318,8 +293,8 @@ var
 begin
   if not boolval(pointer(pDS)) then
   begin
-    result := HandleCount;
-    inc(HandleCount);
+    Result := HandleCount;
+    Inc(HandleCount);
     exit;
   end;
 
@@ -328,18 +303,19 @@ begin
   freechannel := NUM_CHANNELS;
   for channel := 0 to NUM_CHANNELS - 1 do
   begin
-		if boolval(pointer(ChannelBuffers[channel])) then
+    if boolval(pointer(ChannelBuffers[channel])) then
     begin
-      if (channelids[channel] = id) and (not boolval(pointer(I_ChannelPlaying(channel)))) then
+      if (channelids[channel] = id) and
+        (not boolval(pointer(I_ChannelPlaying(channel)))) then
       begin
-        result := I_RestartChannel(channel, vol);
+        Result := I_RestartChannel(channel, vol);
         exit;
       end;
       if HandleCount - channelhandles[channel] > oldhandle then
       begin
         oldhandle := HandleCount - channelhandles[channel];
         oldchannel := channel;
-      end
+      end;
     end
     else
       freechannel := channel;
@@ -352,9 +328,9 @@ begin
   CacheSFX(id);
   ZeroMemory(dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := Sizeof(DSBUFFERDESC);
-    //dsbd.dwFlags=DSBCAPS_CTRLDEFAULT|DSBCAPS_GETCURRENTPOSITION2|DSBCAPS_STATIC;
+  //dsbd.dwFlags=DSBCAPS_CTRLDEFAULT|DSBCAPS_GETCURRENTPOSITION2|DSBCAPS_STATIC;
   dsbd.dwFlags := DSBCAPS_CTRLVOLUME or DSBCAPS_CTRLFREQUENCY or
-                  DSBCAPS_CTRLPAN or DSBCAPS_GETCURRENTPOSITION2 or DSBCAPS_STATIC;
+    DSBCAPS_CTRLPAN or DSBCAPS_GETCURRENTPOSITION2 or DSBCAPS_STATIC;
   dsbd.dwBufferBytes := SoundLengths[id];
   dsbd.lpwfxFormat := @SampleFormat;
 
@@ -366,14 +342,14 @@ begin
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Lock()');
 
-  memcpy(p, pointer(integer(S_sfx[id].data) + 8), s);
+  memcpy(p, pointer(integer(S_sfx[id].Data) + 8), s);
   hres := dsb.Unlock(p, s, p2, s2); // VJ -> dsb.Unlock(p, s, p2, 0); ???
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Unlock()');
 
   ChannelBuffers[channel] := dsb;
   channelids[channel] := id;
-  result := I_RestartChannel(channel, vol);
+  Result := I_RestartChannel(channel, vol);
 end;
 
 procedure I_StopSound(handle: integer);
@@ -385,10 +361,10 @@ begin
 
   for channel := 0 to NUM_CHANNELS - 1 do
   begin
-    if I_ChannelPlaying(channel) and (channelhandles[channel]=handle) then
+    if I_ChannelPlaying(channel) and (channelhandles[channel] = handle) then
     begin
       ChannelBuffers[channel].Stop;
-      ChannelActive[channel] := false;
+      ChannelActive[channel] := False;
     end;
   end;
 end;
@@ -399,7 +375,7 @@ var
 begin
   if not boolval(pointer(pDS)) then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
@@ -407,16 +383,16 @@ begin
   begin
     if (channelhandles[channel] = handle) and I_ChannelPlaying(channel) then
     begin
-      result := true;
+      Result := True;
       exit;
     end;
   end;
-  result := false;
+  Result := False;
 end;
 
-//
+
 // to mix the sounds into buffers, called every frame
-//
+
 procedure I_ProcessSound;
 begin
 end;
@@ -466,7 +442,8 @@ begin
 
   hres := pDS.SetCooperativeLevel(hMainWnd, DSSCL_PRIORITY);
   if hres <> DS_OK then
-    I_Error('I_InitSound(): DirectSound.SetCooperativeLevel Failed, result = %d', [hres]);
+    I_Error('I_InitSound(): DirectSound.SetCooperativeLevel Failed, result = %d',
+      [hres]);
 
   SampleFormat.wFormatTag := WAVE_FORMAT_PCM;
   SampleFormat.nChannels := 1;
@@ -501,7 +478,8 @@ begin
   begin
     hres := pDSBPrimary.SetFormat(SampleFormat);
     if hres <> DS_OK then
-      printf('I_InitSound(): Unable to set primary sound buffer format, result = %d', [hres]);
+      printf('I_InitSound(): Unable to set primary sound buffer format, result = %d',
+        [hres]);
     pDSBPrimary.Play(0, 0, DSBPLAY_LOOPING);
   end;
 
@@ -509,7 +487,7 @@ begin
     ChannelBuffers[i] := nil;
 
   for i := 0 to Ord(NUMSFX) - 1 do
-    S_sfx[i].data := nil;
+    S_sfx[i].Data := nil;
 
   SampleFormat.wFormatTag := WAVE_FORMAT_PCM;
   SampleFormat.nChannels := 1;
@@ -528,7 +506,6 @@ end;
 procedure I_SubmitSound;
 begin
 end;
-
 
 initialization
   pDS := nil;
