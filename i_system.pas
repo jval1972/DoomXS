@@ -1,25 +1,25 @@
 //------------------------------------------------------------------------------
-//
+
 //  DoomXS - A basic Windows source port of Doom
 //  based on original Linux Doom as published by "id Software"
 //  Copyright (C) 1993-1996 by id Software, Inc.
 //  Copyright (C) 2021 by Jim Valavanis
-//
+
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
 //  as published by the Free Software Foundation; either version 2
 //  of the License, or (at your option) any later version.
-//
+
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//
+
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
-//
+
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
@@ -28,33 +28,10 @@ unit i_system;
 
 interface
 
-uses d_delphi,
-  d_ticcmd, d_event;
-
-{
-    i_system.h, i_system.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {	System specific interface stuff. }
-  { }
-  {----------------------------------------------------------------------------- }
+uses
+  d_delphi,
+  d_ticcmd,
+  d_event;
 
 procedure I_Init;
 
@@ -67,17 +44,17 @@ function I_ZoneBase(var size: integer): pointer;
 { returns current time in tics. }
 function I_GetTime: integer;
 
-{ }
+
 { Called by D_DoomLoop, }
 { called before processing any tics in a frame }
 { (just after displaying a frame). }
 { Time consuming syncronous operations }
 { are performed here (joystick reading). }
 { Can call D_PostEvent. }
-{ }
+
 procedure I_StartFrame;
 
-{ }
+
 { Called by D_DoomLoop, }
 { called before processing each tic in a frame. }
 { Quick syncronous operations are performed here. }
@@ -111,7 +88,7 @@ procedure I_ProcessWindows;
 
 function I_GameFinished: boolean;
 
-procedure I_WaitVBL(const count: integer);
+procedure I_WaitVBL(const Count: integer);
 
 var
   mb_used: integer = 6;
@@ -124,11 +101,11 @@ uses Windows, Messages,
   d_net, g_game;
 
 var
-  finished: boolean = false;
+  finished: boolean = False;
 
 function I_GameFinished: boolean;
 begin
-  result := finished;
+  Result := finished;
 end;
 
 procedure I_ProcessWindows;
@@ -145,9 +122,9 @@ begin
   end;
 end;
 
-//
+
 // I_StartFrame
-//
+
 procedure I_StartFrame;
 begin
   I_ProcessWindows;
@@ -155,13 +132,13 @@ begin
   I_ProcessInput;
 end;
 
-//
+
 // I_StartTic
-//
+
 procedure I_StartTic;
 begin
-//  if not InBackground then   // VJ ?
-//    I_ProcessInput;          // VJ ?
+  //  if not InBackground then   // VJ ?
+  //    I_ProcessInput;          // VJ ?
 end;
 
 var
@@ -169,24 +146,24 @@ var
 
 function I_BaseTiccmd: Pticcmd_t;
 begin
-  result := @emptycmd;
+  Result := @emptycmd;
 end;
 
 function I_GetHeapSize: integer;
 begin
-  result := mb_used * 1024 * 1024;
+  Result := mb_used * 1024 * 1024;
 end;
 
 function I_ZoneBase(var size: integer): pointer;
 begin
   size := I_GetHeapSize;
-  result := malloc(size);
+  Result := malloc(size);
 end;
 
-//
+
 // I_GetTime
 // returns time in 1/70th second tics
-//
+
 var
   basetime: int64;
   Freq: int64;
@@ -204,12 +181,12 @@ begin
   end;
   if basetime = 0 then
     basetime := _time;
-  result := round(((_time - basetime) / Freq) * TICRATE);
+  Result := round(((_time - basetime) / Freq) * TICRATE);
 end;
 
-//
+
 // I_Init
-//
+
 procedure I_Init;
 begin
   printf('I_InitSound: Initializing DirectSound.' + #13#10);
@@ -220,43 +197,43 @@ begin
   I_InitInput;
 end;
 
-//
+
 // I_Quit
-//
+
 procedure I_Quit;
 begin
-//  finished := true;
+  //  finished := true;
   PostMessage(hMainWnd, WM_DESTROY, 0, 0);
 end;
 
 procedure I_Destroy;
 begin
-  finished := true;
+  finished := True;
   D_QuitNetGame;
-//  I_ShutdownSound;
+  //  I_ShutdownSound;
   I_ShutdownMusic;
   I_ShutdownInput;
   M_SaveDefaults;
-//  I_ShutdownGraphics;
+  //  I_ShutdownGraphics;
   I_ShutdownIO;
   Halt(0);
 end;
 
 // Wait for vertical retrace or pause a bit.
-procedure I_WaitVBL(const count: integer);
+procedure I_WaitVBL(const Count: integer);
 begin
-  sleep(count);
+  sleep(Count);
 end;
 
 function I_AllocLow(length: integer): pointer;
 begin
-  result := malloc(length);
-  memset(result, 0, length);
+  Result := malloc(length);
+  memset(Result, 0, length);
 end;
 
-//
+
 // I_Error
-//
+
 procedure I_Error(const error: string; const Args: array of const);
 var
   soutproc: TOutProc;
@@ -289,4 +266,3 @@ initialization
     Freq := 1000;
 
 end.
-
