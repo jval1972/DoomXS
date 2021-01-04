@@ -28,35 +28,6 @@ unit m_fixed;
 
 interface
 
-{
-    m_fixed.h, m_fixed.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {	Fixed point arithemtics, implementation. }
-  { }
-  {----------------------------------------------------------------------------- }
-
-  { }
-  { Fixed point, 32bit as 16.16. }
-  { }
-
 const
   FRACBITS = 16;
   FRACUNIT = 1 shl FRACBITS;
@@ -75,16 +46,18 @@ function FixedDiv2(a: fixed_t; b: fixed_t): fixed_t;
 
 implementation
 
-uses i_system,
-  d_delphi, doomtype;
+uses
+  i_system,
+  d_delphi,
+  doomtype;
 
 function FixedMul(a: fixed_t; b: fixed_t): fixed_t;
 var
   c: extended;
 begin
-//  result := (a * b) div FRACUNIT;
+  //  result := (a * b) div FRACUNIT;
   c := a / FRACUNIT;
-  result := trunc(c * b);
+  Result := trunc(c * b);
 end;
 
 function FixedDiv(a: fixed_t; b: fixed_t): fixed_t;
@@ -92,12 +65,12 @@ begin
   if _SHR(abs(a), 14) >= abs(b) then
   begin
     if a xor b < 0 then
-      result := MININT
+      Result := MININT
     else
-      result := MAXINT;
+      Result := MAXINT;
   end
   else
-    result := FixedDiv2(a, b);
+    Result := FixedDiv2(a, b);
 end;
 
 function FixedDiv2(a: fixed_t; b: fixed_t): fixed_t;
@@ -109,8 +82,7 @@ begin
   if (c >= 2147483648.0) or (c < -2147483648.0) then
     I_Error('FixedDiv(): divide by zero' + #13#10);
 
-  result := trunc(c);
+  Result := trunc(c);
 end;
 
 end.
-
