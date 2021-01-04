@@ -29,83 +29,61 @@ unit i_main;
 interface
 
 uses Windows,
-    d_delphi;
-
-{
-    i_main.c
-}
-
-  { Emacs style mode select   -*- C++ -*-  }
-  {----------------------------------------------------------------------------- }
-  { }
-  { $Id:$ }
-  { }
-  { Copyright (C) 1993-1996 by id Software, Inc. }
-  { }
-  { This source is available for distribution and/or modification }
-  { only under the terms of the DOOM Source Code License as }
-  { published by id Software. All rights reserved. }
-  { }
-  { The source is distributed in the hope that it will be useful, }
-  { but WITHOUT ANY WARRANTY; without even the implied warranty of }
-  { FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License }
-  { for more details. }
-  { }
-  { DESCRIPTION: }
-  {   Main program, simply calls D_DoomMain high level loop. }
-  {  }
-  {----------------------------------------------------------------------------- }
+  d_delphi;
 
 var
   hMainWnd: HWND = 0;
 
 const
-  AppTitle = 'Delphi Doom';
+  AppTitle = 'DoomXS';
 
 procedure DoomMain;
 
 implementation
 
-uses Messages,
-  doomdef, d_main,
-  i_input, i_system,
+uses
+  Messages,
+  doomdef,
+  d_main,
+  i_input,
+  i_system,
   m_argv;
 
-function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM;
-  lParam: LPARAM): LRESULT; stdcall; export;
+function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT;
+  stdcall; export;
 begin
   if not I_GameFinished then
   begin
     case Msg of
       WM_SETCURSOR:
-        begin
-          SetCursor(0);
-        end;
+      begin
+        SetCursor(0);
+      end;
       WM_SYSCOMMAND:
+      begin
+        if (wParam = SC_SCREENSAVE) then
         begin
-          if (wParam = SC_SCREENSAVE) then
-          begin
-            result := 0;
-            exit;
-          end;
-        end;
-      WM_ACTIVATE:
-        begin
-          I_SynchronizeInput(wparam <> WA_INACTIVE);
-        end;
-      WM_CLOSE:
-        begin
-          result := 0; // Preserve closing window by pressing Alt + F4
+          Result := 0;
           exit;
         end;
+      end;
+      WM_ACTIVATE:
+      begin
+        I_SynchronizeInput(wparam <> WA_INACTIVE);
+      end;
+      WM_CLOSE:
+      begin
+        Result := 0; // Preserve closing window by pressing Alt + F4
+        exit;
+      end;
       WM_DESTROY:
-        begin
-          I_Destroy;
-        end;
+      begin
+        I_Destroy;
+      end;
     end;
   end;
 
-  result := DefWindowProc(hWnd, Msg, WParam, LParam);
+  Result := DefWindowProc(hWnd, Msg, WParam, LParam);
 end;
 
 procedure DoomMain;
@@ -124,19 +102,9 @@ begin
     if RegisterClass(WindowClass) = 0 then
       Halt(1);
   end;
-  hMainWnd := CreateWindowEx(
-    CS_HREDRAW or CS_VREDRAW,
-    WindowClass.lpszClassName,
-    AppTitle,
-    WS_OVERLAPPED,
-    0,
-    0,
-    SCREENWIDTH,
-    SCREENHEIGHT,
-    0,
-    0,
-    HInstance,
-    nil);
+  hMainWnd := CreateWindowEx(CS_HREDRAW or CS_VREDRAW,
+    WindowClass.lpszClassName, AppTitle, WS_OVERLAPPED, 0,
+    0, SCREENWIDTH, SCREENHEIGHT, 0, 0, HInstance, nil);
   ShowWindow(hMainWnd, CmdShow);
   UpdateWindow(hMainWnd);
   D_DoomMain;
