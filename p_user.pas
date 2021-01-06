@@ -28,69 +28,51 @@ unit p_user;
 
 interface
 
-{
-    p_user.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Player related stuff.
-//	Bobbing POV/weapon, movement.
-//	Pending weapon.
-//
-//-----------------------------------------------------------------------------
-
-uses d_player;
+uses
+  d_player;
 
 procedure P_PlayerThink(player: Pplayer_t);
 
 implementation
 
 uses
-//  i_system, // VJ for debugging
   d_delphi,
-  m_fixed, tables,
-  d_ticcmd, d_event,
-  info_h, info,
-  p_mobj_h, p_mobj, p_tick, p_pspr, p_local, p_spec, p_map,
-  r_main, r_defs,
-  doomdef, doomstat;
+  m_fixed,
+  tables,
+  d_ticcmd,
+  d_event,
+  info_h,
+  info,
+  p_mobj_h,
+  p_mobj,
+  p_tick,
+  p_pspr,
+  p_local,
+  p_spec,
+  p_map,
+  r_main,
+  r_defs,
+  doomdef,
+  doomstat;
 
 const
-// Index of the special effects (INVUL inverse) map.
+  // Index of the special effects (INVUL inverse) map.
   INVERSECOLORMAP = 32;
 
-//
+
 // Movement.
-//
+
 const
-// 16 pixels of bob
+  // 16 pixels of bob
   MAXBOB = $100000;
 
 var
   onground: boolean;
 
-//
+
 // P_Thrust
 // Moves the given origin along a given angle.
-//
+
 procedure P_Thrust(player: Pplayer_t; angle: angle_t; const move: fixed_t);
 begin
   angle := _SHRW(angle, ANGLETOFINESHIFT);
@@ -99,10 +81,10 @@ begin
   player.mo.momy := player.mo.momy + FixedMul(move, finesine[angle]);
 end;
 
-//
+
 // P_CalcHeight
 // Calculate the walking / running height adjustment
-//
+
 procedure P_CalcHeight(player: Pplayer_t);
 var
   angle: integer;
@@ -115,9 +97,9 @@ begin
   // Note: a LUT allows for effects
   //  like a ramp with low health.
 
-  player.bob :=	FixedMul(player.mo.momx, player.mo.momx) +
-                FixedMul(player.mo.momy, player.mo.momy);
-  player.bob :=	_SHR(player.bob, 2);
+  player.bob := FixedMul(player.mo.momx, player.mo.momx) +
+    FixedMul(player.mo.momy, player.mo.momy);
+  player.bob := _SHR(player.bob, 2);
 
   if player.bob > MAXBOB then
     player.bob := MAXBOB;
@@ -129,7 +111,7 @@ begin
     if player.viewz > player.mo.ceilingz - 4 * FRACUNIT then
       player.viewz := player.mo.ceilingz - 4 * FRACUNIT;
 
-    player.viewz := player.mo.z + player.viewheight; 
+    player.viewz := player.mo.z + player.viewheight;
     exit;
   end;
 
@@ -168,24 +150,14 @@ begin
     player.viewz := player.mo.ceilingz - 4 * FRACUNIT;
 end;
 
-//
+
 // P_MovePlayer
-//
+
 procedure P_MovePlayer(player: Pplayer_t);
 var
   cmd: Pticcmd_t;
   look: integer;
 begin
-{  fprintf(debugfile, '--------------------------' + #13#10);
-  fprintf(debugfile, 'P_MovePlayer()' + #13#10);
-  fprintf(debugfile, 'leveltime = %d' + #13#10, [leveltime]);
-  fprintf(debugfile, 'player.mo.angle = %d' + #13#10, [player.mo.angle]);
-  fprintf(debugfile, 'player.mo.momz = %d' + #13#10, [player.mo.momz]);
-  fprintf(debugfile, 'player.mo.z = %d' + #13#10, [player.mo.z]);
-  fprintf(debugfile, 'player.mo.floorz = %d' + #13#10, [player.mo.floorz]);
-  fprintf(debugfile, 'player.viewheight = %d' + #13#10, [player.viewheight]);
-  fprintf(debugfile, 'player.viewz = %d' + #13#10, [player.viewz]);}
-
   cmd := @player.cmd;
 
   player.mo.angle := player.mo.angle + _SHLW(cmd.angleturn, 16);
@@ -201,17 +173,17 @@ begin
     P_Thrust(player, player.mo.angle - ANG90, cmd.sidemove * 2048);
 
   if (boolval(cmd.forwardmove) or boolval(cmd.sidemove)) and
-     (player.mo.state = @states[Ord(S_PLAY)]) then
+    (player.mo.state = @states[Ord(S_PLAY)]) then
     P_SetMobjState(player.mo, S_PLAY_RUN1);
 
   look := cmd.look;
-	if look > 7 then
+  if look > 7 then
     look := look - 16;
 
-	if boolval(look) then
+  if boolval(look) then
   begin
     if look = TOCENTER then
-      player.centering := true
+      player.centering := True
     else
     begin
       player.lookdir := player.lookdir + 5 * look;
@@ -230,20 +202,20 @@ begin
     if abs(player.lookdir) < 8 then
     begin
       player.lookdir := 0;
-      player.centering := false;
+      player.centering := False;
     end;
   end;
 
 end;
 
-//
+
 // P_DeathThink
 // Fall on your face when dying.
 // Decrease POV height to floor height.
-//
+
 const
   ANG5 = ANG90 div 18;
-  ANG355 = ANG270 +  ANG5 * 17; // add by VJ 
+  ANG355 = ANG270 + ANG5 * 17; // add by VJ
 
 procedure P_DeathThink(player: Pplayer_t);
 var
@@ -265,19 +237,18 @@ begin
 
   if boolval(player.attacker) and (player.attacker <> player.mo) then
   begin
-    angle := R_PointToAngle2(
-      player.mo.x, player.mo.y, player.attacker.x, player.attacker.y);
+    angle := R_PointToAngle2(player.mo.x, player.mo.y,
+      player.attacker.x, player.attacker.y);
 
     delta := angle - player.mo.angle;
 
-//    if (delta < ANG5) or (delta > LongWord(-ANG5)) then // VJ changed!, angle_t is integer now, not longword
     if (delta < ANG5) or (delta > ANG355) then
     begin
       // Looking at killer,
       //  so fade damage flash down.
       player.mo.angle := angle;
 
-      if boolval(player.damagecount) then
+      if player.damagecount > 0 then
         player.damagecount := player.damagecount - 1;
     end
     else if delta < ANG180 then
@@ -285,17 +256,17 @@ begin
     else
       player.mo.angle := player.mo.angle - ANG5;
   end
-  else if boolval(player.damagecount) then
+  else if player.damagecount > 0 then
     player.damagecount := player.damagecount - 1;
 
 
-  if boolval(player.cmd.buttons and BT_USE) then
+  if boolval(player.cmd.Buttons and BT_USE) then
     player.playerstate := PST_REBORN;
 end;
 
-//
+
 // P_PlayerThink
-//
+
 procedure P_PlayerThink(player: Pplayer_t);
 var
   cmd: Pticcmd_t;
@@ -309,7 +280,7 @@ begin
 
   // chain saw run forward
   cmd := @player.cmd;
-  if boolval(player.mo.flags and MF_JUSTATTACKED) then
+  if player.mo.flags and MF_JUSTATTACKED <> 0 then
   begin
     cmd.angleturn := 0;
     cmd.forwardmove := $c800 div 512;
@@ -340,50 +311,48 @@ begin
   // Check for weapon change.
 
   // A special event has no other buttons.
-  if boolval(cmd.buttons and BT_SPECIAL) then
-    cmd.buttons := 0;
+  if boolval(cmd.Buttons and BT_SPECIAL) then
+    cmd.Buttons := 0;
 
-  if boolval(cmd.buttons and BT_CHANGE) then
+  if boolval(cmd.Buttons and BT_CHANGE) then
   begin
     // The actual changing of the weapon is done
     //  when the weapon psprite can do it
     //  (read: not in the middle of an attack).
-    newweapon := weapontype_t(_SHR(cmd.buttons and BT_WEAPONMASK, BT_WEAPONSHIFT));
+    newweapon := weapontype_t(_SHR(cmd.Buttons and BT_WEAPONMASK, BT_WEAPONSHIFT));
 
-  	if (newweapon = wp_fist) and
-       boolval(player.weaponowned[Ord(wp_chainsaw)]) and (not (
-       (player.readyweapon = wp_chainsaw) and boolval(player.powers[Ord(pw_strength)]))) then
+    if (newweapon = wp_fist) and boolval(player.weaponowned[Ord(wp_chainsaw)]) and
+      (not ((player.readyweapon = wp_chainsaw) and
+      boolval(player.powers[Ord(pw_strength)]))) then
       newweapon := wp_chainsaw;
 
-
-	  if (gamemode = commercial) and
-  	   (newweapon = wp_shotgun) and
-  	   boolval(player.weaponowned[Ord(wp_supershotgun)]) and
-  	   (player.readyweapon <> wp_supershotgun) then
+    if (gamemode = commercial) and (newweapon = wp_shotgun) and
+      boolval(player.weaponowned[Ord(wp_supershotgun)]) and
+      (player.readyweapon <> wp_supershotgun) then
       newweapon := wp_supershotgun;
 
 
-	  if boolval(player.weaponowned[Ord(newweapon)]) and
-       (newweapon <> player.readyweapon) then
+    if boolval(player.weaponowned[Ord(newweapon)]) and
+      (newweapon <> player.readyweapon) then
       // Do not go to plasma or BFG in shareware,
       //  even if cheated.
       if ((newweapon <> wp_plasma) and (newweapon <> wp_bfg)) or
-         (gamemode <> shareware) then
+        (gamemode <> shareware) then
         player.pendingweapon := newweapon;
 
   end;
 
   // check for use
-  if boolval(cmd.buttons and BT_USE) then
+  if boolval(cmd.Buttons and BT_USE) then
   begin
     if not player.usedown then
     begin
       P_UseLines(player);
-      player.usedown := true;
+      player.usedown := True;
     end;
   end
   else
-    player.usedown := false;
+    player.usedown := False;
 
   // cycle psprites
   P_MovePsprites(player);
@@ -421,7 +390,7 @@ begin
   if boolval(player.powers[Ord(pw_invulnerability)]) then
   begin
     if (player.powers[Ord(pw_invulnerability)] > 4 * 32) or
-       boolval(player.powers[Ord(pw_invulnerability)] and 8) then
+      boolval(player.powers[Ord(pw_invulnerability)] and 8) then
       player.fixedcolormap := INVERSECOLORMAP
     else
       player.fixedcolormap := 0;
@@ -429,7 +398,8 @@ begin
   else if boolval(player.powers[Ord(pw_infrared)]) then
   begin
     if (player.powers[Ord(pw_infrared)] > 4 * 32) or
-       boolval(player.powers[Ord(pw_infrared)] and 8) then
+      boolval(player.powers[Ord(pw_infrared)] and 8) then
+
       // almost full bright
       player.fixedcolormap := 1
     else
@@ -438,6 +408,5 @@ begin
   else
     player.fixedcolormap := 0;
 end;
-
 
 end.
