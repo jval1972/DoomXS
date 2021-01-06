@@ -28,7 +28,9 @@ unit p_floor;
 
 interface
 
-uses z_zone, doomdef,
+uses
+  z_zone,
+  doomdef,
   p_spec,
   m_fixed,
   p_local,
@@ -37,36 +39,9 @@ uses z_zone, doomdef,
   doomstat,
   sounds;
 
-{
-    p_floor.c
-}
 
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Floor animation: raising stairs.
-//
-//-----------------------------------------------------------------------------
-
-//
 // FLOORS
-//
+
 
 function T_MovePlane(sector: Psector_t; speed: fixed_t; dest: fixed_t;
   crush: boolean; floorOrCeiling: integer; direction: integer): result_e;
@@ -79,14 +54,18 @@ function EV_BuildStairs(line: Pline_t; _type: stair_e): integer;
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   doomdata,
-  p_map, p_tick, p_mobj_h, p_setup,
+  p_map,
+  p_tick,
+  p_mobj_h,
+  p_setup,
   r_data;
 
-//
+
 // Move a plane (floor or ceiling) and check for crushing
-//
+
 function T_MovePlane(sector: Psector_t; speed: fixed_t; dest: fixed_t;
   crush: boolean; floorOrCeiling: integer; direction: integer): result_e;
 var
@@ -94,157 +73,145 @@ var
 begin
   case floorOrCeiling of
     0:
+    begin
+      // FLOOR
+      if direction = -1 then
       begin
-        // FLOOR
-        if direction = -1 then
-        begin
         // DOWN
-          if sector.floorheight - speed < dest then
-          begin
-            lastpos := sector.floorheight;
-            sector.floorheight := dest;
-            if P_ChangeSector(sector, crush) then
-            begin
-              sector.floorheight := lastpos;
-              P_ChangeSector(sector, crush);
-            //return crushed;
-            end;
-            result := pastdest;
-            exit;
-          end
-          else
-          begin
-            lastpos := sector.floorheight;
-            sector.floorheight := sector.floorheight - speed;
-            if P_ChangeSector(sector, crush) then
-            begin
-              sector.floorheight := lastpos;
-              P_ChangeSector(sector, crush);
-              result := crushed;
-              exit;
-            end;
-          end;
-        end
-        else if direction = 1 then
+        if sector.floorheight - speed < dest then
         begin
-        // UP
-          if sector.floorheight + speed > dest then
+          lastpos := sector.floorheight;
+          sector.floorheight := dest;
+          if P_ChangeSector(sector, crush) then
           begin
-            lastpos := sector.floorheight;
-            sector.floorheight := dest;
-            if P_ChangeSector(sector, crush) then
-            begin
-              sector.floorheight := lastpos;
-              P_ChangeSector(sector, crush);
-            //return crushed;
-            end;
-            result := pastdest;
-            exit;
-          end
-          else
-          begin
-          // COULD GET CRUSHED
-            lastpos := sector.floorheight;
-            sector.floorheight := sector.floorheight + speed;
-            if P_ChangeSector(sector, crush) then
-            begin
-              if crush then
-              begin
-                result := crushed;
-                exit;
-              end;
-              sector.floorheight := lastpos;
-              P_ChangeSector(sector, crush);
-              result := crushed;
-              exit;
-            end
-          end;
-        end;
-      end;
-    1:
-      begin
-      // CEILING
-        if direction = -1 then
-        begin
-        // DOWN
-          if sector.ceilingheight - speed < dest then
-          begin
-            lastpos := sector.ceilingheight;
-            sector.ceilingheight := dest;
-            if P_ChangeSector(sector,crush) then
-            begin
-              sector.ceilingheight := lastpos;
-              P_ChangeSector(sector, crush);
-            //return crushed;
-            end;
-            result := pastdest;
-            exit;
-          end
-          else
-          begin
-          // COULD GET CRUSHED
-            lastpos := sector.ceilingheight;
-            sector.ceilingheight := sector.ceilingheight - speed;
-            if P_ChangeSector(sector, crush) then
-            begin
-              if crush then
-              begin
-                result := crushed;
-                exit;
-              end;
-              sector.ceilingheight := lastpos;
-              P_ChangeSector(sector, crush);
-              result := crushed;
-              exit;
-            end;
-          end;
-        end
-        else if direction = 1 then
-        begin
-        // UP
-          if sector.ceilingheight + speed > dest then
-          begin
-            lastpos := sector.ceilingheight;
-            sector.ceilingheight := dest;
-            if P_ChangeSector(sector, crush) then
-            begin
-              sector.ceilingheight := lastpos;
-              P_ChangeSector(sector, crush);
-            //return crushed;
-            end;
-            result := pastdest;
-            exit;
-          end
-          else
-          begin
-//            lastpos := sector.ceilingheight;
-            sector.ceilingheight := sector.ceilingheight + speed;
+            sector.floorheight := lastpos;
             P_ChangeSector(sector, crush);
-// UNUSED
-//#if 0
-//		if (flag == true)
-//		{
-//		    sector->ceilingheight = lastpos;
-//		    P_ChangeSector(sector,crush);
-//		    return crushed;
-//		}
-//#endif
+            //return crushed;
+          end;
+          Result := pastdest;
+          exit;
+        end
+        else
+        begin
+          lastpos := sector.floorheight;
+          sector.floorheight := sector.floorheight - speed;
+          if P_ChangeSector(sector, crush) then
+          begin
+            sector.floorheight := lastpos;
+            P_ChangeSector(sector, crush);
+            Result := crushed;
+            exit;
+          end;
+        end;
+      end
+      else if direction = 1 then
+      begin
+        // UP
+        if sector.floorheight + speed > dest then
+        begin
+          lastpos := sector.floorheight;
+          sector.floorheight := dest;
+          if P_ChangeSector(sector, crush) then
+          begin
+            sector.floorheight := lastpos;
+            P_ChangeSector(sector, crush);
+            //return crushed;
+          end;
+          Result := pastdest;
+          exit;
+        end
+        else
+        begin
+          // COULD GET CRUSHED
+          lastpos := sector.floorheight;
+          sector.floorheight := sector.floorheight + speed;
+          if P_ChangeSector(sector, crush) then
+          begin
+            if crush then
+            begin
+              Result := crushed;
+              exit;
+            end;
+            sector.floorheight := lastpos;
+            P_ChangeSector(sector, crush);
+            Result := crushed;
+            exit;
           end;
         end;
       end;
+    end;
+    1:
+    begin
+      // CEILING
+      if direction = -1 then
+      begin
+        // DOWN
+        if sector.ceilingheight - speed < dest then
+        begin
+          lastpos := sector.ceilingheight;
+          sector.ceilingheight := dest;
+          if P_ChangeSector(sector, crush) then
+          begin
+            sector.ceilingheight := lastpos;
+            P_ChangeSector(sector, crush);
+          end;
+          Result := pastdest;
+          exit;
+        end
+        else
+        begin
+          // COULD GET CRUSHED
+          lastpos := sector.ceilingheight;
+          sector.ceilingheight := sector.ceilingheight - speed;
+          if P_ChangeSector(sector, crush) then
+          begin
+            if crush then
+            begin
+              Result := crushed;
+              exit;
+            end;
+            sector.ceilingheight := lastpos;
+            P_ChangeSector(sector, crush);
+            Result := crushed;
+            exit;
+          end;
+        end;
+      end
+      else if direction = 1 then
+      begin
+        // UP
+        if sector.ceilingheight + speed > dest then
+        begin
+          lastpos := sector.ceilingheight;
+          sector.ceilingheight := dest;
+          if P_ChangeSector(sector, crush) then
+          begin
+            sector.ceilingheight := lastpos;
+            P_ChangeSector(sector, crush);
+          end;
+          Result := pastdest;
+          exit;
+        end
+        else
+        begin
+          sector.ceilingheight := sector.ceilingheight + speed;
+          P_ChangeSector(sector, crush);
+        end;
+      end;
+    end;
   end;
-  result := ok;
+  Result := ok;
 end;
 
-//
+
 // MOVE A FLOOR TO IT'S DESTINATION (UP OR DOWN)
-//
+
 procedure T_MoveFloor(floor: Pfloormove_t);
 var
   res: result_e;
 begin
   res := T_MovePlane(floor.sector, floor.speed, floor.floordestheight,
-            floor.crush, 0, floor.direction);
+    floor.crush, 0, floor.direction);
 
   if not boolval(leveltime and 7) then
     S_StartSound(Pmobj_t(@floor.sector.soundorg), Ord(sfx_stnmov));
@@ -255,7 +222,7 @@ begin
 
     if floor.direction = 1 then
     begin
-	    if floor._type = donutRaise then
+      if floor._type = donutRaise then
       begin
         floor.sector.special := floor.newspecial;
         floor.sector.floorpic := floor.texture;
@@ -276,9 +243,9 @@ begin
   end;
 end;
 
-//
+
 // HANDLE FLOOR TYPES
-//
+
 function EV_DoFloor(line: Pline_t; floortype: floor_e): integer;
 var
   secnum: integer;
@@ -289,7 +256,7 @@ var
   side: Pside_t;
 begin
   secnum := -1;
-  result := 0;
+  Result := 0;
   repeat
     secnum := P_FindSectorFromLineTag(line, secnum);
     if secnum < 0 then
@@ -299,161 +266,162 @@ begin
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
     if boolval(sec.specialdata) then
-	    continue;
+      continue;
 
     // new floor thinker
-	   result := 1;
+    Result := 1;
     floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
     floor.thinker._function.acp1 := @T_MoveFloor;
     floor._type := floortype;
-    floor.crush := false;
+    floor.crush := False;
 
     case floortype of
       lowerFloor:
-        begin
-          floor.direction := -1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := P_FindHighestFloorSurrounding(sec);
-        end;
+      begin
+        floor.direction := -1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := P_FindHighestFloorSurrounding(sec);
+      end;
       lowerFloorToLowest:
-        begin
-          floor.direction := -1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := P_FindLowestFloorSurrounding(sec);
-        end;
+      begin
+        floor.direction := -1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := P_FindLowestFloorSurrounding(sec);
+      end;
       turboLower:
-        begin
-          floor.direction := -1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED * 4;
-          floor.floordestheight :=
+      begin
+        floor.direction := -1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED * 4;
+        floor.floordestheight :=
           P_FindHighestFloorSurrounding(sec);
-          if floor.floordestheight <> sec.floorheight then
-            floor.floordestheight := floor.floordestheight + 8 * FRACUNIT;
-        end;
+        if floor.floordestheight <> sec.floorheight then
+          floor.floordestheight := floor.floordestheight + 8 * FRACUNIT;
+      end;
       raiseFloorCrush,
       raiseFloor:
-        begin
-          if floortype = raiseFloorCrush then
-            floor.crush := true;
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := P_FindLowestCeilingSurrounding(sec);
-          if floor.floordestheight > sec.ceilingheight then
-            floor.floordestheight := sec.ceilingheight;
-          if floortype = raiseFloorCrush then // if floor.crush then
-            floor.floordestheight := floor.floordestheight - 8 * FRACUNIT;
-        end;
+      begin
+        if floortype = raiseFloorCrush then
+          floor.crush := True;
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := P_FindLowestCeilingSurrounding(sec);
+        if floor.floordestheight > sec.ceilingheight then
+          floor.floordestheight := sec.ceilingheight;
+        if floortype = raiseFloorCrush then // if floor.crush then
+          floor.floordestheight := floor.floordestheight - 8 * FRACUNIT;
+      end;
       raiseFloorTurbo:
-        begin
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED * 4;
-          floor.floordestheight := P_FindNextHighestFloor(sec, sec.floorheight);
-        end;
+      begin
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED * 4;
+        floor.floordestheight := P_FindNextHighestFloor(sec, sec.floorheight);
+      end;
       raiseFloorToNearest:
-        begin
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := P_FindNextHighestFloor(sec, sec.floorheight);
-        end;
+      begin
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := P_FindNextHighestFloor(sec, sec.floorheight);
+      end;
       raiseFloor24:
-        begin
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := floor.sector.floorheight + 24 * FRACUNIT;
-        end;
+      begin
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := floor.sector.floorheight + 24 * FRACUNIT;
+      end;
       raiseFloor512:
-        begin
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := floor.sector.floorheight + 512 * FRACUNIT;
-        end;
+      begin
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := floor.sector.floorheight + 512 * FRACUNIT;
+      end;
       raiseFloor24AndChange:
-        begin
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := floor.sector.floorheight + 24 * FRACUNIT;
-          sec.floorpic := line.frontsector.floorpic;
-          sec.special := line.frontsector.special;
-        end;
+      begin
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := floor.sector.floorheight + 24 * FRACUNIT;
+        sec.floorpic := line.frontsector.floorpic;
+        sec.special := line.frontsector.special;
+      end;
       raiseToTexture:
+      begin
+        minsize := MAXINT;
+        floor.direction := 1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        for i := 0 to sec.linecount - 1 do
         begin
-          minsize := MAXINT;
-          floor.direction := 1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          for i := 0 to sec.linecount - 1 do
+          if boolval(twoSided(secnum, i)) then
           begin
-            if boolval(twoSided(secnum, i)) then
-            begin
-              side := getSide(secnum, i, 0);
-              if side.bottomtexture >= 0 then
-                if textureheight[side.bottomtexture] < minsize then
-                  minsize := textureheight[side.bottomtexture];
-              side := getSide(secnum, i, 1);
-              if side.bottomtexture >= 0 then
-                if textureheight[side.bottomtexture] < minsize then
-                  minsize := textureheight[side.bottomtexture];
-            end;
+            side := getSide(secnum, i, 0);
+            if side.bottomtexture >= 0 then
+              if textureheight[side.bottomtexture] < minsize then
+                minsize := textureheight[side.bottomtexture];
+            side := getSide(secnum, i, 1);
+            if side.bottomtexture >= 0 then
+              if textureheight[side.bottomtexture] < minsize then
+                minsize := textureheight[side.bottomtexture];
           end;
-          floor.floordestheight := floor.sector.floorheight + minsize;
         end;
+        floor.floordestheight := floor.sector.floorheight + minsize;
+      end;
       lowerAndChange:
+      begin
+        floor.direction := -1;
+        floor.sector := sec;
+        floor.speed := FLOORSPEED;
+        floor.floordestheight := P_FindLowestFloorSurrounding(sec);
+        floor.texture := sec.floorpic;
+        for i := 0 to sec.linecount - 1 do
         begin
-          floor.direction := -1;
-          floor.sector := sec;
-          floor.speed := FLOORSPEED;
-          floor.floordestheight := P_FindLowestFloorSurrounding(sec);
-          floor.texture := sec.floorpic;
-          for i := 0 to sec.linecount - 1 do
+          if boolval(twoSided(secnum, i)) then
           begin
-            if boolval(twoSided(secnum, i)) then
+            side := getSide(secnum, i, 0);
+            if pOperation(side.sector, @sectors[0], '-', SizeOf(side.sector^)) =
+              secnum then
             begin
-              side := getSide(secnum, i, 0);
-              if pOperation(side.sector, @sectors[0], '-', SizeOf(side.sector^)) = secnum then
+              sec := getSector(secnum, i, 1);
+              if sec.floorheight = floor.floordestheight then
               begin
-                sec := getSector(secnum, i, 1);
-                if sec.floorheight = floor.floordestheight then
-                begin
-                  floor.texture := sec.floorpic;
-                  floor.newspecial := sec.special;
-                  break;
-                end;
-              end
-              else
+                floor.texture := sec.floorpic;
+                floor.newspecial := sec.special;
+                break;
+              end;
+            end
+            else
+            begin
+              sec := getSector(secnum, i, 0);
+              if sec.floorheight = floor.floordestheight then
               begin
-                sec := getSector(secnum, i, 0);
-                if sec.floorheight = floor.floordestheight then
-                begin
-                  floor.texture := sec.floorpic;
-                  floor.newspecial := sec.special;
-                  break;
-                end;
+                floor.texture := sec.floorpic;
+                floor.newspecial := sec.special;
+                break;
               end;
             end;
           end;
         end;
+      end;
     end;
   until secnum < 0;
 end;
 
-//
+
 // BUILD A STAIRCASE!
-//
+
 function EV_BuildStairs(line: Pline_t; _type: stair_e): integer;
 var
   secnum: integer;
-  height: integer;
+  Height: integer;
   i: integer;
   newsecnum: integer;
   texture: integer;
@@ -465,7 +433,7 @@ var
   speed: fixed_t;
 begin
   secnum := -1;
-  result := 0;
+  Result := 0;
 
   repeat
     secnum := P_FindSectorFromLineTag(line, secnum);
@@ -479,7 +447,7 @@ begin
       continue;
 
     // new floor thinker
-    result := 1;
+    Result := 1;
     floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
@@ -488,15 +456,15 @@ begin
     floor.sector := sec;
     case _type of
       build8:
-        begin
-          speed := FLOORSPEED div 4;
-          stairsize := 8 * FRACUNIT;
-        end;
+      begin
+        speed := FLOORSPEED div 4;
+        stairsize := 8 * FRACUNIT;
+      end;
       turbo16:
-        begin
-          speed := FLOORSPEED * 4;
-          stairsize := 16 * FRACUNIT;
-        end;
+      begin
+        speed := FLOORSPEED * 4;
+        stairsize := 16 * FRACUNIT;
+      end;
       else
       begin
         speed := 0;
@@ -505,36 +473,36 @@ begin
     end;
     floor.speed := speed;
 
-    height := sec.floorheight + stairsize;
-    floor.floordestheight := height;
+    Height := sec.floorheight + stairsize;
+    floor.floordestheight := Height;
 
     texture := sec.floorpic;
 
     // Find next sector to raise
-    // 1.	Find 2-sided line with same sector side[0]
-    // 2.	Other side is the next sector to raise
+    // 1.  Find 2-sided line with same sector side[0]
+    // 2.  Other side is the next sector to raise
     repeat
       ok := 0;
-	    for i := 0 to sec.linecount - 1 do
+      for i := 0 to sec.linecount - 1 do
       begin
-        if not boolval(sec.lines[i].flags and ML_TWOSIDED) then
+        if not boolval(sec.Lines[i].flags and ML_TWOSIDED) then
           continue;
 
-        tsec := sec.lines[i].frontsector;
-        newsecnum := pOperation (tsec, @sectors[0], '-', SizeOf(sector_t));
-//        (integer(tsec) - integer(@sectors[0])) div ;
+        tsec := sec.Lines[i].frontsector;
+        newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
+        //        (integer(tsec) - integer(@sectors[0])) div ;
 
         if secnum <> newsecnum then
           continue;
 
-        tsec := sec.lines[i].backsector;
+        tsec := sec.Lines[i].backsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
         //integer(tsec) - integer(sectors)) div SizeOf(sector_t);
 
         if tsec.floorpic <> texture then
           continue;
 
-        height := height + stairsize;
+        Height := Height + stairsize;
 
         if boolval(tsec.specialdata) then
           continue;
@@ -550,11 +518,11 @@ begin
         floor.direction := 1;
         floor.sector := sec;
         floor.speed := speed;
-        floor.floordestheight := height;
+        floor.floordestheight := Height;
         ok := 1;
         break;
-	    end;
-	  until not boolval(ok);
+      end;
+    until not boolval(ok);
   until secnum < 0;
 end;
 
