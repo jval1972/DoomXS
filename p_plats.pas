@@ -28,37 +28,19 @@ unit p_plats;
 
 interface
 
-uses i_system, z_zone, m_rnd, doomdef,
-  p_spec, p_local,
+uses
+  i_system,
+  z_zone,
+  m_rnd,
+  doomdef,
+  p_spec,
+  p_local,
   r_defs,
   s_sound,
-// State.
+  // State.
   doomstat,
-// Data.
+  // Data.
   sounds;
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Plats (i.e. elevator platforms) code, raising/lowering.
-//
-//-----------------------------------------------------------------------------
 
 var
   activeplats: array[0..MAXPLATS - 1] of Pplat_t;
@@ -77,9 +59,13 @@ procedure P_RemoveActivePlat(plat: Pplat_t);
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   m_fixed,
-  p_mobj_h, p_tick, p_setup, p_floor;
+  p_mobj_h,
+  p_tick,
+  p_setup,
+  p_floor;
 
 procedure T_PlatRaise(plat: Pplat_t);
 var
@@ -87,80 +73,80 @@ var
 begin
   case plat.status of
     up:
+    begin
+      res := T_MovePlane(plat.sector, plat.speed, plat.high, plat.crush, 0, 1);
+
+      if (plat._type = raiseAndChange) or (plat._type = raiseToNearestAndChange) then
       begin
-        res := T_MovePlane(plat.sector, plat.speed, plat.high, plat.crush, 0, 1);
+        if not boolval(leveltime and 7) then
+          S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_stnmov));
+      end;
 
-        if (plat._type = raiseAndChange) or (plat._type = raiseToNearestAndChange) then
+      if (res = crushed) and (not plat.crush) then
+      begin
+        plat.Count := plat.wait;
+        plat.status := down;
+        S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstart));
+      end
+      else
+      begin
+        if res = pastdest then
         begin
-          if not boolval(leveltime and 7) then
-            S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_stnmov));
-        end;
+          plat.Count := plat.wait;
+          plat.status := waiting;
+          S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstop));
 
-        if (res = crushed) and (not plat.crush) then
-        begin
-          plat.count := plat.wait;
-          plat.status := down;
-          S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstart));
-        end
-        else
-        begin
-          if res = pastdest then
-          begin
-            plat.count := plat.wait;
-            plat.status := waiting;
-            S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstop));
-
-            case plat._type of
-              blazeDWUS,
-              downWaitUpStay:
-                P_RemoveActivePlat(plat);
-              raiseAndChange,
-              raiseToNearestAndChange:
-                P_RemoveActivePlat(plat);
-            end;
+          case plat._type of
+            blazeDWUS,
+            downWaitUpStay:
+              P_RemoveActivePlat(plat);
+            raiseAndChange,
+            raiseToNearestAndChange:
+              P_RemoveActivePlat(plat);
           end;
         end;
       end;
+    end;
 
     down:
-      begin
-        res := T_MovePlane(plat.sector, plat.speed, plat.low, false, 0, -1);
+    begin
+      res := T_MovePlane(plat.sector, plat.speed, plat.low, False, 0, -1);
 
-        if res = pastdest then
-        begin
-          plat.count := plat.wait;
-          plat.status := waiting;
-          S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstop));
-        end;
-      end;
-    waiting:
+      if res = pastdest then
       begin
-        plat.count := plat.count - 1;
-        if not boolval(plat.count) then
-        begin
-          if plat.sector.floorheight = plat.low then
-            plat.status := up
-          else
-            plat.status := down;
-          S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstart));
-        end;
+        plat.Count := plat.wait;
+        plat.status := waiting;
+        S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstop));
       end;
+    end;
+    waiting:
+    begin
+      plat.Count := plat.Count - 1;
+      if not boolval(plat.Count) then
+      begin
+        if plat.sector.floorheight = plat.low then
+          plat.status := up
+        else
+          plat.status := down;
+        S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstart));
+      end;
+    end;
   end;
 end;
 
-//
+
 // Do Platforms
 //  "amount" is only used for SOME platforms.
-//
+
 function EV_DoPlat(line: Pline_t; _type: plattype_e; amount: integer): integer;
 var
   plat: Pplat_t;
   secnum: integer;
   sec: Psector_t;
 begin
-  result := 0;
+  Result := 0;
 
-  //	Activate all <type> plats that are in_stasis
+  //  Activate all <type> plats that are in_stasis
   if _type = perpetualRaise then
     P_ActivateInStasis(line.tag);
 
@@ -174,7 +160,7 @@ begin
       continue;
 
     // Find lowest & highest floors around sector
-    result := 1;
+    Result := 1;
     plat := Z_Malloc(SizeOf(plat^), PU_LEVSPEC, nil);
     P_AddThinker(@plat.thinker);
 
@@ -182,66 +168,66 @@ begin
     plat.sector := sec;
     plat.sector.specialdata := plat;
     plat.thinker._function.acp1 := @T_PlatRaise;
-    plat.crush := false;
+    plat.crush := False;
     plat.tag := line.tag;
 
     case _type of
       raiseToNearestAndChange:
-        begin
-          plat.speed := PLATSPEED div 2;
-          sec.floorpic := sides[line.sidenum[0]].sector.floorpic;
-          plat.high := P_FindNextHighestFloor(sec, sec.floorheight);
-          plat.wait := 0;
-          plat.status := up;
-          // NO MORE DAMAGE, IF APPLICABLE
-          sec.special := 0;
-          S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_stnmov));
-        end;
+      begin
+        plat.speed := PLATSPEED div 2;
+        sec.floorpic := sides[line.sidenum[0]].sector.floorpic;
+        plat.high := P_FindNextHighestFloor(sec, sec.floorheight);
+        plat.wait := 0;
+        plat.status := up;
+        // NO MORE DAMAGE, IF APPLICABLE
+        sec.special := 0;
+        S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_stnmov));
+      end;
 
       raiseAndChange:
-        begin
-          plat.speed := PLATSPEED div 2;
-          sec.floorpic := sides[line.sidenum[0]].sector.floorpic;
-          plat.high := sec.floorheight + amount * FRACUNIT;
-          plat.wait := 0;
-          plat.status := up;
-          S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_stnmov));
-        end;
+      begin
+        plat.speed := PLATSPEED div 2;
+        sec.floorpic := sides[line.sidenum[0]].sector.floorpic;
+        plat.high := sec.floorheight + amount * FRACUNIT;
+        plat.wait := 0;
+        plat.status := up;
+        S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_stnmov));
+      end;
       downWaitUpStay:
-        begin
-          plat.speed := PLATSPEED * 4;
-          plat.low := P_FindLowestFloorSurrounding(sec);
-          if plat.low > sec.floorheight then
-            plat.low := sec.floorheight;
-          plat.high := sec.floorheight;
-          plat.wait := 35 * PLATWAIT; // VJ ??? TICKRATE * PLATWAIT
-          plat.status := down;
-          S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_pstart));
-        end;
+      begin
+        plat.speed := PLATSPEED * 4;
+        plat.low := P_FindLowestFloorSurrounding(sec);
+        if plat.low > sec.floorheight then
+          plat.low := sec.floorheight;
+        plat.high := sec.floorheight;
+        plat.wait := 35 * PLATWAIT; // VJ ??? TICKRATE * PLATWAIT
+        plat.status := down;
+        S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_pstart));
+      end;
       blazeDWUS:
-        begin
-          plat.speed := PLATSPEED * 8;
-          plat.low := P_FindLowestFloorSurrounding(sec);
-          if plat.low > sec.floorheight then
-            plat.low := sec.floorheight;
-          plat.high := sec.floorheight;
-          plat.wait := 35 * PLATWAIT; // VJ ??? TICKRATE * PLATWAIT
-          plat.status := down;
-          S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_pstart));
-        end;
+      begin
+        plat.speed := PLATSPEED * 8;
+        plat.low := P_FindLowestFloorSurrounding(sec);
+        if plat.low > sec.floorheight then
+          plat.low := sec.floorheight;
+        plat.high := sec.floorheight;
+        plat.wait := 35 * PLATWAIT; // VJ ??? TICKRATE * PLATWAIT
+        plat.status := down;
+        S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_pstart));
+      end;
       perpetualRaise:
-        begin
-          plat.speed := PLATSPEED;
-          plat.low := P_FindLowestFloorSurrounding(sec);
-          if plat.low > sec.floorheight then
-            plat.low := sec.floorheight;
-          plat.high := P_FindHighestFloorSurrounding(sec);
-          if plat.high < sec.floorheight then
-            plat.high := sec.floorheight;
-          plat.wait := 35 * PLATWAIT; // VJ ??? TICKRATE * PLATWAIT
-          plat.status := plat_e(P_Random and 1);
-          S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_pstart));
-        end;
+      begin
+        plat.speed := PLATSPEED;
+        plat.low := P_FindLowestFloorSurrounding(sec);
+        if plat.low > sec.floorheight then
+          plat.low := sec.floorheight;
+        plat.high := P_FindHighestFloorSurrounding(sec);
+        if plat.high < sec.floorheight then
+          plat.high := sec.floorheight;
+        plat.wait := 35 * PLATWAIT; // VJ ??? TICKRATE * PLATWAIT
+        plat.status := plat_e(P_Random and 1);
+        S_StartSound(Pmobj_t(@sec.soundorg), Ord(sfx_pstart));
+      end;
     end;
     P_AddActivePlat(plat);
   end;
@@ -252,8 +238,7 @@ var
   i: integer;
 begin
   for i := 0 to MAXPLATS - 1 do
-    if boolval(activeplats[i]) and
-      (activeplats[i].tag = tag) and
+    if boolval(activeplats[i]) and (activeplats[i].tag = tag) and
       (activeplats[i].status = in_stasis) then
     begin
       activeplats[i].status := activeplats[i].oldstatus;
@@ -267,8 +252,9 @@ var
   i: integer;
 begin
   for i := 0 to MAXPLATS - 1 do
-    if boolval(activeplats[i]) and
-      (activeplats[i].status <> in_stasis) and
+    if boolval(activeplats[i]) and (activeplats[i].status <> in_stasis) and
+
+
       (activeplats[i].tag = line.tag) then
     begin
       activeplats[i].oldstatus := activeplats[i].status;
