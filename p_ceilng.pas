@@ -28,40 +28,17 @@ unit p_ceilng;
 
 interface
 
-uses z_zone, doomdef,
-  p_local, p_spec,
+uses
+  z_zone,
+  doomdef,
+  p_local,
+  p_spec,
   r_defs,
   s_sound,
-// State.
+  // State.
   doomstat,
-// Data.
+  // Data.
   sounds;
-
-{
-    p_ceiling.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:  Ceiling aninmation (lowering, crushing, raising)
-//
-//-----------------------------------------------------------------------------
 
 var
   activeceilings: array[0..MAXCEILINGS - 1] of Pceiling_t;
@@ -76,13 +53,17 @@ function EV_CeilingCrushStop(line: Pline_t): integer;
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   m_fixed,
-  p_mobj_h, p_tick, p_setup, p_floor;
+  p_mobj_h,
+  p_tick,
+  p_setup,
+  p_floor;
 
-//
+
 // Add an active ceiling
-//
+
 procedure P_AddActiveCeiling(c: Pceiling_t);
 var
   i: integer;
@@ -91,13 +72,13 @@ begin
     if activeceilings[i] = nil then
     begin
       activeceilings[i] := c;
-	    exit;
+      exit;
     end;
 end;
 
-//
+
 // Remove a ceiling's thinker
-//
+
 procedure P_RemoveActiveCeiling(c: Pceiling_t);
 var
   i: integer;
@@ -108,30 +89,29 @@ begin
       activeceilings[i].sector.specialdata := nil;
       P_RemoveThinker(@activeceilings[i].thinker);
       activeceilings[i] := nil;
-	    exit;
+      exit;
     end;
 end;
 
-//
+
 // Restart a ceiling that's in-stasis
-//
+
 procedure P_ActivateInStasisCeiling(line: Pline_t);
 var
   i: integer;
 begin
   for i := 0 to MAXCEILINGS - 1 do
-    if (activeceilings[i] <> nil) and
-       (activeceilings[i].tag = line.tag) and
-       (activeceilings[i].direction = 0) then
+    if (activeceilings[i] <> nil) and (activeceilings[i].tag = line.tag) and
+      (activeceilings[i].direction = 0) then
     begin
       activeceilings[i].direction := activeceilings[i].olddirection;
       activeceilings[i].thinker._function.acp1 := @T_MoveCeiling;
     end;
 end;
 
-//
+
 // T_MoveCeiling
-//
+
 
 procedure T_MoveCeiling(ceiling: Pceiling_t);
 var
@@ -139,97 +119,93 @@ var
 begin
   case ceiling.direction of
     0:
-    // IN STASIS
-	    begin
-      end;
+      // IN STASIS
+    begin
+    end;
     1:
-    // UP
+      // UP
+    begin
+      res := T_MovePlane(ceiling.sector, ceiling.speed,
+        ceiling.topheight, False, 1, ceiling.direction);
+
+      if not boolval(leveltime and 7) then
       begin
-        res := T_MovePlane(ceiling.sector,
-          ceiling.speed,
-          ceiling.topheight,
-          false, 1, ceiling.direction);
-
-        if not boolval(leveltime and 7) then
-        begin
-          if ceiling._type <> silentCrushAndRaise then
-            S_StartSound(Pmobj_t(@ceiling.sector.soundorg),
-              Ord(sfx_stnmov));
-        end;
-
-        if res = pastdest then
-        begin
-          case ceiling._type of
-            raiseToHighest:
-              P_RemoveActiveCeiling(ceiling);
-            silentCrushAndRaise:
-              begin
-                S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_pstop));
-                ceiling.direction := -1;
-              end;
-            fastCrushAndRaise,
-            crushAndRaise:
-              ceiling.direction := -1;
-          end;
-        end;
+        if ceiling._type <> silentCrushAndRaise then
+          S_StartSound(Pmobj_t(@ceiling.sector.soundorg),
+            Ord(sfx_stnmov));
       end;
-   -1:
-    // DOWN
+
+      if res = pastdest then
       begin
-        res := T_MovePlane(ceiling.sector,
-          ceiling.speed,
-          ceiling.bottomheight,
-          ceiling.crush, 1, ceiling.direction);
-
-        if not boolval(leveltime and 7) then
-        begin
-          if ceiling._type <> silentCrushAndRaise then
-            S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_stnmov));
-        end;
-
-        if res = pastdest then
-        begin
-          case ceiling._type of
-            silentCrushAndRaise:
-              begin
-                S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_pstop));
-                ceiling.speed := CEILSPEED;
-                ceiling.direction := 1;
-              end;
-            crushAndRaise:
-              begin
-                ceiling.speed := CEILSPEED;
-                ceiling.direction := 1;
-              end;
-            fastCrushAndRaise:
-              begin
-                ceiling.direction := 1;
-              end;
-            lowerAndCrush,
-            lowerToFloor:
-              P_RemoveActiveCeiling(ceiling);
-          end;
-        end
-        else // ( res <> pastdest )
-        begin
-          if res = crushed then
+        case ceiling._type of
+          raiseToHighest:
+            P_RemoveActiveCeiling(ceiling);
+          silentCrushAndRaise:
           begin
-            case ceiling._type of
-              silentCrushAndRaise,
-              crushAndRaise,
-              lowerAndCrush:
-                ceiling.speed := CEILSPEED div 8;
-            end;
+            S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_pstop));
+            ceiling.direction := -1;
+          end;
+          fastCrushAndRaise,
+          crushAndRaise:
+            ceiling.direction := -1;
+        end;
+      end;
+    end;
+    -1:
+      // DOWN
+    begin
+      res := T_MovePlane(ceiling.sector, ceiling.speed,
+        ceiling.bottomheight, ceiling.crush, 1, ceiling.direction);
+
+      if not boolval(leveltime and 7) then
+      begin
+        if ceiling._type <> silentCrushAndRaise then
+          S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_stnmov));
+      end;
+
+      if res = pastdest then
+      begin
+        case ceiling._type of
+          silentCrushAndRaise:
+          begin
+            S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_pstop));
+            ceiling.speed := CEILSPEED;
+            ceiling.direction := 1;
+          end;
+          crushAndRaise:
+          begin
+            ceiling.speed := CEILSPEED;
+            ceiling.direction := 1;
+          end;
+          fastCrushAndRaise:
+          begin
+            ceiling.direction := 1;
+          end;
+          lowerAndCrush,
+          lowerToFloor:
+            P_RemoveActiveCeiling(ceiling);
+        end;
+      end
+      else // ( res <> pastdest )
+      begin
+        if res = crushed then
+        begin
+          case ceiling._type of
+            silentCrushAndRaise,
+            crushAndRaise,
+            lowerAndCrush:
+              ceiling.speed := CEILSPEED div 8;
           end;
         end;
       end;
+    end;
   end;
 end;
 
-//
+
 // EV_DoCeiling
 // Move a ceiling up/down and all around!
-//
+
 function EV_DoCeiling(line: Pline_t; _type: ceiling_e): integer;
 var
   initial: boolean;
@@ -238,7 +214,7 @@ var
   ceiling: Pceiling_t;
 begin
   secnum := -1;
-  result := 0;
+  Result := 0;
 
   // Reactivate in-stasis ceilings...for certain types.
   case _type of
@@ -248,11 +224,11 @@ begin
       P_ActivateInStasisCeiling(line);
   end;
 
-  initial := true;
+  initial := True;
   while (secnum >= 0) or initial do
   begin
-    initial := false;
-    secnum := P_FindSectorFromLineTag(line,secnum);
+    initial := False;
+    secnum := P_FindSectorFromLineTag(line, secnum);
     if secnum < 0 then
       break;
 
@@ -261,51 +237,51 @@ begin
       continue;
 
     // new door thinker
-    result := 1;
+    Result := 1;
     ceiling := Z_Malloc(sizeof(ceiling^), PU_LEVSPEC, nil);
     P_AddThinker(@ceiling.thinker);
     sec.specialdata := ceiling;
     ceiling.thinker._function.acp1 := @T_MoveCeiling;
     ceiling.sector := sec;
-    ceiling.crush := false;
+    ceiling.crush := False;
 
     case _type of
       fastCrushAndRaise:
-        begin
-          ceiling.crush := true;
-          ceiling.topheight := sec.ceilingheight;
-          ceiling.bottomheight := sec.floorheight + (8 * FRACUNIT);
-          ceiling.direction := -1;
-          ceiling.speed := CEILSPEED * 2;
-        end;
+      begin
+        ceiling.crush := True;
+        ceiling.topheight := sec.ceilingheight;
+        ceiling.bottomheight := sec.floorheight + (8 * FRACUNIT);
+        ceiling.direction := -1;
+        ceiling.speed := CEILSPEED * 2;
+      end;
 
       silentCrushAndRaise,
       crushAndRaise:
-        begin
-          ceiling.crush := true;
-          ceiling.topheight := sec.ceilingheight;
-          ceiling.bottomheight := sec.floorheight;
-          if _type <> lowerToFloor then
-            ceiling.bottomheight := ceiling.bottomheight + 8 * FRACUNIT;
-          ceiling.direction := -1;
-          ceiling.speed := CEILSPEED;
-        end;
+      begin
+        ceiling.crush := True;
+        ceiling.topheight := sec.ceilingheight;
+        ceiling.bottomheight := sec.floorheight;
+        if _type <> lowerToFloor then
+          ceiling.bottomheight := ceiling.bottomheight + 8 * FRACUNIT;
+        ceiling.direction := -1;
+        ceiling.speed := CEILSPEED;
+      end;
       lowerAndCrush,
       lowerToFloor:
-        begin
-          ceiling.bottomheight := sec.floorheight;
-          if _type <> lowerToFloor then
-            ceiling.bottomheight := ceiling.bottomheight + 8 * FRACUNIT;
-          ceiling.direction := -1;
-          ceiling.speed := CEILSPEED;
-        end;
+      begin
+        ceiling.bottomheight := sec.floorheight;
+        if _type <> lowerToFloor then
+          ceiling.bottomheight := ceiling.bottomheight + 8 * FRACUNIT;
+        ceiling.direction := -1;
+        ceiling.speed := CEILSPEED;
+      end;
 
       raiseToHighest:
-        begin
-          ceiling.topheight := P_FindHighestCeilingSurrounding(sec);
-          ceiling.direction := 1;
-          ceiling.speed := CEILSPEED;
-        end;
+      begin
+        ceiling.topheight := P_FindHighestCeilingSurrounding(sec);
+        ceiling.direction := 1;
+        ceiling.speed := CEILSPEED;
+      end;
     end;
 
     ceiling.tag := sec.tag;
@@ -314,24 +290,23 @@ begin
   end;
 end;
 
-//
+
 // EV_CeilingCrushStop
 // Stop a ceiling from crushing!
-//
+
 function EV_CeilingCrushStop(line: Pline_t): integer;
 var
   i: integer;
 begin
-  result := 0;
+  Result := 0;
   for i := 0 to MAXCEILINGS - 1 do
-    if (activeceilings[i] <> nil) and
-       (activeceilings[i].tag = line.tag) and
-       (activeceilings[i].direction <> 0) then
+    if (activeceilings[i] <> nil) and (activeceilings[i].tag = line.tag) and
+      (activeceilings[i].direction <> 0) then
     begin
       activeceilings[i].olddirection := activeceilings[i].direction;
       activeceilings[i].thinker._function.acv := nil;
       activeceilings[i].direction := 0; // in-stasis
-	    result := 1;
+      Result := 1;
     end;
 end;
 
