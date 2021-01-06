@@ -28,46 +28,21 @@ unit p_tick;
 
 interface
 
-uses p_local, doomstat, d_think;
+uses
+  p_local,
+  doomstat,
+  d_think;
 
-{
-    p_tick.h, p_tick.c
-}
 
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Archiving: SaveGame I/O.
-//	Thinker, Ticker.
-//
-//-----------------------------------------------------------------------------
-
-//
 // THINKERS
 // All thinkers should be allocated by Z_Malloc
 // so they can be operated on uniformly.
 // The actual structures will vary in size,
 // but the first element must be thinker_t.
-//
+
 
 var
-// Both the head and tail of the thinker list.
+  // Both the head and tail of the thinker list.
   thinkercap: thinker_t;
 
 procedure P_InitThinkers;
@@ -83,66 +58,69 @@ var
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   doomdef,
   d_player,
   g_game,
   m_menu,
-  p_user, p_spec, p_mobj,
+  p_user,
+  p_spec,
+  p_mobj,
   z_zone;
 
 procedure P_InitThinkers;
 begin
   thinkercap.prev := @thinkercap;
-  thinkercap.next := @thinkercap;
+  thinkercap.Next := @thinkercap;
 end;
 
-//
+
 // P_AddThinker
 // Adds a new thinker at the end of the list.
-//
+
 procedure P_AddThinker(thinker: Pthinker_t);
 begin
-  thinkercap.prev.next := thinker;
-  thinker.next := @thinkercap;
+  thinkercap.prev.Next := thinker;
+  thinker.Next := @thinkercap;
   thinker.prev := thinkercap.prev;
   thinkercap.prev := thinker;
 end;
 
-//
+
 // P_RemoveThinker
 // Deallocation is lazy -- it will not actually be freed
 // until its thinking turn comes up.
-//
+
 procedure P_RemoveThinker(thinker: Pthinker_t);
 begin
   // FIXME: NOP.
   thinker._function.acv := nil;
 end;
 
-//
+
 // P_AllocateThinker
 // Allocates memory and adds a new thinker at the end of the list.
-//
+
 procedure P_AllocateThinker(thinker: Pthinker_t);
 begin
 end;
 
-//
+
 // P_RunThinkers
-//
+
 procedure P_RunThinkers;
 var
   currentthinker: Pthinker_t;
 begin
-  currentthinker := thinkercap.next;
+  currentthinker := thinkercap.Next;
   while currentthinker <> @thinkercap do
   begin
     if not Assigned(currentthinker._function.acv) then
     begin
       // time to remove it
-      currentthinker.next.prev := currentthinker.prev;
-      currentthinker.prev.next := currentthinker.next;
+      currentthinker.Next.prev := currentthinker.prev;
+      currentthinker.prev.Next := currentthinker.Next;
       Z_Free(currentthinker);
     end
     else
@@ -150,13 +128,13 @@ begin
       if Assigned(currentthinker._function.acp1) then
         currentthinker._function.acp1(currentthinker);
     end;
-    currentthinker := currentthinker.next;
+    currentthinker := currentthinker.Next;
   end;
 end;
 
-//
+
 // P_Ticker
-//
+
 procedure P_Ticker;
 var
   i: integer;
@@ -166,8 +144,8 @@ begin
     exit;
 
   // pause if in menu and at least one tic has been run
-  if (not netgame) and menuactive and
-     (not demoplayback) and (players[consoleplayer].viewz <> 1) then
+  if (not netgame) and menuactive and (not demoplayback) and
+    (players[consoleplayer].viewz <> 1) then
     exit;
 
 
@@ -180,7 +158,7 @@ begin
   P_RespawnSpecials;
 
   // for par times
-  inc(leveltime);
+  Inc(leveltime);
 end;
 
 end.
