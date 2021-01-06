@@ -28,35 +28,9 @@ unit p_sight;
 
 interface
 
-uses m_fixed,
+uses
+  m_fixed,
   p_mobj_h;
-
-{
-    p_sight.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	LineOfSight/Visibility checks, uses REJECT Lookup Table.
-//
-//-----------------------------------------------------------------------------
 
 function P_CheckSight(t1: Pmobj_t; t2: Pmobj_t): boolean;
 
@@ -66,15 +40,19 @@ var
 
 implementation
 
-uses d_delphi,
-  doomdef, doomdata,
+uses
+  d_delphi,
+  doomdef,
+  doomdata,
   i_system,
-  p_local, p_setup,
-  r_defs, r_main;
+  p_local,
+  p_setup,
+  r_defs,
+  r_main;
 
-//
+
 // P_CheckSight
-//
+
 var
   sightzstart: fixed_t; // eye z of looker
 
@@ -84,10 +62,10 @@ var
 
   sightcounts: array[0..1] of integer;
 
-//
+
 // P_DivlineSide
 // Returns side 0 (front), 1 (back), or 2 (on).
-//
+
 function P_DivlineSide(x, y: fixed_t; node: Pdivline_t): integer;
 var
   dx: fixed_t;
@@ -99,15 +77,15 @@ begin
   begin
     if x = node.x then
     begin
-      result := 2;
+      Result := 2;
       exit;
     end;
     if x <= node.x then
     begin
-      result := intval(node.dy > 0);
+      Result := intval(node.dy > 0);
       exit;
     end;
-    result := intval(node.dy < 0);
+    Result := intval(node.dy < 0);
     exit;
   end;
 
@@ -115,46 +93,42 @@ begin
   begin
     if x = node.y then
     begin
-      result := 2;
+      Result := 2;
       exit;
     end;
     if y <= node.y then
     begin
-      result := intval(node.dx < 0);
+      Result := intval(node.dx < 0);
       exit;
     end;
-    result := intval(node.dx > 0);
+    Result := intval(node.dx > 0);
     exit;
   end;
 
   dx := (x - node.x);
   dy := (y - node.y);
 
-//  left := (node.dy shr FRACBITS) * (dx shr FRACBITS);
-//  right := (dy div FRACUNIT) * (node.dx shr FRACBITS);
-//  left := _SHR(node.dy, FRACBITS) * _SHR(dx, FRACBITS);
-//  right := _SHR(dy, FRACBITS) * _SHR(node.dx, FRACBITS);
   left := (node.dy div FRACUNIT) * (dx div FRACUNIT);
   right := (dy div FRACUNIT) * (node.dx div FRACUNIT);
 
   if right < left then
   begin
-    result := 0; // front side
+    Result := 0; // front side
     exit;
   end;
 
   if left = right then
-    result := 2
+    Result := 2
   else
-    result := 1; // back side
+    Result := 1; // back side
 end;
 
-//
+
 // P_InterceptVector2
 // Returns the fractional intercept point
 // along the first divline.
 // This is only called by the addthings and addlines traversers.
-//
+
 function P_InterceptVector2(v2, v1: Pdivline_t): fixed_t;
 var
   num: fixed_t;
@@ -164,22 +138,22 @@ begin
 
   if den = 0 then
   begin
-    result := 0;
+    Result := 0;
     exit;
-    //	I_Error ("P_InterceptVector: parallel");
+    //  I_Error ("P_InterceptVector: parallel");
   end;
 
   num := FixedMul(_SHR(v1.x - v2.x, 8), v1.dy) +
-         FixedMul(_SHR(v2.y - v1.y, 8), v1.dx);
+    FixedMul(_SHR(v2.y - v1.y, 8), v1.dx);
 
-  result := FixedDiv(num , den);
+  Result := FixedDiv(num, den);
 end;
 
-//
+
 // P_CrossSubsector
 // Returns true
 //  if strace crosses the given subsector successfully.
-//
+
 function P_CrossSubsector(num: integer): boolean;
 var
   seg: Pseg_t;
@@ -198,14 +172,6 @@ var
   frac: fixed_t;
   slope: fixed_t;
 begin
-(*
-#ifdef RANGECHECK
-    if (num>=numsubsectors)
-	I_Error ("P_CrossSubsector: ss %i with numss = %i",
-		 num,
-		 numsubsectors);
-#endif
-*)
   sub := @subsectors[num];
 
   // check lines
@@ -244,7 +210,7 @@ begin
     // might do this after updating validcount?
     if not boolval(line.flags and ML_TWOSIDED) then
     begin
-      result := false;
+      Result := False;
       exit;
     end;
 
@@ -254,7 +220,7 @@ begin
 
     // no wall to block sight with?
     if (front.floorheight = back.floorheight) and
-       (front.ceilingheight = back.ceilingheight) then
+      (front.ceilingheight = back.ceilingheight) then
       continue;
 
     // possible occluder
@@ -273,7 +239,7 @@ begin
     // quick test for totally closed doors
     if openbottom >= opentop then
     begin
-      result := false; // stop
+      Result := False; // stop
       exit;
     end;
 
@@ -295,20 +261,20 @@ begin
 
     if topslope <= bottomslope then
     begin
-      result := false; // stop
+      Result := False; // stop
       exit;
     end;
   end;
 
   // passed the subsector ok
-  result := true;
+  Result := True;
 end;
 
-//
+
 // P_CrossBSPNode
 // Returns true
 //  if strace crosses the given node successfully.
-//
+
 function P_CrossBSPNode(bspnum: integer): boolean;
 var
   bsp: Pnode_t;
@@ -317,9 +283,9 @@ begin
   if boolval(bspnum and NF_SUBSECTOR) then
   begin
     if bspnum = -1 then
-      result := P_CrossSubsector(0)
+      Result := P_CrossSubsector(0)
     else
-      result := P_CrossSubsector(bspnum and (not NF_SUBSECTOR));
+      Result := P_CrossSubsector(bspnum and (not NF_SUBSECTOR));
     exit;
   end;
 
@@ -333,7 +299,7 @@ begin
   // cross the starting side
   if not P_CrossBSPNode(bsp.children[side]) then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
@@ -341,20 +307,20 @@ begin
   if side = P_DivlineSide(t2x, t2y, Pdivline_t(bsp)) then
   begin
     // the line doesn't touch the other side
-    result := true;
+    Result := True;
     exit;
   end;
 
   // cross the ending side
-  result := P_CrossBSPNode(bsp.children[side xor 1]);
+  Result := P_CrossBSPNode(bsp.children[side xor 1]);
 end;
 
-//
+
 // P_CheckSight
 // Returns true
 //  if a straight line between t1 and t2 is unobstructed.
 // Uses REJECT.
-//
+
 function P_CheckSight(t1: Pmobj_t; t2: Pmobj_t): boolean;
 var
   s1: integer;
@@ -366,8 +332,10 @@ begin
   // First check for trivial rejection.
 
   // Determine subsector entries in REJECT table.
-  s1 := pOperation(Psubsector_t(t1.subsector).sector, @sectors[0], '-', SizeOf(sectors[0]));
-  s2 := pOperation(Psubsector_t(t2.subsector).sector, @sectors[0], '-', SizeOf(sectors[0]));
+  s1 := pOperation(Psubsector_t(t1.subsector).sector, @sectors[0],
+    '-', SizeOf(sectors[0]));
+  s2 := pOperation(Psubsector_t(t2.subsector).sector, @sectors[0],
+    '-', SizeOf(sectors[0]));
   pnum := s1 * numsectors + s2;
   bytenum := _SHR(pnum, 3);
   bitnum := 1 shl (pnum and 7);
@@ -378,7 +346,7 @@ begin
     sightcounts[0] := sightcounts[0] + 1;
 
     // can't possibly be connected
-    result := false;
+    Result := False;
     exit;
   end;
 
@@ -386,10 +354,10 @@ begin
   // Now look from eyes of t1 to any part of t2.
   sightcounts[1] := sightcounts[1] + 1;
 
-  inc(validcount);
+  Inc(validcount);
 
-  sightzstart := t1.z + t1.height - _SHR(t1.height, 2);
-  topslope := (t2.z + t2.height) - sightzstart;
+  sightzstart := t1.z + t1.Height - _SHR(t1.Height, 2);
+  topslope := (t2.z + t2.Height) - sightzstart;
   bottomslope := t2.z - sightzstart;
 
   strace.x := t1.x;
@@ -400,7 +368,7 @@ begin
   strace.dy := t2.y - t1.y;
 
   // the head node is the last node output
-  result := P_CrossBSPNode(numnodes - 1);
+  Result := P_CrossBSPNode(numnodes - 1);
 end;
 
 end.
