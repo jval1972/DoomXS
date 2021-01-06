@@ -28,38 +28,13 @@ unit p_setup;
 
 interface
 
-uses d_delphi,
-  doomdef, doomdata,
+uses
+  d_delphi,
+  doomdef,
+  doomdata,
   m_fixed,
   p_mobj_h,
   r_defs;
-
-{
-    p_setup.h, p_setup.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//   Setup a game, startup stuff.
-//	Do all the WAD I/O, get map description,
-//	set up initial state and misc. LUTs.
-//
-//-----------------------------------------------------------------------------
 
 // NOT called by W_Ticker. Fixme.
 procedure P_SetupLevel(episode, map, playermask: integer; skill: skill_t);
@@ -68,7 +43,7 @@ procedure P_SetupLevel(episode, map, playermask: integer; skill: skill_t);
 procedure P_Init;
 
 var
-// origin of block map
+  // origin of block map
   bmaporgx: fixed_t;
   bmaporgy: fixed_t;
 
@@ -88,44 +63,43 @@ var
   nodes: Pnode_tArray;
 
   numlines: integer;
-  lines: Pline_tArray;
+  Lines: Pline_tArray;
 
   numsides: integer;
   sides: Pside_tArray;
 
-//
+
 // MAP related Lookup tables.
 // Store VERTEXES, LINEDEFS, SIDEDEFS, etc.
-//
+
 var
 
-// BLOCKMAP
-// Created from axis aligned bounding box
-// of the map, a rectangular array of
-// blocks of size ...
-// Used to speed up collision detection
-// by spatial subdivision in 2D.
-//
-// Blockmap size.
+  // BLOCKMAP
+  // Created from axis aligned bounding box
+  // of the map, a rectangular array of
+  // blocks of size ...
+  // Used to speed up collision detection
+  // by spatial subdivision in 2D.
+
+  // Blockmap size.
   bmapwidth: integer;
   bmapheight: integer; // size in mapblocks
   blockmap: PSmallIntArray; // int for larger maps
-// offsets in blockmap are from here
+  // offsets in blockmap are from here
   blockmaplump: PSmallIntArray;
-// for thing chains
+  // for thing chains
   blocklinks: Pmobj_tPArray;
 
-// REJECT
-// For fast sight rejection.
-// Speeds up enemy AI by skipping detailed
-//  LineOf Sight calculation.
-// Without special effect, this could be
-//  used as a PVS lookup as well.
-//
+  // REJECT
+  // For fast sight rejection.
+  // Speeds up enemy AI by skipping detailed
+  //  LineOf Sight calculation.
+  // Without special effect, this could be
+  //  used as a PVS lookup as well.
   rejectmatrix: PByteArray;
 
 const
-// Maintain single and multi player starting spots.
+  // Maintain single and multi player starting spots.
   MAX_DEATHMATCH_STARTS = 10;
 
 var
@@ -136,20 +110,28 @@ var
 
 implementation
 
-uses d_player,
-  z_zone, m_bbox, g_game, i_system, w_wad,
+uses
+  d_player,
+  z_zone,
+  m_bbox,
+  g_game,
+  i_system,
+  w_wad,
   info,
-  p_local, p_mobj, p_tick, p_spec, p_switch,
-  r_data, r_things,
-  s_sound, doomstat;
+  p_local,
+  p_mobj,
+  p_tick,
+  p_spec,
+  p_switch,
+  r_data,
+  r_things,
+  s_sound,
+  doomstat;
 
-
-//
 // P_LoadVertexes
-//
 procedure P_LoadVertexes(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   ml: Pmapvertex_t;
   li: Pvertex_t;
@@ -162,9 +144,9 @@ begin
   vertexes := Z_Malloc(numvertexes * SizeOf(vertex_t), PU_LEVEL, nil);
 
   // Load data into cache.
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ml := Pmapvertex_t(data);
+  ml := Pmapvertex_t(Data);
 
   // Copy and convert vertex coordinates,
   // internal representation as fixed.
@@ -173,19 +155,17 @@ begin
     li := @vertexes[i];
     li.x := ml.x * FRACUNIT;
     li.y := ml.y * FRACUNIT;
-    inc(ml);
+    Inc(ml);
   end;
 
   // Free buffer memory.
-  Z_Free(data);
+  Z_Free(Data);
 end;
 
-//
 // P_LoadSegs
-//
 procedure P_LoadSegs(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   ml: Pmapseg_t;
   li: Pseg_t;
@@ -196,9 +176,9 @@ begin
   numsegs := W_LumpLength(lump) div SizeOf(mapseg_t);
   segs := Z_Malloc(numsegs * SizeOf(seg_t), PU_LEVEL, nil);
   memset(segs, 0, numsegs * SizeOf(seg_t));
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ml := Pmapseg_t(data);
+  ml := Pmapseg_t(Data);
   for i := 0 to numsegs - 1 do
   begin
     li := @segs[i];
@@ -208,7 +188,7 @@ begin
     li.angle := _SHL(ml.angle, 16);
     li.offset := _SHL(ml.offset, 16);
     linedef := ml.linedef;
-    ldef := @lines[linedef];
+    ldef := @Lines[linedef];
     li.linedef := ldef;
     side := ml.side;
     li.sidedef := @sides[ldef.sidenum[side]];
@@ -217,27 +197,25 @@ begin
       li.backsector := sides[ldef.sidenum[side xor 1]].sector
     else
       li.backsector := nil;
-    inc(ml);
+    Inc(ml);
   end;
 
-  Z_Free(data);
+  Z_Free(Data);
 end;
 
-//
 // P_LoadSubsectors
-//
 procedure P_LoadSubsectors(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   ms: Pmapsubsector_t;
   ss: Psubsector_t;
 begin
   numsubsectors := W_LumpLength(lump) div SizeOf(mapsubsector_t);
   subsectors := Z_Malloc(numsubsectors * SizeOf(subsector_t), PU_LEVEL, nil);
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ms := Pmapsubsector_t(data);
+  ms := Pmapsubsector_t(Data);
   memset(subsectors, 0, numsubsectors * SizeOf(subsector_t));
 
   for i := 0 to numsubsectors - 1 do //; i++, ss++, ms++)
@@ -245,18 +223,16 @@ begin
     ss := @subsectors[i];
     ss.numlines := ms.numsegs;
     ss.firstline := ms.firstseg;
-    inc(ms);
+    Inc(ms);
   end;
 
-  Z_Free(data);
+  Z_Free(Data);
 end;
 
-//
 // P_LoadSectors
-//
 procedure P_LoadSectors(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   ms: Pmapsector_t;
   ss: Psector_t;
@@ -264,9 +240,9 @@ begin
   numsectors := W_LumpLength(lump) div SizeOf(mapsector_t);
   sectors := Z_Malloc(numsectors * SizeOf(sector_t), PU_LEVEL, nil);
   memset(sectors, 0, numsectors * SizeOf(sector_t));
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ms := Pmapsector_t(data);
+  ms := Pmapsector_t(Data);
   for i := 0 to numsectors - 1 do //; i++, ss++, ms++)
   begin
     ss := @sectors[i];
@@ -278,18 +254,16 @@ begin
     ss.special := ms.special;
     ss.tag := ms.tag;
     ss.thinglist := nil;
-    inc(ms);
+    Inc(ms);
   end;
 
-  Z_Free (data);
+  Z_Free(Data);
 end;
 
-//
 // P_LoadNodes
-//
 procedure P_LoadNodes(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   j: integer;
   k: integer;
@@ -298,11 +272,11 @@ var
 begin
   numnodes := W_LumpLength(lump) div SizeOf(mapnode_t);
   nodes := Z_Malloc(numnodes * SizeOf(node_t), PU_LEVEL, nil);
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  mn := Pmapnode_t(data);
+  mn := Pmapnode_t(Data);
 
-  for i := 0 to numnodes - 1 do //; i++, no++, mn++)
+  for i := 0 to numnodes - 1 do
   begin
     no := @nodes[i];
     no.x := mn.x * FRACUNIT;
@@ -313,32 +287,32 @@ begin
     begin
       no.children[j] := mn.children[j];
       for k := 0 to 3 do
-        no.bbox[j, k] := SmallInt(mn.bbox[j, k]) * FRACUNIT;
+        no.bbox[j, k] := smallint(mn.bbox[j, k]) * FRACUNIT;
     end;
-    inc(mn);
+    Inc(mn);
   end;
 
-  Z_Free (data);
+  Z_Free(Data);
 end;
 
-//
+
 // P_LoadThings
-//
+
 procedure P_LoadThings(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   mt: Pmapthing_t;
   numthings: integer;
   spawn: boolean;
 begin
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
   numthings := W_LumpLength(lump) div SizeOf(mapthing_t);
 
-  mt := Pmapthing_t(data);
+  mt := Pmapthing_t(Data);
   for i := 0 to numthings - 1 do
   begin
-    spawn := true;
+    spawn := True;
     // Do not spawn cool, new monsters if !commercial
     if gamemode <> commercial then
     begin
@@ -353,34 +327,34 @@ begin
         65, // Former Human Commando
         66, // Revenant
         84: // Wolf SS
-          spawn := false;
+          spawn := False;
       end;
     end;
 
     if spawn then
     begin
       // Do spawn all other stuff.
-      mt.x := SmallInt(mt.x);
-      mt.y := SmallInt(mt.y);
-      mt.angle := SmallInt(mt.angle);
-      mt._type := SmallInt(mt._type);
-      mt.options := SmallInt(mt.options);
+      mt.x := smallint(mt.x);
+      mt.y := smallint(mt.y);
+      mt.angle := smallint(mt.angle);
+      mt._type := smallint(mt._type);
+      mt.options := smallint(mt.options);
 
       P_SpawnMapThing(mt);
     end;
-    inc(mt);
+    Inc(mt);
   end;
 
-  Z_Free(data);
+  Z_Free(Data);
 end;
 
-//
+
 // P_LoadLineDefs
 // Also counts secret lines for intermissions.
-//
+
 procedure P_LoadLineDefs(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   mld: Pmaplinedef_t;
   ld: Pline_t;
@@ -388,20 +362,20 @@ var
   v2: Pvertex_t;
 begin
   numlines := W_LumpLength(lump) div SizeOf(maplinedef_t);
-  lines := Z_Malloc(numlines * SizeOf(line_t), PU_LEVEL, nil);
-  memset(lines, 0, numlines * SizeOf(line_t));
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Lines := Z_Malloc(numlines * SizeOf(line_t), PU_LEVEL, nil);
+  memset(Lines, 0, numlines * SizeOf(line_t));
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  mld := Pmaplinedef_t(data);
+  mld := Pmaplinedef_t(Data);
   for i := 0 to numlines - 1 do
   begin
-    ld := @lines[i];
-    ld.flags := SmallInt(mld.flags);
-    ld.special := SmallInt(mld.special);
-    ld.tag := SmallInt(mld.tag);
-    ld.v1 := @vertexes[SmallInt(mld.v1)];
+    ld := @Lines[i];
+    ld.flags := smallint(mld.flags);
+    ld.special := smallint(mld.special);
+    ld.tag := smallint(mld.tag);
+    ld.v1 := @vertexes[smallint(mld.v1)];
     v1 := ld.v1;
-    ld.v2 := @vertexes[SmallInt(mld.v2)];
+    ld.v2 := @vertexes[smallint(mld.v2)];
     v2 := ld.v2;
     ld.dx := v2.x - v1.x;
     ld.dy := v2.y - v1.y;
@@ -412,7 +386,7 @@ begin
       ld.slopetype := ST_HORIZONTAL
     else
     begin
-      if FixedDiv(ld.dy , ld.dx) > 0 then
+      if FixedDiv(ld.dy, ld.dx) > 0 then
         ld.slopetype := ST_POSITIVE
       else
         ld.slopetype := ST_NEGATIVE;
@@ -440,8 +414,8 @@ begin
       ld.bbox[BOXTOP] := v1.y;
     end;
 
-    ld.sidenum[0] := SmallInt(mld.sidenum[0]);
-    ld.sidenum[1] := SmallInt(mld.sidenum[1]);
+    ld.sidenum[0] := smallint(mld.sidenum[0]);
+    ld.sidenum[1] := smallint(mld.sidenum[1]);
 
     if ld.sidenum[0] <> -1 then
       ld.frontsector := sides[ld.sidenum[0]].sector
@@ -453,18 +427,18 @@ begin
     else
       ld.backsector := nil;
 
-    inc(mld);
+    Inc(mld);
   end;
 
-  Z_Free (data);
+  Z_Free(Data);
 end;
 
-//
+
 // P_LoadSideDefs
-//
+
 procedure P_LoadSideDefs(lump: integer);
 var
-  data: pointer;
+  Data: pointer;
   i: integer;
   msd: Pmapsidedef_t;
   sd: Pside_t;
@@ -472,33 +446,31 @@ begin
   numsides := W_LumpLength(lump) div SizeOf(mapsidedef_t);
   sides := Z_Malloc(numsides * SizeOf(side_t), PU_LEVEL, nil);
   memset(sides, 0, numsides * SizeOf(side_t));
-  data := W_CacheLumpNum(lump, PU_STATIC);
+  Data := W_CacheLumpNum(lump, PU_STATIC);
 
-  msd := Pmapsidedef_t(data);
+  msd := Pmapsidedef_t(Data);
   for i := 0 to numsides - 1 do
   begin
     sd := @sides[i];
-    sd.textureoffset := SmallInt(msd.textureoffset) * FRACUNIT;
-    sd.rowoffset := SmallInt(msd.rowoffset) * FRACUNIT;
+    sd.textureoffset := smallint(msd.textureoffset) * FRACUNIT;
+    sd.rowoffset := smallint(msd.rowoffset) * FRACUNIT;
     sd.toptexture := R_TextureNumForName(msd.toptexture);
     sd.bottomtexture := R_TextureNumForName(msd.bottomtexture);
     sd.midtexture := R_TextureNumForName(msd.midtexture);
-    sd.sector := @sectors[SmallInt(msd.sector)];
-    inc(msd);
+    sd.sector := @sectors[smallint(msd.sector)];
+    Inc(msd);
   end;
 
-  Z_Free (data);
+  Z_Free(Data);
 end;
 
-//
+
 // P_LoadBlockMap
-//
 procedure P_LoadBlockMap(lump: integer);
 var
-  count: integer;
+  Count: integer;
 begin
   blockmaplump := W_CacheLumpNum(lump, PU_LEVEL);
-//  blockmap := PSmallIntArray(integer(blockmaplump) + 4);
   blockmap := @blockmaplump[4];
 
   bmaporgx := blockmaplump[0] * FRACUNIT;
@@ -507,16 +479,16 @@ begin
   bmapheight := blockmaplump[3];
 
   // clear out mobj chains
-  count := SizeOf(Pmobj_t) * bmapwidth * bmapheight;
-  blocklinks := Z_Malloc(count, PU_LEVEL, nil);
-  memset(blocklinks, 0, count);
+  Count := SizeOf(Pmobj_t) * bmapwidth * bmapheight;
+  blocklinks := Z_Malloc(Count, PU_LEVEL, nil);
+  memset(blocklinks, 0, Count);
 end;
 
-//
+
 // P_GroupLines
 // Builds sector line lists and subsector sector numbers.
 // Finds block bounding boxes for sectors.
-//
+
 procedure P_GroupLines;
 var
   linebuffer: Pline_tPArray; // pointer to an array of pointers Pline_t
@@ -540,14 +512,14 @@ begin
   total := 0;
   for i := 0 to numlines - 1 do
   begin
-    li := @lines[i];
-    inc(total);
+    li := @Lines[i];
+    Inc(total);
     li.frontsector.linecount := li.frontsector.linecount + 1;
 
-    if boolval(li.backsector) and (li.backsector <> li.frontsector) then
+    if (li.backsector <> nil) and (li.backsector <> li.frontsector) then
     begin
       li.backsector.linecount := li.backsector.linecount + 1;
-      inc(total);
+      Inc(total);
     end;
   end;
 
@@ -557,19 +529,20 @@ begin
   begin
     sector := @sectors[i];
     M_ClearBox(@bbox);
-    sector.lines := linebuffer;
+    sector.Lines := linebuffer;
     for j := 0 to numlines - 1 do
     begin
-      li := @lines[j];
-	    if (li.frontsector = sector) or (li.backsector = sector) then
+      li := @Lines[j];
+      if (li.frontsector = sector) or (li.backsector = sector) then
       begin
-  		  linebuffer[0] := li;
+        linebuffer[0] := li;
         incp(pointer(linebuffer), SizeOf(Pointer));
         M_AddToBox(@bbox, li.v1.x, li.v1.y);
         M_AddToBox(@bbox, li.v2.x, li.v2.y);
       end;
     end;
-    if pOperation(linebuffer, sector.lines, '-', SizeOf(pointer)) <> sector.linecount then
+    if pOperation(linebuffer, sector.Lines, '-', SizeOf(pointer)) <>
+      sector.linecount then
       I_Error('P_GroupLines(): miscounted'); // VJ ?????
 
     // set the degenmobj_t to the middle of the bounding box
@@ -579,12 +552,12 @@ begin
     // adjust bounding box to map blocks
     block := _SHR(bbox[BOXTOP] - bmaporgy + MAXRADIUS, MAPBLOCKSHIFT);
     if block >= bmapheight then
-      block  := bmapheight - 1;
+      block := bmapheight - 1;
     sector.blockbox[BOXTOP] := block;
 
     block := _SHR(bbox[BOXBOTTOM] - bmaporgy - MAXRADIUS, MAPBLOCKSHIFT);
     if block < 0 then
-      block  := 0;
+      block := 0;
     sector.blockbox[BOXBOTTOM] := block;
 
     block := _SHR(bbox[BOXRIGHT] - bmaporgx + MAXRADIUS, MAPBLOCKSHIFT);
@@ -599,9 +572,7 @@ begin
   end;
 end;
 
-//
 // P_SetupLevel
-//
 procedure P_SetupLevel(episode, map, playermask: integer; skill: skill_t);
 var
   i: integer;
@@ -616,7 +587,7 @@ begin
   wminfo.partime := 180;
   for i := 0 to MAXPLAYERS - 1 do
   begin
-	  players[i].killcount := 0;
+    players[i].killcount := 0;
     players[i].secretcount := 0;
     players[i].itemcount := 0;
   end;
@@ -627,17 +598,6 @@ begin
 
   // Make sure all sounds are stopped before Z_FreeTags.
   S_Start;
-
-(*
-#if 0 // UNUSED
-    if (debugfile)
-    {
-	Z_FreeTags (PU_LEVEL, MAXINT);
-	Z_FileDumpHeap (debugfile);
-    }
-    else
-#endif
-*)
 
   Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
 
@@ -653,9 +613,9 @@ begin
   if gamemode = commercial then
   begin
     if map < 10 then
-      sprintf(lumpname,'map0%d', [map])
+      sprintf(lumpname, 'map0%d', [map])
     else
-      sprintf(lumpname,'map%d', [map]);
+      sprintf(lumpname, 'map%d', [map]);
   end
   else
     sprintf(lumpname, 'E%dM%d', [episode, map]);
@@ -683,7 +643,7 @@ begin
   P_LoadThings(lumpnum + Ord(ML_THINGS));
 
   // if deathmatch, randomly spawn the active players
-  if boolval(deathmatch) then
+  if deathmatch <> 0 then
   begin
     for i := 0 to MAXPLAYERS - 1 do
       if playeringame[i] then
@@ -700,19 +660,12 @@ begin
   // set up world state
   P_SpawnSpecials;
 
-  // build subsector connect matrix
-  // UNUSED P_ConnectSubsectors ();
-
   // preload graphics
   if precache then
     R_PrecacheLevel;
-
-    //printf ("free memory: 0x%x\n", Z_FreeMemory());
 end;
 
-//
 // P_Init
-//
 procedure P_Init;
 begin
   P_InitSwitchList;
