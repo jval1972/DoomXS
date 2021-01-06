@@ -28,39 +28,12 @@ unit p_lights;
 
 interface
 
-uses doomdef,
+uses
+  doomdef,
   m_rnd,
   p_spec,
   r_defs,
   z_zone;
-
-{
-    p_lights.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Handle Sector base lighting effects.
-//	Muzzle flash?
-//
-//-----------------------------------------------------------------------------
 
 procedure P_SpawnFireFlicker(sector: Psector_t);
 
@@ -84,22 +57,24 @@ procedure T_LightFlash(flash: Plightflash_t);
 
 implementation
 
-uses d_delphi,
-  p_tick, p_setup;
+uses
+  d_delphi,
+  p_tick,
+  p_setup;
 
-//
+
 // FIRELIGHT FLICKER
-//
 
-//
+
+
 // T_FireFlicker
-//
+
 procedure T_FireFlicker(flick: Pfireflicker_t);
 var
   amount: integer;
 begin
-  flick.count := flick.count - 1;
-  if flick.count > 0  then
+  flick.Count := flick.Count - 1;
+  if flick.Count > 0 then
     exit;
 
   amount := (P_Random and 3) * 16;
@@ -109,12 +84,12 @@ begin
   else
     flick.sector.lightlevel := flick.maxlight - amount;
 
-  flick.count := 4;
+  flick.Count := 4;
 end;
 
-//
+
 // P_SpawnFireFlicker
-//
+
 procedure P_SpawnFireFlicker(sector: Psector_t);
 var
   flick: Pfireflicker_t;
@@ -131,41 +106,40 @@ begin
   flick.sector := sector;
   flick.maxlight := sector.lightlevel;
   flick.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel) + 16;
-  flick.count := 4;
+  flick.Count := 4;
 end;
 
-//
+
 // BROKEN LIGHT FLASHING
-//
 
 
-//
+
 // T_LightFlash
 // Do flashing lights.
-//
+
 procedure T_LightFlash(flash: Plightflash_t);
 begin
-  flash.count := flash.count - 1;
-  if flash.count > 0 then
+  flash.Count := flash.Count - 1;
+  if flash.Count > 0 then
     exit;
 
   if flash.sector.lightlevel = flash.maxlight then
   begin
     flash.sector.lightlevel := flash.minlight;
-    flash.count := (P_Random and flash.mintime) + 1;
+    flash.Count := (P_Random and flash.mintime) + 1;
   end
   else
   begin
     flash.sector.lightlevel := flash.maxlight;
-    flash.count := (P_Random and flash.maxtime) + 1;
+    flash.Count := (P_Random and flash.maxtime) + 1;
   end;
 end;
 
-//
+
 // P_SpawnLightFlash
 // After the map has been loaded, scan each sector
 // for specials that spawn thinkers
-//
+
 procedure P_SpawnLightFlash(sector: Psector_t);
 var
   flash: Plightflash_t;
@@ -184,40 +158,39 @@ begin
   flash.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel);
   flash.maxtime := 64;
   flash.mintime := 7;
-  flash.count := (P_Random and flash.maxtime) + 1;
+  flash.Count := (P_Random and flash.maxtime) + 1;
 end;
 
-//
+
 // STROBE LIGHT FLASHING
-//
 
 
-//
+
 // T_StrobeFlash
-//
+
 procedure T_StrobeFlash(flash: Pstrobe_t);
 begin
-  flash.count := flash.count - 1;
-  if flash.count > 0 then
+  flash.Count := flash.Count - 1;
+  if flash.Count > 0 then
     exit;
 
   if flash.sector.lightlevel = flash.minlight then
   begin
     flash.sector.lightlevel := flash.maxlight;
-    flash.count := flash.brighttime;
+    flash.Count := flash.brighttime;
   end
   else
   begin
     flash.sector.lightlevel := flash.minlight;
-    flash.count := flash.darktime;
+    flash.Count := flash.darktime;
   end;
 end;
 
-//
+
 // P_SpawnStrobeFlash
 // After the map has been loaded, scan each sector
 // for specials that spawn thinkers
-//
+
 procedure P_SpawnStrobeFlash(sector: Psector_t; fastOrSlow, inSync: integer);
 var
   flash: Pstrobe_t;
@@ -240,14 +213,14 @@ begin
   sector.special := 0;
 
   if not boolval(inSync) then
-    flash.count := (P_Random and 7) + 1
+    flash.Count := (P_Random and 7) + 1
   else
-    flash.count := 1;
+    flash.Count := 1;
 end;
 
-//
+
 // Start strobing lights (usually from a trigger)
-//
+
 procedure EV_StartLightStrobing(line: Pline_t);
 var
   secnum: integer;
@@ -266,9 +239,9 @@ begin
   until secnum < 0;
 end;
 
-//
+
 // TURN LINE'S TAG LIGHTS OFF
-//
+
 procedure EV_TurnTagLightsOff(line: Pline_t);
 var
   i: integer;
@@ -286,7 +259,7 @@ begin
       min := sector.lightlevel;
       for j := 0 to sector.linecount - 1 do
       begin
-        templine := sector.lines[j];
+        templine := sector.Lines[j];
         tsec := getNextSector(templine, sector);
         if boolval(tsec) then
         begin
@@ -294,14 +267,14 @@ begin
             min := tsec.lightlevel;
         end;
       end;
-	    sector.lightlevel := min;
+      sector.lightlevel := min;
     end;
   end;
 end;
 
-//
+
 // TURN LINE'S TAG LIGHTS ON
-//
+
 procedure EV_LightTurnOn(line: Pline_t; bright: integer);
 var
   i: integer;
@@ -318,11 +291,11 @@ begin
       // bright = 0 means to search
       // for highest light level
       // surrounding sector
-	    if not boolval(bright) then
+      if not boolval(bright) then
       begin
         for j := 0 to sector.linecount - 1 do
         begin
-          templine := sector.lines[j];
+          templine := sector.Lines[j];
           temp := getNextSector(templine, sector);
           if boolval(temp) then
           begin
@@ -331,37 +304,37 @@ begin
           end;
         end;
       end;
-	    sector.lightlevel := bright;
+      sector.lightlevel := bright;
     end;
   end;
 end;
 
-//
+
 // Spawn glowing light
-//
+
 procedure T_Glow(g: Pglow_t);
 begin
   case g.direction of
-   -1:
+    -1:
+    begin
+      // DOWN
+      g.sector.lightlevel := g.sector.lightlevel - GLOWSPEED;
+      if g.sector.lightlevel <= g.minlight then
       begin
-        // DOWN
-        g.sector.lightlevel := g.sector.lightlevel - GLOWSPEED;
-        if g.sector.lightlevel <= g.minlight then
-        begin
-          g.sector.lightlevel := g.sector.lightlevel + GLOWSPEED;
-          g.direction := 1;
-        end;
-      end;
-    1:
-      begin
-        // UP
         g.sector.lightlevel := g.sector.lightlevel + GLOWSPEED;
-        if g.sector.lightlevel >= g.maxlight then
-        begin
-          g.sector.lightlevel := g.sector.lightlevel - GLOWSPEED;
-          g.direction := -1;
-        end;
+        g.direction := 1;
       end;
+    end;
+    1:
+    begin
+      // UP
+      g.sector.lightlevel := g.sector.lightlevel + GLOWSPEED;
+      if g.sector.lightlevel >= g.maxlight then
+      begin
+        g.sector.lightlevel := g.sector.lightlevel - GLOWSPEED;
+        g.direction := -1;
+      end;
+    end;
   end;
 end;
 
