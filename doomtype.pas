@@ -31,65 +31,17 @@ interface
 type
   bool = boolean;
 
-function MAXCHAR: char;
-
-function MAXSHORT: smallint;
-
-{ Max pos 32-bit int. }
-function MAXINT: longint;
-
-function MAXLONG: longint;
-
-function MINCHAR: char;
-
-function MINSHORT: smallint;
-
-{ Max negative 32-bit integer. }
-function MININT: longint;
-
-function MINLONG: longint;
+const
+  MAXCHAR = char($7f);
+  MAXSHORT = smallint($7fff);
+  MAXINT = longint($7fffffff);
+  MAXLONG = longint($7fffffff);
+  MINCHAR = char($80);
+  MINSHORT = smallint($8000);
+  MININT = longint($80000000);
+  MINLONG = longint($80000000);
 
 implementation
-
-function MAXCHAR : char;
-begin
-  MAXCHAR := char($7f);
-end;
-
-function MAXSHORT: smallint;
-begin
-  MAXSHORT := smallint($7fff);
-end;
-
-function MAXINT: longint;
-begin
-  MAXINT := longint($7fffffff);
-end;
-
-function MAXLONG: longint;
-begin
-  MAXLONG := longint($7fffffff);
-end;
-
-function MINCHAR: char;
-begin
-  MINCHAR := char($80);
-end;
-
-function MINSHORT: smallint;
-begin
-  MINSHORT := smallint($8000);
-end;
-
-function MININT: longint;
-begin
-  MININT := longint($80000000);
-end;
-
-function MINLONG: longint;
-begin
-  MINLONG := longint($80000000);
-end;
 
 end.
 
