@@ -28,40 +28,9 @@ unit p_mobj;
 
 interface
 
-{
-    p_mobj.h, p_mobj.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Map Objects, MObj, definition and handling.
-//  Moving object handling. Spawn functions.
-//
-//-----------------------------------------------------------------------------
-
-uses p_mobj_h,
-//  tables,
-// We need the WAD data structure for Map things,
-// from the THINGS lump.
+uses
+  p_mobj_h,
   doomdata,
-// States are tied to finite states are
-//  tied to animation frames.
-// Needs precompiled tables/data structures.
   info_h,
   m_fixed;
 
@@ -79,9 +48,9 @@ procedure P_SpawnMapThing(mthing: Pmapthing_t);
 
 procedure P_SpawnPuff(x, y, z: fixed_t);
 
-function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMissile(Source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
 
-procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
+procedure P_SpawnPlayerMissile(Source: Pmobj_t; _type: mobjtype_t);
 
 procedure P_RespawnSpecials;
 
@@ -93,24 +62,37 @@ var
 
 implementation
 
-uses d_delphi,
-  d_player, d_think, d_main,
+uses
+  d_delphi,
+  d_player,
+  d_think,
+  d_main,
   tables,
   g_game,
-  i_system, z_zone, m_rnd,
+  i_system,
+  z_zone,
+  m_rnd,
   doomdef,
-  p_local, p_map, p_maputl, p_tick, p_pspr, p_setup,
-  r_defs, r_sky, r_main,
+  p_local,
+  p_map,
+  p_maputl,
+  p_tick,
+  p_pspr,
+  p_setup,
+  r_defs,
+  r_sky,
+  r_main,
   sounds,
-  st_stuff, hu_stuff,
+  st_stuff,
+  hu_stuff,
   s_sound,
   info,
   doomstat;
 
-//
+
 // P_SetMobjState
 // Returns true if the mobj is still present.
-//
+
 function P_SetMobjState(mobj: Pmobj_t; state: statenum_t): boolean;
 var
   st: Pstate_t;
@@ -119,8 +101,8 @@ begin
     if state = S_NULL then
     begin
       mobj.state := nil; // VJ was mobj.state := @S_NULL;
-	    P_RemoveMobj(mobj);
-      result := false;
+      P_RemoveMobj(mobj);
+      Result := False;
       exit;
     end;
 
@@ -138,12 +120,12 @@ begin
     state := st.nextstate;
   until (mobj.tics <> 0);
 
-  result := true;
+  Result := True;
 end;
 
-//
+
 // P_ExplodeMissile
-//
+
 procedure P_ExplodeMissile(mo: Pmobj_t);
 begin
   mo.momx := 0;
@@ -163,9 +145,9 @@ begin
     S_StartSound(mo, mo.info.deathsound);
 end;
 
-//
-// P_XYMovement  
-//
+
+// P_XYMovement
+
 const
   STOPSPEED = $1000;
   FRICTION = $e800;
@@ -212,15 +194,15 @@ begin
     if (xmove > MAXMOVE div 2) or (ymove > MAXMOVE div 2) then
     begin
       ptryx := mo.x + xmove div 2;
-	    ptryy := mo.y + ymove div 2;
-	    xmove := _SHR(xmove, 1);
-	    ymove := _SHR(ymove, 1);
+      ptryy := mo.y + ymove div 2;
+      xmove := _SHR(xmove, 1);
+      ymove := _SHR(ymove, 1);
     end
     else
     begin
-	    ptryx := mo.x + xmove;
-	    ptryy := mo.y + ymove;
-	    xmove := 0;
+      ptryx := mo.x + xmove;
+      ptryy := mo.y + ymove;
+      xmove := 0;
       ymove := 0;
     end;
 
@@ -234,19 +216,18 @@ begin
       else if (mo.flags and MF_MISSILE) <> 0 then
       begin
         // explode a missile
-        if boolval(ceilingline) and
-           boolval(ceilingline.backsector) and
-           (ceilingline.backsector.ceilingpic = skyflatnum) then
+        if boolval(ceilingline) and boolval(ceilingline.backsector) and
+          (ceilingline.backsector.ceilingpic = skyflatnum) then
         begin
           // Hack to prevent missiles exploding
           // against the sky.
           // Does not handle sky floors.
-		      P_RemoveMobj(mo);
+          P_RemoveMobj(mo);
           exit;
         end;
         P_ExplodeMissile(mo);
       end
-	    else
+      else
       begin
         mo.momx := 0;
         mo.momy := 0;
@@ -255,7 +236,7 @@ begin
   until not ((xmove <> 0) or (ymove <> 0));
 
   // slow down
-  if boolval(player) and  ((player.cheats and CF_NOMOMENTUM) <> 0) then
+  if boolval(player) and ((player.cheats and CF_NOMOMENTUM) <> 0) then
   begin
     // debug option for no sliding at all
     mo.momx := 0;
@@ -273,27 +254,23 @@ begin
   begin
     // do not stop sliding
     //  if halfway off a step with some momentum
-    if (mo.momx > FRACUNIT div 4) or
-       (mo.momx < -FRACUNIT div 4) or
-       (mo.momy > FRACUNIT div 4) or
-       (mo.momy < -FRACUNIT div 4) then
+    if (mo.momx > FRACUNIT div 4) or (mo.momx < -FRACUNIT div 4) or
+      (mo.momy > FRACUNIT div 4) or (mo.momy < -FRACUNIT div 4) then
     begin
       if mo.floorz <> Psubsector_t(mo.subsector).sector.floorheight then
         exit;
     end;
   end;
 
-  if (mo.momx > -STOPSPEED) and
-     (mo.momx < STOPSPEED) and
-     (mo.momy > -STOPSPEED) and
-     (mo.momy < STOPSPEED) and
-     ((not boolval(player)) or
-      ((player.cmd.forwardmove = 0) and
-       (player.cmd.sidemove = 0))) then
+  if (mo.momx > -STOPSPEED) and (mo.momx < STOPSPEED) and
+    (mo.momy > -STOPSPEED) and (mo.momy < STOPSPEED) and
+    ((not boolval(player)) or ((player.cmd.forwardmove = 0) and
+    (player.cmd.sidemove = 0))) then
   begin
     // if in a walking frame, stop moving
-    if boolval(player) and
-      (LongWord((pOperation(player.mo.state, @states[0], '-', SizeOf(states[0]))) - Ord(S_PLAY_RUN1)) < 4) then
+    if boolval(player) and (longword(
+      (pOperation(player.mo.state, @states[0], '-', SizeOf(states[0]))) -
+      Ord(S_PLAY_RUN1)) < 4) then
       P_SetMobjState(player.mo, S_PLAY);
 
     mo.momx := 0;
@@ -306,9 +283,9 @@ begin
   end;
 end;
 
-//
+
 // P_ZMovement
-//
+
 procedure P_ZMovement(mo: Pmobj_t);
 var
   dist: fixed_t;
@@ -317,7 +294,8 @@ begin
   // check for smooth step up
   if boolval(mo.player) and (mo.z < mo.floorz) then
   begin
-    Pplayer_t(mo.player).viewheight := Pplayer_t(mo.player).viewheight - (mo.floorz - mo.z);
+    Pplayer_t(mo.player).viewheight :=
+      Pplayer_t(mo.player).viewheight - (mo.floorz - mo.z);
     Pplayer_t(mo.player).deltaviewheight :=
       _SHR((PVIEWHEIGHT - Pplayer_t(mo.player).viewheight), 3);
   end;
@@ -329,11 +307,11 @@ begin
   begin
     // float down towards target if too close
     if (not boolval(mo.flags and MF_SKULLFLY)) and
-       (not boolval(mo.flags and MF_INFLOAT)) then
+      (not boolval(mo.flags and MF_INFLOAT)) then
     begin
       dist := P_AproxDistance(mo.x - mo.target.x, mo.y - mo.target.y);
 
-      delta := (mo.target.z + (_SHR(mo.height, 1))) - mo.z; // VJ is it right ???
+      delta := (mo.target.z + (_SHR(mo.Height, 1))) - mo.z; // VJ is it right ???
 
       if (delta < 0) and (dist < -(delta * 3)) then
         mo.z := mo.z - FLOATSPEED
@@ -365,7 +343,7 @@ begin
         // after hitting the ground (hard),
         // and utter appropriate sound.
         Pplayer_t(mo.player).deltaviewheight := _SHR(mo.momz, 3);
-        S_StartSound (mo, Ord(sfx_oof));
+        S_StartSound(mo, Ord(sfx_oof));
       end;
       mo.momz := 0;
     end;
@@ -380,18 +358,18 @@ begin
   else if not boolval(mo.flags and MF_NOGRAVITY) then
   begin
     if mo.momz = 0 then
-      mo.momz := - GRAVITY * 2
+      mo.momz := -GRAVITY * 2
     else
       mo.momz := mo.momz - GRAVITY;
   end;
 
-  if mo.z + mo.height > mo.ceilingz then
+  if mo.z + mo.Height > mo.ceilingz then
   begin
     // hit the ceiling
     if mo.momz > 0 then
       mo.momz := 0;
 
-    mo.z := mo.ceilingz - mo.height;
+    mo.z := mo.ceilingz - mo.Height;
 
     if boolval(mo.flags and MF_SKULLFLY) then
       mo.momz := -mo.momz; // the skull slammed into something
@@ -401,9 +379,9 @@ begin
   end;
 end;
 
-//
+
 // P_NightmareRespawn
-//
+
 procedure P_NightmareRespawn(mobj: Pmobj_t);
 var
   x: fixed_t;
@@ -422,7 +400,8 @@ begin
 
   // spawn a teleport fog at old spot
   // because of removal of the body?
-  mo := P_SpawnMobj(mobj.x, mobj.y, Psubsector_t(mobj.subsector).sector.floorheight, MT_TFOG);
+  mo := P_SpawnMobj(mobj.x, mobj.y, Psubsector_t(mobj.subsector).sector.floorheight,
+    MT_TFOG);
   // initiate teleport sound
   S_StartSound(mo, Ord(sfx_telept));
 
@@ -431,7 +410,7 @@ begin
 
   mo := P_SpawnMobj(x, y, ss.sector.floorheight, MT_TFOG);
 
-  S_StartSound (mo, Ord(sfx_telept));
+  S_StartSound(mo, Ord(sfx_telept));
 
   // spawn the new monster
   mthing := @mobj.spawnpoint;
@@ -456,15 +435,14 @@ begin
   P_RemoveMobj(mobj);
 end;
 
-//
+
 // P_MobjThinker
-//
+
 procedure P_MobjThinker(mobj: Pmobj_t);
 begin
   // momentum movement
-  if boolval(mobj.momx) or
-     boolval(mobj.momy) or
-     boolval(mobj.flags and MF_SKULLFLY) then
+  if boolval(mobj.momx) or boolval(mobj.momy) or
+    boolval(mobj.flags and MF_SKULLFLY) then
   begin
     P_XYMovement(mobj);
 
@@ -516,9 +494,9 @@ begin
   end;
 end;
 
-//
+
 // P_SpawnMobj
-//
+
 function P_SpawnMobj(x, y, z: fixed_t; _type: mobjtype_t): Pmobj_t;
 var
   mobj: Pmobj_t;
@@ -534,7 +512,7 @@ begin
   mobj.x := x;
   mobj.y := y;
   mobj.radius := info.radius;
-  mobj.height := info.height;
+  mobj.Height := info.Height;
   mobj.flags := info.flags;
   mobj.health := info.spawnhealth;
 
@@ -560,20 +538,19 @@ begin
   if z = ONFLOORZ then
     mobj.z := mobj.floorz
   else if z = ONCEILINGZ then
-    mobj.z := mobj.ceilingz - mobj.info.height
+    mobj.z := mobj.ceilingz - mobj.info.Height
   else
     mobj.z := z;
-
   @mobj.thinker._function.acp1 := @P_MobjThinker;
 
   P_AddThinker(@mobj.thinker);
 
-  result := mobj;
+  Result := mobj;
 end;
 
-//
+
 // P_RemoveMobj
-//
+
 var
   itemrespawnque: array[0..ITEMQUESIZE - 1] of mapthing_t;
   itemrespawntime: array[0..ITEMQUESIZE - 1] of integer;
@@ -581,9 +558,8 @@ var
 procedure P_RemoveMobj(mobj: Pmobj_t);
 begin
   if boolval(mobj.flags and MF_SPECIAL) and
-     (not boolval(mobj.flags and MF_DROPPED)) and
-     (mobj._type <> MT_INV) and
-     (mobj._type <> MT_INS) then
+    (not boolval(mobj.flags and MF_DROPPED)) and (mobj._type <> MT_INV) and
+    (mobj._type <> MT_INS) then
   begin
     itemrespawnque[iquehead] := mobj.spawnpoint;
     itemrespawntime[iquehead] := leveltime;
@@ -604,9 +580,9 @@ begin
   P_RemoveThinker(Pthinker_t(mobj));
 end;
 
-//
+
 // P_RespawnSpecials
-//
+
 procedure P_RespawnSpecials;
 var
   x: fixed_t;
@@ -619,7 +595,7 @@ var
 begin
   // only respawn items in deathmatch
   if deathmatch <> 2 then
-    exit; //
+    exit;
 
   // nothing left to respawn?
   if iquehead = iquetail then
@@ -645,7 +621,7 @@ begin
   begin
     if mthing._type = mobjinfo[i].doomednum then
       break;
-    inc(i);
+    Inc(i);
   end;
 
   // spawn it
@@ -662,12 +638,12 @@ begin
   iquetail := (iquetail + 1) and (ITEMQUESIZE - 1);
 end;
 
-//
+
 // P_SpawnPlayer
 // Called when a player is spawned on the level.
 // Most of the player structure stays unchanged
 //  between levels.
-//
+
 procedure P_SpawnPlayer(mthing: Pmapthing_t);
 var
   p: Pplayer_t;
@@ -688,10 +664,10 @@ begin
 
   x := mthing.x * FRACUNIT;
   y := mthing.y * FRACUNIT;
-  z	:= ONFLOORZ;
+  z := ONFLOORZ;
   mobj := P_SpawnMobj(x, y, z, MT_PLAYER);
 
-    // set color translations for player sprites
+  // set color translations for player sprites
   if mthing._type > 1 then
     mobj.flags := mobj.flags or _SHL(mthing._type - 1, MF_TRANSSHIFT);
 
@@ -715,7 +691,7 @@ begin
   // give all cards in death match mode
   if boolval(deathmatch) then
     for i := 0 to Ord(NUMCARDS) - 1 do
-      p.cards[i] := true;
+      p.cards[i] := True;
 
   if mthing._type - 1 = consoleplayer then
   begin
@@ -726,11 +702,11 @@ begin
   end;
 end;
 
-//
+
 // P_SpawnMapThing
 // The fields of the mapthing should
 // already be in host byte order.
-//
+
 procedure P_SpawnMapThing(mthing: Pmapthing_t);
 var
   i: integer;
@@ -746,7 +722,7 @@ begin
     if deathmatch_p < MAX_DEATHMATCH_STARTS then
     begin
       memcpy(@deathmatchstarts[deathmatch_p], mthing, SizeOf(mthing^));
-	    inc(deathmatch_p);
+      Inc(deathmatch_p);
     end;
     exit;
   end;
@@ -781,7 +757,7 @@ begin
   begin
     if mthing._type = mobjinfo[i].doomednum then
       break;
-    inc(i);
+    Inc(i);
   end;
 
   if i = Ord(NUMMOBJTYPES) then
@@ -793,8 +769,8 @@ begin
     exit;
 
   // don't spawn any monsters if -nomonsters
-  if nomonsters and
-    ((i = Ord(MT_SKULL)) or boolval(mobjinfo[i].flags and MF_COUNTKILL)) then
+  if nomonsters and ((i = Ord(MT_SKULL)) or
+    boolval(mobjinfo[i].flags and MF_COUNTKILL)) then
     exit;
 
   // spawn it
@@ -812,23 +788,23 @@ begin
   if mobj.tics > 0 then
     mobj.tics := 1 + (P_Random mod mobj.tics);
   if boolval(mobj.flags and MF_COUNTKILL) then
-    inc(totalkills);
+    Inc(totalkills);
   if boolval(mobj.flags and MF_COUNTITEM) then
-    inc(totalitems);
+    Inc(totalitems);
 
   mobj.angle := ANG45 * (mthing.angle div 45);
   if boolval(mthing.options and MTF_AMBUSH) then
     mobj.flags := mobj.flags or MF_AMBUSH;
 end;
 
-//
+
 // GAME SPAWN FUNCTIONS
-//
 
 
-//
+
+
 // P_SpawnPuff
-//
+
 procedure P_SpawnPuff(x, y, z: fixed_t);
 var
   th: Pmobj_t;
@@ -847,9 +823,9 @@ begin
     P_SetMobjState(th, S_PUFF3);
 end;
 
-//
+
 // P_SpawnBlood
-//
+
 procedure P_SpawnBlood(x, y, z: fixed_t; damage: integer);
 var
   th: Pmobj_t;
@@ -868,11 +844,11 @@ begin
     P_SetMobjState(th, S_BLOOD3);
 end;
 
-//
+
 // P_CheckMissileSpawn
 // Moves the missile forward a bit
 //  and possibly explodes it right there.
-//
+
 procedure P_CheckMissileSpawn(th: Pmobj_t);
 begin
   th.tics := th.tics - (P_Random and 3);
@@ -889,23 +865,23 @@ begin
     P_ExplodeMissile(th);
 end;
 
-//
-// P_SpawnMissile
-//
 
-function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
+// P_SpawnMissile
+
+
+function P_SpawnMissile(Source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
 var
   th: Pmobj_t;
   an: angle_t;
   dist: integer;
 begin
-  th := P_SpawnMobj(source.x, source.y, source.z + 4 * 8 * FRACUNIT, _type);
+  th := P_SpawnMobj(Source.x, Source.y, Source.z + 4 * 8 * FRACUNIT, _type);
 
   if boolval(th.info.seesound) then
     S_StartSound(th, th.info.seesound);
 
-  th.target := source;	// where it came from
-  an := R_PointToAngle2(source.x, source.y, dest.x, dest.y);
+  th.target := Source;  // where it came from
+  an := R_PointToAngle2(Source.x, Source.y, dest.x, dest.y);
 
   // fuzzy player
   if boolval(dest.flags and MF_SHADOW) then
@@ -916,23 +892,23 @@ begin
   th.momx := FixedMul(th.info.speed, finecosine[an]);
   th.momy := FixedMul(th.info.speed, finesine[an]);
 
-  dist := P_AproxDistance(dest.x - source.x, dest.y - source.y);
+  dist := P_AproxDistance(dest.x - Source.x, dest.y - Source.y);
   dist := dist div th.info.speed;
 
   if dist < 1 then
     dist := 1;
 
-  th.momz := (dest.z - source.z) div dist;
+  th.momz := (dest.z - Source.z) div dist;
   P_CheckMissileSpawn(th);
 
-  result := th;
+  Result := th;
 end;
 
-//
+
 // P_SpawnPlayerMissile
 // Tries to aim at a nearby monster
-//
-procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
+
+procedure P_SpawnPlayerMissile(Source: Pmobj_t; _type: mobjtype_t);
 var
   th: Pmobj_t;
   an: angle_t;
@@ -942,41 +918,39 @@ var
   slope: fixed_t;
 begin
   // see which target is to be aimed at
-  an := source.angle;
-  slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+  an := Source.angle;
+  slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
 
   if not boolval(linetarget) then
   begin
     an := an + _SHLW(1, 26);
-    slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+    slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
 
     if not boolval(linetarget) then
     begin
       an := an - _SHLW(2, 26);
-      slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+      slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
     end;
 
     if not boolval(linetarget) then
     begin
-      an := source.angle;
-//      slope := 0;
-//      slope := ((source.player.lookdir)<<FRACBITS)/173;
-      slope := (Pplayer_t(source.player).lookdir * FRACUNIT) div 173;
+      an := Source.angle;
+      slope := (Pplayer_t(Source.player).lookdir * FRACUNIT) div 173;
     end;
   end;
 
-  x := source.x;
-  y := source.y;
-//	z = source->z + 4*8*FRACUNIT+((source.player.lookdir)<<FRACBITS)/173;
-	z := source.z + 4 * 8 * FRACUNIT + (Pplayer_t(source.player).lookdir * FRACUNIT) div 173;
-//  z := source.z + 4 * 8 * FRACUNIT;
+  x := Source.x;
+  y := Source.y;
+  z := Source.z + 4 * 8 * FRACUNIT + (Pplayer_t(Source.player).lookdir *
+    FRACUNIT) div 173;
 
   th := P_SpawnMobj(x, y, z, _type);
 
   if boolval(th.info.seesound) then
     S_StartSound(th, th.info.seesound);
 
-  th.target := source;
+  th.target := Source;
+
   th.angle := an;
   th.momx := FixedMul(th.info.speed, finecosine[_SHRW(an, ANGLETOFINESHIFT)]);
   th.momy := FixedMul(th.info.speed, finesine[_SHRW(an, ANGLETOFINESHIFT)]);
