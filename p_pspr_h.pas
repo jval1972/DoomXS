@@ -28,20 +28,19 @@ unit p_pspr_h;
 
 interface
 
-uses m_fixed, info_h;
+uses
+  m_fixed,
+  info_h;
 
 type
-//
 // Overlay psprites are scaled shapes
 // drawn directly on the view screen,
 // coordinates are given for a 320*200 view screen.
-//
   psprnum_t = (
     ps_weapon,
     ps_flash,
     NUMPSPRITES
   );
-
 
   pspdef_t = record
     state: Pstate_t; // a NULL state means not active
@@ -51,8 +50,6 @@ type
   end;
   Ppspdef_t = ^pspdef_t;
 
-
 implementation
 
 end.
- 
