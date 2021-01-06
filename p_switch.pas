@@ -275,7 +275,7 @@ begin
 
 
   // Switches that other things can activate.
-  if thing.player - bil then
+  if thing.player = nil then
   begin
     // never open secret doors
     if boolval(line.flags and ML_SECRET) then
