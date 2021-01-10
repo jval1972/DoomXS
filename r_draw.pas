@@ -28,36 +28,10 @@ unit r_draw;
 
 interface
 
-uses d_delphi, m_fixed,
+uses
+  d_delphi,
+  m_fixed,
   r_defs;
-
-{
-    r_draw.h, r_draw.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	System specific interface stuff.
-//	The actual span/column drawing functions.
-//	Here find the main potential for optimization,
-//	 e.g. inline assembly, different algorithms.
-//
-//-----------------------------------------------------------------------------
 
 // The span blitting interface.
 // Hook in assembler or system specific BLT
@@ -201,14 +175,6 @@ begin
   // Zero length, column does not exceed a pixel.
   if count < 0 then
     exit;
-(*
-#ifdef RANGECHECK
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0
-	|| dc_yh >= SCREENHEIGHT)
-	I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
-#endif
-*)
 
   // Framebuffer destination address.
   // Use ylookup LUT to avoid multiply with ScreenWidth.
@@ -248,23 +214,7 @@ begin
   // Zero length.
   if count < 0 then
     exit;
-(*
-#ifdef RANGECHECK
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0
-	|| dc_yh >= SCREENHEIGHT)
-    {
 
-	I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
-    }
-    //	dccount++;
-#endif
-*)
-    // Blocky mode, need to multiply by 2.
-//  dc_x := _SHL(dc_x, 1);
-
-//  dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
-//  dest2 := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x + 1]);
   dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
 
   frac := dc_texturemid + (dc_yl - centery) * dc_iscale;
@@ -309,19 +259,17 @@ begin
   // Framebuffer destination address.
   // Use ylookup LUT to avoid multiply with ScreenWidth.
   // Use columnofs LUT for subwindows?
-//  dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
   dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
 
   // Determine scaling,
   //  which is the only mapping to be done.
-//  fracstep := dc_iscale;// * 200 div SCREENHEIGHT;
   fracstep := FRACUNIT * 200 div SCREENHEIGHT;
   frac := dc_texturemid + (dc_yl - centery) * fracstep;
 
   // Inner loop that does the actual texture mapping,
   //  e.g. a DDA-lile scaling.
   // This is as fast as it gets.
-  for i := 0 to count do 
+  for i := 0 to count do
   begin
     // Re-map color indices from wall texture column
     //  using a lighting/special effects LUT.
@@ -351,7 +299,7 @@ const
   );
 
 var
-  fuzzpos: integer;
+  fuzzpos: integer = 0;
 
 //
 // Framebuffer postprocessing.
@@ -380,17 +328,6 @@ begin
   // Zero length.
   if count < 0 then
     exit;
-
-(*
-#ifdef RANGECHECK
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0 || dc_yh >= SCREENHEIGHT)
-    {
-	I_Error ("R_DrawFuzzColumn: %i to %i at %i",
-		 dc_yl, dc_yh, dc_x);
-    }
-#endif
-*)
 
   // Does not work with blocky mode.
   dest := PByteArray(integer(ylookup[dc_yl]) + columnofs[dc_x]);
@@ -480,9 +417,6 @@ var
   fracstep: fixed_t;
   i: integer;
 begin
-  /////////////////////////////////////
-  /////// VJ needs debug!!! ///////////
-  /////////////////////////////////////
   R_DrawTranslatedColumn320x200;
   exit;
         ///////////////////////////////
@@ -492,18 +426,6 @@ begin
   count := dc_yh - dc_yl;
   if count < 0 then
     exit;
-(*
-#ifdef RANGECHECK
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0
-	|| dc_yh >= SCREENHEIGHT)
-    {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
-		  dc_yl, dc_yh, dc_x);
-    }
-
-#endif
-*)
 (*
     // WATCOM VGA specific.
     /* Keep for fixing.
@@ -603,19 +525,6 @@ var
   i: integer;
   spot: integer;
 begin
-(*
-#ifdef RANGECHECK
-    if (ds_x2 < ds_x1
-	|| ds_x1<0
-	|| ds_x2>=SCREENWIDTH
-	|| (unsigned)ds_y>SCREENHEIGHT)
-    {
-	I_Error( "R_DrawSpan: %i to %i at %i",
-		 ds_x1,ds_x2,ds_y);
-    }
-//	dscount++;
-#endif
-*)
   xfrac := ds_xfrac;
   yfrac := ds_yfrac;
 
@@ -657,19 +566,6 @@ var
   i: integer;
   spot: integer;
 begin
-(*
-#ifdef RANGECHECK
-    if (ds_x2 < ds_x1
-	|| ds_x1<0
-	|| ds_x2>=SCREENWIDTH
-	|| (unsigned)ds_y>SCREENHEIGHT)
-    {
-	I_Error( "R_DrawSpan: %i to %i at %i",
-		 ds_x1,ds_x2,ds_y);
-    }
-//	dscount++;
-#endif
-*)
   xfrac := ds_xfrac;
   yfrac := ds_yfrac;
 
@@ -724,11 +620,7 @@ begin
   if width = SCREENWIDTH then
     viewwindowy := 0
   else
-//    viewwindowy := _SHR(SCREENHEIGHT - ST_HEIGHT - height, 1);
     viewwindowy := _SHR(V_PreserveY(200 - ST_HEIGHT) - height, 1);
-//    viewwindowy := _SHR(V_PreserveH(200, 200 - ST_HEIGHT) - height, 1);
-//    viewwindowy := _SHR(SCREENHEIGHT - V_PreserveY(ST_HEIGHT) - height + 1, 1);
-//    viewwindowy := _SHR(SCREENHEIGHT - V_PreserveH(200 - ST_HEIGHT, ST_HEIGHT) - height + 1, 1);
 
   // Preclaculate all row offsets.
   for i := 0 to height - 1 do
@@ -962,13 +854,11 @@ begin
   R_VideoErase(0, top * SCREENWIDTH + side);
 
   // copy one line of right side and bottom
-//  ofs := (viewheight + top) * SCREENWIDTH - side;
-//  R_VideoErase (ofs, top * SCREENWIDTH + side);
   if odd(bottom) then
     ofs := (viewheight + bottom - 1) * SCREENWIDTH - side
   else
     ofs := (viewheight + bottom) * SCREENWIDTH - side;
-  R_VideoErase (ofs, bottom * SCREENWIDTH + side);
+  R_VideoErase(ofs, bottom * SCREENWIDTH + side);
 
   // copy sides using wraparound
   ofs := top * SCREENWIDTH + SCREENWIDTH - side;
@@ -984,10 +874,5 @@ begin
 //  V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT - SBARHEIGHT);
   V_MarkRect(0, 0, 320, 200 - ST_HEIGHT, true);
 end;
-
-
-
-initialization
-  fuzzpos := 0;
 
 end.
