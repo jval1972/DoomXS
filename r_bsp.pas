@@ -28,7 +28,8 @@ unit r_bsp;
 
 interface
 
-uses r_defs;
+uses
+  r_defs;
 
 // BSP?
 procedure R_ClearClipSegs;
@@ -54,12 +55,21 @@ var
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   doomdata,
-  m_fixed, tables,
-  doomdef, m_bbox, i_system,
+  m_fixed,
+  tables,
+  doomdef,
+  m_bbox,
+  i_system,
   p_setup,
-  r_segs, r_main, r_plane, r_things, r_draw, r_sky,
+  r_segs,
+  r_main,
+  r_plane,
+  r_things,
+  r_draw,
+  r_sky,
   // State.
   doomstat;
 
