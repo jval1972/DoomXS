@@ -31,41 +31,16 @@ interface
 uses
   d_delphi,
   tables,
-// Screenwidth.
+  // Screenwidth.
   doomdef,
-// Some more or less basic data types
-// we depend on.
+  // Some more or less basic data types
+  // we depend on.
   m_fixed,
-// We rely on the thinker data struct
-// to handle sound origins in sectors.
+  // We rely on the thinker data struct
+  // to handle sound origins in sectors.
   d_think,
-// SECTORS do store MObjs anyway.
+  // SECTORS do store MObjs anyway.
   p_mobj_h;
-
-{
-    r_defs.h
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//      Refresh/rendering module, shared data struct definitions.
-//
-//-----------------------------------------------------------------------------
 
 // Silhouette, needed for clipping Segs (mainly)
 // and sprites representing things.
@@ -78,16 +53,16 @@ const
   MAXDRAWSEGS = 256; // VJ maybe bigger ????
 
 type
-//
-// INTERNAL MAP TYPES
-//  used by play and refresh
-//
 
-//
-// Your plain vanilla vertex.
-// Note: transformed values not buffered locally,
-//  like some DOOM-alikes ("wt", "WebView") did.
-//
+  // INTERNAL MAP TYPES
+  //  used by play and refresh
+
+
+
+  // Your plain vanilla vertex.
+  // Note: transformed values not buffered locally,
+  //  like some DOOM-alikes ("wt", "WebView") did.
+
   vertex_t = packed record
     x: fixed_t;
     y: fixed_t;
@@ -100,12 +75,12 @@ type
   line_t = record;}
 
 
-// Each sector has a degenmobj_t in its center
-//  for sound origin purposes.
-// I suppose this does not handle sound from
-//  moving objects (doppler), because
-//  position is prolly just buffered, not
-//  updated.
+  // Each sector has a degenmobj_t in its center
+  //  for sound origin purposes.
+  // I suppose this does not handle sound from
+  //  moving objects (doppler), because
+  //  position is prolly just buffered, not
+  //  updated.
   degenmobj_t = packed record
     thinker: thinker_t; // not used for anything
     x: fixed_t;
@@ -116,10 +91,10 @@ type
 
   Pline_tArray = ^line_tArray;
   Pline_tPArray = ^line_tPArray;
-//
-// The SECTORS record, at runtime.
-// Stores things/mobjs.
-//
+
+  // The SECTORS record, at runtime.
+  // Stores things/mobjs.
+
   sector_t = packed record
     floorheight: fixed_t;
     ceilingheight: fixed_t;
@@ -151,15 +126,15 @@ type
     specialdata: pointer;
 
     linecount: integer;
-    lines: Pline_tPArray;	// [linecount] size
+    Lines: Pline_tPArray;  // [linecount] size
   end;
   Psector_t = ^sector_t;
   sector_tArray = packed array[0..$FFFF] of sector_t;
   Psector_tArray = ^sector_tArray;
 
-//
-// The SideDef.
-//
+
+  // The SideDef.
+
 
   side_t = packed record
     // add this to the calculated texture column
@@ -181,15 +156,15 @@ type
   side_tArray = packed array[0..$FFFF] of side_t;
   Pside_tArray = ^side_tArray;
 
-//
-// Move clipping aid for LineDefs.
-//
+
+  // Move clipping aid for LineDefs.
+
   slopetype_t = (
     ST_HORIZONTAL,
     ST_VERTICAL,
     ST_POSITIVE,
     ST_NEGATIVE
-  );
+    );
 
   line_t = packed record
     // Vertices, from v1 to v2.
@@ -232,13 +207,13 @@ type
   line_tPArray = packed array[0..$FFFF] of Pline_t;
 
 
-//
-// A SubSector.
-// References a Sector.
-// Basically, this is a list of LineSegs,
-//  indicating the visible walls that define
-//  (all or some) sides of a convex BSP leaf.
-//
+
+  // A SubSector.
+  // References a Sector.
+  // Basically, this is a list of LineSegs,
+  //  indicating the visible walls that define
+  //  (all or some) sides of a convex BSP leaf.
+
   subsector_t = packed record
     sector: Psector_t;
     numlines: smallint;
@@ -248,9 +223,9 @@ type
   subsector_tArray = packed array[0..$FFFF] of subsector_t;
   Psubsector_tArray = ^subsector_tArray;
 
-//
-// The LineSeg.
-//
+
+  // The LineSeg.
+
   seg_t = packed record
     v1: Pvertex_t;
     v2: Pvertex_t;
@@ -272,9 +247,9 @@ type
   seg_tArray = packed array[0..$FFFF] of seg_t;
   Pseg_tArray = ^seg_tArray;
 
-//
-// BSP node.
-//
+
+  // BSP node.
+
   node_t = packed record
     // Partition line.
     x: fixed_t;
@@ -292,7 +267,7 @@ type
   node_tArray = packed array[0..$FFFF] of node_t;
   Pnode_tArray = ^node_tArray;
 
-// posts are runs of non masked source pixels
+  // posts are runs of non masked source pixels
   post_t = packed record
     topdelta: byte; // -1 is the last post in a column
     length: byte;   // length data bytes follows
@@ -303,19 +278,19 @@ type
   end;}
   Ppost_t = ^post_t;
 
-// column_t is a list of 0 or more post_t, (byte)-1 terminated
+  // column_t is a list of 0 or more post_t, (byte)-1 terminated
   column_t = post_t;
   Pcolumn_t = ^column_t;
 
-//
-// OTHER TYPES
-//
 
-// This could be wider for >8 bit display.
-// Indeed, true color support is posibble
-//  precalculating 24bpp lightmap/colormap LUT.
-//  from darkening PLAYPAL to all black.
-// Could even us emore than 32 levels.
+  // OTHER TYPES
+
+
+  // This could be wider for >8 bit display.
+  // Indeed, true color support is posibble
+  //  precalculating 24bpp lightmap/colormap LUT.
+  //  from darkening PLAYPAL to all black.
+  // Could even us emore than 32 levels.
 {$IFDEF TRUECOLOR}
   lighttable_t = integer; //byte;
 {$ELSE}
@@ -327,9 +302,9 @@ type
   lighttable_tPArray = packed array[0..$FFFF] of Plighttable_tArray;
   Plighttable_tPArray = ^lighttable_tPArray;
 
-//
-// ?
-//
+
+  // ?
+
   drawseg_t = packed record
     curline: Pseg_t;
     x1: integer;
@@ -356,14 +331,14 @@ type
   end;
   Pdrawseg_t = ^drawseg_t;
 
-// Patches.
-// A patch holds one or more columns.
-// Patches are used for sprites and all masked pictures,
-// and we compose textures from the TEXTURE1/2 lists
-// of patches.
+  // Patches.
+  // A patch holds one or more columns.
+  // Patches are used for sprites and all masked pictures,
+  // and we compose textures from the TEXTURE1/2 lists
+  // of patches.
   patch_t = packed record
-    width: smallint; // bounding box size
-    height: smallint;
+    Width: smallint; // bounding box size
+    Height: smallint;
     leftoffset: smallint; // pixels to the left of origin
     topoffset: smallint;  // pixels below the origin
     columnofs: array[0..7] of integer; // only [width] used
@@ -375,14 +350,15 @@ type
   patch_tPArray = packed array[0..$FFFF] of Ppatch_t;
   Ppatch_tPArray = ^patch_tPArray;
 
-// A vissprite_t is a thing
-//  that will be drawn during a refresh.
-// I.e. a sprite object that is partly visible.
+  // A vissprite_t is a thing
+  //  that will be drawn during a refresh.
+  // I.e. a sprite object that is partly visible.
   Pvissprite_t = ^vissprite_t;
+
   vissprite_t = packed record
     // Doubly linked list.
     prev: Pvissprite_t;
-    next: Pvissprite_t;
+    Next: Pvissprite_t;
 
     x1: integer;
     x2: integer;
@@ -413,21 +389,21 @@ type
     mobjflags: integer;
   end;
 
-//
-// Sprites are patches with a special naming convention
-//  so they can be recognized by R_InitSprites.
-// The base name is NNNNFx or NNNNFxFx, with
-//  x indicating the rotation, x = 0, 1-7.
-// The sprite and frame specified by a thing_t
-//  is range checked at run time.
-// A sprite is a patch_t that is assumed to represent
-//  a three dimensional object and may have multiple
-//  rotations pre drawn.
-// Horizontal flipping is used to save space,
-//  thus NNNNF2F5 defines a mirrored patch.
-// Some sprites will only have one picture used
-// for all views: NNNNF0
-//
+
+  // Sprites are patches with a special naming convention
+  //  so they can be recognized by R_InitSprites.
+  // The base name is NNNNFx or NNNNFxFx, with
+  //  x indicating the rotation, x = 0, 1-7.
+  // The sprite and frame specified by a thing_t
+  //  is range checked at run time.
+  // A sprite is a patch_t that is assumed to represent
+  //  a three dimensional object and may have multiple
+  //  rotations pre drawn.
+  // Horizontal flipping is used to save space,
+  //  thus NNNNF2F5 defines a mirrored patch.
+  // Some sprites will only have one picture used
+  // for all views: NNNNF0
+
   spriteframe_t = packed record
     // If false use 0 for any position.
     // Note: as eight entries are available,
@@ -435,11 +411,11 @@ type
     rotate: integer;
 
     // Lump to use for view angles 0-7.
-//    lump: packed array[0..7] of smallint;
+    //    lump: packed array[0..7] of smallint;
     lump: array[0..7] of integer;
 
     // Flip bit (1 = flip) to use for view angles 0-7.
-//    flip: packed array[0..7] of byte;
+    //    flip: packed array[0..7] of byte;
     flip: array[0..7] of boolean;
   end;
   Pspriteframe_t = ^spriteframe_t;
@@ -447,10 +423,10 @@ type
   Pspriteframe_tArray = ^spriteframe_tArray;
 
 
-//
-// A sprite definition:
-//  a number of animation frames.
-//
+
+  // A sprite definition:
+  //  a number of animation frames.
+
   spritedef_t = packed record
     numframes: integer;
     spriteframes: Pspriteframe_tArray;
@@ -467,11 +443,11 @@ type
   visindex_tArray = packed array[-1..$FFFF] of visindex_t;
   Pvisindex_tArray = ^visindex_tArray;
 
-//
-// Now what is a visplane, anyway?
-//
+
+  // Now what is a visplane, anyway?
+
   visplane_t = packed record
-    height: fixed_t;
+    Height: fixed_t;
     picnum: integer;
     lightlevel: integer;
     minx: integer;
