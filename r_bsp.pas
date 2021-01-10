@@ -30,32 +30,6 @@ interface
 
 uses r_defs;
 
-{
-    r_bsp.h, r_bsp.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Refresh module, BSP traversal and handling.
-//	BSP traversal, handling of LineSegs for rendering.
-//
-//-----------------------------------------------------------------------------
-
 // BSP?
 procedure R_ClearClipSegs;
 procedure R_ClearDrawSegs;
@@ -86,25 +60,25 @@ uses d_delphi,
   doomdef, m_bbox, i_system,
   p_setup,
   r_segs, r_main, r_plane, r_things, r_draw, r_sky,
-// State.
+  // State.
   doomstat;
 
-//
+
 // R_ClearDrawSegs
-//
+
 procedure R_ClearDrawSegs;
 begin
   ds_p := 0;
 end;
 
-//
+
 // ClipWallSegment
 // Clips the given range of columns
 // and includes it in the new clip list.
-//
+
 type
   cliprange_t = record
-    first: integer;
+    First: integer;
     last: integer;
   end;
   Pcliprange_t = ^cliprange_t;
@@ -113,32 +87,32 @@ const
   MAXSEGS = 32; // VJ maybe bigger ???
 
 var
-// newend is one past the last valid seg
+  // newend is one past the last valid seg
   newend: integer; // VJ was Pcliprange_t
   solidsegs: array[0..MAXSEGS - 1] of cliprange_t;
 
-//
+
 // R_ClipSolidWallSegment
 // Does handle solid walls,
 //  e.g. single sided LineDefs (middle texture)
 //  that entirely block the view.
-//
-procedure R_ClipSolidWallSegment(first, last: integer);
+
+procedure R_ClipSolidWallSegment(First, last: integer);
 var
-  next: integer;
+  Next: integer;
   start: integer;
 
   procedure crunch;
   begin
-    if next = start then
-    // Post just extended past the bottom of one post.
+    if Next = start then
+      // Post just extended past the bottom of one post.
       exit;
-    while next <> newend do
+    while Next <> newend do
     begin
       // Remove a post.
-      inc(start);
-      inc(next);       // VJ maybe after????
-      solidsegs[start] := solidsegs[next];
+      Inc(start);
+      Inc(Next);       // VJ maybe after????
+      solidsegs[start] := solidsegs[Next];
     end;
     newend := start + 1;
   end;
@@ -147,58 +121,58 @@ begin
   // Find the first range that touches the range
   //  (adjacent pixels are touching).
   start := 0;
-  while solidsegs[start].last < first - 1 do
-    inc(start);
+  while solidsegs[start].last < First - 1 do
+    Inc(start);
 
-  if first < solidsegs[start].first then
+  if First < solidsegs[start].First then
   begin
-    if last < solidsegs[start].first - 1 then
+    if last < solidsegs[start].First - 1 then
     begin
       // Post is entirely visible (above start),
       //  so insert a new clippost.
-      R_StoreWallRange(first, last);
-      next := newend;
-      inc(newend);
+      R_StoreWallRange(First, last);
+      Next := newend;
+      Inc(newend);
 
-      while next <> start do
+      while Next <> start do
       begin
-        solidsegs[next] := solidsegs[next - 1];
-        dec(next);
+        solidsegs[Next] := solidsegs[Next - 1];
+        Dec(Next);
       end;
-	    solidsegs[next].first := first;
-	    solidsegs[next].last := last;
+      solidsegs[Next].First := First;
+      solidsegs[Next].last := last;
       exit;
     end;
 
     // There is a fragment above *start.
-    R_StoreWallRange(first, solidsegs[start].first - 1);
+    R_StoreWallRange(First, solidsegs[start].First - 1);
     // Now adjust the clip size.
-    solidsegs[start].first := first;
+    solidsegs[start].First := First;
   end;
 
   // Bottom contained in start?
   if last <= solidsegs[start].last then
     exit;
 
-  next := start;
-  while last >= solidsegs[next + 1].first - 1 do
+  Next := start;
+  while last >= solidsegs[Next + 1].First - 1 do
   begin
     // There is a fragment between two posts.
-    R_StoreWallRange(solidsegs[next].last + 1, solidsegs[next + 1].first - 1);
-    inc(next);
+    R_StoreWallRange(solidsegs[Next].last + 1, solidsegs[Next + 1].First - 1);
+    Inc(Next);
 
-    if last <= solidsegs[next].last then
+    if last <= solidsegs[Next].last then
     begin
-	    // Bottom is contained in next.
-	    // Adjust the clip size.
-	    solidsegs[start].last := solidsegs[next].last;
+      // Bottom is contained in next.
+      // Adjust the clip size.
+      solidsegs[start].last := solidsegs[Next].last;
       crunch;
       exit;
     end;
   end;
 
   // There is a fragment after *next.
-  R_StoreWallRange(solidsegs[next].last + 1, last);
+  R_StoreWallRange(solidsegs[Next].last + 1, last);
   // Adjust the clip size.
   solidsegs[start].last := last;
 
@@ -207,44 +181,44 @@ begin
   crunch;
 end;
 
-//
+
 // R_ClipPassWallSegment
 // Clips the given range of columns,
 //  but does not includes it in the clip list.
 // Does handle windows,
 //  e.g. LineDefs with upper and lower texture.
-//
-procedure R_ClipPassWallSegment(first, last: integer);
+
+procedure R_ClipPassWallSegment(First, last: integer);
 var
   start: integer;
 begin
   // Find the first range that touches the range
   //  (adjacent pixels are touching).
   start := 0;
-  while solidsegs[start].last < first - 1 do
-    inc(start);
+  while solidsegs[start].last < First - 1 do
+    Inc(start);
 
-  if first < solidsegs[start].first then
+  if First < solidsegs[start].First then
   begin
-    if last < solidsegs[start].first - 1 then
+    if last < solidsegs[start].First - 1 then
     begin
-	    // Post is entirely visible (above start).
-	    R_StoreWallRange (first, last);
-	    exit;
+      // Post is entirely visible (above start).
+      R_StoreWallRange(First, last);
+      exit;
     end;
     // There is a fragment above *start.
-    R_StoreWallRange(first, solidsegs[start].first - 1);
+    R_StoreWallRange(First, solidsegs[start].First - 1);
   end;
 
   // Bottom contained in start?
   if last <= solidsegs[start].last then
     exit;
 
-  while last >= solidsegs[start + 1].first - 1 do
+  while last >= solidsegs[start + 1].First - 1 do
   begin
     // There is a fragment between two posts.
-    R_StoreWallRange(solidsegs[start].last + 1, solidsegs[start + 1].first - 1);
-    inc(start);
+    R_StoreWallRange(solidsegs[start].last + 1, solidsegs[start + 1].First - 1);
+    Inc(start);
 
     if last <= solidsegs[start].last then
       exit;
@@ -254,23 +228,23 @@ begin
   R_StoreWallRange(solidsegs[start].last + 1, last);
 end;
 
-//
+
 // R_ClearClipSegs
-//
+
 procedure R_ClearClipSegs;
 begin
-  solidsegs[0].first := -$7fffffff;
+  solidsegs[0].First := -$7fffffff;
   solidsegs[0].last := -1;
-  solidsegs[1].first := viewwidth;
+  solidsegs[1].First := viewwidth;
   solidsegs[1].last := $7fffffff;
   newend := 2;
 end;
 
-//
+
 // R_AddLine
 // Clips the given segment
 // and adds any visible pieces to the line list.
-//
+
 procedure R_AddLine(line: Pseg_t);
 var
   x1: integer;
@@ -345,7 +319,7 @@ begin
 
   // Closed door.
   if (backsector.ceilingheight <= frontsector.floorheight) or
-     (backsector.floorheight >= frontsector.ceilingheight) then
+    (backsector.floorheight >= frontsector.ceilingheight) then
   begin
     R_ClipSolidWallSegment(x1, x2 - 1);
     exit;
@@ -353,7 +327,7 @@ begin
 
   // Window.
   if (backsector.ceilingheight <> frontsector.ceilingheight) or
-     (backsector.floorheight <> frontsector.floorheight) then
+    (backsector.floorheight <> frontsector.floorheight) then
   begin
     R_ClipPassWallSegment(x1, x2 - 1);
     exit;
@@ -365,20 +339,20 @@ begin
   // identical light levels on both sides,
   // and no middle texture.
   if (backsector.ceilingpic = frontsector.ceilingpic) and
-     (backsector.floorpic = frontsector.floorpic) and
-     (backsector.lightlevel = frontsector.lightlevel) and
-     (curline.sidedef.midtexture = 0) then
+    (backsector.floorpic = frontsector.floorpic) and
+    (backsector.lightlevel = frontsector.lightlevel) and
+    (curline.sidedef.midtexture = 0) then
     exit;
 
   R_ClipPassWallSegment(x1, x2 - 1);
 end;
 
-//
+
 // R_CheckBBox
 // Checks BSP node/subtree bounding box.
 // Returns true
 //  if some part of the bbox might be visible.
-//
+
 const
   checkcoord: array[0..11, 0..3] of integer = (
     (3, 0, 2, 1),
@@ -393,7 +367,7 @@ const
     (2, 1, 3, 1),
     (2, 1, 3, 0),
     (0, 0, 0, 0)
-  );
+    );
 
 function R_CheckBBox(bspcoordA: Pfixed_tArray; const side: integer): boolean;
 var
@@ -447,7 +421,7 @@ begin
   boxpos := _SHL(boxy, 2) + boxx;
   if boxpos = 5 then
   begin
-    result := true;
+    Result := True;
     exit;
   end;
 
@@ -465,7 +439,7 @@ begin
   // Sitting on a line?
   if span >= ANG180 then
   begin
-    result := true;
+    Result := True;
     exit;
   end;
 
@@ -478,7 +452,7 @@ begin
     // Totally off the left edge?
     if tspan >= span then
     begin
-      result := false;
+      Result := False;
       exit;
     end;
 
@@ -493,7 +467,7 @@ begin
     // Totally off the left edge?
     if tspan >= span then
     begin
-      result := false;
+      Result := False;
       exit;
     end;
 
@@ -512,33 +486,32 @@ begin
   // Does not cross a pixel.
   if sx1 = sx2 then
   begin
-    result := false;
+    Result := False;
     exit;
   end;
 
-  dec(sx2);
+  Dec(sx2);
 
   start := 0;
   while solidsegs[start].last < sx2 do
-    inc(start);
+    Inc(start);
 
-  if (sx1 >= solidsegs[start].first) and
-     (sx2 <= solidsegs[start].last) then
+  if (sx1 >= solidsegs[start].First) and (sx2 <= solidsegs[start].last) then
     // The clippost contains the new span.
-    result := false
+    Result := False
   else
-    result := true;
+    Result := True;
 end;
 
-//
+
 // R_Subsector
 // Determine floor/ceiling planes.
 // Add sprites of things in sector.
 // Draw one or more line segments.
-//
+
 procedure R_Subsector(num: integer);
 var
-  count: integer;
+  Count: integer;
   line: Pseg_t;
   i_line: integer;
   sub: Psubsector_t;
@@ -546,49 +519,50 @@ begin
 (*
 #ifdef RANGECHECK
     if (num>=numsubsectors)
-	I_Error ("R_Subsector: ss %i with numss = %i",
-		 num,
-		 numsubsectors);
+  I_Error ("R_Subsector: ss %i with numss = %i",
+     num,
+     numsubsectors);
 #endif
 *)
-  inc(sscount);
+  Inc(sscount);
   sub := @subsectors[num];
   frontsector := sub.sector;
-  count := sub.numlines;
+  Count := sub.numlines;
   i_line := sub.firstline;
   line := @segs[i_line];
 
   if frontsector.floorheight < viewz then
   begin
     floorplane := R_FindPlane(frontsector.floorheight,
-                              frontsector.floorpic,
-                              frontsector.lightlevel);
+      frontsector.floorpic,
+      frontsector.lightlevel);
   end
   else
     floorplane := nil;
 
-  if (frontsector.ceilingheight > viewz) or
-     (frontsector.ceilingpic = skyflatnum) then
+  if (frontsector.ceilingheight > viewz) or (frontsector.ceilingpic =
+    skyflatnum) then
   begin
     ceilingplane := R_FindPlane(frontsector.ceilingheight,
-                                frontsector.ceilingpic,
-                                frontsector.lightlevel);
+      frontsector.ceilingpic,
+      frontsector.lightlevel);
   end
   else
     ceilingplane := nil;
 
   R_AddSprites(frontsector);
 
-  while boolval(count) do
+  while boolval(Count) do
   begin
     R_AddLine(line);
-    inc(i_line);
+    Inc(i_line);
     line := @segs[i_line];
-    dec(count);
+    Dec(Count);
   end;
 end;
 
-//
+
+
 // RenderBSPNode
 // Renders all subsectors below a given node,
 //  traversing subtree recursively.
