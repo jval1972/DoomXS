@@ -28,36 +28,10 @@ unit r_data;
 
 interface
 
-uses d_delphi,
-  m_fixed, r_defs;
-
-{
-    r_data.h, r_data.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//  Refresh module, data I/O, caching, retrieval of graphics
-//  by name.
-//	Preparation of data for rendering,
-//	generation of lookups, caching, retrieval by name.
-//
-//-----------------------------------------------------------------------------
+uses
+  d_delphi,
+  m_fixed,
+  r_defs;
 
 // Retrieve column data for span blitting.
 function R_GetColumn(tex: integer; col: integer): PByteArray;
@@ -105,13 +79,21 @@ procedure R_SetupLevel;
 
 implementation
 
-uses doomdef, doomstat,
+uses
+  doomdef,
+  doomstat,
   d_think,
   g_game,
   i_system,
-  p_local, p_setup, p_tick, p_mobj_h, p_mobj,
-  r_sky, r_things,
-  w_wad, z_zone;
+  p_local,
+  p_setup,
+  p_tick,
+  p_mobj_h,
+  p_mobj,
+  r_sky,
+  r_things,
+  w_wad,
+  z_zone;
 
 //
 // Graphics.
@@ -526,22 +508,7 @@ begin
     if offset > maxoff then
       I_Error('R_InitTextures(): bad texture directory');
 
-//    padcpy(mtexture, pointer(integer(maptex) + offset), SizeOf(mtexture));
     mtexture := Pmaptexture_t(integer(maptex) + offset);
-
-    // Deal with padding problem
-{    mt_ofs := 0;
-
-    memcpy(@mtexture, pointer(integer(maptex) + offset), SizeOf(mtexture));
-{    mtexture.name := Pchar8_t(Pmaptexture_t(integer(maptex) + offset + mt_ofs))^;
-    mt_ofs := mt_ofs + SizeOf(char8_t);
-
-    masked: boolean;
-    width: smallint;
-    height: smallint;
-    columndirectory: PPointer; // OBSOLETE
-    patchcount: smallint;
-    patches: array[0..0] of mappatch_t;}
 
     textures[i] :=
       Z_Malloc(
