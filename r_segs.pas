@@ -28,35 +28,11 @@ unit r_segs;
 
 interface
 
-uses d_delphi,
-  m_fixed, tables,
+uses
+  d_delphi,
+  m_fixed,
+  tables,
   r_defs;
-
-{
-    r_segs.h, r_segs.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Refresh module, drawing LineSegs from BSP.
-//	All the clipping: columns, horizontal spans, sky columns.
-//
-//-----------------------------------------------------------------------------
 
 procedure R_RenderMaskedSegRange(ds: Pdrawseg_t; x1, x2: integer);
 
@@ -118,9 +94,17 @@ var
 
 implementation
 
-uses doomtype, doomdef, doomstat, doomdata,
+uses
+  doomtype,
+  doomdef,
+  doomstat,
+  doomdata,
   i_system,
-  r_main, r_data, r_bsp, r_sky, r_things, r_draw, r_plane;
+  r_main,
+  r_data,
+  r_bsp,
+  r_sky,
+  r_things, r_draw, r_plane;
 
 // OPTIMIZE: closed two sided lines as single sided
 
