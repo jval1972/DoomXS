@@ -28,31 +28,6 @@ unit s_sound;
 
 interface
 
-{
-    s_sound.h, s_sound.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	The not so system specific sound interface.
-//
-//-----------------------------------------------------------------------------
-
 //
 // Initializes sound stuff, including volume
 // Sets channels, SFX and music volume,
@@ -111,10 +86,10 @@ var
 // These are not used, but should be (menu).
 // Maximum volume of a sound effect.
 // Internal default is max out of 0-15.
-  snd_SfxVolume: integer;
+  snd_SfxVolume: integer = 15;
 
 // Maximum volume of music. Useless so far.
-  snd_MusicVolume: integer;
+  snd_MusicVolume: integer = 15;
 
 // following is set
 //  by the defaults code in M_misc:
@@ -123,14 +98,20 @@ var
   
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   d_player,
   g_game,
-  i_system, i_sound, i_music,
-  m_fixed, m_rnd,
-  p_mobj_h, p_local,
+  i_system,
+  i_sound,
+  i_music,
+  m_fixed,
+  m_rnd,
+  p_mobj_h,
+  p_local,
   sounds,
-  z_zone, w_wad,
+  z_zone,
+  w_wad,
   doomdef,
   r_main,
   tables,
@@ -193,7 +174,7 @@ var
   mus_paused: boolean;
 
 // music currently being played
-  mus_playing: Pmusicinfo_t;
+  mus_playing: Pmusicinfo_t = nil;
 
   nextcleanup: integer;
 
@@ -400,22 +381,6 @@ begin
   if sfx.lumpnum < 0 then
     sfx.lumpnum := I_GetSfxLumpNum(sfx);
 
-//#ifndef SNDSRV
-//  // cache data if necessary
-//  if (!sfx->data)
-//  {
-//    fprintf( stderr,
-//	     "S_StartSoundAtVolume: 16bit and not pre-cached - wtf?\n");
-//
-//    // DOS remains, 8bit handling
-//    //sfx->data = (void *) W_CacheLumpNum(sfx->lumpnum, PU_MUSIC);
-//    // fprintf( stderr,
-//    //	     "S_StartSoundAtVolume: loading %d (lump %d) : 0x%x\n",
-//    //       sfx_id, sfx->lumpnum, (int)sfx->data );
-//
-//  }
-//#endif
-
   // increase the usefulness
   if sfx.usefulness < 0 then
     sfx.usefulness := 0; // VJ ??? original was := 1
@@ -428,69 +393,7 @@ end;
 
 procedure S_StartSound(origin: pointer; sfx_id: integer);
 begin
-//#ifdef SAWDEBUG
-//    // if (sfx_id == sfx_sawful)
-//    // sfx_id = sfx_itemup;
-//#endif
-
   S_StartSoundAtVolume(origin, sfx_id, snd_SfxVolume);
-
-
-    // UNUSED. We had problems, had we not?
-//#ifdef SAWDEBUG
-//{
-//    int i;
-//    int n;
-//
-//    static mobj_t*      last_saw_origins[10] = {1,1,1,1,1,1,1,1,1,1};
-//    static int		first_saw=0;
-//    static int		next_saw=0;
-//
-//    if (sfx_id == sfx_sawidl
-//	|| sfx_id == sfx_sawful
-//	|| sfx_id == sfx_sawhit)
-//    {
-//	for (i=first_saw;i!=next_saw;i=(i+1)%10)
-//	    if (last_saw_origins[i] != origin)
-//		fprintf(stderr, "old origin 0x%lx != "
-//			"origin 0x%lx for sfx %d\n",
-//			last_saw_origins[i],
-//			origin,
-//			sfx_id);
-//
-//	last_saw_origins[next_saw] = origin;
-//	next_saw = (next_saw + 1) % 10;
-//	if (next_saw == first_saw)
-//	    first_saw = (first_saw + 1) % 10;
-//
-//	for (n=i=0; i<numChannels ; i++)
-//	{
-//	    if (channels[i].sfxinfo == &S_sfx[sfx_sawidl]
-//		|| channels[i].sfxinfo == &S_sfx[sfx_sawful]
-//		|| channels[i].sfxinfo == &S_sfx[sfx_sawhit]) n++;
-//	}
-//
-//	if (n>1)
-//	{
-//	    for (i=0; i<numChannels ; i++)
-//	    {
-//		if (channels[i].sfxinfo == &S_sfx[sfx_sawidl]
-//		    || channels[i].sfxinfo == &S_sfx[sfx_sawful]
-//		    || channels[i].sfxinfo == &S_sfx[sfx_sawhit])
-//		{
-//		    fprintf(stderr,
-//			    "chn: sfxinfo=0x%lx, origin=0x%lx, "
-//			    "handle=%d\n",
-//			    channels[i].sfxinfo,
-//			    channels[i].origin,
-//			    channels[i].handle);
-//		}
-//	    }
-//	    fprintf(stderr, "\n");
-//	}
-//    }
-//}
-//#endif
 end;
 
 procedure S_StopSound(origin: pointer);
@@ -543,25 +446,6 @@ var
   listener: Pmobj_t;
 begin
   listener := Pmobj_t(listener_p);
-  // Clean up unused data.
-  // This is currently not done for 16bit (sounds cached static).
-  // DOS 8bit remains.
-    (*if (gametic > nextcleanup)
-    {
-	for (i=1 ; i<NUMSFX ; i++)
-	{
-	    if (S_sfx[i].usefulness < 1
-		&& S_sfx[i].usefulness > -1)
-	    {
-		if (--S_sfx[i].usefulness == -1)
-		{
-		    Z_ChangeTag(S_sfx[i].data, PU_CACHE);
-		    S_sfx[i].data = 0;
-		}
-	    }
-	}
-	nextcleanup = gametic + 15;
-    }*)
 
   for cnum := 0 to numChannels - 1 do
   begin
@@ -626,7 +510,6 @@ begin
   if (volume < 0) or (volume > 15) then
     I_Error('S_SetMusicVolume(): Attempt to set music volume at %d', [volume]);
 
-//  I_SetMusicVolume(15); // VJ ????
   I_SetMusicVolume(volume);
   snd_MusicVolume := volume;
 end;
@@ -708,10 +591,6 @@ begin
     // stop the sound playing
     if I_SoundIsPlaying(c.handle) then
     begin
-//#ifdef SAWDEBUG
-//	    if (c->sfxinfo == &S_sfx[sfx_sawful])
-//		fprintf(stderr, "stopped\n");
-//#endif
       I_StopSound(c.handle);
     end;
 
@@ -853,16 +732,5 @@ begin
 
   result := cnum;
 end;
-
-
-
-
-
-initialization
-  snd_SfxVolume := 15;
-  snd_MusicVolume := 15;
-
-  mus_playing := nil;
-
 
 end.
