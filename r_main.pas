@@ -28,39 +28,14 @@ unit r_main;
 
 interface
 
-uses d_delphi,
+uses
+  d_delphi,
   doomdef,
   d_player,
-  m_fixed, tables,
-  r_data, r_defs;
-
-{
-    r_main.h, r_main.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	System specific interface stuff.
-//	Rendering main loop and setup functions,
-//	 utility functions (BSP, geometry, trigonometry).
-//	See tables.c, too.
-//
-//-----------------------------------------------------------------------------
+  m_fixed,
+  tables,
+  r_data,
+  r_defs;
 
 const
 //
@@ -71,16 +46,8 @@ const
 
 // Lighting constants.
 // Now why not 32 levels here?
-{  LIGHTLEVELS = 128;
-  LIGHTSEGSHIFT = 1;}
-{  LIGHTLEVELS = 64;
-  LIGHTSEGSHIFT = 2;}
-{  LIGHTLEVELS = 16;
-  LIGHTSEGSHIFT = 4;}
-  LIGHTLEVELS = 32;
-  LIGHTSEGSHIFT = 3;
-//  LIGHTLEVELS = 128;
-//  LIGHTSEGSHIFT = 1;
+  LIGHTLEVELS = 16;
+  LIGHTSEGSHIFT = 4;
 
   MAXLIGHTSCALE = 48;
   LIGHTSCALESHIFT = 12;
@@ -202,11 +169,18 @@ var
 
 implementation
 
-uses doomdata,
+uses
+  doomdata,
   d_net,
-  m_bbox, m_menu,
+  m_bbox,
+  m_menu,
   p_setup,
-  r_draw, r_bsp, r_things, r_plane, r_sky, r_segs,
+  r_draw,
+  r_bsp,
+  r_things,
+  r_plane,
+  r_sky,
+  r_segs,
   v_video,
   st_stuff;
 
@@ -764,21 +738,17 @@ begin
   else
   begin
     colfunc := R_DrawColumnLow;
-//    colfunc := R_DrawColumn;
 
     if SCREENHEIGHT = 200 then
-//      skycolfunc := R_DrawColumnLow
       skycolfunc := R_DrawColumn
     else
       skycolfunc := R_DrawSkyColumn;
 
-//    basecolfunc := R_DrawColumnLow;
     basecolfunc := R_DrawColumn;
 
     fuzzcolfunc := R_DrawFuzzColumn;
 
     spanfunc := R_DrawSpanLow;
-//    spanfunc := R_DrawSpan;
   end;
 
   R_InitBuffer(scaledviewwidth, viewheight);
@@ -786,8 +756,6 @@ begin
   R_InitTextureMapping;
 
   // psprite scales
-{  pspritescale := FRACUNIT * viewwidth div SCREENWIDTH;
-  pspriteiscale := FRACUNIT * SCREENWIDTH div viewwidth;}
   pspritescale := FRACUNIT * viewwidth div 320;
   pspriteiscale := FRACUNIT * 320 div viewwidth;
 
@@ -800,7 +768,6 @@ begin
   begin
     dy := ((i - viewheight div 2) * FRACUNIT) + FRACUNIT div 2;
     dy := abs(dy);
-//    yslope[i] := FixedDiv(_SHL(viewwidth, detailshift) div 2 * FRACUNIT, dy); // VJ operation priorities ???
     yslope[i] := FixedDiv(viewwidth * FRACUNIT div 2, dy); // VJ operation priorities ???
   end;
 
@@ -817,7 +784,6 @@ begin
     startmap := ((LIGHTLEVELS - 1 - i) * 2) * NUMCOLORMAPS div LIGHTLEVELS;
     for j := 0 to MAXLIGHTSCALE - 1 do
     begin
-//      level := startmap - j * SCREENWIDTH div _SHL(viewwidth, detailshift) div DISTMAP;
       level := startmap - j * SCREENWIDTH div viewwidth div DISTMAP;
 
       if level < 0 then
