@@ -104,7 +104,9 @@ uses
   r_data,
   r_bsp,
   r_sky,
-  r_things, r_draw, r_plane;
+  r_things,
+  r_draw,
+  r_plane;
 
 // OPTIMIZE: closed two sided lines as single sided
 
@@ -390,12 +392,7 @@ begin
   // don't overflow and crash
   if ds_p = MAXDRAWSEGS then
     exit;
-(*
-#ifdef RANGECHECK
-    if (start >=viewwidth || start > stop)
-	I_Error ("Bad R_RenderWallRange: %i to %i", start , stop);
-#endif
-*)
+
   sidedef := curline.sidedef;
   linedef := curline.linedef;
 
@@ -433,23 +430,6 @@ begin
   end
   else
   begin
-    // UNUSED: try to fix the stretched line bug
-(*
-#if 0
-	if (rw_distance < FRACUNIT/2)
-	{
-	    fixed_t		trx,try;
-	    fixed_t		gxt,gyt;
-
-	    trx = curline->v1->x - viewx;
-	    try = curline->v1->y - viewy;
-
-	    gxt = FixedMul(trx,viewcos);
-	    gyt = -FixedMul(try,viewsin);
-	    ds_p->scale1 = FixedDiv(projection, gxt-gyt)<<detailshift;
-	}
-#endif
-*)
     drawsegs[ds_p].scale2 := drawsegs[ds_p].scale1;
   end;
 
