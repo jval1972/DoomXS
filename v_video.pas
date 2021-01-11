@@ -28,38 +28,12 @@ unit v_video;
 
 interface
 
-uses d_delphi,
+uses
+  d_delphi,
   doomtype,
   doomdef,
 // Needed because we are refering to patches.
   r_defs;
-
-{
-    v_video.h, v_video.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Gamma correction LUT.
-//	Functions to draw patches (by post) directly to screen.
-//	Functions to blit a block to the screen.
-//
-//-----------------------------------------------------------------------------
 
 function _CENTERY: integer;
 
@@ -218,8 +192,10 @@ var
 
 implementation
 
-uses i_system,
-  m_fixed, m_bbox;
+uses
+  i_system,
+  m_fixed,
+  m_bbox;
 
 function _CENTERY: integer;
 begin
@@ -275,8 +251,6 @@ end;
 function V_PreserveW(x: integer; w: integer): integer;
 begin
   result := V_PreserveX(x + w) - V_PreserveX(x);
-//  result := preserveX[x + w] - V_PreserveX(x);
-//  result := V_PreserveX(320 - x - w) - V_PreserveX(320 - x);
 end;
 
 // preserve height coordinates
@@ -328,22 +302,6 @@ var
   col: integer;
   row: integer;
 begin
-(*
-#ifdef RANGECHECK
-    if (srcx<0
-	||srcx+width >SCREENWIDTH
-	|| srcy<0
-	|| srcy+height>SCREENHEIGHT
-	||destx<0||destx+width >SCREENWIDTH
-	|| desty<0
-	|| desty+height>SCREENHEIGHT
-	|| (unsigned)srcscrn>4
-	|| (unsigned)destscrn>4)
-    {
-	I_Error ("Bad V_CopyRect");
-    }
-#endif
-*)
   if V_NeedsPreserve(preserve) then
   begin
     destw := V_PreserveW(destx, width);
@@ -357,8 +315,6 @@ begin
     V_MarkRect(destx, desty, destw, desth, false);
 
     fracy := srcy * FRACUNIT;
-{    fracxstep := FRACUNIT * 320 div SCREENWIDTH;
-    fracystep := FRACUNIT * 200 div SCREENHEIGHT;}
     fracxstep := FRACUNIT * width div destw;
     fracystep := FRACUNIT * height div desth;
 
@@ -426,22 +382,6 @@ begin
   begin
     y := y - patch.topoffset;
     x := x - patch.leftoffset;
-(*
-#ifdef RANGECHECK
-    if (x<0
-	||x+SHORT(patch->width) >SCREENWIDTH
-	|| y<0
-	|| y+SHORT(patch->height)>SCREENHEIGHT
-	|| (unsigned)scrn>4)
-    {
-      fprintf( stderr, "Patch at %d,%d exceeds LFB\n", x,y );
-      // No I_Error abort - what is up with TNT.WAD?
-      fprintf( stderr, "V_DrawPatch: bad patch (ignored)\n");
-      return;
-    }
-#endif
-*)
-
     if scrn = _FG then
       V_MarkRect(x, y, patch.width, patch.height, false);
 
@@ -574,22 +514,6 @@ begin
   begin
     y := y - patch.topoffset;
     x := x - patch.leftoffset;
-(*
-#ifdef RANGECHECK
-    if (x<0
-	||x+SHORT(patch->width) >SCREENWIDTH
-	|| y<0
-	|| y+SHORT(patch->height)>SCREENHEIGHT
-	|| (unsigned)scrn>4)
-    {
-      fprintf( stderr, "Patch at %d,%d exceeds LFB\n", x,y );
-      // No I_Error abort - what is up with TNT.WAD?
-      fprintf( stderr, "V_DrawPatch: bad patch (ignored)\n");
-      return;
-    }
-#endif
-*)
-
     if scrn = _FG then
       V_MarkRect(x, y, patch.width, patch.height, false);
 
@@ -702,18 +626,6 @@ procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src:
 var
   dest: PByteArray;
 begin
-(*
-#ifdef RANGECHECK
-    if (x<0
-	||x+width >SCREENWIDTH
-	|| y<0
-	|| y+height>SCREENHEIGHT
-	|| (unsigned)scrn>4 )
-    {
-	I_Error ("Bad V_DrawBlock");
-    }
-#endif
-*)
   V_MarkRect(x, y, width, height, false);
 
   dest := PByteArray(integer(screens[scrn]) + y * SCREENWIDTH + x);
@@ -735,18 +647,6 @@ procedure V_GetBlock(x, y: integer; scrn: integer; width, height: integer; dest:
 var
   src: PByteArray;
 begin
-(*
-#ifdef RANGECHECK
-    if (x<0
-	||x+width >SCREENWIDTH
-	|| y<0
-	|| y+height>SCREENHEIGHT
-	|| (unsigned)scrn>4 )
-    {
-	I_Error ("Bad V_DrawBlock");
-    }
-#endif
-*)
   src := PByteArray(integer(screens[scrn]) + y * SCREENWIDTH + x);
 
   while height <> 0 do
