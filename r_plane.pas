@@ -28,37 +28,11 @@ unit r_plane;
 
 interface
 
-uses m_fixed,
-  doomdef, 
-  r_data, r_defs;
-
-{
-    r_plane.h, r_plane.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Refresh, visplane stuff (floor, ceilings).
-//	Here is a core component: drawing the floors and ceilings,
-//	 while maintaining a per column clipping list only.
-//	Moreover, the sky areas have to be determined.
-//
-//-----------------------------------------------------------------------------
+uses
+  m_fixed,
+  doomdef,
+  r_data,
+  r_defs;
 
 procedure R_InitPlanes;
 procedure R_ClearPlanes;
@@ -105,13 +79,18 @@ var
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   doomstat,
   d_player,
   tables,
   i_system,
-  r_sky, r_draw, r_main, r_things,
-  z_zone, w_wad;
+  r_sky,
+  r_draw,
+  r_main,
+  r_things,
+  z_zone,
+  w_wad;
 
 // Here comes the obnoxious "visplane".
 const
@@ -171,18 +150,7 @@ var
   length: fixed_t;
   index: LongWord;
 begin
-(*
-#ifdef RANGECHECK
-    if (x2 < x1
-	|| x1<0
-	|| x2>=viewwidth
-	|| (unsigned)y>viewheight)
-    {
-	I_Error ("R_MapPlane: %i, %i at %i",x1,x2,y);
-    }
-#endif
-*)
-  if planeheight <> cachedheight[y] then
+  if planeheight <> cachedheight[y] then // JVAL: remove ?
   begin
     cachedheight[y] := planeheight;
     cacheddistance[y] := FixedMul(planeheight, yslope[y]);
@@ -240,8 +208,8 @@ begin
     ceilingclip[i] := -1;
   end;
 
-  lastvisplane := 0; // VJ (= visplanes);
-  lastopening := 0; // VJ (= openings);
+  lastvisplane := 0;
+  lastopening := 0;
 
   // texture calculation
   memset(@cachedheight, 0, SizeOf(cachedheight));
@@ -302,17 +270,13 @@ begin
   if check < lastvisplane then
   begin
     result := @visplanes[check];
-//    result := visplanes[check];
     exit;
   end;
 
   if lastvisplane = MAXVISPLANES then
     I_Error('R_FindPlane(): no more visplanes');
 
-//  inc(lastvisplane);
   lastvisplane := R_NewVisPlane;
-
-//  visplanes[check] := Z_Malloc(SizeOf(visplane_t), PU_LEVEL, nil); // z_alloc
 
   visplanes[check].height := height;
   visplanes[check].picnum := picnum;
@@ -324,7 +288,6 @@ begin
     visplanes[check].top[i] := VISEND;
 
   result := @visplanes[check];
-//  result := visplanes[check];
 end;
 
 //
@@ -391,9 +354,7 @@ begin
   visplanes[lastvisplane].lightlevel := pl.lightlevel;
 
   pl := @visplanes[lastvisplane];
-//  pl := visplanes[lastvisplane];
 
-//  inc(lastvisplane);
   lastvisplane := R_NewVisPlane;
 
   pl.minx := start;
@@ -454,25 +415,9 @@ var
   stop: integer;
   angle: integer;
 begin
-(*
-#ifdef RANGECHECK
-    if (ds_p - drawsegs > MAXDRAWSEGS)
-	I_Error ("R_DrawPlanes: drawsegs overflow (%i)",
-		 ds_p - drawsegs);
-
-    if (lastvisplane - visplanes > MAXVISPLANES)
-	I_Error ("R_DrawPlanes: visplane overflow (%i)",
-		 lastvisplane - visplanes);
-
-    if (lastopening - openings > MAXOPENINGS)
-	I_Error ("R_DrawPlanes: opening overflow (%i)",
-		 lastopening - openings);
-#endif
-*)
   for i := 0 to lastvisplane - 1 do
   begin
     pl := @visplanes[i];
-//    pl := visplanes[i];
     if pl.minx > pl.maxx then
       continue;
 
@@ -533,6 +478,4 @@ begin
   end;
 end;
 
-
 end.
-
