@@ -30,33 +30,6 @@ interface
 
 uses doomtype, doomdef, d_event;
 
-{
-    st_stuff.h, st_stuff.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Status bar code.
-//	Does the face/direction indicator animatin.
-//	Does palette indicators as well (red pain/berserk, bright pickup)
-//
-//-----------------------------------------------------------------------------
-
 // Size of statusbar.
 // Now sensitive for scaling.
 const
@@ -103,23 +76,33 @@ type
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   tables,
   d_items,
-  i_system, i_video, z_zone, w_wad,
+  i_system,
+  i_video,
+  z_zone,
+  w_wad,
   g_game,
   st_lib,
-  p_local, p_inter, d_player,
-  r_defs, r_main,
+  p_local,
+  p_inter,
+  d_player,
+  r_defs,
+  r_main,
   am_map,
-  m_cheat, m_rnd, m_fixed,
+  m_cheat,
+  m_rnd,
+  m_fixed,
   s_sound,
 // Needs access to LFB.
   v_video,
 // State.
   doomstat,
 // Data.
-  dstrings, d_englsh,
+  dstrings,
+  d_englsh,
   sounds,
 // for mapnames
   hu_stuff;
