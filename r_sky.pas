@@ -28,31 +28,6 @@ unit r_sky;
 
 interface
 
-{
-    r_sky.h, r_sky.c
-}
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Sky rendering.
-//
-//-----------------------------------------------------------------------------
-
 // SKY, store the number for name.
 const
   SKYFLATNAME = 'F_SKY1';
@@ -66,10 +41,11 @@ var
   skytexturemid: integer;
 
 procedure R_InitSkyMap;
-  
+
 implementation
 
-uses m_fixed; // Needed for FRACUNIT.
+uses
+  m_fixed; // Needed for FRACUNIT.
 
 //
 // R_InitSkyMap
@@ -77,7 +53,6 @@ uses m_fixed; // Needed for FRACUNIT.
 //
 procedure R_InitSkyMap;
 begin
-  // skyflatnum = R_FlatNumForName ( SKYFLATNAME ); // VJ is placed to g_game.pas
   skytexturemid := 100 * FRACUNIT;
 end;
 
