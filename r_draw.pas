@@ -247,14 +247,6 @@ begin
   // Zero length, column does not exceed a pixel.
   if count < 0 then
     exit;
-(*
-#ifdef RANGECHECK
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0
-	|| dc_yh >= SCREENHEIGHT)
-	I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
-#endif
-*)
 
   // Framebuffer destination address.
   // Use ylookup LUT to avoid multiply with ScreenWidth.
@@ -374,18 +366,6 @@ begin
   count := dc_yh - dc_yl;
   if count < 0 then
     exit;
-(*
-#ifdef RANGECHECK
-    if ((unsigned)dc_x >= SCREENWIDTH
-	|| dc_yl < 0
-	|| dc_yh >= SCREENHEIGHT)
-    {
-	I_Error ( "R_DrawColumn: %i to %i at %i",
-		  dc_yl, dc_yh, dc_x);
-    }
-
-#endif
-*)
 
   // FIXME. As above.
   dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
