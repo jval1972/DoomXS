@@ -28,37 +28,12 @@ unit r_things;
 
 interface
 
-uses d_delphi,
+uses
+  d_delphi,
   doomdef,
   info,
   m_fixed,
   r_defs;
-
-{
-    r_things.h, r_things.c
-}
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Rendering of moving objects, sprites.
-//	Refresh of things, i.e. objects represented by sprites.
-//
-//-----------------------------------------------------------------------------
 
 const
   MAXVISSPRITES = 128;
@@ -92,15 +67,23 @@ var
 //  and range check thing_t sprites patches
   sprites: Pspritedef_tArray;
   numsprites: integer;
-  
+
 implementation
 
-uses tables,
+uses
+  tables,
   g_game,
   i_system,
-  p_mobj_h, p_pspr, p_pspr_h,
-  r_data, r_draw, r_main, r_bsp, r_segs,
-  z_zone, w_wad,
+  p_mobj_h,
+  p_pspr,
+  p_pspr_h,
+  r_data,
+  r_draw,
+  r_main,
+  r_bsp,
+  r_segs,
+  z_zone,
+  w_wad,
   doomstat;
 
 const
@@ -470,12 +453,6 @@ begin
   begin
     dc_x := i;
     texturecolumn := frac div FRACUNIT;
-(*
-#ifdef RANGECHECK
-	if (texturecolumn < 0 || texturecolumn >= SHORT(patch->width))
-	    I_Error ("R_DrawSpriteRange: bad texturecolumn");
-#endif
-*)
     column := Pcolumn_t(integer(patch) + patch.columnofs[texturecolumn]);
     R_DrawMaskedColumn(column);
     frac := frac + vis.xiscale;
@@ -516,48 +493,16 @@ begin
 	    ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
-(************************
-  dc_iscale := _SHR(abs(vis.xiscale), detailshift) * 200 div SCREENHEIGHT;
-  dc_texturemid := vis.texturemid * 200 div SCREENHEIGHT;
-  frac := vis.startfrac;
-  fracstep := vis.xiscale * 320 div SCREENWIDTH;
-  spryscale := vis.scale * SCREENHEIGHT div 200;
-  sprtopscreen := centeryfrac - FixedMul(dc_texturemid, spryscale);
-//  sprtopscreen := centeryfrac - FixedMul(vis.texturemid, vis.xiscale) * SCREENHEIGHT div 200;
-
-//    topscreen := sprtopscreen + spryscale * column.topdelta;
-//    bottomscreen := topscreen + spryscale * column.length;
-
-
-{  x1 := vis.x1 * SCREENWIDTH div 320;
-  x2 := vis.x2 * SCREENWIDTH div 320;}
-  x1 := centerx - (centerx - vis.x1) * SCREENWIDTH div 320;
-  x2 := centerx - (centerx - vis.x2) * SCREENWIDTH div 320;
-  for i := x1 to x2 do
-*********************)
-//  dc_iscale := _SHR(abs(vis.xiscale), detailshift);
   dc_iscale := vis.xiscale;
   dc_texturemid := vis.texturemid;// * 200 div SCREENHEIGHT;
   frac := vis.startfrac;
   fracstep := vis.xiscale;
   spryscale := vis.scale;
   sprtopscreen := centeryfrac - FixedMul(dc_texturemid, spryscale);
-//  sprtopscreen := centeryfrac - FixedMul(vis.texturemid, vis.xiscale) * SCREENHEIGHT div 200;
-
-//    topscreen := sprtopscreen + spryscale * column.topdelta;
-//    bottomscreen := topscreen + spryscale * column.length;
-
-
   for i := vis.x1 to vis.x2 do
   begin
     dc_x := i;
     texturecolumn := frac div FRACUNIT;
-(*
-#ifdef RANGECHECK
-	if (texturecolumn < 0 || texturecolumn >= SHORT(patch->width))
-	    I_Error ("R_DrawSpriteRange: bad texturecolumn");
-#endif
-*)
     column := Pcolumn_t(integer(patch) + patch.columnofs[texturecolumn]);
     R_DrawMaskedColumn(column);
     frac := frac + fracstep;
@@ -616,21 +561,7 @@ begin
     exit;
 
   // decide which patch to use for sprite relative to player
-(*
-#ifdef RANGECHECK
-    if ((unsigned)thing->sprite >= numsprites)
-	I_Error ("R_ProjectSprite: invalid sprite number %i ",
-		 thing->sprite);
-#endif
-*)
   sprdef := @sprites[Ord(thing.sprite)];
-(*
-#ifdef RANGECHECK
-    if ( (thing->frame&FF_FRAMEMASK) >= sprdef->numframes )
-	I_Error ("R_ProjectSprite: invalid sprite frame %i : %i ",
-		 thing->sprite, thing->frame);
-#endif
-*)
   sprframe := @sprdef.spriteframes[thing.frame and FF_FRAMEMASK];
 
   if boolval(sprframe.rotate) then
@@ -711,7 +642,6 @@ begin
   else
   begin
     // diminished light
-//    index := _SHR(xscale, LIGHTSCALESHIFT - detailshift);
     index := _SHR(xscale, LIGHTSCALESHIFT);
 
     if index >= MAXLIGHTSCALE then
@@ -774,21 +704,7 @@ var
   avis: vissprite_t;
 begin
   // decide which patch to use
-(*
-#ifdef RANGECHECK
-    if ( (unsigned)psp->state->sprite >= numsprites)
-	I_Error ("R_ProjectSprite: invalid sprite number %i ",
-		 psp->state->sprite);
-#endif
-*)
   sprdef := @sprites[Ord(psp.state.sprite)];
-(*
-#ifdef RANGECHECK
-    if ( (psp->state->frame & FF_FRAMEMASK)  >= sprdef->numframes)
-	I_Error ("R_ProjectSprite: invalid sprite frame %i : %i ",
-		 psp->state->sprite, psp->state->frame);
-#endif
-*)
   sprframe := @sprdef.spriteframes[psp.state.frame and FF_FRAMEMASK];
 
   lump := sprframe.lump[0];
@@ -818,7 +734,6 @@ begin
   vis.texturemid := (BASEYCENTER * FRACUNIT) + FRACUNIT div 2 - (psp.sy - spritetopoffset[lump]);
   vis.x1 := decide(x1 < 0, 0, x1);
   vis.x2 := decide(x2 >= viewwidth, viewwidth - 1, x2);
-//  vis.scale := _SHL(pspritescale, detailshift);
   vis.scale := pspritescale;
 
   if flip then
@@ -1114,6 +1029,5 @@ begin
   if not boolval(viewangleoffset) then
     R_DrawPlayerSprites;
 end;
-
 
 end.
