@@ -120,13 +120,16 @@ var
 
   viewwindowx: integer;
   viewwindowy: integer;
-  
+
 implementation
 
-uses doomdef,
-  w_wad, z_zone,
+uses
+  doomdef,
+  w_wad,
+  z_zone,
   i_system,
-  r_data, r_main,
+  r_data,
+  r_main,
   st_stuff,
 // Needs access to LFB (guess what).
   v_video,
@@ -403,25 +406,6 @@ begin
   count := dc_yh - dc_yl;
   if count < 0 then
     exit;
-(*
-    // WATCOM VGA specific.
-    /* Keep for fixing.
-    if (detailshift)
-    {
-	if (dc_x & 1)
-	    outp (SC_INDEX+1,12);
-	else
-	    outp (SC_INDEX+1,3);
-
-	dest = destview + dc_yl*80 + (dc_x>>1);
-    }
-    else
-    {
-	outp (SC_INDEX+1,1<<(dc_x&3));
-
-	dest = destview + dc_yl*80 + (dc_x>>2);
-    }*/
-*)
 
   // FIXME. As above.
   dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
@@ -439,7 +423,6 @@ begin
     // Thus the "green" ramp of the player 0 sprite
     //  is mapped to gray, red, black/indigo.
     dest^ := dc_colormap[dc_translation[dc_source[frac div FRACUNIT]]];
-//    dest^ := dc_translation[dc_source[frac div FRACUNIT]]; // VJ removed colormap
     incp(pointer(dest), SCREENWIDTH);
 
     frac := frac + fracstep;
@@ -556,7 +539,6 @@ begin
   count := (ds_x2 - ds_x1) div 3;
   for i := 0 to count do
   begin
-//    spot := (_SHR(yfrac, 10) and (63 * 64)) + (_SHR(xfrac, 16) and 63);
     spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
     // Lowres/blocky mode does it twice,
     //  while scale is adjusted appropriately.
@@ -637,7 +619,7 @@ begin
   src := W_CacheLumpName(name, PU_CACHE);
   dest := screens[1];
 
-  for y := 0 to SCREENHEIGHT - V_PreserveY(ST_HEIGHT) - 1 do //- 1 do // do // - 1 do
+  for y := 0 to SCREENHEIGHT - V_PreserveY(ST_HEIGHT) - 1 do
   begin
     for x := 0 to SCREENWIDTH div 64 - 1 do
     begin
@@ -847,8 +829,6 @@ begin
     ofs := ofs + SCREENWIDTH;
   end;
 
-  // ?
-//  V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT - SBARHEIGHT);
   V_MarkRect(0, 0, 320, 200 - ST_HEIGHT, true);
 end;
 
