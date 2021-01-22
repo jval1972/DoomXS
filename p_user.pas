@@ -150,9 +150,7 @@ begin
     player.viewz := player.mo.ceilingz - 4 * FRACUNIT;
 end;
 
-
 // P_MovePlayer
-
 procedure P_MovePlayer(player: Pplayer_t);
 var
   cmd: Pticcmd_t;
@@ -363,31 +361,31 @@ begin
   if boolval(player.powers[Ord(pw_strength)]) then
     player.powers[Ord(pw_strength)] := player.powers[Ord(pw_strength)] + 1;
 
-  if boolval(player.powers[Ord(pw_invulnerability)]) then
+  if player.powers[Ord(pw_invulnerability)] > 0 then
     player.powers[Ord(pw_invulnerability)] := player.powers[Ord(pw_invulnerability)] - 1;
 
-  if boolval(player.powers[Ord(pw_invisibility)]) then
+  if player.powers[Ord(pw_invisibility)] > 0 then
   begin
     player.powers[Ord(pw_invisibility)] := player.powers[Ord(pw_invisibility)] - 1;
-    if not boolval(player.powers[Ord(pw_invisibility)]) then
+    if player.powers[Ord(pw_invisibility)] = 0 then
       player.mo.flags := player.mo.flags and (not MF_SHADOW);
   end;
 
-  if boolval(player.powers[Ord(pw_infrared)]) then
+  if player.powers[Ord(pw_infrared)] > 0 then
     player.powers[Ord(pw_infrared)] := player.powers[Ord(pw_infrared)] - 1;
 
-  if boolval(player.powers[Ord(pw_ironfeet)]) then
+  if player.powers[Ord(pw_ironfeet)] > 0 then
     player.powers[Ord(pw_infrared)] := player.powers[Ord(pw_infrared)] - 1;
 
-  if boolval(player.damagecount) then
+  if player.damagecount > 0 then
     player.damagecount := player.damagecount - 1;
 
-  if boolval(player.bonuscount) then
+  if player.bonuscount > 0 then
     player.bonuscount := player.bonuscount - 1;
 
 
   // Handling colormaps.
-  if boolval(player.powers[Ord(pw_invulnerability)]) then
+  if player.powers[Ord(pw_invulnerability)] > 0 then
   begin
     if (player.powers[Ord(pw_invulnerability)] > 4 * 32) or
       boolval(player.powers[Ord(pw_invulnerability)] and 8) then
@@ -395,7 +393,7 @@ begin
     else
       player.fixedcolormap := 0;
   end
-  else if boolval(player.powers[Ord(pw_infrared)]) then
+  else if player.powers[Ord(pw_infrared)] > 0 then
   begin
     if (player.powers[Ord(pw_infrared)] > 4 * 32) or
       boolval(player.powers[Ord(pw_infrared)] and 8) then
