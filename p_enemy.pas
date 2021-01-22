@@ -198,11 +198,11 @@ const
   opposite: array[0..8] of dirtype_t = (
     DI_WEST, DI_SOUTHWEST, DI_SOUTH, DI_SOUTHEAST,
     DI_EAST, DI_NORTHEAST, DI_NORTH, DI_NORTHWEST, DI_NODIR
-    );
+  );
 
   diags: array[0..3] of dirtype_t = (
     DI_NORTHWEST, DI_NORTHEAST, DI_SOUTHWEST, DI_SOUTHEAST
-    );
+  );
 
 procedure A_Fall(actor: Pmobj_t);
 begin
@@ -248,7 +248,7 @@ begin
   for i := 0 to sec.linecount - 1 do
   begin
     check := sec.Lines[i];
-    if not boolval(check.flags and ML_TWOSIDED) then
+    if check.flags and ML_TWOSIDED = 0 then
       continue;
 
     P_LineOpening(check);
@@ -261,9 +261,9 @@ begin
     else
       other := sides[check.sidenum[0]].sector;
 
-    if boolval(check.flags and ML_SOUNDBLOCK) then
+    if check.flags and ML_SOUNDBLOCK <> 0 then
     begin
-      if not boolval(soundblocks) then
+      if soundblocks = 0 then
         P_RecursiveSound(other, 1);
     end
     else
@@ -291,7 +291,7 @@ var
   pl: Pmobj_t;
   dist: fixed_t;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
   begin
     Result := False;
     exit;
@@ -322,7 +322,7 @@ begin
     exit;
   end;
 
-  if boolval(actor.flags and MF_JUSTHIT) then
+  if actor.flags and MF_JUSTHIT <> 0 then
   begin
     // the target just hit the enemy,
     // so fight back!
@@ -331,7 +331,7 @@ begin
     exit;
   end;
 
-  if boolval(actor.reactiontime) then
+  if actor.reactiontime <> 0 then
   begin
     Result := False; // do not attack yet
     exit;
@@ -341,7 +341,7 @@ begin
   dist := P_AproxDistance(actor.x - actor.target.x, actor.y - actor.target.y) -
     64 * FRACUNIT;
 
-  if not boolval(actor.info.meleestate) then
+  if actor.info.meleestate = 0 then
     dist := dist - 128 * FRACUNIT;  // no melee attack, so fire more
 
   dist := _SHR(dist, 16);
@@ -419,7 +419,7 @@ begin
   if not try_ok then
   begin
     // open any specials
-    if boolval(actor.flags and MF_FLOAT) and floatok then
+    if (actor.flags and MF_FLOAT <> 0) and floatok then
     begin
       // must adjust height
       if actor.z < tmfloorz then
@@ -432,7 +432,7 @@ begin
       exit;
     end;
 
-    if not boolval(numspechit) then
+    if numspechit = 0 then
     begin
       Result := False;
       exit;
@@ -440,7 +440,7 @@ begin
 
     actor.movedir := Ord(DI_NODIR);
     Result := False;
-    while boolval(numspechit) do
+    while numspechit > 0 do
     begin
       Dec(numspechit);
       ld := spechit[numspechit];
@@ -455,7 +455,7 @@ begin
   else
     actor.flags := actor.flags and (not MF_INFLOAT);
 
-  if not boolval(actor.flags and MF_FLOAT) then
+  if actor.flags and MF_FLOAT = 0 then
     actor.z := actor.floorz;
   Result := True;
 end;
@@ -492,7 +492,7 @@ var
   turnaround: dirtype_t;
   idx: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     I_Error('P_NewChaseDir(): called with no target');
 
   olddir := dirtype_t(actor.movedir);
@@ -566,7 +566,7 @@ begin
   end;
 
   // randomly determine direction of search
-  if boolval(P_Random and 1) then
+  if P_Random and 1 <> 0 then
   begin
     for tdir := DI_EAST to DI_SOUTHEAST do
     begin
@@ -685,7 +685,7 @@ begin
   // to see if all Keens are dead
 
   th := thinkercap.Next;
-  while Pointer(th) <> Pointer(@thinkercap) do
+  while th <> @thinkercap do
   begin
     if @th._function.acp1 = @P_MobjThinker then
     begin
@@ -695,16 +695,6 @@ begin
     end;
     th := th.Next;
   end;
-
-{  repeat
-    th := th.next;
-    if @th._function.acp1 = @P_MobjThinker then
-    begin
-      mo2 := Pmobj_t(th);
-      if (mo2 <> mo) and (mo2._type = mo._type) and (mo2.health > 0) then
-        exit; // other Keen not dead
-    end;
-  until Pointer(th) = Pointer(@thinkercap);}
 
   junk.tag := 666;
   EV_DoDoor(@junk, Open);
@@ -727,13 +717,13 @@ begin
   actor.threshold := 0; // any shot will wake up
   targ := Psubsector_t(actor.subsector).sector.soundtarget;
   seeyou := False;
-  if boolval(targ) and boolval(targ.flags and MF_SHOOTABLE) then
+  if (targ <> nil) and ((targ.flags and MF_SHOOTABLE) <> 0) then
   begin
     actor.target := targ;
 
-    if boolval(actor.flags and MF_AMBUSH) then
+    if actor.flags and MF_AMBUSH <> 0 then
     begin
-      if P_CheckSight(actor, actor.target) then
+      if P_CheckSight(actor, targ) then
         seeyou := True;
     end
     else
@@ -747,7 +737,7 @@ begin
   end;
 
   // go into chase state
-  if boolval(actor.info.seesound) then
+  if actor.info.seesound <> 0 then
   begin
     case sfxenum_t(actor.info.seesound) of
       sfx_posit1,
@@ -758,8 +748,8 @@ begin
       sfx_bgsit1,
       sfx_bgsit2:
         sound := Ord(sfx_bgsit1) + P_Random mod 2;
-      else
-        sound := actor.info.seesound;
+    else
+      sound := actor.info.seesound;
     end;
 
     if (actor._type = MT_SPIDER) or (actor._type = MT_CYBORG) then
@@ -782,13 +772,13 @@ var
   delta: integer;
   nomissile: boolean;
 begin
-  if boolval(actor.reactiontime) then
+  if actor.reactiontime <> 0 then
     actor.reactiontime := actor.reactiontime - 1;
 
   // modify target threshold
-  if boolval(actor.threshold) then
+  if actor.threshold <> 0 then
   begin
-    if (not boolval(actor.target)) or (actor.target.health <= 0) then
+    if (actor.target = nil) or (actor.target.health <= 0) then
       actor.threshold := 0
     else
       actor.threshold := actor.threshold - 1;
@@ -797,7 +787,7 @@ begin
   // turn towards movement direction if not there yet
   if actor.movedir < 8 then
   begin
-    actor.angle := actor.angle and _SHLW(7, 29);
+    actor.angle := actor.angle and $E0000000;
     delta := actor.angle - _SHLW(actor.movedir, 29);
 
     if delta > 0 then
@@ -806,8 +796,7 @@ begin
       actor.angle := actor.angle + ANG90 div 2;
   end;
 
-  if (not boolval(actor.target)) or
-    (not boolval(actor.target.flags and MF_SHOOTABLE)) then
+  if (actor.target = nil) or (actor.target.flags and MF_SHOOTABLE = 0) then
   begin
     // look for a new target
     if P_LookForPlayers(actor, True) then
@@ -818,7 +807,7 @@ begin
   end;
 
   // do not attack twice in a row
-  if boolval(actor.flags and MF_JUSTATTACKED) then
+  if actor.flags and MF_JUSTATTACKED <> 0 then
   begin
     actor.flags := actor.flags and (not MF_JUSTATTACKED);
     if (gameskill <> sk_nightmare) and (not fastparm) then
@@ -827,9 +816,9 @@ begin
   end;
 
   // check for melee attack
-  if boolval(actor.info.meleestate) and P_CheckMeleeRange(actor) then
+  if (actor.info.meleestate <> 0) and P_CheckMeleeRange(actor) then
   begin
-    if boolval(actor.info.attacksound) then
+    if actor.info.attacksound <> 0 then
       S_StartSound(actor, actor.info.attacksound);
 
     P_SetMobjState(actor, statenum_t(actor.info.meleestate));
@@ -838,7 +827,7 @@ begin
 
   nomissile := False;
   // check for missile attack
-  if boolval(actor.info.missilestate) then
+  if actor.info.missilestate <> 0 then
   begin
     if (gameskill < sk_nightmare) and (not fastparm) and boolval(actor.movecount) then
       nomissile := True
@@ -853,7 +842,7 @@ begin
   end;
 
   // possibly choose another target
-  if netgame and (not boolval(actor.threshold)) and
+  if netgame and (actor.threshold = 0) and
     (not P_CheckSight(actor, actor.target)) then
   begin
     if P_LookForPlayers(actor, True) then
@@ -866,7 +855,7 @@ begin
     P_NewChaseDir(actor);
 
   // make active sound
-  if boolval(actor.info.activesound) and (P_Random < 3) then
+  if (actor.info.activesound <> 0) and (P_Random < 3) then
     S_StartSound(actor, actor.info.activesound);
 end;
 
@@ -875,7 +864,7 @@ end;
 
 procedure A_FaceTarget(actor: Pmobj_t);
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   actor.flags := actor.flags and (not MF_AMBUSH);
@@ -883,7 +872,7 @@ begin
   actor.angle :=
     R_PointToAngle2(actor.x, actor.y, actor.target.x, actor.target.y);
 
-  if boolval(actor.target.flags and MF_SHADOW) then
+  if actor.target.flags and MF_SHADOW <> 0 then
     actor.angle := actor.angle + _SHLW(P_Random - P_Random, 21);
 end;
 
@@ -896,7 +885,7 @@ var
   damage: integer;
   slope: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -917,7 +906,7 @@ var
   damage: integer;
   slope: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   S_StartSound(actor, Ord(sfx_shotgn));
@@ -940,12 +929,13 @@ var
   damage: integer;
   slope: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   S_StartSound(actor, Ord(sfx_shotgn));
   A_FaceTarget(actor);
   bangle := actor.angle;
+
   slope := P_AimLineAttack(actor, bangle, MISSILERANGE);
 
   angle := bangle + _SHLW(P_Random - P_Random, 20);
@@ -961,7 +951,7 @@ begin
   if P_Random < 40 then
     exit;
 
-  if (not boolval(actor.target)) or (actor.target.health <= 0) or
+  if (actor.target = nil) or (actor.target.health <= 0) or
     (not P_CheckSight(actor, actor.target)) then
     P_SetMobjState(actor, statenum_t(actor.info.seestate));
 end;
@@ -974,14 +964,14 @@ begin
   if P_Random < 10 then
     exit;
 
-  if (not boolval(actor.target)) or (actor.target.health <= 0) or
+  if (actor.target = nil) or (actor.target.health <= 0) or
     (not P_CheckSight(actor, actor.target)) then
     P_SetMobjState(actor, statenum_t(actor.info.seestate));
 end;
 
 procedure A_BspiAttack(actor: Pmobj_t);
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -997,7 +987,7 @@ procedure A_TroopAttack(actor: Pmobj_t);
 var
   damage: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1017,7 +1007,7 @@ procedure A_SargAttack(actor: Pmobj_t);
 var
   damage: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1032,7 +1022,7 @@ procedure A_HeadAttack(actor: Pmobj_t);
 var
   damage: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1049,7 +1039,7 @@ end;
 
 procedure A_CyberAttack(actor: Pmobj_t);
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1060,7 +1050,7 @@ procedure A_BruisAttack(actor: Pmobj_t);
 var
   damage: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   if P_CheckMeleeRange(actor) then
@@ -1082,7 +1072,7 @@ procedure A_SkelMissile(actor: Pmobj_t);
 var
   mo: Pmobj_t;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1123,7 +1113,7 @@ begin
   // adjust direction
   dest := actor.tracer;
 
-  if (not boolval(dest)) or (dest.health <= 0) then
+  if (dest = nil) or (dest.health <= 0) then
     exit;
 
   // change angle
@@ -1166,7 +1156,7 @@ end;
 
 procedure A_SkelWhoosh(actor: Pmobj_t);
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1177,7 +1167,7 @@ procedure A_SkelFist(actor: Pmobj_t);
 var
   damage: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1325,7 +1315,7 @@ var
   an: longword;
 begin
   dest := actor.tracer;
-  if not boolval(dest) then
+  if dest = nil then
     exit;
 
   // don't move it if the vile lost sight
@@ -1361,7 +1351,7 @@ procedure A_VileTarget(actor: Pmobj_t);
 var
   fog: Pmobj_t;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1382,7 +1372,7 @@ var
   fire: Pmobj_t;
   an: angle_t;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1398,7 +1388,7 @@ begin
 
   fire := actor.tracer;
 
-  if not boolval(fire) then
+  if fire = nil then
     exit;
 
   // move the fire between the vile and the player
@@ -1489,7 +1479,7 @@ var
   an: angle_t;
   dist: integer;
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   dest := actor.target;
@@ -1570,7 +1560,7 @@ end;
 
 procedure A_PainAttack(actor: Pmobj_t);
 begin
-  if not boolval(actor.target) then
+  if actor.target = nil then
     exit;
 
   A_FaceTarget(actor);
@@ -1618,7 +1608,7 @@ end;
 
 procedure A_Pain(actor: Pmobj_t);
 begin
-  if boolval(actor.info.painsound) then
+  if actor.info.painsound <> 0 then
     S_StartSound(actor, actor.info.painsound);
 end;
 
@@ -1820,7 +1810,7 @@ begin
   braintargeton := 0;
 
   thinker := thinkercap.Next;
-  while Pointer(thinker) <> Pointer(@thinkercap) do
+  while thinker <> @thinkercap do
   begin
     if @thinker._function.acp1 = @P_MobjThinker then // is a mobj
     begin
@@ -1905,7 +1895,7 @@ var
   newmobj: Pmobj_t;
 begin
   easy := easy xor 1;
-  if (gameskill <= sk_easy) and (not boolval(easy)) then
+  if (gameskill <= sk_easy) and (easy = 0) then
     exit;
 
   if numbraintargets = 0 then // VJ
