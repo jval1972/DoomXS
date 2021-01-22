@@ -90,15 +90,26 @@ function I_GameFinished: boolean;
 
 procedure I_WaitVBL(const Count: integer);
 
+function I_SetDPIAwareness: boolean;
+
 var
   mb_used: integer = 6;
 
 implementation
 
-uses Windows, Messages,
-  doomdef, m_misc,
-  i_main, i_video, i_sound, i_music, i_input, i_io,
-  d_net, g_game;
+uses
+  Windows,
+  Messages,
+  doomdef,
+  m_misc,
+  i_main,
+  i_video,
+  i_sound,
+  i_music,
+  i_input,
+  i_io,
+  d_net,
+  g_game;
 
 var
   finished: boolean = False;
@@ -257,6 +268,39 @@ end;
 procedure I_Error(const error: string);
 begin
   I_Error(error, []);
+end;
+
+type
+  dpiproc_t = function: BOOL; stdcall;
+  dpiproc2_t = function(value: integer): HRESULT; stdcall;
+
+function I_SetDPIAwareness: boolean;
+var
+  dpifunc: dpiproc_t;
+  dpifunc2: dpiproc2_t;
+  dllinst: THandle;
+begin
+  result := false;
+
+  dllinst := LoadLibrary('Shcore.dll');
+  if dllinst <> 0 then
+  begin
+    dpifunc2 := GetProcAddress(dllinst, 'SetProcessDpiAwareness');
+    if assigned(dpifunc2) then
+    begin
+      result := dpifunc2(2) = S_OK;
+      if not result then
+        result := dpifunc2(1) = S_OK;
+    end;
+    FreeLibrary(dllinst);
+    exit;
+  end;
+
+  dllinst := LoadLibrary('user32');
+  dpifunc := GetProcAddress(dllinst, 'SetProcessDPIAware');
+  if assigned(dpifunc) then
+    result := dpifunc;
+  FreeLibrary(dllinst);
 end;
 
 initialization

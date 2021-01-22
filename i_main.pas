@@ -90,9 +90,11 @@ procedure DoomMain;
 var
   WindowClass: TWndClass;
 begin
+  I_SetDPIAwareness;
+
   ZeroMemory(WindowClass, SizeOf(WindowClass));
   WindowClass.lpfnWndProc := @WindowProc;
-  WindowClass.hbrBackground := GetStockObject(WHITE_BRUSH);
+  WindowClass.hbrBackground := GetStockObject(BLACK_BRUSH);
   WindowClass.lpszClassName := 'Doom32';
   if HPrevInst = 0 then
   begin
@@ -102,9 +104,21 @@ begin
     if RegisterClass(WindowClass) = 0 then
       Halt(1);
   end;
-  hMainWnd := CreateWindowEx(CS_HREDRAW or CS_VREDRAW,
-    WindowClass.lpszClassName, AppTitle, WS_OVERLAPPED, 0,
-    0, SCREENWIDTH, SCREENHEIGHT, 0, 0, HInstance, nil);
+
+  hMainWnd := CreateWindowEx(
+    0,
+    WindowClass.lpszClassName,
+    AppTitle,
+    WS_OVERLAPPED
+    ,
+    0, 0, 0, 0,
+    0,
+    0,
+    HInstance,
+    nil);
+
+  SetWindowLong(hMainWnd, GWL_STYLE, 0);
+
   ShowWindow(hMainWnd, CmdShow);
   UpdateWindow(hMainWnd);
   D_DoomMain;
