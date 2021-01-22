@@ -69,8 +69,8 @@ const
   MAXWIDTH = 1600;
   MAXHEIGHT = 1200;
 
-  SCREENWIDTH = 320;
-  SCREENHEIGHT = 200;
+  SCREENWIDTH = 640;
+  SCREENHEIGHT = 400;
 
 const
 // The maximum number of players, multiplayer/networking.
