@@ -20,6 +20,9 @@
 //  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
+// DESCRIPTION:
+//	Intermission screens.
+//
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
@@ -29,27 +32,6 @@ unit wi_stuff;
 interface
 
 uses d_player;
-
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// DESCRIPTION:
-//	Intermission screens.
-//
-//-----------------------------------------------------------------------------
 
 const
 // States for the intermission
@@ -72,8 +54,10 @@ procedure WI_Start(wbstartstruct: Pwbstartstruct_t);
 
 implementation
 
-uses d_delphi,
-  doomdef, d_event,
+uses
+  d_delphi,
+  doomdef,
+  d_event,
   z_zone,
   m_rnd,
   i_system,
@@ -1776,24 +1760,6 @@ end;
 procedure WI_initVariables(wbstartstruct: Pwbstartstruct_t);
 begin
   wbs := wbstartstruct;
-(*
-#ifdef RANGECHECKING
-    if (gamemode != commercial)
-    {
-      if ( gamemode == retail )
-	RNGCHECK(wbs->epsd, 0, 3);
-      else
-	RNGCHECK(wbs->epsd, 0, 2);
-    }
-    else
-    {
-	RNGCHECK(wbs->last, 0, 8);
-	RNGCHECK(wbs->next, 0, 8);
-    }
-    RNGCHECK(wbs->pnum, 0, MAXPLAYERS);
-    RNGCHECK(wbs->pnum, 0, MAXPLAYERS);
-#endif
-*)
   acceleratestage := 0;
   cnt := 0;
   bcnt := 0;
