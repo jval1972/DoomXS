@@ -73,13 +73,19 @@ procedure I_UpdateSoundParams(handle: integer; vol: integer; sep: integer;
 
 implementation
 
-uses d_delphi, DirectX, mmsystem,
+uses
+  d_delphi,
+  DirectX,
+  mmsystem,
   z_zone,
-  m_argv, m_misc,
-  i_system, i_main,
+  m_argv,
+  m_misc,
+  i_system,
+  i_main,
   s_sound,
   w_wad,
-  doomdef, doomstat;
+  doomdef,
+  doomstat;
 
 // The number of internal mixing channels,
 //  the samples calculated for each mixing step,
