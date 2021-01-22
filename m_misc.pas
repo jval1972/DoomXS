@@ -41,7 +41,7 @@ procedure M_SaveDefaults;
 implementation
 
 uses
-  classes,
+  Classes,
   d_delphi,
   doomtype,
   doomdef,
