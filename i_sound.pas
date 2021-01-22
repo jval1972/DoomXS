@@ -226,14 +226,22 @@ end;
 procedure I_KillChannel(channel: integer);
 begin
   if pDS <> nil then
-    exit;
-
-  if ChannelBuffers[channel] <> nil then
   begin
-    ChannelBuffers[channel].Stop;
-    ChannelBuffers[channel]._Release;
+    if ChannelBuffers[channel] <> nil then
+    begin
+      ChannelBuffers[channel].Stop;
+      ChannelBuffers[channel]._Release;
+    end;
   end;
 end;
+
+const
+  vulumetrans: array[0..15] of integer = (
+      0,  96, 128, 168, 186, 200, 212, 222,
+    230, 237, 243, 248, 250, 252, 254, 255
+  );
+
+  vulumetransshift = 8;
 
 function I_RestartChannel(channel: integer; volume: integer): integer;
 var
@@ -253,7 +261,7 @@ begin
 
   dsb.Stop;
   dsb.SetCurrentPosition(0);
-  dsb.SetVolume(DSBVOLUME_MIN + _SHR((DSBVOLUME_MAX - DSBVOLUME_MIN) * (volume + 1), 4));
+  dsb.SetVolume(DSBVOLUME_MIN + _SHR((DSBVOLUME_MAX - DSBVOLUME_MIN) * (vulumetrans[volume] + 1), vulumetransshift));
   dsb.Play(0, 0, 0);
   channelhandles[channel] := HandleCount;
   Result := HandleCount;
@@ -343,7 +351,7 @@ begin
     I_ErrorStartSound('SoundBuffer.Lock()');
 
   memcpy(p, pointer(integer(S_sfx[id].Data) + 8), s);
-  hres := dsb.Unlock(p, s, p2, s2); // VJ -> dsb.Unlock(p, s, p2, 0); ???
+  hres := dsb.Unlock(p, s, p2, s2);
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Unlock()');
 
