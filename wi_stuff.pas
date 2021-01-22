@@ -21,7 +21,7 @@
 //  02111-1307, USA.
 //
 // DESCRIPTION:
-//	Intermission screens.
+//   Intermission screens.
 //
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
@@ -31,7 +31,8 @@ unit wi_stuff;
 
 interface
 
-uses d_player;
+uses
+  d_player;
 
 const
 // States for the intermission
@@ -78,7 +79,7 @@ const
 
 
 //
-// Different vetween registered DOOM (1994) and
+// Different between registered DOOM (1994) and
 //  Ultimate DOOM - Final edition (retail, 1995?).
 // This is supposedly ignored for commercial
 //  release (aka DOOM II), which had 34 maps
@@ -289,8 +290,6 @@ var
 // Locally used stuff.
 //
 const
-  SP_PAUSE = 1;
-
 // in seconds
   SHOWNEXTLOCDELAY = 4;
 
@@ -399,7 +398,7 @@ var
 // UNUSED static unsigned char *background=0;
 
 
-procedure WI_slamBackground;
+procedure WI_SlamBackground;
 begin
   memcpy(screens[_FG], screens[1], SCREENWIDTH * SCREENHEIGHT);
   V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT, false);
@@ -413,7 +412,7 @@ begin
 end;
 
 // Draws "<Levelname> Finished!"
-procedure WI_drawLF;
+procedure WI_DrawLF;
 var
   y: integer;
 begin
@@ -429,7 +428,7 @@ begin
 end;
 
 // Draws "Entering <LevelName>"
-procedure WI_drawEL;
+procedure WI_DrawEL;
 var
   y: integer;
 begin
@@ -444,7 +443,7 @@ begin
   V_DrawPatch((320 - lnames[wbs.next].width) div 2, y, _FG, lnames[wbs.next], true);
 end;
 
-procedure WI_drawOnLnode(n: integer; c: Ppatch_tPArray);
+procedure WI_DrawOnLnode(n: integer; c: Ppatch_tPArray);
 var
   i: integer;
   left: integer;
@@ -475,10 +474,10 @@ begin
     V_DrawPatch(lnodes[wbs.epsd][n].x, lnodes[wbs.epsd][n].y, _FG, c[i], true)
   else
     // DEBUG
-    printf('WI_drawOnLnode(): Could not place patch on level %d', [n + 1]);
+    printf('WI_DrawOnLnode(): Could not place patch on level %d', [n + 1]);
 end;
 
-procedure WI_initAnimatedBack;
+procedure WI_InitAnimatedBack;
 var
   i: integer;
   a: Pwianim_t;
@@ -506,7 +505,7 @@ begin
   end;
 end;
 
-procedure WI_updateAnimatedBack;
+procedure WI_UpdateAnimatedBack;
 var
   i: integer;
   a: Pwianim_t;
@@ -559,7 +558,7 @@ begin
   end;
 end;
 
-procedure WI_drawAnimatedBack;
+procedure WI_DrawAnimatedBack;
 var
   i: integer;
   a: Pwianim_t;
@@ -586,7 +585,7 @@ end;
 // Returns new x position.
 //
 
-function WI_drawNum(x, y: integer; n: integer; digits: integer): integer;
+function WI_DrawNum(x, y: integer; n: integer; digits: integer): integer;
 var
   fontwidth: integer;
   neg: boolean;
@@ -643,20 +642,20 @@ begin
   result := x;
 end;
 
-procedure WI_drawPercent(x, y: integer; p: integer);
+procedure WI_DrawPercent(x, y: integer; p: integer);
 begin
   if p < 0 then
     exit;
 
   V_DrawPatch(x, y, _FG, percent, true);
-  WI_drawNum(x, y, p, -1);
+  WI_DrawNum(x, y, p, -1);
 end;
 
 //
 // Display level completion time and par,
 //  or "sucks" message if overflow.
 //
-procedure WI_drawTime(x, y: integer; t: integer);
+procedure WI_DrawTime(x, y: integer; t: integer);
 var
   _div: integer;
   n: integer;
@@ -670,36 +669,36 @@ begin
 
     repeat
       n := (t div _div) mod 60;
-      x := WI_drawNum(x, y, n, 2) - colon.width;
+      x := WI_DrawNum(x, y, n, 2) - colon.width;
       _div := _div * 60;
 
       // draw
       if (_div = 60) or (t div _div <> 0) then
         V_DrawPatch(x, y, _FG, colon, true);
-    until not boolval(t div _div);
+    until t div _div = 0;
   end
   else
     // "sucks"
     V_DrawPatch(x - sucks.width, y, _FG, sucks, true);
 end;
 
-procedure WI_unloadData; forward;
+procedure WI_UnloadData; forward;
 
 procedure WI_End;
 begin
-  WI_unloadData;
+  WI_UnloadData;
 end;
 
-procedure WI_initNoState;
+procedure WI_InitNoState;
 begin
   state := NoState;
   acceleratestage := 0;
   cnt := 10;
 end;
 
-procedure WI_updateNoState;
+procedure WI_UpdateNoState;
 begin
-  WI_updateAnimatedBack;
+  WI_UpdateAnimatedBack;
 
   dec(cnt);
   if cnt = 0 then
@@ -712,42 +711,42 @@ end;
 var
   snl_pointeron: boolean = false;
 
-procedure WI_initShowNextLoc;
+procedure WI_InitShowNextLoc;
 begin
   state := ShowNextLoc;
   acceleratestage := 0;
   cnt := SHOWNEXTLOCDELAY * TICRATE;
 
-  WI_initAnimatedBack;
+  WI_InitAnimatedBack;
 end;
 
-procedure WI_updateShowNextLoc;
+procedure WI_UpdateShowNextLoc;
 begin
-  WI_updateAnimatedBack;
+  WI_UpdateAnimatedBack;
 
   dec(cnt);
   if (cnt = 0) or (acceleratestage <> 0) then
-    WI_initNoState
+    WI_InitNoState
   else
     snl_pointeron := (cnt and 31) < 20;
 end;
 
 
-procedure WI_drawShowNextLoc;
+procedure WI_DrawShowNextLoc;
 var
   i: integer;
   last: integer;
 begin
-  WI_slamBackground;
+  WI_SlamBackground;
 
   // draw animated background
-  WI_drawAnimatedBack();
+  WI_DrawAnimatedBack();
 
   if gamemode <> commercial then
   begin
     if wbs.epsd > 2 then
     begin
-      WI_drawEL;
+      WI_DrawEL;
       exit;
     end;
 
@@ -755,30 +754,30 @@ begin
 
     // draw a splat on taken cities.
     for i := 0 to last do
-      WI_drawOnLnode(i, @splat);
+      WI_DrawOnLnode(i, @splat);
 
     // splat the secret level?
     if wbs.didsecret then
-      WI_drawOnLnode(8, @splat);
+      WI_DrawOnLnode(8, @splat);
 
     // draw flashing ptr
     if snl_pointeron then
-      WI_drawOnLnode(wbs.next, @yah);
+      WI_DrawOnLnode(wbs.next, @yah);
   end;
 
   // draws which level you are entering..
   if (gamemode <> commercial) or
      (wbs.next <> 30) then
-    WI_drawEL;
+    WI_DrawEL;
 end;
 
-procedure WI_drawNoState;
+procedure WI_DrawNoState;
 begin
   snl_pointeron := true;
-  WI_drawShowNextLoc;
+  WI_DrawShowNextLoc;
 end;
 
-function WI_fragSum(playernum: integer): integer;
+function WI_FragSum(playernum: integer): integer;
 var
   i: integer;
 begin
@@ -799,7 +798,7 @@ var
   dm_frags: array[0..MAXPLAYERS - 1, 0..MAXPLAYERS - 1] of integer;
   dm_totals: array[0..MAXPLAYERS - 1] of integer;
 
-procedure WI_initDeathmatchStats;
+procedure WI_InitDeathmatchStats;
 var
   i: integer;
   j: integer;
@@ -822,18 +821,18 @@ begin
     end;
   end;
 
-  WI_initAnimatedBack;
+  WI_InitAnimatedBack;
 end;
 
-procedure WI_updateDeathmatchStats;
+procedure WI_UpdateDeathmatchStats;
 var
   i: integer;
   j: integer;
   stillticking: boolean;
 begin
-  WI_updateAnimatedBack;
+  WI_UpdateAnimatedBack;
 
-  if boolval(acceleratestage) and (dm_state <> 4) then
+  if (acceleratestage <> 0) and (dm_state <> 4) then
   begin
     acceleratestage := 0;
 
@@ -845,7 +844,7 @@ begin
           if playeringame[j] then
             dm_frags[i, j] := plrs[i].frags[j];
 
-        dm_totals[i] := WI_fragSum(i);
+        dm_totals[i] := WI_FragSum(i);
       end;
     end;
 
@@ -880,7 +879,7 @@ begin
             stillticking := true;
           end;
         end;
-        dm_totals[i] := WI_fragSum(i);
+        dm_totals[i] := WI_FragSum(i);
 
         if dm_totals[i] > 99 then
           dm_totals[i] := 99
@@ -901,9 +900,9 @@ begin
       S_StartSound(nil, Ord(sfx_slop));
 
       if gamemode = commercial then
-        WI_initNoState
+        WI_InitNoState
       else
-        WI_initShowNextLoc;
+        WI_InitShowNextLoc;
     end;
   end
   else if dm_state and 1 <> 0 then
@@ -917,7 +916,7 @@ begin
   end;
 end;
 
-procedure WI_drawDeathmatchStats;
+procedure WI_DrawDeathmatchStats;
 var
   i: integer;
   j: integer;
@@ -926,11 +925,11 @@ var
   w: integer;
 begin
 
-  WI_slamBackground;
+  WI_SlamBackground;
 
   // draw animated background
-  WI_drawAnimatedBack;
-  WI_drawLF;
+  WI_DrawAnimatedBack;
+  WI_DrawLF;
 
   // draw stat titles (top line)
   V_DrawPatch(DM_TOTALSX - total.width div 2, DM_MATRIXY - WI_SPACINGY + 10, _FG, total, true);
@@ -979,10 +978,10 @@ begin
       for j := 0 to MAXPLAYERS - 1 do
       begin
         if playeringame[j] then
-          WI_drawNum(x + w, y, dm_frags[i, j], 2);
+          WI_DrawNum(x + w, y, dm_frags[i, j], 2);
         x := x + DM_SPACINGX;
       end;
-      WI_drawNum(DM_TOTALSX + w, y, dm_totals[i], 2);
+      WI_DrawNum(DM_TOTALSX + w, y, dm_totals[i], 2);
     end;
     y := y + WI_SPACINGY;
   end;
@@ -998,7 +997,7 @@ begin
   result := 32 + star.width div 2 + 32 * (not intval(boolval(dofrags))); // VJ ???
 end;
 
-procedure WI_initNetgameStats;
+procedure WI_InitNetgameStats;
 var
   i: integer;
 begin
@@ -1018,21 +1017,21 @@ begin
     cnt_secret[i] := 0;
     cnt_frags[i] := 0;
 
-    dofrags := dofrags + WI_fragSum(i);
+    dofrags := dofrags + WI_FragSum(i);
   end;
 
   dofrags := intval(dofrags <> 0);
 
-  WI_initAnimatedBack;
+  WI_InitAnimatedBack;
 end;
 
-procedure WI_updateNetgameStats;
+procedure WI_UpdateNetgameStats;
 var
   i: integer;
   fsum: integer;
   stillticking: boolean;
 begin
-  WI_updateAnimatedBack;
+  WI_UpdateAnimatedBack;
 
   if (acceleratestage <> 0) and (ng_state <> 10) then
   begin
@@ -1048,7 +1047,7 @@ begin
       cnt_secret[i] := (plrs[i].ssecret * 100) div wbs.maxsecret;
 
       if dofrags <> 0 then
-        cnt_frags[i] := WI_fragSum(i);
+        cnt_frags[i] := WI_FragSum(i);
     end;
     S_StartSound(nil, Ord(sfx_barexp));
     ng_state := 10;
@@ -1143,7 +1142,7 @@ begin
 
       cnt_frags[i] := cnt_frags[i] + 1;
 
-      fsum := WI_fragSum(i);
+      fsum := WI_FragSum(i);
       if cnt_frags[i] >= fsum then
         cnt_frags[i] := fsum
       else
@@ -1161,9 +1160,9 @@ begin
     begin
       S_StartSound(nil, Ord(sfx_sgcock));
       if gamemode = commercial then
-        WI_initNoState
+        WI_InitNoState
       else
-        WI_initShowNextLoc;
+        WI_InitShowNextLoc;
     end;
   end
   else if ng_state and 1 <> 0 then
@@ -1177,7 +1176,7 @@ begin
   end;
 end;
 
-procedure WI_drawNetgameStats;
+procedure WI_DrawNetgameStats;
 var
   i: integer;
   x: integer;
@@ -1186,12 +1185,12 @@ var
 begin
   pwidth := percent.width;
 
-  WI_slamBackground;
+  WI_SlamBackground;
 
   // draw animated background
-  WI_drawAnimatedBack;
+  WI_DrawAnimatedBack;
 
-  WI_drawLF;
+  WI_DrawLF;
 
   // draw stat titles (top line)
   V_DrawPatch(NG_STATSX + NG_SPACINGX - kills.width, NG_STATSY, _FG, kills, true);
@@ -1218,15 +1217,15 @@ begin
       V_DrawPatch(x - p[i].width, y, _FG, star, true);
 
     x := x + NG_SPACINGX;
-    WI_drawPercent(x - pwidth, y + 10, cnt_kills[i]);
+    WI_DrawPercent(x - pwidth, y + 10, cnt_kills[i]);
     x := x + NG_SPACINGX;
-    WI_drawPercent(x - pwidth, y + 10, cnt_items[i]);
+    WI_DrawPercent(x - pwidth, y + 10, cnt_items[i]);
     x := x + NG_SPACINGX;
-    WI_drawPercent(x - pwidth, y + 10, cnt_secret[i]);
+    WI_DrawPercent(x - pwidth, y + 10, cnt_secret[i]);
     x := x + NG_SPACINGX;
 
     if dofrags <> 0 then
-      WI_drawNum(x, y + 10, cnt_frags[i], -1);
+      WI_DrawNum(x, y + 10, cnt_frags[i], -1);
 
     y := y + WI_SPACINGY;
   end;
@@ -1235,7 +1234,7 @@ end;
 var
   sp_state: integer = 0;
 
-procedure WI_initStats;
+procedure WI_InitStats;
 begin
   state := StatCount;
   acceleratestage := 0;
@@ -1247,12 +1246,12 @@ begin
   cnt_par := -1;
   cnt_pause := TICRATE;
 
-  WI_initAnimatedBack;
+  WI_InitAnimatedBack;
 end;
 
-procedure WI_updateStats;
+procedure WI_UpdateStats;
 begin
-  WI_updateAnimatedBack;
+  WI_UpdateAnimatedBack;
 
   if (acceleratestage <> 0) and (sp_state <> 10) then
   begin
@@ -1338,9 +1337,9 @@ begin
       S_StartSound(nil, Ord(sfx_sgcock));
 
       if gamemode = commercial then
-        WI_initNoState
+        WI_InitNoState
       else
-        WI_initShowNextLoc;
+        WI_InitShowNextLoc;
     end;
   end
   else if sp_state and 1 <> 0 then
@@ -1354,40 +1353,40 @@ begin
   end;
 end;
 
-procedure WI_drawStats;
+procedure WI_DrawStats;
 var
   // line height
   lh: integer;
 begin
   lh := (3 * num[0].height) div 2;
 
-  WI_slamBackground;
+  WI_SlamBackground;
 
   // draw animated background
-  WI_drawAnimatedBack;
+  WI_DrawAnimatedBack;
 
-  WI_drawLF;
+  WI_DrawLF;
 
   V_DrawPatch(SP_STATSX, SP_STATSY, _FG, kills, true);
-  WI_drawPercent(320 - SP_STATSX, SP_STATSY, cnt_kills[0]);
+  WI_DrawPercent(320 - SP_STATSX, SP_STATSY, cnt_kills[0]);
 
   V_DrawPatch(SP_STATSX, SP_STATSY + lh, _FG, items, true);
-  WI_drawPercent(320 - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
+  WI_DrawPercent(320 - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
 
   V_DrawPatch(SP_STATSX, SP_STATSY + 2 * lh, _FG, sp_secret, true);
-  WI_drawPercent(320 - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
+  WI_DrawPercent(320 - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
 
   V_DrawPatch(SP_TIMEX, SP_TIMEY, _FG, time, true);
-  WI_drawTime(160 - SP_TIMEX, SP_TIMEY, cnt_time);
+  WI_DrawTime(160 - SP_TIMEX, SP_TIMEY, cnt_time);
 
   if wbs.epsd < 3 then
   begin
     V_DrawPatch(160 + SP_TIMEX, SP_TIMEY, _FG, par, true);
-    WI_drawTime(320 - SP_TIMEX, SP_TIMEY, cnt_par);
+    WI_DrawTime(320 - SP_TIMEX, SP_TIMEY, cnt_par);
   end;
 end;
 
-procedure WI_checkForAccelerate;
+procedure WI_CheckForAccelerate;
 var
   i: integer;
   player: Pplayer_t;
@@ -1436,32 +1435,32 @@ begin
       S_ChangeMusic(Ord(mus_inter), true);
   end;
 
-  WI_checkForAccelerate;
+  WI_CheckForAccelerate;
 
   case state of
     StatCount:
       begin
         if deathmatch <> 0 then
-          WI_updateDeathmatchStats
+          WI_UpdateDeathmatchStats
         else if netgame then
-          WI_updateNetgameStats
+          WI_UpdateNetgameStats
         else
-          WI_updateStats;
+          WI_UpdateStats;
       end;
 
     ShowNextLoc:
       begin
-        WI_updateShowNextLoc();
+        WI_UpdateShowNextLoc();
       end;
 
     NoState:
       begin
-        WI_updateNoState();
+        WI_UpdateNoState();
       end;
   end;
 end;
 
-procedure WI_loadData;
+procedure WI_LoadData;
 var
   i: integer;
   j: integer;
@@ -1619,7 +1618,7 @@ begin
   end;
 end;
 
-procedure WI_unloadData;
+procedure WI_UnloadData;
 var
   i: integer;
   j: integer;
@@ -1689,26 +1688,26 @@ begin
     StatCount:
       begin
         if deathmatch <> 0 then
-          WI_drawDeathmatchStats
+          WI_DrawDeathmatchStats
         else if netgame then
-          WI_drawNetgameStats
+          WI_DrawNetgameStats
         else
-          WI_drawStats;
+          WI_DrawStats;
       end;
 
     ShowNextLoc:
       begin
-        WI_drawShowNextLoc;
+        WI_DrawShowNextLoc;
       end;
 
     NoState:
       begin
-        WI_drawNoState;
+        WI_DrawNoState;
       end;
   end;
 end;
 
-procedure WI_initVariables(wbstartstruct: Pwbstartstruct_t);
+procedure WI_InitVariables(wbstartstruct: Pwbstartstruct_t);
 begin
   wbs := wbstartstruct;
   acceleratestage := 0;
@@ -1734,15 +1733,15 @@ end;
 
 procedure WI_Start(wbstartstruct: Pwbstartstruct_t);
 begin
-  WI_initVariables(wbstartstruct);
-  WI_loadData;
+  WI_InitVariables(wbstartstruct);
+  WI_LoadData;
 
   if deathmatch <> 0 then
-    WI_initDeathmatchStats
+    WI_InitDeathmatchStats
   else if netgame then
-    WI_initNetgameStats
+    WI_InitNetgameStats
   else
-    WI_initStats;
+    WI_InitStats;
 end;
 
 initialization
