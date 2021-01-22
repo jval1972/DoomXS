@@ -65,7 +65,7 @@ var
   g_pDD: IDirectDraw7 = nil; // DirectDraw object
   g_pDDSPrimary: IDirectDrawSurface7 = nil;// DirectDraw primary surface
   g_pDDScreen: IDirectDrawSurface7 = nil;   // DirectDraw surface
-  screen: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of longword;
+  screen32: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of longword;
 
 var
   s_alttab_disabled: boolean = False;
@@ -147,7 +147,7 @@ begin
   r.Bottom := SCREENHEIGHT;
 
   begin
-    dest := @screen;
+    dest := @screen32;
     src := @(screens[0]^);
     for i := 0 to SCREENWIDTH * SCREENHEIGHT - 1 do
     begin
@@ -258,7 +258,7 @@ begin
   ddsd.dwWidth := SCREENWIDTH;
   ddsd.dwHeight := SCREENHEIGHT;
   ddsd.lPitch := 4 * SCREENWIDTH; // Display is true color
-  ddsd.lpSurface := @screen;
+  ddsd.lpSurface := @screen32;
 
   hres := g_pDD.CreateSurface(ddsd, g_pDDScreen, nil);
   if hres <> DD_OK then
