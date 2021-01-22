@@ -122,17 +122,6 @@ begin
   I_EnableAltTab;
 end;
 
-{// Takes full 8 bit values.
-procedure I_SetPalette(palette: PByteArray);
-var
-  i: integer;
-begin
-  for i := 0 to 255 do
-    curpal[i] := (palette[3 * i] shl 16) +
-                 (palette[3 * i + 1] shl 8) +
-                 (palette[3 * i + 2]);
-end;}
-
 procedure I_UpdateNoBlit;
 begin
 end;
@@ -181,34 +170,6 @@ begin
   r.Right := SCREENWIDTH;
   r.Bottom := SCREENHEIGHT;
 
-{  for i := 0 to SCREENWIDTH * SCREENHEIGHT - 1 do
-    screen[i] := curpal[screens[0, i]];}
-
-{  if not boolval(detailshift) then
-  begin
-    for i := 1 to SCREENWIDTH * SCREENHEIGHT - 2 do
-    begin
-
-      screen[i] := RGB(
-                   GetTheColor(GetRValue(curpal[screens[0, i]]), GetRValue(curpal[screens[0, i + 1]])),
-                   GetTheColor(GetGValue(curpal[screens[0, i]]), GetGValue(curpal[screens[0, i + 1]])),
-                   GetTheColor(GetBValue(curpal[screens[0, i]]), GetBValue(curpal[screens[0, i + 1]])) );
-
-    end;
-  end}
-{  if not boolval(detailshift) then
-  begin
-    for i := 1 to SCREENWIDTH * SCREENHEIGHT - 2 do
-    begin
-
-      screen[i] := RGB(
-                   GetTheColor(GetRValue(curpal[screens[0, i]]), GetRValue(screen[i - 1])),
-                   GetTheColor(GetGValue(curpal[screens[0, i]]), GetGValue(screen[i - 1])),
-                   GetTheColor(GetBValue(curpal[screens[0, i]]), GetBValue(screen[i - 1])) );
-
-    end;
-  end
-  else}
   begin
     dest := @screen;
     src := @(screens[0]^);
