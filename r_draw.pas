@@ -152,9 +152,6 @@ var
 //
   translations: array[0..2,0..255] of byte;}
 
-{// just for profiling
-  dccount: integer;}
-
 //
 // A column is a vertical slice/span from a wall texture that,
 //  given the DOOM style restrictions on the view orientation,
