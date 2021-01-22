@@ -222,7 +222,7 @@ begin
         if inhelpscreensstate and (not inhelpscreens) then
           redrawsbar := True; // just put away the help screen
         ST_Drawer(viewheight = SCREENHEIGHT{200}, redrawsbar);
-        fullscreen := viewheight = SCREENHEIGHT{200};
+//        fullscreen := viewheight = SCREENHEIGHT{200};
       end;
     end;
     GS_INTERMISSION:
