@@ -73,7 +73,6 @@ procedure S_StopMusic;
 procedure S_PauseSound;
 procedure S_ResumeSound;
 
-
 //
 // Updates music & sounds
 //
@@ -95,7 +94,7 @@ var
 //  by the defaults code in M_misc:
 // number of channels available
   numChannels: integer;
-  
+
 implementation
 
 uses
@@ -216,7 +215,7 @@ begin
     channels[i].sfxinfo := nil;
 
   // no sounds are playing, and they are not mus_paused
-  mus_paused := boolval(0);
+  mus_paused := false;
 
   // Note that sounds have not been cached (yet).
   for i := 1 to Ord(NUMSFX) - 1 do
@@ -239,11 +238,11 @@ begin
   // kill all playing sounds at start of level
   //  (trust me - a good idea)
   for cnum := 0 to numChannels - 1 do
-    if boolval(channels[cnum].sfxinfo) then
+    if channels[cnum].sfxinfo <> nil then
       S_StopChannel(cnum);
 
   // start new music for the level
-  mus_paused := boolval(0);
+  mus_paused := false;
 
   if gamemode = commercial then
     mnum := Ord(mus_runnin) + gamemap - 1
@@ -254,24 +253,20 @@ begin
     else
     begin
       case gamemap of
-        1: mnum := Ord(mus_e3m4);  // American	e4m1
-        2: mnum := Ord(mus_e3m2);  // Romero	e4m2
-        3: mnum := Ord(mus_e3m3);  // Shawn	e4m3
-        4: mnum := Ord(mus_e1m5);  // American	e4m4
-        5: mnum := Ord(mus_e2m7);  // Tim 	e4m5
-        6: mnum := Ord(mus_e2m4);  // Romero	e4m6
-        7: mnum := Ord(mus_e2m6);  // J.Anderson	e4m7 CHIRON.WAD
-        8: mnum := Ord(mus_e2m5);  // Shawn	e4m8
-        9: mnum := Ord(mus_e1m9);  // Tim		e4m9
+        1: mnum := Ord(mus_e3m4); // American   e4m1
+        2: mnum := Ord(mus_e3m2); // Romero     e4m2
+        3: mnum := Ord(mus_e3m3); // Shawn      e4m3
+        4: mnum := Ord(mus_e1m5); // American   e4m4
+        5: mnum := Ord(mus_e2m7); // Tim        e4m5
+        6: mnum := Ord(mus_e2m4); // Romero     e4m6
+        7: mnum := Ord(mus_e2m6); // J.Anderson e4m7 CHIRON.WAD
+        8: mnum := Ord(mus_e2m5); // Shawn      e4m8
+        9: mnum := Ord(mus_e1m9); // Tim        e4m9
       else
-        mnum := Ord(mus_e1m1); // VJ ?????
+        mnum := Ord(mus_e1m1);
       end;
     end;
   end;
-
-  // HACK FOR COMMERCIAL
-  //  if (commercial && mnum > mus_e3m9)
-  //      mnum -= mus_e3m9;
 
   S_ChangeMusic(mnum, true);
 
@@ -290,12 +285,6 @@ var
 begin
   origin := Pmobj_t(origin_p);
 
-
-  // Debug.
-  (*fprintf( stderr,
-  	   "S_StartSoundAtVolume: playing sound %d (%s)\n",
-  	   sfx_id, S_sfx[sfx_id].name );*)
-
   // check for bogus sound #
   if (sfx_id < 1) or (sfx_id > Ord(NUMSFX)) then
     I_Error('Bad sfx #: %d', [sfx_id]);
@@ -303,7 +292,7 @@ begin
   sfx := @S_sfx[sfx_id];
 
   // Initialize sound parameters
-  if boolval(sfx.link) then
+  if sfx.link <> nil then
   begin
     pitch := sfx.pitch;
     priority := sfx.priority;
@@ -323,12 +312,12 @@ begin
 
   // Check to see if it is audible,
   //  and if not, modify the params
-  if boolval(origin) and (origin <> players[consoleplayer].mo) then
+  if (origin <> nil) and (origin <> players[consoleplayer].mo) then
   begin
     rc := S_AdjustSoundParams(players[consoleplayer].mo, origin,
-			     @volume,
-			     @sep,
-			     @pitch);
+           @volume,
+           @sep,
+           @pitch);
 
     if (origin.x = players[consoleplayer].mo.x) and
        (origin.y = players[consoleplayer].mo.y) then
@@ -366,7 +355,7 @@ begin
   S_StopSound(origin);
 
   // try to find a channel
-  cnum := S_getChannel(origin, sfx);
+  cnum := S_GetChannel(origin, sfx);
 
   if cnum < 0 then
     exit;
@@ -383,7 +372,7 @@ begin
 
   // increase the usefulness
   if sfx.usefulness < 0 then
-    sfx.usefulness := 0; // VJ ??? original was := 1
+    sfx.usefulness := 0;
   sfx.usefulness := sfx.usefulness + 1;
 
   // Assigns the handle to one of the channels in the
@@ -402,7 +391,7 @@ var
 begin
   for cnum := 0 to numChannels - 1 do
   begin
-    if boolval(channels[cnum].sfxinfo) and (channels[cnum].origin = origin) then
+    if (channels[cnum].sfxinfo <> nil) and (channels[cnum].origin = origin) then
     begin
       S_StopChannel(cnum);
       break;
@@ -415,7 +404,7 @@ end;
 //
 procedure S_PauseSound;
 begin
-  if boolval(mus_playing) and (not mus_paused) then
+  if (mus_playing <> nil) and (not mus_paused) then
   begin
     I_PauseSong(mus_playing.handle);
     mus_paused := true;
@@ -424,7 +413,7 @@ end;
 
 procedure S_ResumeSound;
 begin
-  if boolval(mus_playing) and mus_paused then
+  if (mus_playing <> nil) and mus_paused then
   begin
     I_ResumeSong(mus_playing.handle);
     mus_paused := false;
@@ -452,7 +441,7 @@ begin
     c := @channels[cnum];
     sfx := c.sfxinfo;
 
-    if boolval(c.sfxinfo) then
+    if c.sfxinfo <> nil then
     begin
       if I_SoundIsPlaying(c.handle) then
       begin
@@ -461,7 +450,7 @@ begin
         pitch := NORM_PITCH;
         sep := NORM_SEP;
 
-        if boolval(sfx.link) then
+        if sfx.link <> nil then
         begin
           pitch := sfx.pitch;
           volume := volume + sfx.volume;
@@ -471,38 +460,27 @@ begin
             continue;
           end
           else if volume > snd_SfxVolume then
-          begin
             volume := snd_SfxVolume;
-          end;
         end;
 
         // check non-local sounds for distance clipping
         //  or modify their params
-        if boolval(c.origin) and (integer(listener_p) <> integer(c.origin)) then
+        if (c.origin <> nil) and (listener_p <> c.origin) then
         begin
           audible := S_AdjustSoundParams(listener, c.origin, @volume, @sep, @pitch);
 
           if not audible then
-          begin
-            S_StopChannel(cnum);
-          end
+            S_StopChannel(cnum)
           else
             I_UpdateSoundParams(c.handle, volume, sep, pitch);
         end
       end
       else
-      begin
         // if channel is allocated but sound has stopped,
         //  free it
         S_StopChannel(cnum);
-      end;
     end;
   end;
-  // kill music if it is a single-play && finished
-  // if (	mus_playing
-  //      && !I_QrySongPlaying(mus_playing->handle)
-  //      && !mus_paused )
-  // S_StopMusic();
 end;
 
 procedure S_SetMusicVolume(volume: integer);
@@ -548,7 +526,7 @@ begin
   S_StopMusic;
 
   // get lumpnum if neccessary
-  if not boolval(music.lumpnum) then
+  if music.lumpnum = 0 then
   begin
     namebuf := stringtochar8('d_' + music.name);
     music.lumpnum := W_GetNumForName(namebuf);
@@ -556,6 +534,7 @@ begin
 
   // load & register it
   music.data := W_CacheLumpNum(music.lumpnum, PU_MUSIC);
+
   music.handle := I_RegisterSong(music.data, W_LumpLength(music.lumpnum));
 
   // play it
@@ -566,7 +545,7 @@ end;
 
 procedure S_StopMusic;
 begin
-  if boolval(mus_playing) then
+  if mus_playing <> nil then
   begin
     if mus_paused then
       I_ResumeSong(mus_playing.handle);
@@ -586,7 +565,7 @@ var
 begin
   c := @channels[cnum];
 
-  if boolval(c.sfxinfo) then
+  if c.sfxinfo <> nil then
   begin
     // stop the sound playing
     if I_SoundIsPlaying(c.handle) then
@@ -598,7 +577,7 @@ begin
     //  if other channels are playing the sound
     for i := 0 to numChannels - 1 do
     begin
-	    if (cnum <> i) and
+      if (cnum <> i) and
          (c.sfxinfo = channels[i].sfxinfo) then
         break;
     end;
@@ -617,7 +596,7 @@ end;
 // Otherwise, modifies parameters and returns 1.
 //
 function S_AdjustSoundParams(listener: Pmobj_t; source:Pmobj_t;
-  vol: Pinteger; sep: Pinteger; pitch:Pinteger): boolean;
+  vol: Pinteger; sep: Pinteger; pitch: Pinteger): boolean;
 var
   approx_dist: fixed_t;
   adx: fixed_t;
@@ -647,16 +626,14 @@ begin
   else
     angle := angle + ($ffffffff - listener.angle);
 
-  angle := _SHRW(angle, ANGLETOFINESHIFT);
+  angle := angle shr ANGLETOFINESHIFT;
 
   // stereo separation
   sep^ := 128 - (FixedMul(S_STEREO_SWING, finesine[angle]) div FRACUNIT);
 
   // volume calculation
   if approx_dist < S_CLOSE_DIST then
-  begin
-    vol^ := snd_SfxVolume;
-  end
+    vol^ := snd_SfxVolume
   else if gamemap = 8 then
   begin
     if approx_dist > S_CLIPPING_DIST then
@@ -666,20 +643,18 @@ begin
       ((S_CLIPPING_DIST - approx_dist) div FRACUNIT)) div S_ATTENUATOR;
   end
   else
-  begin
     // distance effect
     vol^ := (snd_SfxVolume * ((S_CLIPPING_DIST - approx_dist) div FRACUNIT)) div
               S_ATTENUATOR;
-  end;
 
   result := vol^ > 0;
 end;
 
 //
-// S_getChannel :
+// S_GetChannel :
 //   If none available, return -1.  Otherwise channel #.
 //
-function S_getChannel(origin: pointer; sfxinfo: Psfxinfo_t): integer;
+function S_GetChannel(origin: pointer; sfxinfo: Psfxinfo_t): integer;
 var
   // channel number to use
   cnum: integer;
@@ -689,9 +664,9 @@ begin
   cnum := 0;
   while cnum < numChannels do
   begin
-    if not boolval(channels[cnum].sfxinfo) then
+    if channels[cnum].sfxinfo = nil then
       break
-    else if boolval(origin) and (channels[cnum].origin = origin) then
+    else if (origin <> nil) and (channels[cnum].origin = origin) then
     begin
       S_StopChannel(cnum);
       break;
@@ -706,7 +681,7 @@ begin
     cnum := 0;
     while cnum < numChannels do
     begin
-	    if channels[cnum].sfxinfo.priority >= sfxinfo.priority then
+      if channels[cnum].sfxinfo.priority >= sfxinfo.priority then
         break;
       inc(cnum);
     end;
@@ -718,10 +693,7 @@ begin
       exit;
     end
     else
-    begin
-      // Otherwise, kick out lower priority.
-      S_StopChannel(cnum);
-    end;
+      S_StopChannel(cnum); // Otherwise, kick out lower priority.
   end;
 
   c := @channels[cnum];
