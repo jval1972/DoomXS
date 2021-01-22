@@ -164,7 +164,6 @@ begin
   destrect.Bottom := GetSystemMetrics(SM_CYSCREEN);
   if g_pDDSPrimary.Blt(destrect, g_pDDScreen, srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, PDDBltFX(0)^) = DDERR_SURFACELOST then
     g_pDDSPrimary.Restore;
-//  g_pDDSPrimary.BltFast(0, 0, g_pDDScreen, r, 0);
 end;
 
 
