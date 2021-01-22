@@ -233,9 +233,6 @@ begin
       D_PageDrawer;
   end;
 
-  // draw buffered stuff to screen
-  I_UpdateNoBlit;
-
   // draw the view directly
   if (gamestate = GS_LEVEL) and (not automapactive) and (gametic <> 0) then
     R_RenderPlayerView(@players[displayplayer]);
@@ -307,7 +304,6 @@ begin
     until (tics <> 0);
     wipestart := nowtime;
     done := wipe_ScreenWipe(Ord(wipe_Melt), 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
-    I_UpdateNoBlit;
     M_Drawer;         // menu is drawn even on top of wipes
     I_FinishUpdate;   // page flip or blit buffer
   until done;
