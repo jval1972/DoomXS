@@ -259,7 +259,7 @@ begin
       channel := 15
     else if channel = 15 then
       channel := 9;
-    if boolval(score[spos] and $80) then
+    if score[spos] and $80 <> 0 then
       delta := -1;
     Inc(spos);
     case etype of
@@ -274,7 +274,7 @@ begin
       begin
         event[i].Data[0] := channel or $90;
         event[i].Data[1] := score[spos] and 127;
-        if boolval(score[spos] and 128) then
+          if score[spos] and 128 <> 0 then
         begin
           Inc(spos);
           channelvol[channel] := score[spos];
@@ -285,8 +285,8 @@ begin
       2:
       begin
         event[i].Data[0] := channel or $e0;
-        event[i].Data[1] := _SHL(score[spos], 7) and $7f;
-        event[i].Data[2] := _SHR(score[spos], 7);
+        event[i].data[1] := (score[spos] and 1) shr 6;
+        event[i].data[2] := (score[spos] div 2) and 127;
         Inc(spos);
       end;
       3:
@@ -327,7 +327,7 @@ begin
     if delta = -1 then
     begin
       delta := 0;
-      while boolval(score[spos] and 128) do
+      while (score[spos] and 128) <> 0 do
       begin
         delta := _SHL(delta, 7);
         delta := delta + score[spos] and 127;
@@ -345,10 +345,10 @@ end;
 procedure I_InitMus;
 var
   rc: MMRESULT;
-  numdev: longword;
+  numdev: LongWord;
   i: integer;
 begin
-  if boolval(M_CheckParm('-nomusic')) then
+  if M_CheckParm('-nomusic') <> 0 then
     exit;
 
   if hMidiStream <> 0 then
@@ -437,12 +437,6 @@ begin
     end;
   end;
   song.nextevent := 0;
-
-{  rc := midiOutClose(HMIDIOUT(hMidiStream));
-  if rc <> MMSYSERR_NOERROR then
-    printf('I_StopMusic(): midiOutReset failed, result = %d' + #13#10, [rc]);
-
-  hMidiStream := 0;}
 end;
 
 procedure I_StopMusic(song: Psonginfo_t);
@@ -500,7 +494,7 @@ procedure I_PauseSongMus(handle: integer);
 var
   rc: MMRESULT;
 begin
-  if not boolval(hMidiStream) then
+  if hMidiStream = 0 then
     exit;
 
   rc := midiStreamPause(hMidiStream);
@@ -523,7 +517,7 @@ procedure I_ResumeSongMus(handle: integer);
 var
   rc: MMRESULT;
 begin
-  if not boolval(hMidiStream) then
+  if hMidiStream = 0 then
     exit;
 
   rc := midiStreamRestart(hMidiStream);
@@ -586,13 +580,10 @@ begin
 
   if I_MusToMidi(PByteArray(Data), song.midievents) then
   begin
-{    if m_type <> m_mus then
-    begin}
     I_InitMus;
     m_type := m_mus;
-    //    end;
 
-    if not boolval(hMidiStream) then
+    if hMidiStream = 0 then
     begin
       printf('I_RegisterSong(): Could not initialize midi stream' + #13#10);
       m_type := m_none;
@@ -642,7 +633,7 @@ end;
 // Is the song playing?
 function I_QrySongPlaying(handle: integer): boolean;
 begin
-  Result := boolval(CurrentSong);
+  result := CurrentSong <> nil;
 end;
 
 
