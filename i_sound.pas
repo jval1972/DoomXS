@@ -34,10 +34,6 @@ uses
 // Init at program start...
 procedure I_InitSound;
 
-// ... update sound buffer and audio device at runtime...
-procedure I_UpdateSound;
-procedure I_SubmitSound;
-
 // ... shut down and relase at program termination.
 procedure I_ShutdownSound;
 
@@ -111,24 +107,24 @@ var
   SoundLengths: array[0..Ord(NUMSFX) - 1] of integer;
   HighSound: boolean = False;
 
-  // The sound in channel handles,
-  //  determined on registration,
-  //  might be used to unregister/stop/modify,
-  //  currently unused.
+// The sound in channel handles,
+//  determined on registration,
+//  might be used to unregister/stop/modify,
+//  currently unused.
   channelhandles: array[0..NUM_CHANNELS - 1] of integer;
 
-  // SFX id of the playing sound effect.
-  // Used to catch duplicates (like chainsaw).
+// SFX id of the playing sound effect.
+// Used to catch duplicates (like chainsaw).
   channelids: array[0..NUM_CHANNELS - 1] of integer;
 
-  //actual data buffers
+//actual data buffers
   ChannelBuffers: array[0..NUM_CHANNELS - 1] of LPDIRECTSOUNDBUFFER;
   ChannelActive: packed array[0..NUM_CHANNELS - 1] of boolean;
 
-
+//
 // Retrieve the raw data lump index
 //  for a given SFX name.
-
+//
 function I_GetSfxLumpNum(sfxinfo: Psfxinfo_t): integer;
 var
   namebuf: string;
@@ -142,11 +138,11 @@ end;
 
 procedure CacheSFX(sfxid: integer);
 var
-  Name: string;
+  name: string;
   sfx: Psfxinfo_t;
 begin
   sfx := @S_sfx[sfxid];
-  if sfx.Data <> nil then
+  if sfx.data <> nil then
     exit;
   // Get the sound data from the WAD, allocate lump
   //  in zone memory.
@@ -172,7 +168,7 @@ begin
   sfx.Data := W_CacheLumpNum(sfx.lumpnum, PU_STATIC);
 end;
 
-
+//
 // SFX API
 // Note: this was called by S_Init.
 // However, whatever they did in the
@@ -180,7 +176,7 @@ end;
 // were simply dummies in the Linux
 // version.
 // See soundserver initdata().
-
+//
 procedure I_SetChannels;
 begin
 end;
@@ -197,15 +193,15 @@ end;
 
 function I_ChannelPlaying(channel: integer): boolean;
 var
-  status: longword;
+  status: LongWord;
 begin
-  if not boolval(pointer(pDS)) then
+  if pDS = nil then
   begin
     Result := False;
     exit;
   end;
 
-  if not boolval(pointer(ChannelBuffers[channel])) then
+  if ChannelBuffers[channel] = nil then
   begin
     Result := False;
     exit;
@@ -218,7 +214,7 @@ begin
   end;
 
   ChannelBuffers[channel].GetStatus(status);
-  if boolval(status and DSBSTATUS_PLAYING) then
+  if status and DSBSTATUS_PLAYING <> 0 then
     Result := True
   else
   begin
@@ -229,7 +225,7 @@ end;
 
 procedure I_KillChannel(channel: integer);
 begin
-  if not boolval(pointer(pDS)) then
+  if pDS <> nil then
     exit;
 
   if ChannelBuffers[channel] <> nil then
@@ -252,7 +248,7 @@ begin
 
   ChannelActive[channel] := True;
   dsb := ChannelBuffers[channel];
-  if not boolval(pointer(dsb)) then
+  if dsb = nil then
     I_Error('I_RestartChannel(): Restarting dead sound at channel %d', [channel]);
 
   dsb.Stop;
@@ -297,7 +293,7 @@ var
   end;
 
 begin
-  if not boolval(pointer(pDS)) then
+  if pDS = nil then
   begin
     Result := HandleCount;
     Inc(HandleCount);
@@ -309,10 +305,9 @@ begin
   freechannel := NUM_CHANNELS;
   for channel := 0 to NUM_CHANNELS - 1 do
   begin
-    if boolval(pointer(ChannelBuffers[channel])) then
+    if ChannelBuffers[channel] <> nil then
     begin
-      if (channelids[channel] = id) and
-        (not boolval(pointer(I_ChannelPlaying(channel)))) then
+      if (channelids[channel] = id) and (not I_ChannelPlaying(channel)) then
       begin
         Result := I_RestartChannel(channel, vol);
         exit;
@@ -327,14 +322,13 @@ begin
       freechannel := channel;
   end;
 
-  if boolval(freechannel) then
+  if freechannel <> 0 then
     channel := freechannel
   else
     channel := oldchannel;
   CacheSFX(id);
   ZeroMemory(dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := Sizeof(DSBUFFERDESC);
-  //dsbd.dwFlags=DSBCAPS_CTRLDEFAULT|DSBCAPS_GETCURRENTPOSITION2|DSBCAPS_STATIC;
   dsbd.dwFlags := DSBCAPS_CTRLVOLUME or DSBCAPS_CTRLFREQUENCY or
     DSBCAPS_CTRLPAN or DSBCAPS_GETCURRENTPOSITION2 or DSBCAPS_STATIC;
   dsbd.dwBufferBytes := SoundLengths[id];
@@ -362,7 +356,7 @@ procedure I_StopSound(handle: integer);
 var
   channel: integer;
 begin
-  if not boolval(pointer(pDS)) then
+  if pDS = nil then
     exit;
 
   for channel := 0 to NUM_CHANNELS - 1 do
@@ -379,7 +373,7 @@ function I_SoundIsPlaying(handle: integer): boolean;
 var
   channel: integer;
 begin
-  if not boolval(pointer(pDS)) then
+  if pDS = nil then
   begin
     Result := False;
     exit;
@@ -435,7 +429,7 @@ var
   dsbd: DSBUFFERDESC;
   i: integer;
 begin
-  if boolval(M_CheckParm('-nosound')) then
+  if M_CheckParm('-nosound') <> 0 then
     exit;
 
   hres := DirectSoundCreate(nil, pDS, nil);
@@ -502,15 +496,6 @@ begin
   SampleFormat.nAvgBytesPerSec := 11025;
   SampleFormat.wBitsPerSample := 8;
   SampleFormat.cbSize := 0;
-end;
-
-// ... update sound buffer and audio device at runtime...
-procedure I_UpdateSound;
-begin
-end;
-
-procedure I_SubmitSound;
-begin
 end;
 
 initialization
