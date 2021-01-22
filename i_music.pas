@@ -57,13 +57,18 @@ procedure I_ProcessMusic;
 
 implementation
 
-uses Windows,
+uses
+  Windows,
   Messages,
   d_delphi,
   mmsystem,
-  doomdef, doomstat,
-  m_argv, m_misc,
-  i_system, i_sound, i_midi,
+  doomdef,
+  doomstat,
+  m_argv,
+  m_misc,
+  i_system,
+  i_sound,
+  i_midi,
   s_sound,
   w_wad,
   z_zone;
