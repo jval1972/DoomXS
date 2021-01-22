@@ -42,7 +42,7 @@ type
   drawfunc_t = procedure(start: integer; stop: integer);
 
 var
-  ds_p: integer; // VJ was: Pdrawseg_t
+  ds_p: integer;
 
   curline: Pseg_t;
   frontsector: Psector_t;
@@ -94,11 +94,11 @@ type
   Pcliprange_t = ^cliprange_t;
 
 const
-  MAXSEGS = 32; // VJ maybe bigger ???
+  MAXSEGS = 32;
 
 var
   // newend is one past the last valid seg
-  newend: integer; // VJ was Pcliprange_t
+  newend: integer;
   solidsegs: array[0..MAXSEGS - 1] of cliprange_t;
 
 
@@ -526,14 +526,6 @@ var
   i_line: integer;
   sub: Psubsector_t;
 begin
-(*
-#ifdef RANGECHECK
-    if (num>=numsubsectors)
-  I_Error ("R_Subsector: ss %i with numss = %i",
-     num,
-     numsubsectors);
-#endif
-*)
   Inc(sscount);
   sub := @subsectors[num];
   frontsector := sub.sector;
@@ -605,6 +597,5 @@ begin
   if R_CheckBBox(Pfixed_tArray(@(bsp^.bbox)), side xor 1) then
     R_RenderBSPNode(bsp.children[side xor 1]);
 end;
-
 
 end.
