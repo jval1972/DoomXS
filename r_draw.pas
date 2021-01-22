@@ -179,7 +179,6 @@ begin
   // Framebuffer destination address.
   // Use ylookup LUT to avoid multiply with ScreenWidth.
   // Use columnofs LUT for subwindows?
-//  dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
   dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
 
   // Determine scaling,
@@ -496,7 +495,6 @@ begin
   for i := 0 to count do
   begin
     // Current texture index in u,v.
-//    spot := ((_SHR(yfrac, 10)) and (63 * 64)) + (_SHR(xfrac, 16) and 63);
     spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
 
     // Lookup pixel from flat texture tile,
