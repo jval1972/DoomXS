@@ -28,7 +28,8 @@ unit i_main;
 
 interface
 
-uses Windows,
+uses
+  Windows,
   d_delphi;
 
 var

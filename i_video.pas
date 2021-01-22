@@ -212,40 +212,13 @@ begin
     I_ErrorInitGraphics('DirectDrawCreateEx');
 
   if fullscreen then
-  begin
-    SetWindowPos(hMainWnd, 0, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW);
-    // Get exclusive mode
-    hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_NORMAL);
-//    hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_EXCLUSIVE or DDSCL_FULLSCREEN);
-    if hres <> DD_OK then
-      I_ErrorInitGraphics('SetCooperativeLevel');
-
-    // Set the video mode to SCREENWIDTH x SCREENHEIGHT x 32
-    hres := g_pDD.SetDisplayMode(SCREENWIDTH, SCREENHEIGHT, 32, 0, 0);
-    if hres <> DD_OK then
-    begin
-      // Fullscreen mode failed, trying window mode
-      fullscreen := False;
-
-      SetWindowPos(hMainWnd, 0, 0, 0, SCREENWIDTH, SCREENHEIGHT, SWP_SHOWWINDOW);
-
-      printf('SetDisplayMode(): Failed to fullscreen %dx%dx%d, trying window mode',
-        [SCREENWIDTH, SCREENHEIGHT, 32]);
-
-      hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_NORMAL);
-      if hres <> DD_OK then
-        I_ErrorInitGraphics('SetDisplayMode');
-    end
-    else
-      I_DisableAltTab;
-  end
+    SetWindowPos(hMainWnd, 0, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW)
   else
-  begin
     SetWindowPos(hMainWnd, 0, 0, 0, SCREENWIDTH, SCREENHEIGHT, SWP_SHOWWINDOW);
-    hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_NORMAL);
-    if hres <> DD_OK then
-      I_ErrorInitGraphics('SetCooperativeLevel');
-  end;
+
+  hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_NORMAL);
+  if hres <> DD_OK then
+    I_ErrorInitGraphics('SetCooperativeLevel');
 
   ZeroMemory(ddsd, SizeOf(ddsd));
   ddsd.dwSize := SizeOf(ddsd);
