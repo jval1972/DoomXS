@@ -309,10 +309,7 @@ begin
   until done;
 end;
 
-
 //  D_DoomLoop
-
-
 procedure D_DoomLoop;
 begin
   if demorecording then
@@ -475,9 +472,7 @@ end;
 var
   title: string;
 
-
 // D_AddFile
-
 procedure D_AddFile(_file: string);
 var
   i: integer;
@@ -535,7 +530,7 @@ begin
   // French stuff.
   sprintf(doom2fwad, '%s\doom2f.wad', [doomwaddir]);
 
-  if boolval(M_CheckParm('-shdev')) then
+  if M_CheckParm('-shdev') > 0 then
   begin
     gamemode := shareware;
     devparm := True;
@@ -546,7 +541,7 @@ begin
     exit;
   end;
 
-  if boolval(M_CheckParm('-regdev')) then
+  if M_CheckParm('-regdev') > 0 then
   begin
     gamemode := registered;
     devparm := True;
@@ -558,7 +553,7 @@ begin
     exit;
   end;
 
-  if boolval(M_CheckParm('-comdev')) then
+  if M_CheckParm('-comdev') > 0 then
   begin
     gamemode := commercial;
     devparm := True;
@@ -633,16 +628,12 @@ begin
 
   printf('Game mode indeterminate.' + #13#10);
   gamemode := indetermined;
-
-  // We don't abort. Let's see what the PWAD contains.
-  //exit(1);
-  //I_Error ("Game mode indeterminate\n");
 end;
 
 
 // Find a Response File
 
-// VJ: Changed to handle more that 1 response files
+// JVAL: Changed to handle more that 1 response files
 procedure FindResponseFile;
 var
   i: integer;
@@ -740,9 +731,9 @@ begin
   fastparm := boolval(M_CheckParm('-fast'));
   devparm := boolval(M_CheckParm('-devparm'));
 
-  if boolval(M_CheckParm('-altdeath')) then
+  if M_CheckParm('-altdeath') > 0 then
     deathmatch := 2
-  else if boolval(M_CheckParm('-deathmatch')) then
+  else if M_CheckParm('-deathmatch') > 0 then
     deathmatch := 1;
 
   case gamemode of
@@ -1094,7 +1085,6 @@ var
   i: integer;
 
 initialization
-
   for i := 0 to MAXWADFILES - 1 do
     wadfiles[i] := '';
 
