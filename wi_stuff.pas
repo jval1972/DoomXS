@@ -87,15 +87,6 @@ const
   NUMMAPS = 9;
 
 
-// in tics
-//U #define PAUSELEN		(TICRATE*2)
-//U #define SCORESTEP		100
-//U #define ANIMPERIOD		32
-// pixel distance from "(YOU)" to "PLAYER N"
-//U #define STARDIST		10
-//U #define WK 1
-
-
 // GLOBAL LOCATIONS
   WI_TITLEY = 2;
   WI_SPACINGY = 33;
@@ -146,7 +137,7 @@ type
 // There is another anim_t used in p_spec.
 //
 type
-  wianim_t = record // VJ renamed from anim_t -> wianim_t
+  wianim_t = record // JVAL: renamed from anim_t -> wianim_t
     _type: animenum_t;
 
     // period in tics between animations
@@ -298,19 +289,10 @@ var
 // Locally used stuff.
 //
 const
-// States for single-player
-{  SP_KILLS = 0;
-  SP_ITEMS = 2;
-  SP_SECRET = 4;
-  SP_FRAGS = 6;
-  SP_TIME = 8;}
-//  SP_PAR = ST_TIME; // removed by VJ
-
   SP_PAUSE = 1;
 
 // in seconds
   SHOWNEXTLOCDELAY = 4;
-//#define SHOWLASTLOCDELAY	SHOWNEXTLOCDELAY
 
 
 var
@@ -349,7 +331,7 @@ var
 
 
 //
-//	GRAPHICS
+// GRAPHICS
 //
 
 // background (map of levels).
@@ -438,13 +420,11 @@ begin
   y := WI_TITLEY;
 
   // draw <LevelName>
-//  V_DrawPatch((SCREENWIDTH - lnames[wbs.last].width) div 2, y, _FB, lnames[wbs.last]);
   V_DrawPatch((320 - lnames[wbs.last].width) div 2, y, _FG, lnames[wbs.last], true);
 
   // draw "Finished!"
   y := y + (5 * lnames[wbs.last].height) div 4;
 
-//  V_DrawPatch((SCREENWIDTH - finished.width) div 2, y, _FB, finished);
   V_DrawPatch((320 - finished.width) div 2, y, _FG, finished, true);
 end;
 
@@ -456,13 +436,11 @@ begin
   y := WI_TITLEY;
 
   // draw "Entering"
-//  V_DrawPatch((SCREENWIDTH - entering.width) div 2, y, _FB, entering);
   V_DrawPatch((320 - entering.width) div 2, y, _FG, entering, true);
 
   // draw level
   y := y + (5 * lnames[wbs.next].height) div 4;
 
-//  V_DrawPatch((SCREENWIDTH - lnames[wbs.next].width) div 2, y, _FB, lnames[wbs.next]);
   V_DrawPatch((320 - lnames[wbs.next].width) div 2, y, _FG, lnames[wbs.next], true);
 end;
 
@@ -484,13 +462,6 @@ begin
     right := left + c[i].width;
     bottom := top + c[i].height;
 
-{    if (left >= 0) and
-       (right < SCREENWIDTH) and
-       (top >= 0) and
-       (bottom < SCREENHEIGHT) then
-      fits := true
-    else
-      inc(i);}
     if (left >= 0) and
        (right < 320) and
        (top >= 0) and
@@ -593,7 +564,7 @@ var
   i: integer;
   a: Pwianim_t;
 begin
-  if gamemode = commercial then // VJ was if (commercial)
+  if gamemode = commercial then
     exit;
 
   if wbs.epsd > 2 then
@@ -624,7 +595,7 @@ begin
   fontwidth := num[0].width;
   if digits < 0 then
   begin
-    if not boolval(n) then
+    if n = 0 then
       // make variable-length zeros 1 digit long
       digits := 1
     else
@@ -633,7 +604,7 @@ begin
       digits := 0;
       temp := n;
 
-      while boolval(temp) do
+      while temp <> 0 do
       begin
         temp := temp div 10;
         inc(digits);
@@ -654,7 +625,7 @@ begin
   end;
 
   // draw the new number
-  while boolval(digits) do
+  while digits > 0 do
   begin
     x := x - fontwidth;
     V_DrawPatch(x, y, _FG, num[n mod 10], true);
@@ -703,7 +674,7 @@ begin
       _div := _div * 60;
 
       // draw
-      if (_div = 60) or boolval(t div _div) then
+      if (_div = 60) or (t div _div <> 0) then
         V_DrawPatch(x, y, _FG, colon, true);
     until not boolval(t div _div);
   end
@@ -731,7 +702,7 @@ begin
   WI_updateAnimatedBack;
 
   dec(cnt);
-  if not boolval(cnt) then
+  if cnt = 0 then
   begin
     WI_End;
     G_WorldDone;
@@ -755,7 +726,7 @@ begin
   WI_updateAnimatedBack;
 
   dec(cnt);
-  if (not boolval(cnt)) or boolval(acceleratestage) then
+  if (cnt = 0) or (acceleratestage <> 0) then
     WI_initNoState
   else
     snl_pointeron := (cnt and 31) < 20;
@@ -821,8 +792,6 @@ begin
 
   // JDC hack - negative frags.
   result := result - plrs[playernum].frags[playernum];
-    // UNUSED if (result < 0)
-    // 	result = 0;
 end;
 
 var
@@ -886,7 +855,7 @@ begin
 
   if dm_state = 2 then
   begin
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     stillticking := false;
@@ -927,7 +896,7 @@ begin
   end
   else if dm_state = 4 then
   begin
-    if boolval(acceleratestage) then
+    if acceleratestage <> 0 then
     begin
       S_StartSound(nil, Ord(sfx_slop));
 
@@ -937,10 +906,10 @@ begin
         WI_initShowNextLoc;
     end;
   end
-  else if boolval(dm_state and 1) then
+  else if dm_state and 1 <> 0 then
   begin
     dec(cnt_pause);
-    if not boolval(cnt_pause) then
+    if cnt_pause = 0 then
     begin
       inc(dm_state);
       cnt_pause := TICRATE;
@@ -1052,7 +1021,7 @@ begin
     dofrags := dofrags + WI_fragSum(i);
   end;
 
-  dofrags := intval(boolval(dofrags));
+  dofrags := intval(dofrags <> 0);
 
   WI_initAnimatedBack;
 end;
@@ -1065,7 +1034,7 @@ var
 begin
   WI_updateAnimatedBack;
 
-  if boolval(acceleratestage) and (ng_state <> 10) then
+  if (acceleratestage <> 0) and (ng_state <> 10) then
   begin
     acceleratestage := 0;
 
@@ -1078,7 +1047,7 @@ begin
       cnt_items[i] := (plrs[i].sitems * 100) div wbs.maxitems;
       cnt_secret[i] := (plrs[i].ssecret * 100) div wbs.maxsecret;
 
-      if boolval(dofrags) then
+      if dofrags <> 0 then
         cnt_frags[i] := WI_fragSum(i);
     end;
     S_StartSound(nil, Ord(sfx_barexp));
@@ -1087,7 +1056,7 @@ begin
 
   if ng_state = 2 then
   begin
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     stillticking := false;
@@ -1113,7 +1082,7 @@ begin
   end
   else if ng_state = 4 then
   begin
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     stillticking := false;
@@ -1137,7 +1106,7 @@ begin
   end
   else if ng_state = 6 then
   begin
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     stillticking := false;
@@ -1157,12 +1126,12 @@ begin
     if not stillticking then
     begin
       S_StartSound(nil, Ord(sfx_barexp));
-      ng_state := ng_state + 1 + 2 * intval(boolval(dofrags));
+      ng_state := ng_state + 1 + 2 * intval(dofrags <> 0);
     end;
   end
   else if ng_state = 8 then
   begin
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     stillticking := false;
@@ -1188,7 +1157,7 @@ begin
   end
   else if ng_state = 10 then
   begin
-    if boolval(acceleratestage) then
+    if acceleratestage <> 0 then
     begin
       S_StartSound(nil, Ord(sfx_sgcock));
       if gamemode = commercial then
@@ -1197,10 +1166,10 @@ begin
         WI_initShowNextLoc;
     end;
   end
-  else if boolval(ng_state and 1) then
+  else if ng_state and 1 <> 0 then
   begin
     dec(cnt_pause);
-    if not boolval(cnt_pause) then
+    if cnt_pause = 0 then
     begin
       inc(ng_state);
       cnt_pause := TICRATE;
@@ -1256,7 +1225,7 @@ begin
     WI_drawPercent(x - pwidth, y + 10, cnt_secret[i]);
     x := x + NG_SPACINGX;
 
-    if boolval(dofrags) then
+    if dofrags <> 0 then
       WI_drawNum(x, y + 10, cnt_frags[i], -1);
 
     y := y + WI_SPACINGY;
@@ -1285,7 +1254,7 @@ procedure WI_updateStats;
 begin
   WI_updateAnimatedBack;
 
-  if boolval(acceleratestage) and (sp_state <> 10) then
+  if (acceleratestage <> 0) and (sp_state <> 10) then
   begin
     acceleratestage := 0;
     cnt_kills[0] := (plrs[me].skills * 100) div wbs.maxkills;
@@ -1301,7 +1270,7 @@ begin
   begin
     cnt_kills[0] := cnt_kills[0] + 2;
 
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     if cnt_kills[0] >= (plrs[me].skills * 100) div wbs.maxkills then
@@ -1315,7 +1284,7 @@ begin
   begin
     cnt_items[0] := cnt_items[0] + 2;
 
-    if boolval(bcnt and 3) then
+    if bcnt and 3 <> 0 then
       S_StartSound(nil, OrD(sfx_pistol));
 
     if cnt_items[0] >= (plrs[me].sitems * 100) div wbs.maxitems then
@@ -1329,7 +1298,7 @@ begin
   begin
     cnt_secret[0] := cnt_secret[0] + 2;
 
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     if cnt_secret[0] >= (plrs[me].ssecret * 100) div wbs.maxsecret then
@@ -1341,7 +1310,7 @@ begin
   end
   else if sp_state = 8 then
   begin
-    if not boolval(bcnt and 3) then
+    if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
     cnt_time := cnt_time + 3;
@@ -1353,7 +1322,7 @@ begin
 
     if cnt_par >= wbs.partime div TICRATE then
     begin
-	    cnt_par := wbs.partime div TICRATE;
+      cnt_par := wbs.partime div TICRATE;
 
       if cnt_time >= plrs[me].stime div TICRATE then
       begin
@@ -1364,7 +1333,7 @@ begin
   end
   else if sp_state = 10 then
   begin
-    if boolval(acceleratestage) then
+    if acceleratestage <> 0 then
     begin
       S_StartSound(nil, Ord(sfx_sgcock));
 
@@ -1374,10 +1343,10 @@ begin
         WI_initShowNextLoc;
     end;
   end
-  else if boolval(sp_state and 1) then
+  else if sp_state and 1 <> 0 then
   begin
     dec(cnt_pause);
-    if not boolval(cnt_pause) then
+    if cnt_pause = 0 then
     begin
       inc(sp_state);
       cnt_pause := TICRATE;
@@ -1400,25 +1369,19 @@ begin
   WI_drawLF;
 
   V_DrawPatch(SP_STATSX, SP_STATSY, _FG, kills, true);
-//  WI_drawPercent(SCREENWIDTH - SP_STATSX, SP_STATSY, cnt_kills[0]);
   WI_drawPercent(320 - SP_STATSX, SP_STATSY, cnt_kills[0]);
 
   V_DrawPatch(SP_STATSX, SP_STATSY + lh, _FG, items, true);
-//  WI_drawPercent(SCREENWIDTH - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
   WI_drawPercent(320 - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
 
   V_DrawPatch(SP_STATSX, SP_STATSY + 2 * lh, _FG, sp_secret, true);
-//  WI_drawPercent(SCREENWIDTH - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
   WI_drawPercent(320 - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
 
   V_DrawPatch(SP_TIMEX, SP_TIMEY, _FG, time, true);
-//  WI_drawTime(SCREENWIDTH div 2 - SP_TIMEX, SP_TIMEY, cnt_time);
   WI_drawTime(160 - SP_TIMEX, SP_TIMEY, cnt_time);
 
   if wbs.epsd < 3 then
   begin
-//    V_DrawPatch(SCREENWIDTH div 2 + SP_TIMEX, SP_TIMEY, _FB, par);
-//    WI_drawTime(SCREENWIDTH - SP_TIMEX, SP_TIMEY, cnt_par);
     V_DrawPatch(160 + SP_TIMEX, SP_TIMEY, _FG, par, true);
     WI_drawTime(320 - SP_TIMEX, SP_TIMEY, cnt_par);
   end;
@@ -1437,7 +1400,7 @@ begin
     if playeringame[i] then
     begin
 
-      if boolval(player.cmd.buttons and BT_ATTACK) then
+      if player.cmd.buttons and BT_ATTACK <> 0 then
       begin
         if not player.attackdown then
           acceleratestage := 1;
@@ -1446,7 +1409,7 @@ begin
       else
         player.attackdown := false;
 
-	    if boolval(player.cmd.buttons and BT_USE) then
+      if player.cmd.buttons and BT_USE <> 0 then
       begin
         if not player.usedown then
           acceleratestage := 1;
@@ -1478,7 +1441,7 @@ begin
   case state of
     StatCount:
       begin
-        if boolval(deathmatch) then
+        if deathmatch <> 0 then
           WI_updateDeathmatchStats
         else if netgame then
           WI_updateNetgameStats
@@ -1518,18 +1481,6 @@ begin
   bg := W_CacheLumpName(name, PU_CACHE);
   V_DrawPatch(0, 0, 1, bg, true);
 
-
-    // UNUSED unsigned char *pic = screens[1];
-    // if (gamemode == commercial)
-    // {
-    // darken the background image
-    // while (pic != screens[1] + SCREENHEIGHT*SCREENWIDTH)
-    // {
-    //   *pic = colormaps[256*25 + *pic];
-    //   pic++;
-    // }
-    //}
-
   if gamemode = commercial then
   begin
     NUMCMAPS := 32;
@@ -1538,7 +1489,7 @@ begin
         Z_Malloc(SizeOf(Ppatch_t) * NUMCMAPS, PU_STATIC, nil));
     for i := 0 to NUMCMAPS - 1 do
     begin
-      name := 'CWILV' + IntToStrZfill(2, i); // VJ was sprintf(name, 'CWILV%2.2d', i);
+      name := 'CWILV' + IntToStrZfill(2, i);
       lnames[i] := W_CacheLumpName(name, PU_STATIC);
     end;
   end
@@ -1573,7 +1524,7 @@ begin
           if (wbs.epsd <> 1) or (j <> 8) then
           begin
             // animations
-            sprintf(name, 'WIA%d%.2d%.2d', [wbs.epsd, j, i]); // VJ ????
+            sprintf(name, 'WIA%d%.2d%.2d', [wbs.epsd, j, i]);
             a.p[i] := W_CacheLumpName(name, PU_STATIC);
           end
           else
@@ -1589,7 +1540,7 @@ begin
   // More hacks on minus sign.
   wiminus := W_CacheLumpName('WIMINUS', PU_STATIC);
 
-  for i :=0 to 9 do
+  for i := 0 to 9 do
   begin
     // numbers 0-9
     sprintf(name, 'WINUM%d', [i]);
@@ -1618,7 +1569,7 @@ begin
   if language = french then
   begin
     // "items"
-    if netgame and (not boolval(deathmatch)) then
+    if netgame and (deathmatch = 0) then
       items := W_CacheLumpName('WIOBJ', PU_STATIC)
     else
       items := W_CacheLumpName('WIOSTI', PU_STATIC);
@@ -1737,7 +1688,7 @@ begin
   case state of
     StatCount:
       begin
-        if boolval(deathmatch) then
+        if deathmatch <> 0 then
           WI_drawDeathmatchStats
         else if netgame then
           WI_drawNetgameStats
@@ -1767,13 +1718,13 @@ begin
   me := wbs.pnum;
   plrs := @wbs.plyr;
 
-  if not boolval(wbs.maxkills) then
+  if wbs.maxkills = 0 then
     wbs.maxkills := 1;
 
-  if not boolval(wbs.maxitems) then
+  if wbs.maxitems = 0 then
     wbs.maxitems := 1;
 
-  if not boolval(wbs.maxsecret) then
+  if wbs.maxsecret = 0 then
     wbs.maxsecret := 1;
 
   if gamemode <> retail then
@@ -1786,7 +1737,7 @@ begin
   WI_initVariables(wbstartstruct);
   WI_loadData;
 
-  if boolval(deathmatch) then
+  if deathmatch <> 0 then
     WI_initDeathmatchStats
   else if netgame then
     WI_initNetgameStats
@@ -1799,6 +1750,5 @@ initialization
   anims[1] := @epsd1animinfo;
   anims[2] := @epsd2animinfo;
   anims[3] := nil;
-
 
 end.
