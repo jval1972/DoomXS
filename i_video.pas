@@ -127,7 +127,8 @@ end;
 procedure I_FinishUpdate;
 var
   i: integer;
-  r: TRect;
+  srcrect: TRect;
+  destrect: TRect;
   dest: PLongWord;
 {$IFDEF TRUECOLOR}
   src: PInteger;
@@ -141,11 +142,6 @@ begin
   if screens[_FG] = nil then
     exit;
 
-  r.Left := 0;
-  r.Top := 0;
-  r.Right := SCREENWIDTH;
-  r.Bottom := SCREENHEIGHT;
-
   begin
     dest := @screen32;
     src := @(screens[0]^);
@@ -156,7 +152,19 @@ begin
       Inc(src);
     end;
   end;
-  g_pDDSPrimary.BltFast(0, 0, g_pDDScreen, r, 0);
+
+  srcrect.Left := 0;
+  srcrect.Top := 0;
+  srcrect.Right := SCREENWIDTH;
+  srcrect.Bottom := SCREENHEIGHT;
+
+  destrect.Left := 0;
+  destrect.Top := 0;
+  destrect.Right := GetSystemMetrics(SM_CXSCREEN);
+  destrect.Bottom := GetSystemMetrics(SM_CYSCREEN);
+  if g_pDDSPrimary.Blt(destrect, g_pDDScreen, srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, PDDBltFX(0)^) = DDERR_SURFACELOST then
+    g_pDDSPrimary.Restore;
+//  g_pDDSPrimary.BltFast(0, 0, g_pDDScreen, r, 0);
 end;
 
 
@@ -205,8 +213,10 @@ begin
 
   if fullscreen then
   begin
+    SetWindowPos(hMainWnd, 0, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW);
     // Get exclusive mode
-    hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_EXCLUSIVE or DDSCL_FULLSCREEN);
+    hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_NORMAL);
+//    hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_EXCLUSIVE or DDSCL_FULLSCREEN);
     if hres <> DD_OK then
       I_ErrorInitGraphics('SetCooperativeLevel');
 
@@ -231,6 +241,7 @@ begin
   end
   else
   begin
+    SetWindowPos(hMainWnd, 0, 0, 0, SCREENWIDTH, SCREENHEIGHT, SWP_SHOWWINDOW);
     hres := g_pDD.SetCooperativeLevel(hMainWnd, DDSCL_NORMAL);
     if hres <> DD_OK then
       I_ErrorInitGraphics('SetCooperativeLevel');
