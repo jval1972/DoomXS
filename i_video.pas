@@ -39,7 +39,7 @@ uses
 procedure I_InitGraphics;
 
 
-procedure I_ShutdownGraphics;
+procedure I_ShutDownGraphics;
 
 // Takes full 8 bit values.
 procedure I_SetPalette(palette: PByteArray);
