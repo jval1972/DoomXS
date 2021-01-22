@@ -44,7 +44,6 @@ procedure I_ShutdownGraphics;
 // Takes full 8 bit values.
 procedure I_SetPalette(palette: PByteArray);
 
-procedure I_UpdateNoBlit;
 procedure I_FinishUpdate;
 
 procedure I_ReadScreen(scr: PByteArray);
@@ -54,9 +53,11 @@ var
 
 implementation
 
-uses doomdef,
+uses
+  doomdef,
   directx,
-  i_system, i_main, //r_main,
+  i_system,
+  i_main,
   v_video;
 
 var
@@ -122,13 +123,7 @@ begin
   I_EnableAltTab;
 end;
 
-procedure I_UpdateNoBlit;
-begin
-end;
-
-
 // I_FinishUpdate
-
 procedure I_FinishUpdate;
 var
   i: integer;
@@ -138,26 +133,7 @@ var
   src: PInteger;
 {$ELSE}
   src: PByte;
-
 {$ENDIF}
-
-  function GetTheColor(const a, b: byte): byte;
-  begin
-    if a > b then
-    begin
-      if a - b < 64 then
-        Result := (a div 2 + b div 2)
-      else
-        Result := a;
-    end
-    else
-    begin
-      if b - a < 64 then
-        Result := (a div 2 + b div 2)
-      else
-        Result := a;
-    end;
-  end;
 
 begin
   if hMainWnd = 0 then
@@ -186,10 +162,7 @@ end;
 
 // Palette stuff.
 
-
-
 // I_SetPalette
-
 procedure I_SetPalette(palette: PByteArray);
 var
   dest: PLongWord;
