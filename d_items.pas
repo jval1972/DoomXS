@@ -63,7 +63,7 @@ initialization
 // flashstate, muzzle flash
 //
 
-	// fist
+  // fist
   weaponinfo[0].ammo := am_noammo;
   weaponinfo[0].upstate := Ord(S_PUNCHUP);
   weaponinfo[0].downstate := Ord(S_PUNCHDOWN);
@@ -71,7 +71,7 @@ initialization
   weaponinfo[0].atkstate := Ord(S_PUNCH1);
   weaponinfo[0].flashstate := Ord(S_NULL);
 
-	// pistol
+  // pistol
   weaponinfo[1].ammo := am_clip;
   weaponinfo[1].upstate := Ord(S_PISTOLUP);
   weaponinfo[1].downstate := Ord(S_PISTOLDOWN);
@@ -79,7 +79,7 @@ initialization
   weaponinfo[1].atkstate := Ord(S_PISTOL1);
   weaponinfo[1].flashstate := Ord(S_PISTOLFLASH);
 
-	// shotgun
+  // shotgun
   weaponinfo[2].ammo := am_shell;
   weaponinfo[2].upstate := Ord(S_SGUNUP);
   weaponinfo[2].downstate := Ord(S_SGUNDOWN);
@@ -87,7 +87,7 @@ initialization
   weaponinfo[2].atkstate := Ord(S_SGUN1);
   weaponinfo[2].flashstate := Ord(S_SGUNFLASH1);
 
-	// chaingun
+  // chaingun
   weaponinfo[3].ammo := am_clip;
   weaponinfo[3].upstate := Ord(S_CHAINUP);
   weaponinfo[3].downstate := Ord(S_CHAINDOWN);
@@ -95,7 +95,7 @@ initialization
   weaponinfo[3].atkstate := Ord(S_CHAIN1);
   weaponinfo[3].flashstate := Ord(S_CHAINFLASH1);
 
-	// missile launcher
+  // missile launcher
   weaponinfo[4].ammo := am_misl;
   weaponinfo[4].upstate := Ord(S_MISSILEUP);
   weaponinfo[4].downstate := Ord(S_MISSILEDOWN);
@@ -103,7 +103,7 @@ initialization
   weaponinfo[4].atkstate := Ord(S_MISSILE1);
   weaponinfo[4].flashstate := Ord(S_MISSILEFLASH1);
 
-	// plasma rifle
+  // plasma rifle
   weaponinfo[5].ammo := am_cell;
   weaponinfo[5].upstate := Ord(S_PLASMAUP);
   weaponinfo[5].downstate := Ord(S_PLASMADOWN);
@@ -111,7 +111,7 @@ initialization
   weaponinfo[5].atkstate := Ord(S_PLASMA1);
   weaponinfo[5].flashstate := Ord(S_PLASMAFLASH1);
 
-	// bfg 9000
+  // bfg 9000
   weaponinfo[6].ammo := am_cell;
   weaponinfo[6].upstate := Ord(S_BFGUP);
   weaponinfo[6].downstate := Ord(S_BFGDOWN);
@@ -119,7 +119,7 @@ initialization
   weaponinfo[6].atkstate := Ord(S_BFG1);
   weaponinfo[6].flashstate := Ord(S_BFGFLASH1);
 
-	// chainsaw
+  // chainsaw
   weaponinfo[7].ammo := am_noammo;
   weaponinfo[7].upstate := Ord(S_SAWUP);
   weaponinfo[7].downstate := Ord(S_SAWDOWN);
@@ -127,7 +127,7 @@ initialization
   weaponinfo[7].atkstate := Ord(S_SAW1);
   weaponinfo[7].flashstate := Ord(S_NULL);
 
-	// super shotgun
+  // super shotgun
   weaponinfo[8].ammo := am_shell;
   weaponinfo[8].upstate := Ord(S_DSGUNUP);
   weaponinfo[8].downstate := Ord(S_DSGUNDOWN);

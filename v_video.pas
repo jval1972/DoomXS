@@ -403,7 +403,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + column.topdelta * swidth);
-  	    count := column.length;
+        count := column.length;
 
         while count > 0 do
         begin
@@ -459,7 +459,7 @@ begin
         source := PByte(integer(column) + 3);
 //        dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
         dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
-  	    count := column.length;
+        count := column.length;
         fracy := 0;
         lasty := 0;
 
@@ -535,7 +535,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + column.topdelta * swidth);
-  	    count := column.length;
+        count := column.length;
 
         while count > 0 do
         begin
@@ -590,7 +590,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
-  	    count := column.length;
+        count := column.length;
         fracy := 0;
         lasty := 0;
 

@@ -391,10 +391,9 @@ begin
     begin
       dc_source := PByteArray(integer(column) + 3);
       dc_texturemid := basetexturemid - (column.topdelta * FRACUNIT);
-	    // dc_source = (byte *)column + 3 - column->topdelta;
 
-	    // Drawn by either R_DrawColumn
-	    //  or (SHADOW) R_DrawFuzzColumn.
+      // Drawn by either R_DrawColumn
+      //  or (SHADOW) R_DrawFuzzColumn.
       colfunc;
     end;
     //column := (column_t *)(  (byte *)column + column->length + 4);
@@ -432,7 +431,7 @@ begin
     else
       colfunc := R_DrawTranslatedColumn;
     dc_translation := PByteArray(integer(translationtables) - 256 +
-	    ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
+      ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
   dc_iscale := abs(vis.xiscale);
@@ -478,7 +477,7 @@ begin
     else
       colfunc := R_DrawTranslatedColumn;
     dc_translation := PByteArray(integer(translationtables) - 256 +
-	    ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
+      ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
   dc_iscale := vis.xiscale;

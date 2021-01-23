@@ -33,7 +33,7 @@ const
   D_CDROM = 'CD-ROM Version: default.cfg from c:\doomdata' + #13#10;
 
   { }
-  {	M_Menu.C }
+  {  M_Menu.C }
   { }
   PRESSKEY = 'press a key.';
   PRESSYN = 'press y or n.';
@@ -64,9 +64,9 @@ const
              PRESSKEY;
   MSGOFF = 'Messages OFF';
   MSGON = 'Messages ON';
-  NETEND =	'you can''t end a netgame!' + #13#10 + #13#10 +
+  NETEND =  'you can''t end a netgame!' + #13#10 + #13#10 +
             PRESSKEY;
-  SENDGAME	= 'are you sure you want to end the game?' + #13#10 + #13#10 +
+  SENDGAME  = 'are you sure you want to end the game?' + #13#10 + #13#10 +
              PRESSYN;
 
   DOSY = '(press y to quit)';
@@ -81,7 +81,7 @@ const
   EMPTYSTRING = 'empty slot';
 
   { }
-  {	P_inter.C }
+  {  P_inter.C }
   { }
   GOTARMOR = 'Picked up the armor.';
   GOTMEGA = 'Picked up the MegaArmor!';
@@ -141,7 +141,7 @@ const
   GGSAVED = 'game saved.';
 
   { }
-  {	HU_stuff.C }
+  {  HU_stuff.C }
   { }
   HUSTR_MSGU = '[Message unsent]';
 
@@ -325,7 +325,7 @@ const
   HUSTR_KEYRED = 'r';
 
   { }
-  {	AM_map.C }
+  {  AM_map.C }
   { }
   AMSTR_FOLLOWON = 'Follow Mode ON';
   AMSTR_FOLLOWOFF = 'Follow Mode OFF';
@@ -335,7 +335,7 @@ const
   AMSTR_MARKSCLEARED = 'All Marks Cleared';
 
   { }
-  {	ST_stuff.C }
+  {  ST_stuff.C }
   { }
   STSTR_MUS = 'Music Change';
   STSTR_NOMUS = 'IMPOSSIBLE SELECTION';
@@ -674,7 +674,7 @@ const
   { }
   { Character cast strings F_FINALE.C }
   { }
-  CC_ZOMBIE	= 'ZOMBIEMAN';
+  CC_ZOMBIE  = 'ZOMBIEMAN';
   CC_SHOTGUN = 'SHOTGUN GUY';
   CC_HEAVY = 'HEAVY WEAPON DUDE';
   CC_IMP = 'IMP';
@@ -692,18 +692,18 @@ const
   CC_CYBER = 'THE CYBERDEMON';
   CC_HERO = 'OUR HERO';
 
-	MSG_MODIFIEDGAME =
+  MSG_MODIFIEDGAME =
       '===========================================================================' + #13#10 +
-	    'ATTENTION:  This version of DOOM has been modified.  If you would like to' + #13#10 +
-	    'get a copy of the original game, call 1-800-IDGAMES or see the readme file.' + #13#10 +
-	    '        You will not receive technical support for modified games.' + #13#10 +
-	    '                      press enter to continue' + #13#10 +
-	    '===========================================================================' + #13#10;
+      'ATTENTION:  This version of DOOM has been modified.  If you would like to' + #13#10 +
+      'get a copy of the original game, call 1-800-IDGAMES or see the readme file.' + #13#10 +
+      '        You will not receive technical support for modified games.' + #13#10 +
+      '                      press enter to continue' + #13#10 +
+      '===========================================================================' + #13#10;
 
   MSG_SHAREWARE =
-  	    '===========================================================================' + #13#10 +
-  	    '                                Shareware!' + #13#10 +
-  	    '===========================================================================' + #13#10;
+        '===========================================================================' + #13#10 +
+        '                                Shareware!' + #13#10 +
+        '===========================================================================' + #13#10;
 
   MSG_COMMERCIAL =
         '===========================================================================' + #13#10 +
@@ -712,9 +712,9 @@ const
         '===========================================================================' + #13#10;
 
   MSG_UNDETERMINED =
-  	    '===========================================================================' + #13#10 +
-  	    '                       Undetermined version! (Ouch)' + #13#10 +
-  	    '===========================================================================' + #13#10;
+        '===========================================================================' + #13#10 +
+        '                       Undetermined version! (Ouch)' + #13#10 +
+        '===========================================================================' + #13#10;
 
 
 implementation

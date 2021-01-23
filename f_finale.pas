@@ -171,8 +171,8 @@ begin
               finaletext := C6TEXT;
             end;
         else
-	      // Ouch.
-	      end;
+        // Ouch.
+        end;
       end;
   else
     begin
@@ -235,7 +235,7 @@ begin
   begin
     finalecount := 0;
     finalestage := 1;
-    wipegamestate := -1;		// force a wipe
+    wipegamestate := -1;    // force a wipe
     if gameepisode = 3 then
       S_StartMusic(Ord(mus_bunny));
   end;
@@ -269,13 +269,13 @@ begin
     for x := 0 to (320 div 64) - 1 do
     begin
       memcpy(@screens[dstscr, dest], @src[_SHL(y and 63, 6)], 64);
-	    dest := dest + 64;
+      dest := dest + 64;
     end;
 
     if (320 and 63) <> 0 then
     begin
       memcpy(@screens[dstscr, dest], @src[_SHL(y and 63, 6)], 320 and 63);
-	    dest := dest + (320 and 63);
+      dest := dest + (320 and 63);
     end;
   end;
 
@@ -314,8 +314,8 @@ begin
     c1 := Ord(toupper(c)) - Ord(HU_FONTSTART);
     if (c1 < 0) or (c1 > HU_FONTSIZE) then
     begin
-	    cx := cx + 4;
-	    continue;
+      cx := cx + 4;
+      continue;
     end;
 
     w := hu_font[c1].width;
@@ -361,7 +361,7 @@ var
 //
 procedure F_StartCast;
 begin
-  wipegamestate := -1;		// force a screen wipe
+  wipegamestate := -1;    // force a screen wipe
   castnum := 0;
   caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
   casttics := caststate.tics;
@@ -399,7 +399,7 @@ begin
   end
   else
   begin
-	// just advance to next state in animation
+  // just advance to next state in animation
     if caststate = @states[Ord(S_PLAY_ATK1)] then
     begin
       castattacking := false;
@@ -416,33 +416,33 @@ begin
 
     // sound hacks....
     case statenum_t(st) of
-      S_PLAY_ATK1:	sfx := Ord(sfx_dshtgn);
-      S_POSS_ATK2:	sfx := Ord(sfx_pistol);
-      S_SPOS_ATK2:	sfx := Ord(sfx_shotgn);
-      S_VILE_ATK2:	sfx := Ord(sfx_vilatk);
-      S_SKEL_FIST2:	sfx := Ord(sfx_skeswg);
-      S_SKEL_FIST4:	sfx := Ord(sfx_skepch);
-      S_SKEL_MISS2:	sfx := Ord(sfx_skeatk);
+      S_PLAY_ATK1:  sfx := Ord(sfx_dshtgn);
+      S_POSS_ATK2:  sfx := Ord(sfx_pistol);
+      S_SPOS_ATK2:  sfx := Ord(sfx_shotgn);
+      S_VILE_ATK2:  sfx := Ord(sfx_vilatk);
+      S_SKEL_FIST2:  sfx := Ord(sfx_skeswg);
+      S_SKEL_FIST4:  sfx := Ord(sfx_skepch);
+      S_SKEL_MISS2:  sfx := Ord(sfx_skeatk);
       S_FATT_ATK8,
       S_FATT_ATK5,
-      S_FATT_ATK2:	sfx := Ord(sfx_firsht);
+      S_FATT_ATK2:  sfx := Ord(sfx_firsht);
       S_CPOS_ATK2,
       S_CPOS_ATK3,
-      S_CPOS_ATK4:	sfx := Ord(sfx_shotgn);
-      S_TROO_ATK3:	sfx := Ord(sfx_claw);
-      S_SARG_ATK2:	sfx := Ord(sfx_sgtatk);
+      S_CPOS_ATK4:  sfx := Ord(sfx_shotgn);
+      S_TROO_ATK3:  sfx := Ord(sfx_claw);
+      S_SARG_ATK2:  sfx := Ord(sfx_sgtatk);
       S_BOSS_ATK2,
       S_BOS2_ATK2,
-      S_HEAD_ATK2:	sfx := Ord(sfx_firsht);
-      S_SKULL_ATK2:	sfx := Ord(sfx_sklatk);
+      S_HEAD_ATK2:  sfx := Ord(sfx_firsht);
+      S_SKULL_ATK2:  sfx := Ord(sfx_sklatk);
       S_SPID_ATK2,
-      S_SPID_ATK3:	sfx := Ord(sfx_shotgn);
-      S_BSPI_ATK2:	sfx := Ord(sfx_plasma);
+      S_SPID_ATK3:  sfx := Ord(sfx_shotgn);
+      S_BSPI_ATK2:  sfx := Ord(sfx_plasma);
       S_CYBER_ATK2,
       S_CYBER_ATK4,
-      S_CYBER_ATK6:	sfx := Ord(sfx_rlaunc);
-      S_PAIN_ATK3:	sfx := Ord(sfx_sklatk);
-	  else
+      S_CYBER_ATK6:  sfx := Ord(sfx_rlaunc);
+      S_PAIN_ATK3:  sfx := Ord(sfx_sklatk);
+    else
       sfx := 0;
     end;
     if sfx <> 0 then

@@ -224,11 +224,11 @@ begin
     // Hack. Does not work corretly.
     bdest := dc_colormap[dc_source[(frac div FRACUNIT) and 127]];
     dest^ := bdest;
-  	inc(dest, SCREENWIDTH);
+    inc(dest, SCREENWIDTH);
     dest^ := bdest;
-  	inc(dest, SCREENWIDTH);
+    inc(dest, SCREENWIDTH);
     dest^ := bdest;
-  	inc(dest, SCREENWIDTH);
+    inc(dest, SCREENWIDTH);
     frac := frac + fracstep;
   end;
 end;
@@ -500,7 +500,7 @@ begin
     // Lookup pixel from flat texture tile,
     //  re-index using light/colormap.
 
-	  dest^ := ds_colormap[ds_source[spot]];
+    dest^ := ds_colormap[ds_source[spot]];
     inc(dest);
 
     // Next step in u,v.
@@ -621,7 +621,7 @@ begin
   begin
     for x := 0 to SCREENWIDTH div 64 - 1 do
     begin
-	    memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
+      memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
       incp(pointer(dest), 64);
     end;
     if (SCREENWIDTH and 63) <> 0 then
@@ -711,7 +711,7 @@ begin
   begin
     for x := 0 to 320 div 64 - 1 do
     begin
-	    memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
+      memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
       incp(pointer(dest), 64);
     end;
     if (320 and 63) <> 0 then

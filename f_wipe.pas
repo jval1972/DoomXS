@@ -108,7 +108,7 @@ begin
       begin
         newval := wipe_scr[w] - ticks;
         if newval < wipe_scr_end[e] then
-  		    wipe_scr[w] := wipe_scr_end[e]
+          wipe_scr[w] := wipe_scr_end[e]
         else
           wipe_scr[w] := newval;
       end
@@ -267,7 +267,7 @@ begin
   if not go then
   begin
     go := true;
-	// wipe_scr = (byte *) Z_Malloc(width*height, PU_STATIC, 0); // DEBUG
+  // wipe_scr = (byte *) Z_Malloc(width*height, PU_STATIC, 0); // DEBUG
     wipe_scr := screens[_FG];
 
     WIPES(wipeno * 3)
@@ -282,7 +282,7 @@ begin
   if rc <> 0 then
   begin
     go := false;
-	  WIPES(wipeno * 3 + 2);
+    WIPES(wipeno * 3 + 2);
   end;
 
   result := not go;

@@ -331,7 +331,7 @@ begin
           ceilingclip[rw_x] := yl - 1;
       end;
 
-	    if boolval(bottomtexture) then
+      if bottomtexture <> 0 then
       begin
         // bottom wall
         mid := _SHR(pixlow + HEIGHTUNIT - 1, HEIGHTBITS);
@@ -453,14 +453,14 @@ begin
     markceiling := true;
     if boolval(linedef.flags and ML_DONTPEGBOTTOM) then
     begin
-	    vtop := frontsector.floorheight + textureheight[sidedef.midtexture];
-	    // bottom of texture at bottom
-	    rw_midtexturemid := vtop - viewz;
+      vtop := frontsector.floorheight + textureheight[sidedef.midtexture];
+      // bottom of texture at bottom
+      rw_midtexturemid := vtop - viewz;
     end
     else
     begin
-	    // top of texture at top
-	    rw_midtexturemid := worldtop;
+      // top of texture at top
+      rw_midtexturemid := worldtop;
     end;
     rw_midtexturemid := rw_midtexturemid + sidedef.rowoffset;
 
@@ -485,8 +485,8 @@ begin
     else if backsector.floorheight > viewz then
     begin
       drawsegs[ds_p].silhouette := SIL_BOTTOM;
-	    drawsegs[ds_p].bsilheight := MAXINT;
-	    // ds_p->sprbottomclip = negonearray;
+      drawsegs[ds_p].bsilheight := MAXINT;
+      // ds_p->sprbottomclip = negonearray;
     end;
 
     if frontsector.ceilingheight < backsector.ceilingheight then
@@ -511,8 +511,8 @@ begin
     if backsector.floorheight >= frontsector.ceilingheight then
     begin
       drawsegs[ds_p].sprtopclip := @screenheightarray;
-	    drawsegs[ds_p].tsilheight := MININT;
-	    drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
+      drawsegs[ds_p].tsilheight := MININT;
+      drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
     end;
 
     worldhigh := backsector.ceilingheight - viewz;
@@ -602,7 +602,7 @@ begin
       maskedtexture := true;
       maskedtexturecol := PSmallIntArray(@openings[lastopening - rw_x]);
       drawsegs[ds_p].maskedtexturecol := maskedtexturecol;
-	    lastopening := lastopening + rw_stopx - rw_x;
+      lastopening := lastopening + rw_stopx - rw_x;
     end;
   end;
 
@@ -693,7 +693,7 @@ begin
     if worldlow > worldbottom then
     begin
       pixlow := _SHR(centeryfrac, 4) - FixedMul(worldlow, rw_scale);
-	    pixlowstep := -FixedMul(rw_scalestep, worldlow);
+      pixlowstep := -FixedMul(rw_scalestep, worldlow);
     end;
   end;
 
@@ -709,7 +709,7 @@ begin
 
   // save sprite clipping info
   if (boolval(drawsegs[ds_p].silhouette and SIL_TOP) or maskedtexture) and
-	   (not boolval(drawsegs[ds_p].sprtopclip)) then
+     (not boolval(drawsegs[ds_p].sprtopclip)) then
   begin
     memcpy(@openings[lastopening], @ceilingclip[start], SizeOf(ceilingclip[0]) * (rw_stopx - start));
     drawsegs[ds_p].sprtopclip := PSmallIntArray(@openings[lastopening - start]);

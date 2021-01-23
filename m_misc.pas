@@ -392,7 +392,7 @@ type
     palette_type: word;
 
     filler: array[0..57] of byte;
-    data: byte;		// unbounded
+    data: byte;    // unbounded
   end;
   Ppcx_t = ^pcx_t;
 
@@ -442,9 +442,9 @@ begin
     end
     else
     begin
-	    pack[i_p] := $c1;
+      pack[i_p] := $c1;
       inc(i_p);
-	    pack[i_p] := data[i_d];
+      pack[i_p] := data[i_d];
       inc(i_p);
       inc(i_d);
     end;

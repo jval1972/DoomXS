@@ -343,15 +343,15 @@ begin
   case gamemode of
     shareware,
     registered,
-    retail:	s := HU_TITLE;
+    retail:  s := HU_TITLE;
 
 { FIXME
       case pack_plut:
-	s = HU_TITLEP;
-	break;
+  s = HU_TITLEP;
+  break;
       case pack_tnt:
-	s = HU_TITLET;
-	break;
+  s = HU_TITLET;
+  break;
 }
 
   else
@@ -406,11 +406,11 @@ begin
   begin
     // display message if necessary
     if ((plr._message <> '') and (not message_nottobefuckedwith)) or
-	     ((plr._message <> '') and message_dontfuckwithme) then
+       ((plr._message <> '') and message_dontfuckwithme) then
     begin
-	    HUlib_addMessageToSText(@w_message, '', plr._message);
-	    plr._message := '';
-	    message_on := true;
+      HUlib_addMessageToSText(@w_message, '', plr._message);
+      plr._message := '';
+      message_on := true;
       message_counter := HU_MSGTIMEOUT;
       message_nottobefuckedwith := message_dontfuckwithme;
       message_dontfuckwithme := false;
@@ -531,8 +531,8 @@ begin
     if ev.data1 = HU_MSGREFRESH then
     begin
       message_on := true;
-	    message_counter := HU_MSGTIMEOUT;
-	    result := true;
+      message_counter := HU_MSGTIMEOUT;
+      result := true;
     end
     else if netgame and (ev.data1 = Ord(HU_INPUTTOGGLE)) then
     begin
@@ -543,7 +543,7 @@ begin
     end
     else if netgame and (numplayers > 2) then
     begin
-	    for i := 0 to MAXPLAYERS - 1 do
+      for i := 0 to MAXPLAYERS - 1 do
       begin
         if ev.data1 = Ord(destination_keys[i]) then
         begin
@@ -582,7 +582,7 @@ begin
       c := Chr(Ord(c) - Ord('0'));
       if c > Chr(9) then
         exit;
-	    // fprintf(stderr, "got here\n");
+      // fprintf(stderr, "got here\n");
       macromessage := chat_macros[Ord(c)];
 
       // kill last message with a '\n'
@@ -596,8 +596,8 @@ begin
       // leave chat mode and notify that it was sent
       chat_on := false;
       lastmessage := chat_macros[Ord(c)];
-	    plr._message := lastmessage;
-	    result := true;
+      plr._message := lastmessage;
+      result := true;
     end
     else
     begin
@@ -605,9 +605,9 @@ begin
         c := ForeignTranslation(c);
       if shiftdown or ((c >= 'a') and (c <= 'z')) then
         c := shiftxform[Ord(c)];
-	    result := HUlib_keyInIText(@w_chat, Ord(c));
-	    if result then
-	      HU_queueChatChar(c);
+      result := HUlib_keyInIText(@w_chat, Ord(c));
+      if result then
+        HU_queueChatChar(c);
       if Ord(c) = KEY_ENTER then
       begin
         chat_on := false;
@@ -617,8 +617,8 @@ begin
           plr._message := lastmessage;
         end
       end
-	    else if Ord(c) = KEY_ESCAPE then
-	      chat_on := false;
+      else if Ord(c) = KEY_ESCAPE then
+        chat_on := false;
     end;
   end;
 end;

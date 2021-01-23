@@ -278,9 +278,6 @@ const
   ST_DETHY = ST_Y + 23; // VJ was 191;
 
 //Incoming messages window location
-//UNUSED
-//   ST_MSGTEXTX	   (viewwindowx)
-//   ST_MSGTEXTY	   (viewwindowy+viewheight-18)
   ST_MSGTEXTX = 0;
   ST_MSGTEXTY = 0;
 // Dimensions given in characters.
@@ -451,7 +448,7 @@ const
 
   cheat_ammo_seq: array[0..5] of char = (
     Chr($b2), Chr($26), Chr($f2), Chr($66), Chr($a2),
-    Chr($ff)	// idkfa
+    Chr($ff)  // idkfa
   );
 
   cheat_ammonokey_seq: array[0..4] of char = (
@@ -468,7 +465,7 @@ const
 //
   cheat_commercial_noclip_seq: array[0..6] of char = (
     Chr($b2), Chr($26), Chr($e2), Chr($36), Chr($b2),
-    Chr($2a), Chr($ff)	// idclip
+    Chr($2a), Chr($ff)  // idclip
   );
 
 
@@ -599,7 +596,7 @@ begin
 
       AM_MSGEXITED:
         begin
-          //	fprintf(stderr, "AM exited\n");
+          //  fprintf(stderr, "AM exited\n");
           st_gamestate := FirstPersonState;
         end;
     end;
@@ -842,7 +839,7 @@ begin
           oldweaponsowned[i] := plyr.weaponowned[i];
         end;
       end;
-	    if doevilgrin then
+      if doevilgrin then
       begin
         // evil grin if just picked up weapon
         priority := 8;
@@ -947,7 +944,7 @@ begin
       end;
     end
     else
-	    lastattackdown := -1;
+      lastattackdown := -1;
   end;
 
   if priority < 5 then
@@ -1071,16 +1068,16 @@ begin
       cnt := bzc;
   end;
 
-  if boolval(cnt) then
+  if cnt <> 0 then
   begin
     palette := _SHR(cnt + 7, 3);
-	
+
     if palette >= NUMREDPALS then
       palette := NUMREDPALS - 1;
 
     palette := palette + STARTREDPALS;
   end
-  else if boolval(plyr.bonuscount) then
+  else if plyr.bonuscount <> 0 then
   begin
     palette := _SHR(plyr.bonuscount + 7, 3);
 

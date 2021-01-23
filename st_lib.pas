@@ -249,10 +249,9 @@ begin
     V_DrawPatch(x - w, n.y - ST_Y, _BG, n.p[0], false);
 
   // draw the new number
-  while boolval(num) and boolval(numdigits) do
+  while (num <> 0) and (numdigits <> 0) do
   begin
     x := x - w;
-//    V_DrawPatch(x, n.y, _FG, n.p[num mod 10], true);
     V_DrawPatch(x, n.y - ST_Y, _BG, n.p[num mod 10], false);
     num := num div 10;
     dec(numdigits);
@@ -260,7 +259,6 @@ begin
 
   // draw a minus sign if necessary
   if neg then
-//    V_DrawPatch(x - 8, n.y, _FG, sttminus, true);
     V_DrawPatch(x - 8, n.y - ST_Y, _BG, sttminus, false);
 end;
 
@@ -290,8 +288,8 @@ end;
 procedure STlib_initMultIcon(i: Pst_multicon_t; x, y: integer; il: Ppatch_tPArray;
   inum: PInteger; _on: PBoolean);
 begin
-  i.x	:= x;
-  i.y	:= y;
+  i.x := x;
+  i.y := y;
   i.oldinum := -1;
   i.inum := inum;
   i._on := _on;
@@ -320,8 +318,8 @@ end;
 procedure STlib_initBinIcon(b: Pst_binicon_t; x, y: integer; i: Ppatch_t;
   val: PBoolean; _on: PBoolean);
 begin
-  b.x	:= x;
-  b.y	:= y;
+  b.x := x;
+  b.y := y;
   b.oldval := false;
   b.val := val;
   b._on := _on;

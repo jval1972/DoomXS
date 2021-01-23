@@ -126,9 +126,9 @@ var
   block: Pmemblock_t;
 begin
   // set the entire zone to one free block
-	block := Pmemblock_t(integer(zone) + SizeOf(memzone_t));
+  block := Pmemblock_t(integer(zone) + SizeOf(memzone_t));
   zone.blocklist.next := block;
-	zone.blocklist.prev := block;
+  zone.blocklist.prev := block;
 
   zone.blocklist.user := PPointer(zone);
   zone.blocklist.tag := PU_STATIC;
@@ -155,7 +155,7 @@ begin
   mainzone.size := size;
 
   // set the entire zone to one free block
-	block := Pmemblock_t(integer(mainzone) + SizeOf(memzone_t));
+  block := Pmemblock_t(integer(mainzone) + SizeOf(memzone_t));
   mainzone.blocklist.next := block;
   mainzone.blocklist.prev := block;
 
@@ -277,8 +277,8 @@ begin
         //  so move base past it
         rover := rover.next;
         base := rover;
-	    end
-	    else
+      end
+      else
       begin
         // free the rover block (adding the size to base)
         // the rover can be the base block
@@ -318,7 +318,7 @@ begin
     // mark as an in use block
     base.user := user;
     PPointer(user)^ := Pointer(integer(base) + SizeOf(memblock_t));
-//	*(void **)user = (void *) ((byte *)base + sizeof(memblock_t));
+//  *(void **)user = (void *) ((byte *)base + sizeof(memblock_t));
   end
   else
   begin
@@ -380,7 +380,7 @@ begin
   begin
     if (block.tag >= lowtag) and (block.tag <= hightag) then
       printf('block:%s    size:%s    user:%s    tag:%s' + #13#10,
-		    [IntToStrZfill(8, integer(block)), IntToStrZfill(7, block.size),
+        [IntToStrZfill(8, integer(block)), IntToStrZfill(7, block.size),
          IntToStrZfill(8, integer(block.user)), IntToStrZfill(3, block.tag)]);
     if block.next = @mainzone.blocklist then
     begin
@@ -462,7 +462,7 @@ begin
     if block.next = @mainzone.blocklist then
     begin
       // all blocks have been hit
-	    break;
+      break;
     end;
 
     if integer(block) + block.size <> integer(block.next) then

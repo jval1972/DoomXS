@@ -236,15 +236,15 @@ begin
     if (c <> ' ') and (Ord(c) >= l.sc) and (c <= '_') then
     begin
       w := l.f[Ord(c) - l.sc].width;
-	    if x + w > SCREENWIDTH then
+      if x + w > SCREENWIDTH then
         break;
       V_DrawPatch(x, l.y, FG, l.f[Ord(c) - l.sc], false);
-	    x := x + w;
+      x := x + w;
     end
     else
     begin
       x := x + 4;
-	    if x >= SCREENWIDTH then
+      if x >= SCREENWIDTH then
         break;
     end;
   end;
@@ -415,9 +415,9 @@ begin
   if (ch >= Ord(' ')) and (ch <= Ord('_')) then
     HUlib_addCharToTextLine(@it.l, Chr(ch))
   else
-	if ch = KEY_BACKSPACE then
+  if ch = KEY_BACKSPACE then
     HUlib_delCharFromIText(it)
-	else if ch <> KEY_ENTER then
+  else if ch <> KEY_ENTER then
   begin
     result := false; // did not eat key
     exit;

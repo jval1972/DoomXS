@@ -271,13 +271,13 @@ begin
   else
   begin
     // WAD file
-	  handle.Read(header, SizeOf(header));
+    handle.Read(header, SizeOf(header));
     if header.identification <> IWAD then
       // Homebrew levels?
-	    if header.identification <> PWAD then
+      if header.identification <> PWAD then
         I_Error('W_AddFile(): Wad file %s doesn''t have IWAD or PWAD id' + #13#10, [filename]);
 
-	    // ???modifiedgame = true;
+      // ???modifiedgame = true;
 //    header.numlumps := header.numlumps;
 //    header.infotableofs = header.infotableofs;
     len := header.numlumps * SizeOf(filelump_t);

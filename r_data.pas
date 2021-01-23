@@ -475,7 +475,7 @@ begin
   texturewidthmask := Z_Malloc(numtextures * 4, PU_STATIC, nil);
   textureheight := Z_Malloc(numtextures * 4, PU_STATIC, nil);
 
-  //	Really complex printing shit...
+  //  Really complex printing shit...
   temp1 := W_GetNumForName('S_START');  // P_???????
   temp2 := W_GetNumForName('S_END') - 1;
   temp3 := ((temp2 - temp1 + 63) div 64) + ((numtextures + 63) div 64);

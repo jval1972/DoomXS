@@ -153,10 +153,10 @@ var
 // The finetangentgent[angle+FINEANGLES/4] table
 // holds the fixed_t tangent values for view angles,
 // ranging from MININT to 0 to MAXINT.
-// fixed_t		finetangent[FINEANGLES/2];
+// fixed_t    finetangent[FINEANGLES/2];
 
-// fixed_t		finesine[5*FINEANGLES/4];
-// fixed_t*		finecosine = &finesine[FINEANGLES/4]; // VJ -> moved to tables.pas
+// fixed_t    finesine[5*FINEANGLES/4];
+// fixed_t*    finecosine = &finesine[FINEANGLES/4]; // VJ -> moved to tables.pas
 
 
   sscount: integer;
@@ -348,14 +348,14 @@ begin
     // x >=0
     if y >= 0 then
     begin
-	    // y>= 0
-	    if x > y then
+      // y>= 0
+      if x > y then
       begin
         // octant 0
         result := tantoangle[SlopeDiv(y, x)];
         exit;
       end
-	    else
+      else
       begin
         // octant 1
         result := ANG90 - 1 - tantoangle[SlopeDiv(x, y)];
@@ -364,7 +364,7 @@ begin
     end
     else
     begin
-	    // y<0
+      // y<0
       y := -y;
       if x > y then
       begin
@@ -372,7 +372,7 @@ begin
         result := -tantoangle[SlopeDiv(y, x)];
         exit;
       end
-	    else
+      else
       begin
         // octant 7
         result := ANG270 + tantoangle[SlopeDiv(x, y)];
@@ -393,7 +393,7 @@ begin
         result := ANG180 - 1 - tantoangle[SlopeDiv(y, x)];
         exit;
       end
-	    else
+      else
       begin
         // octant 2
         result := ANG90 + tantoangle[SlopeDiv(x, y)];
@@ -410,7 +410,7 @@ begin
         result := ANG180 + tantoangle[SlopeDiv(y, x)];
         exit;
       end
-	    else
+      else
       begin
         // octant 5
         result := ANG270 - 1 - tantoangle[SlopeDiv(x, y)];
@@ -494,10 +494,10 @@ begin
     // UNUSED
 #if 0
 {
-    fixed_t		dist;
-    fixed_t		z;
-    fixed_t		sinv;
-    fixed_t		cosv;
+    fixed_t    dist;
+    fixed_t    z;
+    fixed_t    sinv;
+    fixed_t    cosv;
 
     sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];
     dist = FixedDiv (rw_distance, sinv);
@@ -592,7 +592,7 @@ begin
     else
     begin
       t := FixedMul(finetangent[i], focallength);
-	    t := (centerxfrac - t + FRACUNIT - 1) div FRACUNIT;
+      t := (centerxfrac - t + FRACUNIT - 1) div FRACUNIT;
 
       if t < -1 then
         t := -1

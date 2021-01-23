@@ -137,7 +137,7 @@ var
 
   precache: boolean; // if true, load all graphics at start
 
-	respawnmonsters: boolean;
+  respawnmonsters: boolean;
 
   viewactive: boolean;
 
@@ -285,12 +285,12 @@ var
   savedescription: string;
 
 const
-  BODYQUESIZE	= 32;
+  BODYQUESIZE  = 32;
 
 var
   bodyque: array[0..BODYQUESIZE - 1] of Pmobj_t;
 
-  statcopy: pointer;				// for statistics driver
+  statcopy: pointer;        // for statistics driver
 
 function G_CmdChecksum(cmd: Pticcmd_t): integer;
 var
@@ -320,7 +320,7 @@ var
   look: integer;
   base: Pticcmd_t;
 begin
-  base := I_BaseTiccmd;		// empty, or external driver
+  base := I_BaseTiccmd;    // empty, or external driver
 
   memcpy(cmd, base, SizeOf(cmd^));
 
@@ -350,7 +350,7 @@ begin
   else
     tspeed := speed;
 
-	if gamekeydown[key_lookdown] or gamekeydown[key_lookup] then
+  if gamekeydown[key_lookdown] or gamekeydown[key_lookup] then
     lookheld := lookheld + ticdup
   else
     lookheld := 0;
@@ -397,7 +397,7 @@ begin
   if gamekeydown[key_lookdown] then
     look := -lspeed;
 
-	if gamekeydown[key_lookcenter] then
+  if gamekeydown[key_lookcenter] then
     look := TOCENTER;
 
   if joyymove < 0 then
@@ -423,7 +423,7 @@ begin
   if gamekeydown[key_use] or (boolval(usejoystick) and joybuttons[joybuse]) then
   begin
     cmd.buttons := cmd.buttons or BT_USE;
-	// clear double clicks if hit use button
+  // clear double clicks if hit use button
     dclicks := 0;
   end;
 
@@ -459,8 +459,8 @@ begin
     dclicktime := dclicktime + ticdup;
     if dclicktime > 20 then
     begin
-	    dclicks := 0;
-	    dclickstate := 0;
+      dclicks := 0;
+      dclickstate := 0;
     end
   end;
 
@@ -574,7 +574,7 @@ begin
   end;
 
   P_SetupLevel(gameepisode, gamemap, 0, gameskill);
-  displayplayer := consoleplayer;		// view the guy you are playing
+  displayplayer := consoleplayer;    // view the guy you are playing
   starttime := I_GetTime;
   gameaction := ga_nothing;
   Z_CheckHeap;
@@ -600,9 +600,9 @@ function G_Responder(ev: Pevent_t): boolean;
 begin
   // allow spy mode changes even during the demo
   if (gamestate = GS_LEVEL) and (ev._type = ev_keydown) and
-	   (ev.data1 = KEY_F12) and (singledemo or (not boolval(deathmatch))) then
+     (ev.data1 = KEY_F12) and (singledemo or (not boolval(deathmatch))) then
   begin
-	// spy mode
+  // spy mode
     repeat
       inc(displayplayer);
       if displayplayer = MAXPLAYERS then
@@ -618,7 +618,7 @@ begin
   begin
     if (ev._type = ev_keydown) or
        ((ev._type = ev_mouse) and (ev.data1 <> 0)) or
-	     ((ev._type = ev_joystick) and (ev.data1 <> 0)) then
+       ((ev._type = ev_joystick) and (ev.data1 <> 0)) then
     begin
       M_StartControlPanel;
       result := true;
@@ -747,7 +747,7 @@ begin
   begin
     case gameaction of
       ga_loadlevel:
-	      G_DoLoadLevel;
+        G_DoLoadLevel;
       ga_newgame:
         G_DoNewGame;
       ga_loadgame:
@@ -780,7 +780,7 @@ begin
     begin
       cmd := @players[i].cmd;
 
-	    memcpy (cmd, @netcmds[i][buf], SizeOf(ticcmd_t));
+      memcpy (cmd, @netcmds[i][buf], SizeOf(ticcmd_t));
 
       if demoplayback then
         G_ReadDemoTiccmd(cmd);
@@ -789,10 +789,10 @@ begin
 
       // check for turbo cheats
       if (cmd.forwardmove > TURBOTHRESHOLD) and
-		     ((gametic and 31) = 0) and
+         ((gametic and 31) = 0) and
          (((_SHR(gametic, 5)) and 3) = i) then
       begin
-    		sprintf(msg, '%s is turbo!', [player_names[i]]);
+        sprintf(msg, '%s is turbo!', [player_names[i]]);
         players[consoleplayer]._message := msg;
       end;
 
@@ -806,7 +806,7 @@ begin
           consistancy[i][buf] := players[i].mo.x
         else
           consistancy[i][buf] := rndindex;
-	    end;
+      end;
     end;
   end;
 
@@ -837,7 +837,7 @@ begin
         end;
       end;
     end;
-	end;
+  end;
 
   // do main actions
   case gamestate of
@@ -899,7 +899,7 @@ begin
   memset(@p.powers, 0, SizeOf(p.powers));
   memset(@p.cards, 0, SizeOf(p.cards));
   p.mo.flags := p.mo.flags and (not MF_SHADOW); // cancel invisibility
-	p.lookdir := 0;       // cancel lookdir
+  p.lookdir := 0;       // cancel lookdir
   p.centering := false; 
   p.extralight := 0;    // cancel gun flashes
   p.fixedcolormap := 0; // cancel ir gogles
@@ -935,7 +935,7 @@ begin
   players[player].secretcount := secretcount;
 
   p.usedown := true;
-  p.attackdown := true;	// don't do anything immediately
+  p.attackdown := true;  // don't do anything immediately
   p.playerstate := PST_LIVE;
   p.health := MAXHEALTH;
   p.readyweapon := wp_pistol;
@@ -943,7 +943,7 @@ begin
   p.weaponowned[Ord(wp_fist)] := 1;
   p.weaponowned[Ord(wp_pistol)] := 1;
   p.ammo[Ord(am_clip)] := 50;
-	p.lookdir := 0;
+  p.lookdir := 0;
   p.centering := false;
 
   for i := 0 to Ord(NUMAMMO) - 1 do
@@ -1044,7 +1044,7 @@ var
   i: integer;
 begin
   if not netgame then
-  	// reload the level from scratch
+    // reload the level from scratch
     gameaction := ga_loadlevel
   else
   begin
@@ -1076,7 +1076,7 @@ begin
         playerstarts[i]._type := i + 1; // restore 
         exit;
       end;
-	    // he's going to be inside something.  Too bad.
+      // he's going to be inside something.  Too bad.
     end;
     P_SpawnPlayer(@playerstarts[playernum]);
   end;
@@ -1184,7 +1184,7 @@ begin
         4: wminfo.next := 2;
       end
     end
-  	else
+    else
       wminfo.next := gamemap; // go to next level
   end;
 
@@ -1485,7 +1485,7 @@ begin
   else if gamemode = shareware then
   begin
     if episode > 1 then
-	   episode := 1;	// only start episode 1 on shareware
+     episode := 1;  // only start episode 1 on shareware
   end
   else
   begin
