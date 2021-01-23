@@ -85,7 +85,6 @@ var
   MidiDevice: LongWord;
   midicaps: MIDIOUTCAPS;
   m_type: music_t = m_none;
-  MidiFileName: string;
 
 type
   MidiEvent_t = packed record
@@ -628,9 +627,7 @@ begin
       Result := 0;
       exit;
     end;
-    ClearMidiFilePlayList;
-    AddMidiFileToPlayList(MidiFileName);
-    I_PlayMidi(0);
+    I_PlayMidi;
   end;
   Result := integer(song);
 end;

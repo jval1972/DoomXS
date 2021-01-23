@@ -28,15 +28,11 @@ unit i_midi;
 
 interface
 
-procedure I_PlayMidi(index: integer);
+procedure I_PlayMidi;
 
 procedure I_StopMidi;
 
 procedure AddMidiFileToPlayList(MidiFile: string);
-
-procedure DeleteMidiFileFromPlayList(MidiFile: string);
-
-procedure ClearMidiFilePlayList;
 
 function I_IsMidiPlaying: boolean;
 
@@ -46,19 +42,19 @@ procedure I_PauseMidi;
 
 function _mciGetErrorString(const code: LongWord): string;
 
+var
+  MidiFileName: string;
+
 implementation
 
 uses
   d_delphi,
-  Classes,
   Windows,
   Messages,
   MMSystem;
 
 var
   wDeviceID: DWORD;
-  MidiFileNames: TStringList;
-  MidiID: integer;
   Window: HWnd;
   fIsPlaying: boolean;
   WindowClass: TWndClass;
@@ -68,7 +64,6 @@ const
   rsSequencer = 'sequencer';
   rsWndTitle = 'Notify Window';
   rsErrNoMIDIMapper = 'MIDI mapper unavailable';
-  rsErrOutOfRange = 'I_PlayMidi(index): index out of playlist range.';
 
 // Plays a specified MIDI file by using MCI_OPEN and MCI_PLAY. Returns
 // as soon as playback begins. The window procedure function for the
@@ -140,12 +135,7 @@ begin
       if (wParam = MCI_NOTIFY_SUCCESSFUL) then
       begin
         StopPlaying;
-        if MidiID >= MidiFileNames.Count - 1 then
-          MidiID := 0
-        else
-          Inc(MidiID);
-        if MidiID < MidiFileNames.Count then
-          playMIDIFile(Window, MidiFileNames.Strings[MidiID]);
+        playMIDIFile(Window, MidiFileName);
       end;
     WM_CLOSE:
     begin
@@ -159,38 +149,10 @@ end;
 
 procedure AddMidiFileToPlayList(MidiFile: string);
 begin
-  if MidiFileNames = nil then
-    MidiFileNames := TStringList.Create;
-  MidiFileNames.Add(MidiFile);
+  MidiFileName := MidiFile;
 end;
 
-procedure DeleteMidiFileFromPlayList(MidiFile: string);
-var
-  i: integer;
-begin
-  if MidiFileNames <> nil then
-  begin
-    if MidiFileNames.IndexOf(MidiFile) > -1 then
-      MidiFileNames.Delete(MidiFileNames.IndexOf(MidiFile))
-    else
-    begin
-      for i := 0 to MidiFileNames.Count - 1 do
-        if strupper(MidiFileNames.Strings[i]) = strupper(MidiFile) then
-        begin
-          MidiFileNames.Delete(i);
-          exit;
-        end;
-    end;
-  end;
-end;
-
-procedure ClearMidiFilePlayList;
-begin
-  if MidiFileNames <> nil then
-    MidiFileNames.Clear;
-end;
-
-procedure I_PlayMidi(index: integer);
+procedure I_PlayMidi;
 begin
   I_StopMidi;
   FillChar(WindowClass, SizeOf(WindowClass), Chr(0));
@@ -212,14 +174,7 @@ begin
     ShowWindow(Window, SW_HIDE);
   end;
 
-  if (index < MidiFileNames.Count) and (index > -1) then
-  begin
-    MidiID := index;
-    playMIDIFile(Window, MidiFileNames.Strings[MidiID], True);
-    fIsPlaying := True;
-  end
-  else
-    printf(rsErrNoMIDIMapper);
+  playMIDIFile(Window, MidiFileName, True);
 end;
 
 procedure I_StopMidi;
@@ -266,12 +221,9 @@ end;
 
 initialization
   Window := 0;
-  MidiFileNames := TStringList.Create;
-  MidiID := 0;
   fIsPlaying := False;
 
 finalization
   StopPlaying;
-  MidiFileNames.Free;
 
 end.
