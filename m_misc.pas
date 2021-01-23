@@ -79,7 +79,7 @@ begin
   BlockWrite(handle, source^, length, count);
   close(handle);
 
-  result := boolval(count);
+  result := count > 0;
 end;
 
 function M_ReadFile(const name: string; var buffer: Pointer): integer;
@@ -392,7 +392,6 @@ type
     palette_type: word;
 
     filler: array[0..57] of byte;
-    data: byte;    // unbounded
   end;
   Ppcx_t = ^pcx_t;
 
@@ -418,8 +417,8 @@ begin
   pcx.ymin := 0;
   pcx.xmax := WORD(width - 1);
   pcx.ymax := WORD(height - 1);
-  pcx.hres := WORD(width);
-  pcx.vres := WORD(height);
+  pcx.hres := 1;
+  pcx.vres := 1;
   memset(@pcx.palette, 0, SizeOf(pcx.palette));
   pcx.color_planes := 1;    // chunky image
   pcx.bytes_per_line := WORD(width);
@@ -428,13 +427,13 @@ begin
 
 
   // pack the image
-  pack := PByteArray(@pcx.data);
+  pack := PByteArray(pcx);
 
   i_d := 0;
-  i_p := 0;
+  i_p := SizeOf(pcx_t);
   for i := 0 to width * height - 1 do
   begin
-    if (data[i_d] and $c0) <> $c0 then
+    if data[i_d] and $c0 <> $c0 then
     begin
       pack[i_p] := data[i_d];
       inc(i_p);
