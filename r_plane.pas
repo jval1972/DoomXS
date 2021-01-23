@@ -55,8 +55,6 @@ var
 //
   floorclip: packed array[0..SCREENWIDTH - 1] of smallint;
   ceilingclip: packed array[0..SCREENWIDTH - 1] of smallint;
-{  floorclip: array[0..SCREENWIDTH - 1] of integer;
-  ceilingclip: array[0..SCREENWIDTH - 1] of integer;}
 
 var
   floorplane: Pvisplane_t;
@@ -94,7 +92,7 @@ uses
 
 // Here comes the obnoxious "visplane".
 const
-  MAXVISPLANES = 256; // VJ was = 128
+  MAXVISPLANES = 256; // JVAL was = 128
 
 var
   visplanes: array[0..MAXVISPLANES - 1] of visplane_t;
@@ -343,9 +341,7 @@ begin
     exit;
   end;
 
-    // make a new visplane
-//  visplanes[lastvisplane] := Z_Malloc(SizeOf(visplane_t), PU_LEVEL, nil); // z_alloc
-
+  // make a new visplane
   if lastvisplane = MAXVISPLANES then
     I_Error('R_CheckPlane(): no more visplanes');
 
@@ -373,14 +369,12 @@ procedure R_MakeSpans(x: integer; t1: integer; b1: integer; t2: integer; b2: int
 begin
   while (t1 < t2) and (t1 <= b1) do
   begin
-  // VJ 9/7/05
     if (t1 >= 0) and (t1 <= Length(spanstart)) then
       R_MapPlane(t1, spanstart[t1], x - 1);
     inc(t1);
   end;
   while (b1 > b2) and (b1 >= t1) do
   begin
-  // VJ 9/7/05
     if (b1 >= 0) and (b1 <= Length(spanstart)) then
       R_MapPlane(b1, spanstart[b1], x - 1);
     dec(b1);
@@ -388,14 +382,12 @@ begin
 
   while (t2 < t1) and (t2 <= b2) do
   begin
-  // VJ 9/7/05
     if (t2 >= 0) and (t2 <= Length(spanstart)) then
       spanstart[t2] := x;
     inc(t2);
   end;
   while (b2 > b1) and (b2 >= t2) do
   begin
-  // VJ 9/7/05
     if (b2 >= 0) and (b2 <= Length(spanstart)) then
       spanstart[b2] := x;
     dec(b2);
@@ -425,7 +417,6 @@ begin
     // sky flat
     if pl.picnum = skyflatnum then
     begin
-//      dc_iscale := _SHR(pspriteiscale, detailshift);
       dc_iscale := pspriteiscale;
 
       // Sky is allways drawn full bright,
@@ -464,7 +455,7 @@ begin
     if light < 0 then
       light := 0;
 
-    planezlight := @zlight[light]; // VJ ???
+    planezlight := @zlight[light];
 
     pl.top[pl.maxx + 1] := VISEND;
     pl.top[pl.minx - 1] := VISEND;
