@@ -47,7 +47,8 @@ var
 
 implementation
 
-uses info_h;
+uses
+  info_h;
 
 initialization
 //
