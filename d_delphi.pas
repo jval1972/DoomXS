@@ -115,28 +115,7 @@ function boolval(const p: pointer): boolean; overload;
 function intval(const b: boolean): integer;
 
 function decide(const contition: boolean; const iftrue: integer;
-  const iffalse: integer): integer; overload;
-
-function decide(const contition: boolean; const iftrue: boolean;
-  const iffalse: boolean): boolean; overload;
-
-function decide(const contition: boolean; const iftrue: string;
-  const iffalse: string): string; overload;
-
-function decide(const contition: boolean; const iftrue: pointer;
-  const iffalse: pointer): pointer; overload;
-
-function decide(const contition: integer; const iftrue: integer;
-  const iffalse: integer): integer; overload;
-
-function decide(const contition: integer; const iftrue: boolean;
-  const iffalse: boolean): boolean; overload;
-
-function decide(const contition: integer; const iftrue: string;
-  const iffalse: string): string; overload;
-
-function decide(const contition: integer; const iftrue: pointer;
-  const iffalse: pointer): pointer; overload;
+  const iffalse: integer): integer;
 
 function incp(var p: pointer; const size: integer = 1): pointer;
 
@@ -360,69 +339,6 @@ function decide(const contition: boolean; const iftrue: integer;
   const iffalse: integer): integer;
 begin
   if contition then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: boolean; const iftrue: boolean;
-  const iffalse: boolean): boolean;
-begin
-  if contition then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: boolean; const iftrue: string;
-  const iffalse: string): string;
-begin
-  if contition then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: boolean; const iftrue: pointer;
-  const iffalse: pointer): pointer;
-begin
-  if contition then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: integer; const iftrue: integer;
-  const iffalse: integer): integer;
-begin
-  if contition <> 0 then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: integer; const iftrue: boolean;
-  const iffalse: boolean): boolean;
-begin
-  if contition <> 0 then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: integer; const iftrue: string;
-  const iffalse: string): string;
-begin
-  if contition <> 0 then
-    Result := iftrue
-  else
-    Result := iffalse;
-end;
-
-function decide(const contition: integer; const iftrue: pointer;
-  const iffalse: pointer): pointer;
-begin
-  if contition <> 0 then
     Result := iftrue
   else
     Result := iffalse;
