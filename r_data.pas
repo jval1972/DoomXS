@@ -387,14 +387,14 @@ begin
 
   if lump > 0 then
   begin
-    result := PByteArray(integer(W_CacheLumpNum(lump, PU_CACHE)) + ofs); // VJ ???
+    result := PByteArray(integer(W_CacheLumpNum(lump, PU_CACHE)) + ofs);
     exit;
   end;
 
   if not boolval(texturecomposite[tex]) then
     R_GenerateComposite(tex);
 
-  result := PByteArray(integer(texturecomposite[tex]) + ofs); // VJ ???
+  result := PByteArray(integer(texturecomposite[tex]) + ofs);
 end;
 
 //
@@ -424,9 +424,6 @@ var
   numtextures1: integer;
   numtextures2: integer;
   directory: PIntegerArray;
-  temp1: integer;
-  temp2: integer;
-  temp3: integer;
 begin
   // Load the patch names from pnames.lmp.
   ZeroMemory(name, SizeOf(name));
@@ -475,22 +472,8 @@ begin
   texturewidthmask := Z_Malloc(numtextures * 4, PU_STATIC, nil);
   textureheight := Z_Malloc(numtextures * 4, PU_STATIC, nil);
 
-  //  Really complex printing shit...
-  temp1 := W_GetNumForName('S_START');  // P_???????
-  temp2 := W_GetNumForName('S_END') - 1;
-  temp3 := ((temp2 - temp1 + 63) div 64) + ((numtextures + 63) div 64);
-  printf('[');
-  for i := 0 to temp3 - 1 do
-    printf(' ');
-  printf('         ]');
-  for i := 0 to temp3 - 1 do
-    printf(#9);             // VJ original Chr(8) not Chr(9)
-  printf(#9#9#9#9#9#9#9#9#9#9);
-
   for i := 0 to numtextures - 1 do
   begin
-    if not boolval(i and 63) then
-      printf('.');
 
     if i = numtextures1 then
     begin
@@ -530,8 +513,6 @@ begin
         I_Error('R_InitTextures(): Missing patch in texture %s', [texture.name]);
       inc(mpatch);
       inc(patch);
-//      incp(pointer(mpatch), SizeOf(mpatch^));
-//      incp(pointer(patch), SizeOf(patch^));
     end;
     texturecolumnlump[i] := Z_Malloc(texture.width * 2, PU_STATIC, nil);
     texturecolumnofs[i] := Z_Malloc(texture.width * 2, PU_STATIC, nil);
@@ -819,6 +800,5 @@ procedure R_SetupLevel;
 begin
   maxvisplane := -1;
 end;
-
 
 end.
