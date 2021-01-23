@@ -58,7 +58,7 @@ uses
   s_sound,
   v_video,
   w_wad,
-  z_zone,
+  z_memory,
   doomstat;
 
 function M_WriteFile(const name: string; source: pointer; length: integer): boolean;

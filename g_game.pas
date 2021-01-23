@@ -166,7 +166,7 @@ implementation
 
 uses
   d_delphi,
-  z_zone,
+  z_memory,
   doomstat,
   doomdata,
   am_map,
@@ -577,7 +577,6 @@ begin
   displayplayer := consoleplayer;    // view the guy you are playing
   starttime := I_GetTime;
   gameaction := ga_nothing;
-  Z_CheckHeap;
 
   // clear cmd building stuff
   memset(@gamekeydown, 0, SizeOf(gamekeydown));

@@ -359,7 +359,7 @@ uses
   doomdata,
   i_system,
   i_io,
-  z_zone,
+  z_memory,
   m_argv,
   m_rnd,
   w_wad,

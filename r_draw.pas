@@ -126,7 +126,7 @@ implementation
 uses
   doomdef,
   w_wad,
-  z_zone,
+  z_memory,
   i_system,
   r_data,
   r_main,

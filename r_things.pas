@@ -82,7 +82,7 @@ uses
   r_main,
   r_bsp,
   r_segs,
-  z_zone,
+  z_memory,
   w_wad,
   doomstat;
 

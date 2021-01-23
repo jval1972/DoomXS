@@ -73,7 +73,7 @@ uses
   p_maputl in 'p_maputl.pas',
   p_mobj in 'p_mobj.pas',
   p_mobj_h in 'p_mobj_h.pas',
-  z_zone in 'z_zone.pas',
+  z_memory in 'z_memory.pas',
   p_plats in 'p_plats.pas',
   p_pspr in 'p_pspr.pas',
   p_pspr_h in 'p_pspr_h.pas',

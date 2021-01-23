@@ -81,7 +81,7 @@ uses
   r_draw,
   r_main,
   r_things,
-  z_zone,
+  z_memory,
   w_wad;
 
 // Here comes the obnoxious "visplane".

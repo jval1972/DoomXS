@@ -82,7 +82,7 @@ uses
   d_items,
   i_system,
   i_video,
-  z_zone,
+  z_memory,
   w_wad,
   g_game,
   st_lib,

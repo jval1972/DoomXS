@@ -112,7 +112,7 @@ type
     // Is wp_nochange if not changing.
     pendingweapon : weapontype_t;
 
-    weaponowned: array[0..Ord(NUMWEAPONS) - 1] of boolean;
+    weaponowned: array[0..Ord(NUMWEAPONS) - 1] of LongBool;
     ammo: array[0..Ord(NUMAMMO) - 1] of integer;
     maxammo: array[0..Ord(NUMAMMO) - 1] of integer;
 

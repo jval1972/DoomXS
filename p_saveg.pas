@@ -77,7 +77,7 @@ uses
   p_plats,
   p_lights,
   r_defs,
-  z_zone;
+  z_memory;
 
 // Pads save_p to a 4-byte boundary
 //  so that the load/save works on SGI&Gecko.

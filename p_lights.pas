@@ -33,7 +33,7 @@ uses
   m_rnd,
   p_spec,
   r_defs,
-  z_zone;
+  z_memory;
 
 procedure P_SpawnFireFlicker(sector: Psector_t);
 

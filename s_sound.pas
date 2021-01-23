@@ -109,7 +109,7 @@ uses
   p_mobj_h,
   p_local,
   sounds,
-  z_zone,
+  z_memory,
   w_wad,
   doomdef,
   r_main,

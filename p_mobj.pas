@@ -70,7 +70,7 @@ uses
   tables,
   g_game,
   i_system,
-  z_zone,
+  z_memory,
   m_rnd,
   doomdef,
   p_local,

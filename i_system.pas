@@ -35,11 +35,6 @@ uses
 
 procedure I_Init;
 
-{ Called by startup code }
-{ to get the ammount of memory to malloc }
-{ for the zone management. }
-function I_ZoneBase(var size: integer): pointer;
-
 { Called by D_DoomLoop, }
 { returns current time in tics. }
 function I_GetTime: integer;
@@ -87,9 +82,6 @@ function I_GameFinished: boolean;
 procedure I_WaitVBL(const Count: integer);
 
 function I_SetDPIAwareness: boolean;
-
-var
-  mb_used: integer = 6;
 
 implementation
 
@@ -156,21 +148,8 @@ begin
   Result := @emptycmd;
 end;
 
-function I_GetHeapSize: integer;
-begin
-  Result := mb_used * 1024 * 1024;
-end;
-
-function I_ZoneBase(var size: integer): pointer;
-begin
-  size := I_GetHeapSize;
-  Result := malloc(size);
-end;
-
-
 // I_GetTime
 // returns time in 1/70th second tics
-
 var
   basetime: int64;
   Freq: int64;
@@ -193,7 +172,6 @@ end;
 
 
 // I_Init
-
 procedure I_Init;
 begin
   printf('I_InitSound: Initializing DirectSound.' + #13#10);
@@ -217,11 +195,11 @@ procedure I_Destroy;
 begin
   finished := True;
   D_QuitNetGame;
-  //  I_ShutdownSound;
+  //I_ShutdownSound;
   I_ShutdownMusic;
   I_ShutDownInput;
   M_SaveDefaults;
-  //  I_ShutdownGraphics;
+  //I_ShutdownGraphics;
   I_ShutdownIO;
   Halt(0);
 end;

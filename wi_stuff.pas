@@ -59,7 +59,7 @@ uses
   d_delphi,
   doomdef,
   d_event,
-  z_zone,
+  z_memory,
   m_rnd,
   i_system,
   w_wad,

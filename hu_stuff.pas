@@ -100,7 +100,7 @@ implementation
 
 uses
   d_delphi,
-  z_zone,
+  z_memory,
   w_wad,
   doomstat,
   am_map,

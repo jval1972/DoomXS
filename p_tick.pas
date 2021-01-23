@@ -67,7 +67,7 @@ uses
   p_user,
   p_spec,
   p_mobj,
-  z_zone;
+  z_memory;
 
 procedure P_InitThinkers;
 begin

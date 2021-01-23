@@ -94,8 +94,9 @@ var
 implementation
 
 uses
-  doomtype, i_system,
-  z_zone;
+  doomtype,
+  i_system,
+  z_memory;
 
 const
   IWAD = integer(Ord('I') or

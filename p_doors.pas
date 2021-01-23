@@ -29,7 +29,7 @@ unit p_doors;
 interface
 
 uses
-  z_zone,
+  z_memory,
   doomdef,
   p_local,
   p_mobj_h,

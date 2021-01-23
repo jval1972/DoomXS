@@ -29,7 +29,7 @@ unit p_floor;
 interface
 
 uses
-  z_zone,
+  z_memory,
   doomdef,
   p_spec,
   m_fixed,

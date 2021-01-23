@@ -93,7 +93,7 @@ uses
   r_sky,
   r_things,
   w_wad,
-  z_zone;
+  z_memory;
 
 //
 // Graphics.
@@ -262,7 +262,7 @@ begin
   begin
     patch := @texture.patches[i];
 
-    realpatch := W_CacheLumpNum(patch.patch, PU_CACHE);
+    realpatch := W_CacheLumpNum(patch.patch, PU_STATIC);
     x1 := patch.originx;
     x2 := x1 + realpatch.width;
 
@@ -285,6 +285,7 @@ begin
       end;
       inc(x);
     end;
+    Z_ChangeTag(realpatch, PU_CACHE);
   end;
 
   // Now that the texture has been built in column cache,

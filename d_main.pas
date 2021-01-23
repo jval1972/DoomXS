@@ -95,7 +95,7 @@ uses
   dstrings,
   d_englsh,
   sounds,
-  z_zone,
+  z_memory,
   w_wad,
   s_sound,
   v_video,
@@ -271,7 +271,7 @@ begin
 
   // see if the border needs to be updated to the screen
   if (gamestate = GS_LEVEL) and (not automapactive) and
-    (scaledviewwidth <> SCREENWIDTH{320}) then
+    (scaledviewwidth <> SCREENWIDTH) then
   begin
     if menuactive or menuactivestate or (not viewactivestate) then
       borderdrawcount := 3;
@@ -365,9 +365,7 @@ begin
   end;
 end;
 
-
 //  DEMO LOOP
-
 var
   demosequence: integer;
   pagetic: integer;
@@ -401,10 +399,8 @@ begin
   advancedemo := True;
 end;
 
-
 // This cycles through the demo sequences.
 // FIXME - version dependend demo numbers?
-
 procedure D_DoAdvanceDemo;
 begin
   players[consoleplayer].playerstate := PST_LIVE;  // not reborn
@@ -476,9 +472,7 @@ begin
   end;
 end;
 
-
 // D_StartTitle
-
 procedure D_StartTitle;
 begin
   gameaction := ga_nothing;
@@ -486,7 +480,7 @@ begin
   D_AdvanceDemo;
 end;
 
-//      print title for every printed line
+// print title for every printed line
 var
   title: string;
 
@@ -504,12 +498,10 @@ begin
     end;
 end;
 
-
 // IdentifyVersion
 // Checks availability of IWAD files by name,
 // to determine whether registered/commercial features
 // should be executed (notably loading PWAD's).
-
 procedure IdentifyVersion;
 var
   doom1wad: string;
@@ -575,12 +567,6 @@ begin
   begin
     gamemode := commercial;
     devparm := True;
-  (* I don't bother
-  if(plutonia)
-      D_AddFile (DEVDATA"plutonia.wad");
-  else if(tnt)
-      D_AddFile (DEVDATA"tnt.wad");
-  else*)
     D_AddFile(DEVDATA + 'doom2.wad');
 
     D_AddFile(DEVMAPS + 'cdata/texture1.lmp');
@@ -937,39 +923,28 @@ begin
   if (p <> 0) and (p <= myargc - 1) then
     fullscreen := False;
 
-  p := M_CheckParm('-zone');
-  if (p <> 0) and (p < myargc - 1) then
-  begin
-    mb_used := atoi(myargv[p + 1]);
-    if mb_used < 6 then
-    begin
-      printf('Zone memory allocation needs at least 6MB (%d).' + #13#10, [mb_used]);
-      mb_used := 6;
-    end;
-  end;
-
   // init subsystems
-  printf('Z_Init: Init zone memory allocation daemon, allocation %dMB.' +
-    #13#10, [mb_used]);
+  printf('Z_Init: Init zone memory allocation daemon.'#13#10);
   Z_Init;
 
-  printf('I_InitInfo: Initialize information tables.' + #13#10);
+  printf('I_InitInfo: Initialize information tables.'#13#10);
   I_InitInfo;
 
-  printf('V_Init: allocate screens.' + #13#10);
+  printf('V_Init: allocate screens.'#13#10);
   V_Init;
 
   printf('AM_Init: initializing automap.'#13#10);
   AM_Init;
 
-  printf('M_LoadDefaults: Load system defaults.' + #13#10);
-  M_LoadDefaults;              // load before initing other systems
+  // Load defaults before initing other systems
+  printf('M_LoadDefaults: Load system defaults.'#13#10);
+  M_LoadDefaults;
 
-  printf('M_InitMenus: Initializing menus.' + #13#10);
+  printf('M_InitMenus: Initializing menus.'#13#10);
   M_InitMenus;
 
 
-  printf('W_Init: Init WADfiles.' + #13#10);
+  printf('W_Init: Init WADfiles.'#13#10);
   W_InitMultipleFiles(@wadfiles);
 
   if gamemode = registered then

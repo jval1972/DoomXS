@@ -29,7 +29,7 @@ unit p_ceilng;
 interface
 
 uses
-  z_zone,
+  z_memory,
   doomdef,
   p_local,
   p_spec,

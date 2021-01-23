@@ -30,7 +30,7 @@ interface
 
 uses
   d_delphi,
-  z_zone,
+  z_memory,
   doomdef,
   doomdata,
   d_player,

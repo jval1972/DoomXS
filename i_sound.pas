@@ -73,7 +73,7 @@ uses
   d_delphi,
   DirectX,
   mmsystem,
-  z_zone,
+  z_memory,
   m_argv,
   m_misc,
   i_system,

@@ -112,7 +112,7 @@ implementation
 
 uses
   d_player,
-  z_zone,
+  z_memory,
   m_bbox,
   g_game,
   i_system,

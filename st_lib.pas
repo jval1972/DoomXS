@@ -163,7 +163,7 @@ implementation
 
 uses
   doomdef,
-  z_zone,
+  z_memory,
   v_video,
   i_system,
   w_wad,

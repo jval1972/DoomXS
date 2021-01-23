@@ -58,7 +58,7 @@ uses
   r_things,
 // Functions.
   i_system,
-  z_zone,
+  z_memory,
   v_video,
   w_wad,
   s_sound,

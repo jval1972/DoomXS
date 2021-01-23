@@ -52,7 +52,7 @@ uses
   m_fixed,
   i_video,
   v_video,
-  z_zone;
+  z_memory;
 
 //
 //                       SCREEN WIPE PACKAGE

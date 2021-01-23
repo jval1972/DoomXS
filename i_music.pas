@@ -71,7 +71,7 @@ uses
   i_midi,
   s_sound,
   w_wad,
-  z_zone;
+  z_memory;
 
 type
   music_t = (m_none, m_mus, m_midi);
