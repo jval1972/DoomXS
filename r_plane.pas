@@ -342,6 +342,7 @@ begin
   end;
 
   // make a new visplane
+
   if lastvisplane = MAXVISPLANES then
     I_Error('R_CheckPlane(): no more visplanes');
 
@@ -413,7 +414,6 @@ begin
     if pl.minx > pl.maxx then
       continue;
 
-
     // sky flat
     if pl.picnum = skyflatnum then
     begin
@@ -440,7 +440,7 @@ begin
           skycolfunc;
         end;
       end;
-	    continue;
+      continue;
     end;
 
     // regular flat
