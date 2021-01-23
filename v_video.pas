@@ -257,7 +257,6 @@ end;
 function V_PreserveH(y: integer; h: integer): integer;
 begin
   result := V_PreserveY(y + h) - V_PreserveY(y);
-//  result := preserveY[y + h] - V_PreserveY(y);
 end;
 
 
@@ -352,8 +351,6 @@ end;
 
 function V_GetScreenWidth(scrn: integer): integer;
 begin
-  // VJ
-  // Hack to adjust screen coordinates!
   if  scrn in [0..3] then
     result := SCREENWIDTH
   else
@@ -387,8 +384,6 @@ begin
 
     col := 0;
 
-    // VJ
-    // Hack to adjust screen coordinates!
     swidth := V_GetScreenWidth(scrn);
     desttop := PByte(integer(screens[scrn]) + y * swidth + x);
 
@@ -437,17 +432,12 @@ begin
       V_MarkRect(x, y, pw, ph, false);
 
     fracx := 0;
-{    fracxstep := (FRACUNIT * 320) div SCREENWIDTH;
-    fracystep := (FRACUNIT * 200) div SCREENHEIGHT;}
     fracxstep := FRACUNIT * patch.width div pw;
     fracystep := FRACUNIT * patch.height div ph;
 
     col := 0;
-    // VJ
-    // Hack to adjust screen coordinates!
     swidth := V_GetScreenWidth(scrn);
     desttop := PByte(integer(screens[scrn]) + y * swidth + x);
-{    desttop := PByte(integer(screens[scrn]) + y * SCREENWIDTH + x);}
 
     while col < pw do
     begin
@@ -457,7 +447,6 @@ begin
       while column.topdelta <> $ff do
       begin
         source := PByte(integer(column) + 3);
-//        dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
         dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
         count := column.length;
         fracy := 0;
@@ -519,8 +508,6 @@ begin
 
     col := 0;
 
-    // VJ
-    // Hack to adjust screen coordinates!
     swidth := V_GetScreenWidth(scrn);
     desttop := PByteArray(integer(screens[scrn]) + y * swidth + x);
 
@@ -541,16 +528,13 @@ begin
         begin
           dest^ := source^;
           inc(source);
-//          incp(pointer(source));
           inc(dest, swidth);
-//          dest := PByte(integer(dest) + swidth);
           dec(count);
         end;
         column := Pcolumn_t(integer(column) + column.length + 4);
       end;
       inc(col);
       inc(desttop);
-//      incp(pointer(desttop));
     end;
   end
 ////////////////////////////////////////////////////
@@ -571,8 +555,6 @@ begin
       V_MarkRect(x, y, pw, ph, false);
 
     fracx := 0;
-{    fracxstep := (FRACUNIT * 320) div SCREENWIDTH;
-    fracystep := (FRACUNIT * 200) div SCREENHEIGHT;}
     fracxstep := FRACUNIT * patch.width div pw;
     fracystep := FRACUNIT * patch.height div ph;
 
@@ -603,7 +585,6 @@ begin
           begin
             lasty := fracy div FRACUNIT;
             inc(source);
-//            incp(pointer(source));
             dec(count);
           end;
         end;
@@ -611,7 +592,6 @@ begin
       end;
       inc(col);
       inc(desttop);
-//      incp(pointer(desttop));
 
       fracx := fracx + fracxstep;
     end;
@@ -682,10 +662,10 @@ begin
 
   // initialize translation tables
   for i := 0 to 319 do
-    preserveX[i] := round(i * SCREENWIDTH / 320);
+    preserveX[i] := Trunc(i * SCREENWIDTH / 320);
 
   for i := 0 to 199 do
-    preserveY[i] := round(i * SCREENHEIGHT / 200);
+    preserveY[i] := Trunc(i * SCREENHEIGHT / 200);
 
 end;
 
