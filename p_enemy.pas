@@ -829,7 +829,7 @@ begin
   // check for missile attack
   if actor.info.missilestate <> 0 then
   begin
-    if (gameskill < sk_nightmare) and (not fastparm) and boolval(actor.movecount) then
+    if (gameskill < sk_nightmare) and (not fastparm) and (actor.movecount <> 0) then
       nomissile := True
     else if not P_CheckMissileRange(actor) then
       nomissile := True;
@@ -1195,7 +1195,7 @@ var
   maxdist: integer;
   check: boolean;
 begin
-  if not boolval(thing.flags and MF_CORPSE) then
+  if thing.flags and MF_CORPSE = 0 then
   begin
     Result := True; // not a monster
     exit;
@@ -1746,7 +1746,7 @@ begin
           EV_DoDoor(@junk, blazeOpen);
           exit;
         end
-        else if gamemap = 6 then
+        else if gamemap = 8 then
         begin
           junk.tag := 666;
           EV_DoFloor(@junk, lowerFloorToLowest);
@@ -1898,7 +1898,7 @@ begin
   if (gameskill <= sk_easy) and (easy = 0) then
     exit;
 
-  if numbraintargets = 0 then // VJ
+  if numbraintargets = 0 then // JVAL
   begin
     A_BrainAwake(mo);
     exit;
