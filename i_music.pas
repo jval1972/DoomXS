@@ -82,19 +82,19 @@ const
 
 var
   hMidiStream: HMIDISTRM = 0;
-  MidiDevice: longword;
+  MidiDevice: LongWord;
   midicaps: MIDIOUTCAPS;
   m_type: music_t = m_none;
   MidiFileName: string;
 
 type
   MidiEvent_t = packed record
-    time: longword;                  { Ticks since last event }
-    ID: longword;                    { Reserved, must be zero }
+    time: LongWord;                  { Ticks since last event }
+    ID: LongWord;                    { Reserved, must be zero }
     case integer of
       1: (Data: packed array[0..2] of byte;
         _type: byte);
-      2: (mevent: longword);
+      2: (mevent: LongWord);
   end;
   PMidiEvent_t = ^MidiEvent_t;
   MidiEvent_tArray = array[0..$FFFF] of MidiEvent_t;
@@ -104,18 +104,18 @@ type
 
   midiheader_t = record
     lpData: pointer;             { pointer to locked data block }
-    dwBufferLength: longword;    { length of data in data block }
-    dwBytesRecorded: longword;   { used for input only }
-    dwUser: longword;            { for client's use }
-    dwFlags: longword;           { assorted flags (see defines) }
+    dwBufferLength: LongWord;    { length of data in data block }
+    dwBytesRecorded: LongWord;   { used for input only }
+    dwUser: LongWord;            { for client's use }
+    dwFlags: LongWord;           { assorted flags (see defines) }
     lpNext: Pmidiheader_t;       { reserved for driver }
-    reserved: longword;          { reserved for driver }
-    dwOffset: longword;          { Callback offset into buffer }
-    dwReserved: array[0..7] of longword; { Reserved for MMSYSTEM }
+    reserved: LongWord;          { reserved for driver }
+    dwOffset: LongWord;          { Callback offset into buffer }
+    dwReserved: array[0..7] of LongWord; { Reserved for MMSYSTEM }
   end;
 
   musheader_t = packed record
-    ID: longword;       // identifier "MUS" 0x1A
+    ID: LongWord;       // identifier "MUS" 0x1A
     scoreLen: word;
     scoreStart: word;
     channels: word;     // count of primary channels

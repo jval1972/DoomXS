@@ -268,7 +268,7 @@ begin
     (player.cmd.sidemove = 0))) then
   begin
     // if in a walking frame, stop moving
-    if boolval(player) and (longword(
+    if (player <> nil) and (LongWord(
       (pOperation(player.mo.state, @states[0], '-', SizeOf(states[0]))) -
       Ord(S_PLAY_RUN1)) < 4) then
       P_SetMobjState(player.mo, S_PLAY);

@@ -44,7 +44,7 @@ procedure I_ResumeMidi;
 
 procedure I_PauseMidi;
 
-function _mciGetErrorString(const code: longword): string;
+function _mciGetErrorString(const code: LongWord): string;
 
 implementation
 
@@ -248,7 +248,7 @@ begin
   mciSendCommand(wDeviceID, MCI_PAUSE, 0, 0);
 end;
 
-function _mciGetErrorString(const code: longword): string;
+function _mciGetErrorString(const code: LongWord): string;
 var
   buf: array[0..127] of char;
   i: integer;

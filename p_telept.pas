@@ -61,7 +61,7 @@ var
   tag: integer;
   m: Pmobj_t;
   fog: Pmobj_t;
-  an: longword;
+  an: LongWord;
   thinker: Pthinker_t;
   sector: Psector_t;
   oldx: fixed_t;

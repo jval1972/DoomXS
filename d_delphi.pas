@@ -37,7 +37,7 @@ type
 
   PInteger = ^integer;
 
-  PLongWord = ^longword;
+  PLongWord = ^LongWord;
 
   TWordArray = packed array[0..$FFFF] of word;
   PWordArray = ^TWordArray;
@@ -45,7 +45,7 @@ type
   TIntegerArray = packed array[0..$FFFF] of integer;
   PIntegerArray = ^TIntegerArray;
 
-  TLongWordArray = packed array[0..$FFFF] of longword;
+  TLongWordArray = packed array[0..$FFFF] of LongWord;
   PLongWordArray = ^TLongWordArray;
 
   TSmallintArray = packed array[0..$FFFF] of smallint;
@@ -188,11 +188,11 @@ function tolower(ch: char): char;
 
 function _SHL(const x: integer; const bits: integer): integer;
 
-function _SHLW(const x: longword; const bits: longword): longword;
+function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
 
 function _SHR(const x: integer; const bits: integer): integer;
 
-function _SHRW(const x: longword; const bits: longword): longword;
+function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
 
 function StringVal(const Str: PChar): string;
 
@@ -587,7 +587,7 @@ begin
   Result := x * (1 shl bits);
 end;
 
-function _SHLW(const x: longword; const bits: longword): longword;
+function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
 begin
   Result := x shl bits;
 end;
@@ -597,7 +597,7 @@ begin
   Result := x div (1 shl bits);
 end;
 
-function _SHRW(const x: longword; const bits: longword): longword;
+function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
 begin
   Result := x shr bits;
 end;

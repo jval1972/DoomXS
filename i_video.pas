@@ -61,11 +61,11 @@ uses
   v_video;
 
 var
-  curpal: array[0..255] of longword;
+  curpal: array[0..255] of LongWord;
   g_pDD: IDirectDraw7 = nil; // DirectDraw object
   g_pDDSPrimary: IDirectDrawSurface7 = nil;// DirectDraw primary surface
   g_pDDScreen: IDirectDrawSurface7 = nil;   // DirectDraw surface
-  screen32: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of longword;
+  screen32: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of LongWord;
 
 var
   s_alttab_disabled: boolean = False;
@@ -179,9 +179,9 @@ begin
   src := palette;
   while integer(src) < integer(@palette[256 * 3]) do
   begin
-    dest^ := (longword(gammatable[usegamma, src[0]]) shl 16) or
-      (longword(gammatable[usegamma, src[1]]) shl 8) or
-      (longword(gammatable[usegamma, src[2]]));
+    dest^ := (LongWord(gammatable[usegamma, src[0]]) shl 16) or
+      (LongWord(gammatable[usegamma, src[1]]) shl 8) or
+      (LongWord(gammatable[usegamma, src[2]]));
     Inc(dest);
     incp(pointer(src), 3);
   end;

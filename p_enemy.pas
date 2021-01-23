@@ -1312,7 +1312,7 @@ end;
 procedure A_Fire(actor: Pmobj_t);
 var
   dest: Pmobj_t;
-  an: longword;
+  an: LongWord;
 begin
   dest := actor.tracer;
   if dest = nil then

@@ -88,20 +88,38 @@ var
 
 implementation
 
-uses d_delphi,
+uses
+  d_delphi,
   Classes,
-  doomstat, dstrings, d_englsh,
-  sounds, z_zone, w_wad, s_sound, v_video,
-  f_finale, f_wipe,
-  m_argv, m_misc, m_menu,
+  doomstat,
+  dstrings,
+  d_englsh,
+  sounds,
+  z_zone,
+  w_wad,
+  s_sound,
+  v_video,
+  f_finale,
+  f_wipe,
+  m_argv,
+  m_misc,
+  m_menu,
   info,
-  i_system, i_sound, i_video, i_io,
-  d_ticcmd, d_player, d_net,
+  i_system,
+  i_sound,
+  i_video,
+  i_io,
+  d_ticcmd,
+  d_player,
+  d_net,
   g_game,
-  hu_stuff, wi_stuff, st_stuff,
+  hu_stuff,
+  wi_stuff,
+  st_stuff,
   am_map,
   p_setup,
-  r_draw, r_main;
+  r_draw,
+  r_main;
 
 const
   BGCOLOR = 7;

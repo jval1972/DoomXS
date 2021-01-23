@@ -61,7 +61,7 @@ type
 
   doomdata_t = record
     // High bit is retransmit request.
-    checksum: longword;
+    checksum: LongWord;
     // Only valid if NCMD_RETRANSMIT.
     retransmitfrom: byte;
 
@@ -209,7 +209,7 @@ end;
 
 // Checksum
 
-function NetbufferChecksum: longword;
+function NetbufferChecksum: LongWord;
 var
   i: integer;
   p: PLongWordArray;
@@ -218,7 +218,7 @@ begin
 
   p := PLongWordArray(pointer(netbuffer));
 
-  // Hack: first position of doomdata_t is checksum (longword)
+  // Hack: first position of doomdata_t is checksum (LongWord)
   for i := 1 to NetbufferSize div 4 do
     Result := Result + p[i];
 
@@ -256,7 +256,7 @@ end;
 
 // HSendPacket
 
-procedure HSendPacket(node: integer; flags: longword);
+procedure HSendPacket(node: integer; flags: LongWord);
 var
   i: integer;
   realretrans: integer;

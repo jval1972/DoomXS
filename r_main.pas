@@ -514,7 +514,6 @@ begin
   // both sines are allways positive
   sinea := finesine[_SHRW(anglea, ANGLETOFINESHIFT)];
   sineb := finesine[_SHRW(angleb, ANGLETOFINESHIFT)];
-//  num := _SHL(FixedMul(projection, sineb), detailshift);
   num := FixedMul(projection, sineb);
   den := FixedMul(rw_distance, sinea);
 

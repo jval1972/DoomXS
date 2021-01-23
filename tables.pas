@@ -28,9 +28,11 @@ unit tables;
 
 interface
 
-uses m_fixed;
+uses
+  m_fixed;
 
-const PI = 3.141592657;
+const
+  PI = 3.141592657;
 
 
 const

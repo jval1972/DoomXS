@@ -85,7 +85,7 @@ const
 
 type
   machine_t = record
-    address: longword;
+    address: LongWord;
     port: word;
     player: byte;
     pad: byte;
@@ -292,7 +292,7 @@ begin
     if hostentry = nil then
       I_Error('gethostbyname(): Could not find %s' + #13#10 + '%s',
         [Name, neterror]);
-    address.sin_addr.s_addr := longword(hostentry.h_addr_list);
+    address.sin_addr.s_addr := LongWord(hostentry.h_addr_list);
     printf('Node number %d hostname %s' + #13#10,
       [doomcom.numnodes, StringVal(hostentry.h_name)]);
   end;

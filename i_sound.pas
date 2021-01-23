@@ -292,8 +292,8 @@ var
   freechannel: integer;
   p: pointer;
   p2: pointer;
-  s: longword;
-  s2: longword;
+  s: LongWord;
+  s2: LongWord;
 
   procedure I_ErrorStartSound(const procname: string);
   begin
