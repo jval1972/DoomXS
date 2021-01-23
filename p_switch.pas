@@ -195,7 +195,7 @@ var
   i: integer;
   sound: integer;
 begin
-  if not boolval(useAgain) then
+  if useAgain = 0 then
     line.special := 0;
 
   texTop := sides[line.sidenum[0]].toptexture;
@@ -215,7 +215,7 @@ begin
       S_StartSound(buttonlist[0].soundorg, sound);
       sides[line.sidenum[0]].toptexture := switchlist[i xor 1];
 
-      if boolval(useAgain) then
+      if useAgain <> 0 then
         P_StartButton(line, top, switchlist[i], BUTTONTIME);
 
       exit;
@@ -227,7 +227,7 @@ begin
         S_StartSound(buttonlist[0].soundorg, sound);
         sides[line.sidenum[0]].midtexture := switchlist[i xor 1];
 
-        if boolval(useAgain) then
+        if useAgain <> 0 then
           P_StartButton(line, middle, switchlist[i], BUTTONTIME);
 
         exit;
@@ -239,7 +239,7 @@ begin
           S_StartSound(buttonlist[0].soundorg, sound);
           sides[line.sidenum[0]].bottomtexture := switchlist[i xor 1];
 
-          if boolval(useAgain) then
+          if useAgain <> 0 then
             P_StartButton(line, bottom, switchlist[i], BUTTONTIME);
 
           exit;
