@@ -219,7 +219,7 @@ begin
   D_QuitNetGame;
   //  I_ShutdownSound;
   I_ShutdownMusic;
-  I_ShutdownInput;
+  I_ShutDownInput;
   M_SaveDefaults;
   //  I_ShutdownGraphics;
   I_ShutdownIO;
