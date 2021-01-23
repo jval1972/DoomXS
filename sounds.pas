@@ -35,7 +35,7 @@ interface
 type
   Psfxinfo_t = ^sfxinfo_t;
 
-  sfxinfo_t = record
+  sfxinfo_t = packed record
     // up to 6-character name
     name: string;
 
