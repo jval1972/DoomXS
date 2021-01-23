@@ -887,7 +887,6 @@ begin
       S_StartSound(nil, quitsounds2[_SHR(gametic, 2) and 7])
     else
       S_StartSound(nil, quitsounds[_SHR(gametic, 2) and 7]);
-    //    I_WaitVBL(105);
     I_WaitVBL(1000);
   end;
   I_Quit;
