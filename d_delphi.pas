@@ -157,7 +157,7 @@ procedure fprintf(var f: TFile; const str: string); overload;
 
 procedure fprintf(var f: TFile; const Fmt: string; const Args: array of const); overload;
 
-function tan(const x: single): single;
+function tan(const X: Extended): Extended;
 
 function strupper(const S: string): string;
 
@@ -433,19 +433,13 @@ begin
   Result := ExtractFileExt(filename);
 end;
 
-function tan(const x: single): single;
-var
-  a: single;
-  b: single;
-begin
-  b := cos(x);
-  if b <> 0 then
-  begin
-    a := sin(x);
-    Result := a / b;
-  end
-  else
-    Result := 0.0;
+function tan(const X: Extended): Extended;
+{  Tan := Sin(X) / Cos(X) }
+asm
+        FLD    X
+        FPTAN
+        FSTP   ST(0)      { FPTAN pushes 1.0 after result }
+        FWAIT
 end;
 
 function strupper(const S: string): string;
