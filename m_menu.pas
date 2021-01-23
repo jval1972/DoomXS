@@ -917,12 +917,7 @@ end;
 
 procedure M_ChangeDetail(choice: integer);
 begin
-  // FIXME - does not work. Remove anyway?
-{  fprintf(stderr, 'M_ChangeDetail(): low detail mode n.a.' + #13#10);
-  exit;}
-
   detailLevel := 1 - detailLevel;
-
 
   R_SetViewSize(screenblocks, detailLevel);
 
