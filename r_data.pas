@@ -219,14 +219,14 @@ begin
     if position < 0 then
     begin
       count := count + position;
-	    position := 0;
+      position := 0;
     end;
 
     if position + count > cacheheight then
       count := cacheheight - position;
 
     if count > 0 then
-      memcpy (@cache[position], source, count);
+      memcpy(@cache[position], source, count);
 
     patch := Pcolumn_t(integer(patch) + patch.length + 4);
   end;
@@ -324,19 +324,16 @@ begin
   // Fill in the lump / offset, so columns
   //  with only a single patch are all done.
   patchcount := malloc(texture.width);
-//  patchcount := Z_Malloc(texture.width, PU_LEVEL, nil);
-//  GetMem(patchcount, texture.width);
-//  memset(patchcount, 0, texture.width);
   patch := @texture.patches[0];
 
   for i := 0 to texture.patchcount - 1 do
   begin
-    realpatch := W_CacheLumpNum(patch.patch, PU_CACHE);
+    realpatch := W_CacheLumpNum(patch.patch, PU_STATIC);
     x1 := patch.originx;
     x2 := x1 + realpatch.width;
 
     if x1 < 0 then
-	    x := 0
+      x := 0
     else
       x := x1;
 
@@ -350,12 +347,12 @@ begin
       inc(x);
     end;
     inc(patch);
-//    incp(pointer(patch), SizeOf(patch^));
+    Z_ChangeTag(realpatch, PU_CACHE);
   end;
 
   for x := 0 to texture.width - 1 do
   begin
-    if not boolval(patchcount[x]) then
+    if patchcount[x] = 0 then
     begin
       printf('R_GenerateLookup(): column without a patch (%s)' + #13#10, [texture.name]);
       exit;
@@ -541,7 +538,7 @@ begin
 
     j := 1;
     while j * 2 <= texture.width do
-      j := _SHL(j, 1);
+      j := j * 2;
 
     texturewidthmask[i] := j - 1;
     textureheight[i] := texture.height * FRACUNIT;
@@ -550,7 +547,7 @@ begin
   end;
 
   Z_Free(maptex1);
-  if boolval(maptex2) then
+  if maptex2 <> nil then
     Z_Free(maptex2);
 
   // Precalculate whatever possible.
@@ -558,7 +555,7 @@ begin
     R_GenerateLookup(i);
 
   // Create translation table for global animation.
-  texturetranslation := Z_Malloc((numtextures + 1) * 4, PU_STATIC, nil);
+  texturetranslation := Z_Malloc((numtextures + 1) * SizeOf(integer), PU_STATIC, nil);
 
   for i := 0 to numtextures - 1 do
     texturetranslation[i] := i;
@@ -732,8 +729,8 @@ begin
 
   // Precache flats.
   flatpresent := malloc(numflats);
-//  GetMem(flatpresent, numflats);
-//  memset(flatpresent, 0, numflats);
+  for i := 0 to numflats - 1 do
+    flatpresent[i] := 0;
 
   for i := 0 to numsectors - 1 do
   begin
@@ -745,7 +742,7 @@ begin
 
   for i := 0 to numflats - 1 do
   begin
-    if boolval(flatpresent[i]) then
+    if flatpresent[i] <> 0 then
     begin
       lump := firstflat + i;
       flatmemory := flatmemory + lumpinfo[lump].size;
@@ -755,8 +752,6 @@ begin
 
   // Precache textures.
   texturepresent := malloc(numtextures);
-//  GetMem(texturepresent, numtextures);
-//  memset(texturepresent, 0, numtextures);
 
   for i := 0 to numsides - 1 do
   begin
@@ -776,7 +771,7 @@ begin
   texturememory := 0;
   for i := 0 to numtextures - 1 do
   begin
-    if not boolval(texturepresent[i]) then
+    if texturepresent[i] = 0 then
       continue;
 
     texture := textures[i];
@@ -791,9 +786,8 @@ begin
 
   // Precache sprites.
   spritepresent := malloc(numsprites);
-//  GetMem(spritepresent, numsprites);
-//  memset(spritepresent, 0, numsprites);
-
+  for i := 0 to numsprites - 1 do
+    spritepresent[i] := 0;
   th := thinkercap.next;
   while th <> @thinkercap do
   begin
@@ -811,7 +805,7 @@ begin
     for j := 0 to sprites[i].numframes - 1 do
     begin
       sf := @sprites[i].spriteframes[j];
-	    for k := 0 to 7 do
+      for k := 0 to 7 do
       begin
         lump := firstspritelump + sf.lump[k];
         spritememory := spritememory + lumpinfo[lump].size;
