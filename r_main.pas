@@ -490,28 +490,10 @@ var
   num: fixed_t;
   den: integer;
 begin
-(*
-    // UNUSED
-#if 0
-{
-    fixed_t    dist;
-    fixed_t    z;
-    fixed_t    sinv;
-    fixed_t    cosv;
-
-    sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];
-    dist = FixedDiv (rw_distance, sinv);
-    cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
-    z = abs(FixedMul (dist, cosv));
-    result = FixedDiv(projection, z);
-    return result;
-}
-#endif
-*)
   anglea := ANG90 + (visangle - viewangle);
   angleb := ANG90 + (visangle - rw_normalangle);
 
-  // both sines are allways positive
+  // both sines are always positive
   sinea := finesine[_SHRW(anglea, ANGLETOFINESHIFT)];
   sineb := finesine[_SHRW(angleb, ANGLETOFINESHIFT)];
   num := FixedMul(projection, sineb);
@@ -715,7 +697,7 @@ begin
   centeryfrac := centery * FRACUNIT;
   projection := centerxfrac;
 
-  if not boolval(detailshift) then
+  if detailshift = 0 then
   begin
     colfunc := R_DrawColumn;
 
@@ -753,6 +735,7 @@ begin
   // psprite scales
   pspritescale := FRACUNIT * viewwidth div 320;
   pspriteiscale := FRACUNIT * 320 div viewwidth;
+
 
   // thing clipping
   for i := 0 to viewwidth - 1 do
