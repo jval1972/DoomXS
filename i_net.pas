@@ -391,7 +391,6 @@ var
 begin
   trueval := 1;
   doomcom := malloc(SizeOf(doomcom^));
-  memset(doomcom, 0, SizeOf(doomcom^));
 
   // set up for network
   i := M_CheckParm('-dup');

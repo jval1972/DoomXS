@@ -76,10 +76,6 @@ procedure I_Quit;
 
 procedure I_Destroy;
 
-{ Allocates from low memory under dos, }
-{ just mallocs under unix, win32 }
-function I_AllocLow(length: integer): pointer;
-
 procedure I_Error(const error: string; const Args: array of const); overload;
 
 procedure I_Error(const error: string); overload;
@@ -236,15 +232,7 @@ begin
   sleep(Count);
 end;
 
-function I_AllocLow(length: integer): pointer;
-begin
-  Result := malloc(length);
-  memset(Result, 0, length);
-end;
-
-
 // I_Error
-
 procedure I_Error(const error: string; const Args: array of const);
 var
   soutproc: TOutProc;

@@ -103,8 +103,6 @@ uses
 // a patch or sprite is composed of zero or more columns.
 //
 
-
-
 //
 // Texture definition.
 // Each texture is composed of one or more patches,

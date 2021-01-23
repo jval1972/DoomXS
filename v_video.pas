@@ -648,7 +648,7 @@ var
   st: integer;
 begin
   // stick these in low dos memory on PCs
-  base := PByteArray(I_AllocLow(SCREENWIDTH * SCREENHEIGHT * 4 + 2 * 320 * 200));
+  base := malloc(SCREENWIDTH * SCREENHEIGHT * 4 + 2 * 320 * 200);
 
   st := 0;
   for i := 0 to 5 do

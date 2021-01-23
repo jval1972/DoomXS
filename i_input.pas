@@ -164,8 +164,8 @@ begin
 
   end;
 
-  curkeys := I_AllocLow(SizeOf(TKeyboardState));
-  oldkeys := I_AllocLow(SizeOf(TKeyboardState));
+  curkeys := malloc(SizeOf(TKeyboardState));
+  oldkeys := malloc(SizeOf(TKeyboardState));
 
 end;
 
