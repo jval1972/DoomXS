@@ -573,7 +573,6 @@ var
   i: integer;
   f: file;
 begin
-  //  song := Psonginfo_t(malloc(SizeOf(songinfo_t)));
   song := Z_Malloc(SizeOf(songinfo_t), PU_STATIC, nil);
   song.numevents := GetSongLength(PByteArray(Data));
   song.nextevent := 0;
@@ -660,7 +659,6 @@ begin
         #13#10, [rc]);
   end
   else
-    printf('I_SetMusicVolume(): Midi device dos not support volume control' + #13#10);
 end;
 
 procedure I_SetMusicVolume(volume: integer);
