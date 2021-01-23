@@ -1136,36 +1136,10 @@ end;
 
 procedure ST_Refresh(refresh: boolean);
 begin
-{  if refresh then
-  begin
-    st_firsttime := false;
-    // draw status bar background to off-screen buff}
-    ST_RefreshBackground;
-{//    ST_FinishRefresh;
-  end;}
+  // draw status bar background to off-screen buff}
+  ST_RefreshBackground;
   // and refresh all widgets
   ST_DrawWidgets(refresh);
-  ST_FinishRefresh;
-end;
-
-procedure ST_doRefresh;
-begin
-  st_firsttime := false;
-
-  // draw status bar background to off-screen buff
-  ST_RefreshBackground;
-
-  // and refresh all widgets
-  ST_DrawWidgets(true);
-
-  ST_FinishRefresh;
-end;
-
-procedure ST_diffDraw;
-begin
-  // update all widgets
-  ST_DrawWidgets(true);
-
   ST_FinishRefresh;
 end;
 
@@ -1178,12 +1152,6 @@ begin
   ST_doPaletteStuff;
 
   ST_Refresh(st_firsttime);
-{  // If just after ST_Start(), refresh all
-  if st_firsttime then
-    ST_doRefresh
-  // Otherwise, update as little as possible
-  else
-    ST_diffDraw;}
 end;
 
 procedure ST_loadGraphics;
@@ -1271,45 +1239,6 @@ procedure ST_loadData;
 begin
   lu_palette := W_GetNumForName('PLAYPAL');
   ST_loadGraphics;
-end;
-
-procedure ST_unloadGraphics;
-var
-  i: integer;
-begin
-  // unload the numbers, tall and short
-  for i := 0 to 9 do
-  begin
-    Z_ChangeTag(tallnum[i], PU_CACHE);
-    Z_ChangeTag(shortnum[i], PU_CACHE);
-  end;
-  // unload tall percent
-  Z_ChangeTag(tallpercent, PU_CACHE);
-
-  // unload arms background
-  Z_ChangeTag(armsbg, PU_CACHE);
-
-  // unload gray #'s
-  for i := 0 to 5 do
-    Z_ChangeTag(arms[i][0], PU_CACHE);
-
-  // unload the key cards
-  for i := 0 to Ord(NUMCARDS) - 1 do
-    Z_ChangeTag(keys[i], PU_CACHE);
-
-  Z_ChangeTag(sbar, PU_CACHE);
-  Z_ChangeTag(faceback, PU_CACHE);
-
-  for i := 0 to ST_NUMFACES - 1 do
-    Z_ChangeTag(faces[i], PU_CACHE);
-
-  // Note: nobody ain't seen no unloading    // VJ ???
-  //   of stminus yet. Dude.
-end;
-
-procedure ST_unloadData;
-begin
-  ST_unloadGraphics;
 end;
 
 procedure ST_initData;
