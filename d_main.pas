@@ -942,6 +942,9 @@ begin
   printf('V_Init: allocate screens.' + #13#10);
   V_Init;
 
+  printf('AM_Init: initializing automap.'#13#10);
+  AM_Init;
+
   printf('M_LoadDefaults: Load system defaults.' + #13#10);
   M_LoadDefaults;              // load before initing other systems
 

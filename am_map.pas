@@ -191,11 +191,6 @@ const
 var
   thintriangle_guy: array[0..NUMTHINTRIANGLEGUYLINES - 1] of mline_t;
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
 var
   cheating: integer = 0;
   grid: boolean = False;
@@ -282,10 +277,6 @@ var
   cheat_amap: cheatseq_t;
 
   stopped: boolean = True;
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 
 function AM_Responder(ev: Pevent_t): boolean;
 
@@ -300,12 +291,16 @@ procedure AM_Drawer;
 { if the level is completed while it is up. }
 procedure AM_Stop;
 
+procedure AM_Init;
+
 implementation
 
-uses tables,
+uses
+  tables,
   d_englsh,
   g_game,
-  p_mobj_h, p_setup;
+  p_mobj_h,
+  p_setup;
 
 { how much zoom-in per tic }
 function M_ZOOMIN: integer;
@@ -338,9 +333,6 @@ function CYMTOF(y: integer): integer;
 begin
   Result := f_y + (f_h - MTOF(y - m_y));
 end;
-
-
-
 
 procedure AM_getIslope(ml: Pmline_t; _is: Pislope_t);
 var
@@ -418,7 +410,7 @@ begin
   m_y2 := m_y + m_h;
 
   // Change the scaling multipliers
-  scale_mtof := FixedDiv(_SHL(f_w, FRACBITS), m_w);
+  scale_mtof := FixedDiv(f_w * FRACUNIT, m_w);
   scale_ftom := FixedDiv(FRACUNIT, scale_mtof);
 end;
 
@@ -898,26 +890,18 @@ begin
   if (m_paninc.x <> 0) or (m_paninc.y <> 0) then
     AM_changeWindowLoc;
 
-  // Update light level
-  // AM_updateLightLev();
-
 end;
 
-
 // Clear automap frame buffer.
-
 procedure AM_clearFB(color: integer);
 begin
   FillChar(fb^, f_w * f_h, color);
 end;
 
-
 // Automap clipping of lines.
-
 // Based on Cohen-Sutherland clipping algorithm but with a slightly
 // faster reject and precalculated slopes.  If the speed is needed,
 // use a hash algorithm to handle  the common cases.
-
 function AM_clipMline(ml: Pmline_t; fl: Pfline_t): boolean;
 const
   LEFT = 1;
@@ -958,7 +942,7 @@ begin
   else
     outcode2 := 0;
 
-  if (outcode1 and outcode2) <> 0 then
+  if outcode1 and outcode2 <> 0 then
   begin
     Result := False; // trivially outside
     exit;
@@ -974,7 +958,7 @@ begin
   else if ml.b.x > m_x2 then
     outcode2 := outcode2 or RIGHT;
 
-  if (outcode1 and outcode2) <> 0 then
+  if outcode1 and outcode2 <> 0 then
   begin
     Result := False; // trivially outside
     exit;
@@ -989,7 +973,7 @@ begin
   DOOUTCODE(outcode1, fl.a.x, fl.a.y);
   DOOUTCODE(outcode2, fl.b.x, fl.b.y);
 
-  if (outcode1 and outcode2) <> 0 then
+  if outcode1 and outcode2 <> 0 then
   begin
     Result := False; // trivially outside
     exit;
@@ -1005,28 +989,28 @@ begin
       outside := outcode2;
 
     // clip to each side
-    if (outside and TOP) <> 0 then
+    if outside and TOP <> 0 then
     begin
       dy := fl.a.y - fl.b.y;
       dx := fl.b.x - fl.a.x;
       tmp.x := fl.a.x + (dx * (fl.a.y)) div dy;
       tmp.y := 0;
     end
-    else if (outside and BOTTOM) <> 0 then
+    else if outside and BOTTOM <> 0 then
     begin
       dy := fl.a.y - fl.b.y;
       dx := fl.b.x - fl.a.x;
       tmp.x := fl.a.x + (dx * (fl.a.y - f_h)) div dy;
       tmp.y := f_h - 1;
     end
-    else if boolval(outside and RIGHT) then
+    else if outside and RIGHT <> 0 then
     begin
       dy := fl.b.y - fl.a.y;
       dx := fl.b.x - fl.a.x;
       tmp.y := fl.a.y + (dy * (f_w - 1 - fl.a.x)) div dx;
       tmp.x := f_w - 1;
     end
-    else if (outside and LEFT) <> 0 then
+    else if outside and LEFT <> 0 then
     begin
       dy := fl.b.y - fl.a.y;
       dx := fl.b.x - fl.a.x;
@@ -1045,7 +1029,7 @@ begin
       DOOUTCODE(outcode2, fl.b.x, fl.b.y);
     end;
 
-    if (outcode1 and outcode2) <> 0 then
+    if outcode1 and outcode2 <> 0 then
     begin
       Result := False; // trivially outside
       exit;
@@ -1055,9 +1039,7 @@ begin
   Result := True;
 end;
 
-
 // Classic Bresenham w/ whatever optimizations needed for speed
-
 procedure AM_drawFline(fl: Pfline_t; color: integer);
 var
   x, y, dx, dy, sx, sy, ax, ay, d: integer;
@@ -1129,9 +1111,7 @@ begin
   end;
 end;
 
-
 // Clip lines, draw visible part sof lines.
-
 var
   fl: fline_t;
 
@@ -1143,7 +1123,6 @@ end;
 
 
 // Draws flat (floor/ceiling tile) aligned grid lines.
-
 procedure AM_drawGrid(color: integer);
 var
   x, y: fixed_t;
@@ -1192,7 +1171,6 @@ end;
 
 // Determines visible lines, draws them.
 // This is LineDef based, not LineSeg based.
-
 procedure AM_drawWalls;
 var
   i: integer;
@@ -1208,7 +1186,7 @@ begin
     begin
       if ((Lines[i].flags and LINE_NEVERSEE) <> 0) and (not boolval(cheating)) then
         continue;
-      if not boolval(Lines[i].backsector) then
+      if Lines[i].backsector = nil then
       begin
         AM_drawMline(@l, WALLCOLORS + lightlev);
       end
@@ -1240,7 +1218,7 @@ begin
         end;
       end;
     end
-    else if boolval(plr.powers[Ord(pw_allmap)]) then
+    else if plr.powers[Ord(pw_allmap)] <> 0 then
     begin
       if (Lines[i].flags and LINE_NEVERSEE) = 0 then
         AM_drawMline(@l, GRAYS + 3);
@@ -1335,13 +1313,13 @@ begin
     Inc(their_color);
     p := @players[i];
 
-    if (boolval(deathmatch) and (not singledemo)) and (p <> plr) then
+    if (deathmatch <> 0) and (not singledemo) and (p <> plr) then
       continue;
 
     if not playeringame[i] then
       continue;
 
-    if boolval(p.powers[Ord(pw_invisibility)]) then
+    if p.powers[Ord(pw_invisibility)] <> 0 then
       color := 246 // *close* to black
     else
       color := their_colors[their_color];
@@ -1378,15 +1356,12 @@ begin
   begin
     if markpoints[i].x <> -1 then
     begin
-      // w = SHORT(marknums[i]->width);
-      // h = SHORT(marknums[i]->height);
       w := 5; // because something's wrong with the wad, i guess
       h := 6; // because something's wrong with the wad, i guess
       fx := CXMTOF(markpoints[i].x);
       fy := CYMTOF(markpoints[i].y);
       if (fx >= f_x) and (fx <= f_w - w) and (fy >= f_y) and (fy <= f_h - h) then
         V_DrawPatch(fx, fy, _FG, marknums[i], False);
-      //        V_DrawPatch(fx, fy, _FB, marknums[i], true);
     end;
   end;
 end;
@@ -1415,178 +1390,189 @@ begin
   V_MarkRect(f_x, f_y, f_w, f_h, False);
 end;
 
-initialization
+procedure AM_Init;
+var
+  pl: Pmline_t;
+begin
+  pl := @player_arrow[0];
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7);
+  pl.b.y := 0;
 
-  ////////////////////////////////////////////////////////////////////////////////
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7);
+  pl.a.y := 0;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[0].a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[0].a.y := 0;
-  player_arrow[0].b.x := ((8 * PLAYERRADIUS) div 7);
-  player_arrow[0].b.y := 0;
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7);
+  pl.a.y := 0;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[1].a.x := ((8 * PLAYERRADIUS) div 7);
-  player_arrow[1].a.y := 0;
-  player_arrow[1].b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
-  player_arrow[1].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[2].a.x := ((8 * PLAYERRADIUS) div 7);
-  player_arrow[2].a.y := 0;
-  player_arrow[2].b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
-  player_arrow[2].b.y := -((8 * PLAYERRADIUS) div 7) div 4;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[3].a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[3].a.y := 0;
-  player_arrow[3].b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[3].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[4].a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[4].a.y := 0;
-  player_arrow[4].b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[4].b.y := -((8 * PLAYERRADIUS) div 7) div 4;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
-  player_arrow[5].a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[5].a.y := 0;
-  player_arrow[5].b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[5].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
+////////////////////////////////////////////////////////////////////////////////
 
-  player_arrow[6].a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[6].a.y := 0;
-  player_arrow[6].b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  player_arrow[6].b.y := -((8 * PLAYERRADIUS) div 7) div 4;
+  pl := @cheat_player_arrow[0];
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7);
+  pl.b.y := 0;
 
-  ////////////////////////////////////////////////////////////////////////////////
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7);
+  pl.a.y := 0;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[0].a.x :=
-    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[0].a.y := 0;
-  cheat_player_arrow[0].b.x := ((8 * PLAYERRADIUS) div 7);
-  cheat_player_arrow[0].b.y := 0;
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7);
+  pl.a.y := 0;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[1].a.x := ((8 * PLAYERRADIUS) div 7);
-  cheat_player_arrow[1].a.y := 0;
-  cheat_player_arrow[1].b.x :=
-    ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
-  cheat_player_arrow[1].b.y := ((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[2].a.x := ((8 * PLAYERRADIUS) div 7);
-  cheat_player_arrow[2].a.y := 0;
-  cheat_player_arrow[2].b.x :=
-    ((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 2;
-  cheat_player_arrow[2].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[3].a.x :=
-    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[3].a.y := 0;
-  cheat_player_arrow[3].b.x :=
-    -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[3].b.y := ((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[4].a.x :=
-    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[4].a.y := 0;
-  cheat_player_arrow[4].b.x :=
-    -((8 * PLAYERRADIUS) div 7) - ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[4].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[5].a.x :=
-    -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[5].a.y := 0;
-  cheat_player_arrow[5].b.x :=
-    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[5].b.y := ((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) div 2;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) div 2;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[6].a.x :=
-    -((8 * PLAYERRADIUS) div 7) + 3 * ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[6].a.y := 0;
-  cheat_player_arrow[6].b.x :=
-    -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
-  cheat_player_arrow[6].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) div 2;
+  pl.a.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[7].a.x := -((8 * PLAYERRADIUS) div 7) div 2;
-  cheat_player_arrow[7].a.y := 0;
-  cheat_player_arrow[7].b.x := -((8 * PLAYERRADIUS) div 7) div 2;
-  cheat_player_arrow[7].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
+  pl.a.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  cheat_player_arrow[8].a.x := -((8 * PLAYERRADIUS) div 7) div 2;
-  cheat_player_arrow[8].a.y := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[8].b.x :=
-    -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[8].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.a.y := 0;
+  pl.b.x := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[9].a.x :=
-    -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[9].a.y := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[9].b.x :=
-    -((8 * PLAYERRADIUS) div 7) div 2 + ((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[9].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
+  inc(pl);
+  pl.a.x := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.a.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.x := 0;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 6;
 
-  cheat_player_arrow[10].a.x := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[10].a.y := 0;
-  cheat_player_arrow[10].b.x := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[10].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := 0;
+  pl.a.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.x := 0;
+  pl.b.y := ((8 * PLAYERRADIUS) div 7) div 4;
 
-  cheat_player_arrow[11].a.x := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[11].a.y := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[11].b.x := 0;
-  cheat_player_arrow[11].b.y := -((8 * PLAYERRADIUS) div 7) div 6;
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7) div 6;
+  pl.a.y := ((8 * PLAYERRADIUS) div 7) div 4;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) div 6;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 7;
 
-  cheat_player_arrow[12].a.x := 0;
-  cheat_player_arrow[12].a.y := -((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[12].b.x := 0;
-  cheat_player_arrow[12].b.y := ((8 * PLAYERRADIUS) div 7) div 4;
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7) div 6;
+  pl.a.y := -((8 * PLAYERRADIUS) div 7) div 7;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 32;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 7 - ((8 * PLAYERRADIUS) div 7) div 32;
 
-  cheat_player_arrow[13].a.x := ((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[13].a.y := ((8 * PLAYERRADIUS) div 7) div 4;
-  cheat_player_arrow[13].b.x := ((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[13].b.y := -((8 * PLAYERRADIUS) div 7) div 7;
+  inc(pl);
+  pl.a.x := ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 32;
+  pl.a.y := -((8 * PLAYERRADIUS) div 7) div 7 - ((8 * PLAYERRADIUS) div 7) div 32;
+  pl.b.x := ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 10;
+  pl.b.y := -((8 * PLAYERRADIUS) div 7) div 7;
 
-  cheat_player_arrow[14].a.x := ((8 * PLAYERRADIUS) div 7) div 6;
-  cheat_player_arrow[14].a.y := -((8 * PLAYERRADIUS) div 7) div 7;
-  cheat_player_arrow[14].b.x :=
-    ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 32;
-  cheat_player_arrow[14].b.y :=
-    -((8 * PLAYERRADIUS) div 7) div 7 - ((8 * PLAYERRADIUS) div 7) div 32;
+////////////////////////////////////////////////////////////////////////////////
 
-  cheat_player_arrow[15].a.x :=
-    ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 32;
-  cheat_player_arrow[15].a.y :=
-    -((8 * PLAYERRADIUS) div 7) div 7 - ((8 * PLAYERRADIUS) div 7) div 32;
-  cheat_player_arrow[15].b.x :=
-    ((8 * PLAYERRADIUS) div 7) div 6 + ((8 * PLAYERRADIUS) div 7) div 10;
-  cheat_player_arrow[15].b.y := -((8 * PLAYERRADIUS) div 7) div 7;
+  pl := @triangle_guy[0];
+  pl.a.x := Round(-0.867 * FRACUNIT);
+  pl.a.y := Round(-0.5 * FRACUNIT);
+  pl.b.x := Round(0.867 * FRACUNIT);
+  pl.b.y := Round(-0.5 * FRACUNIT);
 
-  ////////////////////////////////////////////////////////////////////////////////
+  inc(pl);
+  pl.a.x := Round(0.867 * FRACUNIT);
+  pl.a.y := Round(-0.5 * FRACUNIT);
+  pl.b.x := 0;
+  pl.b.y := FRACUNIT;
 
-  triangle_guy[0].a.x := round(-0.867 * FRACUNIT);
-  triangle_guy[0].a.y := round(-0.5 * FRACUNIT);
-  triangle_guy[0].b.x := round(0.867 * FRACUNIT);
-  triangle_guy[0].b.y := round(-0.5 * FRACUNIT);
+  inc(pl);
+  pl.a.x := 0;
+  pl.a.y := FRACUNIT;
+  pl.b.x := Round(-0.867 * FRACUNIT);
+  pl.b.y := Round(-0.5 * FRACUNIT);
 
-  triangle_guy[1].a.x := round(0.867 * FRACUNIT);
-  triangle_guy[1].a.y := round(-0.5 * FRACUNIT);
-  triangle_guy[1].b.x := 0;
-  triangle_guy[1].b.y := FRACUNIT;
+////////////////////////////////////////////////////////////////////////////////
 
-  triangle_guy[2].a.x := 0;
-  triangle_guy[2].a.y := FRACUNIT;
-  triangle_guy[2].b.x := round(-0.867 * FRACUNIT);
-  triangle_guy[2].b.y := round(-0.5 * FRACUNIT);
+  pl := @thintriangle_guy[0];
+  pl.a.x := Round(-0.5 * FRACUNIT);
+  pl.a.y := Round(-0.7 * FRACUNIT);
+  pl.b.x := FRACUNIT;
+  pl.b.y := 0;
 
-  ////////////////////////////////////////////////////////////////////////////////
-  thintriangle_guy[0].a.x := round(-0.5 * FRACUNIT);
-  thintriangle_guy[0].a.y := round(-0.7 * FRACUNIT);
-  thintriangle_guy[0].b.x := FRACUNIT;
-  thintriangle_guy[0].b.y := 0;
+  inc(pl);
+  pl.a.x := FRACUNIT;
+  pl.a.y := 0;
+  pl.b.x := Round(-0.5 * FRACUNIT);
+  pl.b.y := Round(0.7 * FRACUNIT);
 
-  thintriangle_guy[1].a.x := FRACUNIT;
-  thintriangle_guy[1].a.y := 0;
-  thintriangle_guy[1].b.x := round(-0.5 * FRACUNIT);
-  thintriangle_guy[1].b.y := round(-0.7 * FRACUNIT);
-
-  thintriangle_guy[2].a.x := round(-0.5 * FRACUNIT);
-  thintriangle_guy[2].a.y := round(-0.7 * FRACUNIT);
-  thintriangle_guy[2].b.x := round(-0.5 * FRACUNIT);
-  thintriangle_guy[2].b.y := round(-0.7 * FRACUNIT);
+  inc(pl);
+  pl.a.x := Round(-0.5 * FRACUNIT);
+  pl.a.y := Round(0.7 * FRACUNIT);
+  pl.b.x := Round(-0.5 * FRACUNIT);
+  pl.b.y := Round(-0.7 * FRACUNIT);
 
   ////////////////////////////////////////////////////////////////////////////////
   cheat_amap.sequence := get_cheatseq_string(cheat_amap_seq);
@@ -1601,5 +1587,6 @@ initialization
   ZeroMemory(st_notify_AM_Stop, SizeOf(st_notify_AM_Stop));
   st_notify_AM_Stop._type := ev_keyup;
   st_notify_AM_Stop.data1 := AM_MSGEXITED;
+end;
 
 end.
