@@ -38,7 +38,6 @@ uses
 // and sets up the video mode
 procedure I_InitGraphics;
 
-
 procedure I_ShutDownGraphics;
 
 // Takes full 8 bit values.
@@ -47,6 +46,10 @@ procedure I_SetPalette(palette: PByteArray);
 procedure I_FinishUpdate;
 
 procedure I_ReadScreen(scr: PByteArray);
+
+function I_NativeWidth: integer;
+
+function I_NativeHeight: integer;
 
 var
   fullscreen: boolean = True;
@@ -123,6 +126,17 @@ begin
   I_EnableAltTab;
 end;
 
+function I_NativeWidth: integer;
+begin
+  Result := GetSystemMetrics(SM_CXSCREEN);
+end;
+
+function I_NativeHeight: integer;
+begin
+  Result := GetSystemMetrics(SM_CYSCREEN);
+end;
+
+
 // I_FinishUpdate
 procedure I_FinishUpdate;
 var
@@ -160,8 +174,8 @@ begin
 
   destrect.Left := 0;
   destrect.Top := 0;
-  destrect.Right := GetSystemMetrics(SM_CXSCREEN);
-  destrect.Bottom := GetSystemMetrics(SM_CYSCREEN);
+  destrect.Right := I_NativeWidth;
+  destrect.Bottom := I_NativeHeight;
   if g_pDDSPrimary.Blt(destrect, g_pDDScreen, srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, PDDBltFX(0)^) = DDERR_SURFACELOST then
     g_pDDSPrimary.Restore;
 end;
@@ -211,7 +225,7 @@ begin
     I_ErrorInitGraphics('DirectDrawCreateEx');
 
   if fullscreen then
-    SetWindowPos(hMainWnd, 0, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW)
+    SetWindowPos(hMainWnd, 0, 0, 0, I_NativeWidth, I_NativeHeight, SWP_SHOWWINDOW)
   else
     SetWindowPos(hMainWnd, 0, 0, 0, SCREENWIDTH, SCREENHEIGHT, SWP_SHOWWINDOW);
 
