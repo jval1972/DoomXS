@@ -328,10 +328,10 @@ type
     NUMSTATES
   );
 
-  state_t = record
+  state_t = packed record
     sprite: spritenum_t;
     frame: integer;
-    tics: integer;
+    tics: smallint;
     action: actionf_t;
     nextstate: statenum_t;
     misc1: integer;
@@ -377,30 +377,30 @@ type
     MT_MISC86,NUMMOBJTYPES
   );
 
-  mobjinfo_t = record
-    doomednum: integer;
-    spawnstate: integer;
-    spawnhealth: integer;
-    seestate: integer;
-    seesound: integer;
-    reactiontime: integer;
-    attacksound: integer;
-    painstate: integer;
-    painchance: integer;
-    painsound: integer;
-    meleestate: integer;
-    missilestate: integer;
-    deathstate: integer;
-    xdeathstate: integer;
-    deathsound: integer;
+  mobjinfo_t = packed record
+    doomednum: smallint;
+    spawnstate: smallint;
+    spawnhealth: smallint;
+    seestate: smallint;
+    seesound: smallint;
+    reactiontime: smallint;
+    attacksound: smallint;
+    painstate: smallint;
+    painchance: smallint;
+    painsound: smallint;
+    meleestate: smallint;
+    missilestate: smallint;
+    deathstate: smallint;
+    xdeathstate: smallint;
+    deathsound: smallint;
     speed: integer;
     radius: integer;
     height: integer;
     mass: integer;
     damage: integer;
-    activesound: integer;
+    activesound: smallint;
     flags: integer;
-    raisestate: integer;
+    raisestate: smallint;
   end;
   Pmobjinfo_t = ^mobjinfo_t;
 
