@@ -728,7 +728,6 @@ var
   s_error: string;
   i: integer;
   j: integer;
-  oldoutproc: TOutProc;
 begin
   outproc := @I_IOprintf;
 
@@ -1007,11 +1006,7 @@ begin
     end;
 
     // If additonal PWAD files are used, print modified banner
-    oldoutproc := outproc;
-    outproc := @I_IOMessageBox;
     printf(MSG_MODIFIEDGAME);
-    outproc := oldoutproc;
-    printf(MSG_MODIFIEDGAME); // Print the message again to console
   end;
 
   case gamemode of
