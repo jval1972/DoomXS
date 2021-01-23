@@ -78,7 +78,7 @@ begin
 
       if (plat._type = raiseAndChange) or (plat._type = raiseToNearestAndChange) then
       begin
-        if not boolval(leveltime and 7) then
+          if leveltime and 7 = 0 then
           S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_stnmov));
       end;
 
@@ -122,7 +122,7 @@ begin
     waiting:
     begin
       plat.Count := plat.Count - 1;
-      if not boolval(plat.Count) then
+        if plat.count = 0 then
       begin
         if plat.sector.floorheight = plat.low then
           plat.status := up
@@ -156,12 +156,12 @@ begin
     sec := @sectors[secnum];
     secnum := P_FindSectorFromLineTag(line, secnum);
 
-    if boolval(sec.specialdata) then
+    if sec.specialdata <> nil then
       continue;
 
     // Find lowest & highest floors around sector
     Result := 1;
-    plat := Z_Malloc(SizeOf(plat^), PU_LEVSPEC, nil);
+    plat := Z_Malloc(SizeOf(plat_t), PU_LEVSPEC, nil);
     P_AddThinker(@plat.thinker);
 
     plat._type := _type;
@@ -238,7 +238,7 @@ var
   i: integer;
 begin
   for i := 0 to MAXPLATS - 1 do
-    if boolval(activeplats[i]) and (activeplats[i].tag = tag) and
+    if (activeplats[i] <> nil) and (activeplats[i].tag = tag) and
       (activeplats[i].status = in_stasis) then
     begin
       activeplats[i].status := activeplats[i].oldstatus;
@@ -252,7 +252,7 @@ var
   i: integer;
 begin
   for i := 0 to MAXPLATS - 1 do
-    if boolval(activeplats[i]) and (activeplats[i].status <> in_stasis) and
+    if (activeplats[i] <> nil) and (activeplats[i].status <> in_stasis) and
 
 
       (activeplats[i].tag = line.tag) then
