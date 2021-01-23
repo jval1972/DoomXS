@@ -175,7 +175,6 @@ var
 
 // a gametic cannot be run until nettics[] > gametic for all players
 
-
 const
   CRESENDCOUNT = 10;
   PL_DRONE = $80; // bit flag in doomdata->player
@@ -199,16 +198,12 @@ var
   reboundstore: doomdata_t;
 
 
-
-
 function NetbufferSize: integer;
 begin
   Result := SizeOf(doomdata_t) - SizeOf(Tcmds) + netbuffer.numtics * SizeOf(ticcmd_t);
 end;
 
-
 // Checksum
-
 function NetbufferChecksum: LongWord;
 var
   i: integer;
@@ -253,9 +248,7 @@ begin
   Result := 0;
 end;
 
-
 // HSendPacket
-
 procedure HSendPacket(node: integer; flags: LongWord);
 var
   i: integer;
@@ -302,10 +295,8 @@ begin
   I_NetCmd;
 end;
 
-
 // HGetPacket
 // Returns false if no packet is waiting
-
 function HGetPacket: boolean;
 var
   realretrans: integer;
@@ -358,7 +349,6 @@ begin
 
   if debugfile <> nil then
   begin
-
     if (netbuffer.checksum and NCMD_SETUP) <> 0 then
       fprintf(debugfile, 'setup packet' + #13#10)
     else
@@ -464,7 +454,6 @@ begin
     end;
 
     // update command store from the packet
-
     remoteresend[netnode] := False;
 
     start := nettics[netnode] - realstart;
@@ -474,7 +463,6 @@ begin
     begin
       dest := @netcmds[netconsole][nettics[netnode] mod BACKUPTICS];
       nettics[netnode] := nettics[netnode] + 1;
-      ////////  *dest = *src;
       dest^ := src^;
       src := Pticcmd_t(pointer(integer(src) + SizeOf(ticcmd_t)));
     end;
@@ -575,9 +563,7 @@ begin
   GetPackets;
 end;
 
-
 // CheckAbort
-
 procedure CheckAbort;
 var
   ev: Pevent_t;
@@ -601,9 +587,7 @@ begin
   until eventtail = eventhead;
 end;
 
-
 // D_ArbitrateNetStart
-
 procedure D_ArbitrateNetStart;
 var
   i: integer;
@@ -671,10 +655,8 @@ begin
   end;
 end;
 
-
 // D_CheckNetGame
 // Works out player numbers among the net participants
-
 procedure D_CheckNetGame;
 var
   i: integer;
@@ -740,9 +722,7 @@ begin
   end;
 end;
 
-
 // TryRunTics
-
 var
   frameon: integer = 0;
   frameskip: array[0..3] of boolean;
@@ -800,7 +780,7 @@ begin
     // ideally nettics[0] should be 1 - 3 tics above lowtic
     // if we are consistantly slower, speed up time
     i := 0;
-    while (i < MAXPLAYERS) and (not playeringame[i]) do
+    while (i < MAXPLAYERS) and not playeringame[i] do
       Inc(i);
     if consoleplayer = i then
     begin
@@ -811,14 +791,12 @@ begin
       if nettics[0] <= nettics[nodeforplayer[i]] then
       begin
         Dec(gametime);
-        // printf ('-');
       end;
       frameskip[frameon and 3] := (oldnettics > nettics[nodeforplayer[i]]);
       oldnettics := nettics[0];
       if (frameskip[0] and frameskip[1] and frameskip[2] and frameskip[3]) then
       begin
         skiptics := 1;
-        // printf ("+");
       end;
     end;
   end; // demoplayback
@@ -862,13 +840,12 @@ begin
       // modify command for duplicated tics
       if i <> ticdup - 1 then
       begin
-
         buf := (gametic div ticdup) mod BACKUPTICS;
         for j := 0 to MAXPLAYERS - 1 do
         begin
           cmd := @netcmds[j][buf];
           cmd.chatchar := 0;
-          if (cmd.Buttons and BT_SPECIAL) <> 0 then
+          if cmd.Buttons and BT_SPECIAL <> 0 then
             cmd.Buttons := 0;
         end;
       end;
