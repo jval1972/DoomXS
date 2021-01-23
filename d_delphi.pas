@@ -448,7 +448,6 @@ begin
     Result := 0.0;
 end;
 
-
 function strupper(const S: string): string;
 var
   Ch: char;
@@ -474,28 +473,22 @@ end;
 
 function toupper(ch: char): char;
 asm
-         { ->    AL      Character       }
-         { <-    AL      Result          }
-
-         CMP     AL,'a'
-         JB      @@exit
-         CMP     AL,'z'
-         JA      @@exit
-         SUB     AL,'a' - 'A'
-         @@exit:
+  CMP     AL,'a'
+  JB      @@exit
+  CMP     AL,'z'
+  JA      @@exit
+  SUB     AL,'a' - 'A'
+@@exit:
 end;
 
 function tolower(ch: char): char;
 asm
-         { ->    AL      Character       }
-         { <-    AL      Result          }
-
-         CMP     AL,'A'
-         JB      @@exit
-         CMP     AL,'Z'
-         JA      @@exit
-         SUB     AL,'A' - 'a'
-         @@exit:
+  CMP     AL,'A'
+  JB      @@exit
+  CMP     AL,'Z'
+  JA      @@exit
+  SUB     AL,'A' - 'a'
+@@exit:
 end;
 
 function _SHL(const x: integer; const bits: integer): integer;
