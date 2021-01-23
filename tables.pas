@@ -32,7 +32,7 @@ uses
   m_fixed;
 
 const
-  PI = 3.141592657;
+  d_PI = 3.141592657;
 
 
 const

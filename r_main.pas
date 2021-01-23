@@ -516,18 +516,16 @@ end;
 // R_InitTables
 //
 procedure R_InitTables;
-// UNUSED: now getting from tables.c
-// VJ: tables constants are now calculated here
 var
   i: integer;
-  a: extended; // VJ was single
+  a: single;
   fv: single;
   t: integer;
 begin
 // viewangle tangent table
   for i := 0 to FINEANGLES div 2 - 1 do
   begin
-    a := (i - FINEANGLES / 4 + 0.5) * PI * 2 / FINEANGLES;
+    a := (i - FINEANGLES / 4 + 0.5) * d_PI * 2 / FINEANGLES;
     fv := FRACUNIT * tan(a);
     t := round(fv);
     finetangent[i] := t;
@@ -537,7 +535,7 @@ begin
   for i := 0 to 5 * FINEANGLES div 4 - 1 do
   begin
     // OPTIMIZE: mirror...
-    a := (i + 0.5) * PI * 2 / FINEANGLES;
+    a := (i + 0.5) * d_PI * 2 / FINEANGLES;
     t := round(FRACUNIT * sin(a));
     finesine[i] := t;
   end;
