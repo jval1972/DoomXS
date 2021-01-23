@@ -411,7 +411,7 @@ var
   st_oldhealth: integer;
 
 // used for evil grin
-  oldweaponsowned: array[0..Ord(NUMWEAPONS) - 1] of integer;
+  oldweaponsowned: array[0..Ord(NUMWEAPONS) - 1] of boolean;
 
  // count until face changes
   st_facecount: integer;
@@ -631,7 +631,7 @@ begin
         plyr.armortype := 2;
 
         for i := 0 to Ord(NUMWEAPONS) - 1 do
-          plyr.weaponowned[i] := 1;
+          plyr.weaponowned[i] := True;
 
         for i := 0 to Ord(NUMAMMO) - 1 do
           plyr.ammo[i] := plyr.maxammo[i];
@@ -645,7 +645,7 @@ begin
         plyr.armortype := 2;
 
         for i := 0 to Ord(NUMWEAPONS) - 1 do
-          plyr.weaponowned[i] := 1;
+          plyr.weaponowned[i] := True;
 
         for i := 0 to Ord(NUMAMMO) - 1 do
           plyr.ammo[i] := plyr.maxammo[i];
@@ -716,7 +716,7 @@ begin
       // 'choppers' invulnerability & chainsaw
       else if cht_CheckCheat(@cheat_choppers, Chr(ev.data1)) then
       begin
-        plyr.weaponowned[Ord(wp_chainsaw)] := 1;
+        plyr.weaponowned[Ord(wp_chainsaw)] := True;
         plyr.powers[Ord(pw_invulnerability)] := 1;
         plyr._message := STSTR_CHOPPERS;
       end

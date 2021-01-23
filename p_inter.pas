@@ -135,7 +135,7 @@ begin
     begin
       if player.readyweapon = wp_fist then
       begin
-        if boolval(player.weaponowned[Ord(wp_chaingun)]) then
+        if player.weaponowned[Ord(wp_chaingun)] then
           player.pendingweapon := wp_chaingun
         else
           player.pendingweapon := wp_pistol;
@@ -146,7 +146,7 @@ begin
       if (player.readyweapon = wp_fist) or (player.readyweapon =
         wp_pistol) then
       begin
-        if boolval(player.weaponowned[Ord(wp_shotgun)]) then
+        if player.weaponowned[Ord(wp_shotgun)] then
           player.pendingweapon := wp_shotgun;
       end;
     end;
@@ -155,7 +155,7 @@ begin
       if (player.readyweapon = wp_fist) or (player.readyweapon =
         wp_pistol) then
       begin
-        if boolval(player.weaponowned[Ord(wp_plasma)]) then
+        if player.weaponowned[Ord(wp_plasma)] then
           player.pendingweapon := wp_plasma;
       end;
     end;
@@ -163,7 +163,7 @@ begin
     begin
       if player.readyweapon = wp_fist then
       begin
-        if boolval(player.weaponowned[Ord(wp_missile)]) then
+        if player.weaponowned[Ord(wp_missile)] then
           player.pendingweapon := wp_missile;
       end;
     end;
@@ -185,14 +185,14 @@ begin
   if netgame and (deathmatch <> 2) and (not dropped) then
   begin
     // leave placed weapons forever on net games
-    if boolval(player.weaponowned[Ord(weapon)]) then
+    if player.weaponowned[Ord(weapon)] then
     begin
       Result := False;
       exit;
     end;
 
     player.bonuscount := player.bonuscount + BONUSADD;
-    player.weaponowned[Ord(weapon)] := 1;
+    player.weaponowned[Ord(weapon)] := True;
 
     if boolval(deathmatch) then
       P_GiveAmmo(player, weaponinfo[Ord(weapon)].ammo, 5)
@@ -218,12 +218,12 @@ begin
   else
     gaveammo := False;
 
-  if boolval(player.weaponowned[Ord(weapon)]) then
+  if player.weaponowned[Ord(weapon)] then
     gaveweapon := False
   else
   begin
     gaveweapon := True;
-    player.weaponowned[Ord(weapon)] := 1;
+    player.weaponowned[Ord(weapon)] := True;
     player.pendingweapon := weapon;
   end;
 

@@ -940,8 +940,8 @@ begin
   p.health := MAXHEALTH;
   p.readyweapon := wp_pistol;
   p.pendingweapon := wp_pistol;
-  p.weaponowned[Ord(wp_fist)] := 1;
-  p.weaponowned[Ord(wp_pistol)] := 1;
+  p.weaponowned[Ord(wp_fist)] := True;
+  p.weaponowned[Ord(wp_pistol)] := True;
   p.ammo[Ord(am_clip)] := 50;
   p.lookdir := 0;
   p.centering := false;
@@ -961,7 +961,7 @@ var
   x: fixed_t;
   y: fixed_t;
   ss: Psubsector_t;
-  an: angle_t; // VJ was u long
+  an: angle_t;
   mo: Pmobj_t;
   i: integer;
 begin

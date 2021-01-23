@@ -241,26 +241,26 @@ begin
   // Out of ammo, pick a weapon to change to.
   // Preferences are set here.
   repeat
-    if boolval(player.weaponowned[Ord(wp_plasma)]) and
+    if player.weaponowned[Ord(wp_plasma)] and
       boolval(player.ammo[Ord(am_cell)]) and (gamemode <> shareware) then
       player.pendingweapon := wp_plasma
-    else if boolval(player.weaponowned[Ord(wp_supershotgun)]) and
+    else if player.weaponowned[Ord(wp_supershotgun)] and
       (player.ammo[Ord(am_shell)] > 2) and (gamemode = commercial) then
       player.pendingweapon := wp_supershotgun
-    else if boolval(player.weaponowned[Ord(wp_chaingun)]) and
+    else if player.weaponowned[Ord(wp_chaingun)] and
       boolval(player.ammo[Ord(am_clip)]) then
       player.pendingweapon := wp_chaingun
-    else if boolval(player.weaponowned[Ord(wp_shotgun)]) and
+    else if player.weaponowned[Ord(wp_shotgun)] and
       boolval(player.ammo[Ord(am_shell)]) then
       player.pendingweapon := wp_shotgun
     else if boolval(player.ammo[Ord(am_clip)]) then
       player.pendingweapon := wp_pistol
-    else if boolval(player.weaponowned[Ord(wp_chainsaw)]) then
+    else if player.weaponowned[Ord(wp_chainsaw)] then
       player.pendingweapon := wp_chainsaw
-    else if boolval(player.weaponowned[Ord(wp_missile)]) and
+    else if player.weaponowned[Ord(wp_missile)] and
       boolval(player.ammo[Ord(am_misl)]) then
       player.pendingweapon := wp_missile
-    else if boolval(player.weaponowned[Ord(wp_bfg)]) and
+    else if player.weaponowned[Ord(wp_bfg)] and
       (player.ammo[Ord(am_cell)] > 40) and (gamemode <> shareware) then
       player.pendingweapon := wp_bfg
     else
