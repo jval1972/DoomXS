@@ -170,27 +170,6 @@ type
     function Size: longint;
   end;
 
-  TCachedFile = class(TFile)
-  private
-    fBufSize: integer;
-    fBuffer: pointer;
-    fPosition: integer;
-    fBufferStart: integer;
-    fBufferEnd: integer;
-    fSize: integer;
-    fInitialized: boolean;
-  protected
-    procedure SetSize(NewSize: longint); //override;
-    procedure ResetBuffer; virtual;
-  public
-    constructor Create(const FileName: string; mode: word;
-      ABufSize: integer = $FFFF); virtual;
-    destructor Destroy; override;
-    function Read(var Buffer; Count: longint): longint; override;
-    function Write(const Buffer; Count: longint): longint; override;
-    function Seek(Offset: longint; Origin: word): longint; override;
-  end;
-
 procedure fprintf(var f: file; const str: string); overload;
 
 procedure fprintf(var f: file; const Fmt: string; const Args: array of const); overload;
@@ -221,7 +200,9 @@ procedure ZeroMemory(var X; Count: integer);
 
 implementation
 
-uses Windows, SysUtils;
+uses
+  Windows,
+  SysUtils;
 
 procedure sprintf(var s: string; const Fmt: string; const Args: array of const);
 begin
@@ -509,96 +490,6 @@ end;
 function TFile.Size: longint;
 begin
   Result := FileSize(f);
-end;
-
-constructor TCachedFile.Create(const FileName: string; mode: word;
-  ABufSize: integer = $FFFF);
-begin
-  fInitialized := False;
-  inherited Create(FileName, mode);
-  fBufSize := ABufSize;
-  GetMem(fBuffer, fBufSize);
-  fPosition := 0;
-  ResetBuffer;
-  fSize := inherited Size;
-  fInitialized := True;
-end;
-
-procedure TCachedFile.ResetBuffer;
-begin
-  fBufferStart := -1;
-  fBufferEnd := -1;
-end;
-
-destructor TCachedFile.Destroy;
-begin
-  FreeMem(fBuffer, fBufSize);
-  inherited;
-end;
-
-function TCachedFile.Read(var Buffer; Count: longint): longint;
-var
-  x: longint;
-begin
-  // Buffer hit
-  if (fPosition >= fBufferStart) and (fPosition + Count <= fBufferEnd) then
-  begin
-    x := longint(fBuffer) + fPosition - fBufferStart;
-    Move(Pointer(x)^, Buffer, Count);
-    fPosition := fPosition + Count;
-    Result := Count;
-  end
-  // Non Buffer hit, cache buffer
-  else if Count <= fBufSize then
-  begin
-    fPosition := inherited Seek(fPosition, sFromBeginning);
-    x := inherited Read(fBuffer^, fBufSize);
-    if x < Count then
-      Result := x
-    else
-      Result := Count;
-    Move(fBuffer^, Buffer, Count);
-    fBufferStart := fPosition;
-    fBufferEnd := fPosition + x;
-    fPosition := fPosition + Result;
-  end
-  // Keep old buffer
-  else
-  begin
-    fPosition := inherited Seek(fPosition, sFromBeginning);
-    Result := inherited Read(Buffer, Count);
-    fPosition := fPosition + Result;
-  end;
-end;
-
-function TCachedFile.Write(const Buffer; Count: longint): longint;
-begin
-  fPosition := inherited Seek(fPosition, sFromBeginning);
-  Result := inherited Write(Buffer, Count);
-  fPosition := fPosition + Result;
-  if fSize < fPosition then
-    fSize := fPosition;
-end;
-
-function TCachedFile.Seek(Offset: longint; Origin: word): longint;
-begin
-  if fInitialized then
-  begin
-    case Origin of
-      sFromBeginning: fPosition := Offset;
-      sFromCurrent: Inc(fPosition, Offset);
-      sFromEnd: fPosition := fSize + Offset;
-    end;
-    Result := fPosition;
-  end
-  else
-    Result := inherited Seek(Offset, Origin);
-end;
-
-procedure TCachedFile.SetSize(NewSize: longint);
-begin
-  inherited;
-  fSize := NewSize;
 end;
 
 function getenv(const env: string): string;

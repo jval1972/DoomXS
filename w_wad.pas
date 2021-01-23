@@ -58,7 +58,7 @@ type
 // WADFILE I/O related stuff.
 //
   lumpinfo_t = record
-    handle: TCachedFile;
+    handle: TFile;
     position: integer;
     size: integer;
     case integer of
@@ -151,7 +151,7 @@ begin
     result[i] := #0;
 end;
 
-function filelength(handle: TCachedFile): integer;
+function filelength(handle: TFile): integer;
 begin
   try
     result := handle.Size;
@@ -222,12 +222,12 @@ var
   lump_p: Plumpinfo_t;
   i: integer;
   j: integer;
-  handle: TCachedFile;
+  handle: TFile;
   len: integer;
   startlump: integer;
   fileinfo: Pfilelump_tArray;
   singleinfo: filelump_t;
-  storehandle: TCachedFile;
+  storehandle: TFile;
   ext: string;
   c: char;
 begin
@@ -249,7 +249,7 @@ begin
   end;
 
   try
-    handle := TCachedFile.Create(filename, fOpen);
+    handle := TFile.Create(filename, fOpen);
   except
     printf('W_AddFile(): couldn''t open %s' + #13#10, [filename]);
     exit;
@@ -330,7 +330,7 @@ var
   lumpcount: integer;
   lump_p: Plumpinfo_t;
   i: integer;
-  handle: TCachedFile;
+  handle: TFile;
   length: integer;
   fileinfo: Pfilelump_tArray;
 begin
@@ -341,7 +341,7 @@ begin
     I_Error('W_Reload(): File %s does not exist' + #13#10, [reloadname]);
 
   try
-    handle := TCachedFile.Create(reloadname, fOpen);
+    handle := TFile.Create(reloadname, fOpen);
   except
     handle := nil;
     I_Error('W_Reload(): couldn''t open %s', [reloadname]);
@@ -515,7 +515,7 @@ procedure W_ReadLump(lump: integer; dest: pointer);
 var
   c: integer;
   l: Plumpinfo_t;
-  handle: TCachedFile;
+  handle: TFile;
 begin
   if lump >= numlumps then
     I_Error('W_ReadLump(): %d >= numlumps', [lump]);
@@ -529,7 +529,7 @@ begin
       I_Error('W_ReadLump(): couldn''t open %s', [reloadname]);
 
     try
-      handle := TCachedFile.Create(reloadname, fOpen);
+      handle := TFile.Create(reloadname, fOpen);
     except
       handle := nil;
       I_Error('W_ReadLump(): couldn''t open %s', [reloadname]);
