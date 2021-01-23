@@ -170,7 +170,7 @@ const
   MAXBUTTONS = 16;
 
   // 1 second, in ticks.
-  BUTTONTIME = 35; // VJ 1000 / TICKRATE ???
+  BUTTONTIME = 35;
 
 
 type
