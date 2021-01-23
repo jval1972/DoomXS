@@ -659,6 +659,7 @@ begin
         #13#10, [rc]);
   end
   else
+    printf('I_SetMusicVolume(): Midi device does not support volume control' + #13#10);
 end;
 
 procedure I_SetMusicVolume(volume: integer);
