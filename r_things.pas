@@ -109,7 +109,6 @@ type
 // There was a lot of stuff grabbed wrong, so I changed it...
 //
 var
-
   spritelights: Plighttable_tPArray;
 
 //
@@ -153,7 +152,7 @@ begin
     for r := 0 to 7 do
     begin
       sprtemp[frame].lump[r] := lump - firstspritelump;
-	    sprtemp[frame].flip[r] := flipped;
+      sprtemp[frame].flip[r] := flipped;
     end;
     exit;
   end;
@@ -273,7 +272,7 @@ begin
     if maxframe = -1 then
     begin
       sprites[i].numframes := 0;
-	    continue;
+      continue;
     end;
 
     inc(maxframe);
@@ -315,7 +314,7 @@ end;
 //
 var
   vissprites: array[0..MAXVISSPRITES - 1] of vissprite_t;
-  vissprite_p: integer; // VJ was (vissprite_t*)
+  vissprite_p: integer;
 
 
 //
@@ -338,7 +337,7 @@ end;
 //
 procedure R_ClearSprites;
 begin
-  vissprite_p := 0; // VJ was := vissprites;
+  vissprite_p := 0;
 end;
 
 //
@@ -421,12 +420,12 @@ begin
 
   dc_colormap := vis.colormap;
 
-  if not boolval(dc_colormap) then
+  if dc_colormap = nil then
   begin
     // NULL colormap = shadow draw
     colfunc := fuzzcolfunc;
   end
-  else if boolval(vis.mobjflags and MF_TRANSLATION) then
+  else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
     if SCREENHEIGHT = 200 then
       colfunc := R_DrawTranslatedColumn320x200
@@ -436,7 +435,6 @@ begin
 	    ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
-//  dc_iscale := _SHR(abs(vis.xiscale), detailshift);
   dc_iscale := abs(vis.xiscale);
   dc_texturemid := vis.texturemid;
   frac := vis.startfrac;
@@ -463,10 +461,6 @@ var
   fracstep: fixed_t;
   patch: Ppatch_t;
   i: integer;
-{  x1: integer;
-  x2: integer;
-  y1: integer;
-  y2: integer;}
 begin
   patch := W_CacheLumpNum(vis.patch + firstspritelump, PU_CACHE);
 
@@ -551,7 +545,7 @@ begin
   tx := -(gyt + gxt);
 
   // too far off the side?
-  if abs(tx) > _SHL(tz, 2) then
+  if abs(tx) > 4 * tz then
     exit;
 
   // decide which patch to use for sprite relative to player
@@ -575,7 +569,7 @@ begin
 
   // calculate edges of the shape
   tx := tx - spriteoffset[lump];
-  x1 := (centerxfrac + FixedMul(tx, xscale) ) div FRACUNIT;
+  x1 := (centerxfrac + FixedMul(tx, xscale)) div FRACUNIT;
 
   // off the right side?
   if x1 > viewwidth then
@@ -591,7 +585,6 @@ begin
   // store information in a vissprite
   vis := R_NewVisSprite;
   vis.mobjflags := thing.flags;
-//  vis.scale := _SHL(xscale, detailshift);
   vis.scale := xscale;
   vis.gx := thing.x;
   vis.gy := thing.y;
@@ -618,17 +611,17 @@ begin
   vis.patch := lump;
 
   // get light level
-  if boolval(thing.flags and MF_SHADOW) then
+  if thing.flags and MF_SHADOW <> 0 then
   begin
     // shadow draw
     vis.colormap := nil;
   end
-  else if boolval(fixedcolormap) then
+  else if fixedcolormap <> nil then
   begin
     // fixed map
     vis.colormap := fixedcolormap;
   end
-  else if boolval(thing.frame and FF_FULLBRIGHT) then
+  else if thing.frame and FF_FULLBRIGHT <> 0 then
   begin
     // full bright
     vis.colormap := Plighttable_tArray(colormaps); // VJ ???
@@ -663,19 +656,19 @@ begin
 
   // Well, now it will be done.
   sec.validcount := validcount;
-	
+
   lightnum := _SHR(sec.lightlevel, LIGHTSEGSHIFT) + extralight;
 
   if lightnum < 0 then
-    spritelights := @scalelight[0, 0] // VJ ???
+    spritelights := @scalelight[0, 0]
   else if lightnum >= LIGHTLEVELS then
-    spritelights := @scalelight[LIGHTLEVELS - 1, 0]   // VJ ???
+    spritelights := @scalelight[LIGHTLEVELS - 1, 0]
   else
-    spritelights := @scalelight[lightnum, 0];   // VJ ???
+    spritelights := @scalelight[lightnum, 0];
 
   // Handle all things in sector.
   thing := sec.thinglist;
-  while boolval(thing) do
+  while thing <> nil do
   begin
     R_ProjectSprite(thing);
     thing := thing.snext;
@@ -705,8 +698,7 @@ begin
   flip := sprframe.flip[0];
 
   // calculate edges of the shape
-  tx := psp.sx - 160 * FRACUNIT; // VJ -> 160 = SCREENWIDTH / 2 ???
-//  tx := psp.sx - SCREENWIDTH * FRACUNIT div 2; // VJ -> 160 = SCREENWIDTH / 2 ???
+  tx := psp.sx - 160 * FRACUNIT;
 
   tx := tx - spriteoffset[lump];
   x1 := (centerxfrac + FixedMul(tx, pspritescale)) div FRACUNIT;
@@ -747,17 +739,17 @@ begin
   vis.patch := lump;
 
   if (viewplayer.powers[Ord(pw_invisibility)] > 4 * 32) or
-     (boolval(viewplayer.powers[Ord(pw_invisibility)] and 8)) then
+     (viewplayer.powers[Ord(pw_invisibility)] and 8 <> 0) then
   begin
     // shadow draw
     vis.colormap := nil;
   end
-  else if boolval(fixedcolormap) then
+  else if fixedcolormap <> nil then
   begin
     // fixed color
     vis.colormap := fixedcolormap;
   end
-  else if boolval(psp.state.frame and FF_FULLBRIGHT) then
+  else if psp.state.frame and FF_FULLBRIGHT <> 0 then
   begin
     // full bright
     vis.colormap := colormaps;
@@ -769,7 +761,6 @@ begin
   end;
 
   R_DrawPVisSprite(vis);
-//  R_DrawVisSprite(vis, vis.x1, vis.x2);
 end;
 
 //
@@ -786,7 +777,7 @@ begin
       extralight;
 
   if lightnum < 0 then
-    spritelights := @scalelight[0, 0] // VJ ???
+    spritelights := @scalelight[0, 0]
   else if lightnum >= LIGHTLEVELS then
     spritelights := @scalelight[LIGHTLEVELS - 1, 0]
   else
@@ -799,7 +790,7 @@ begin
   // add all active psprites
   for i := 0 to Ord(NUMPSPRITES) - 1 do
   begin
-    if boolval(viewplayer.psprites[i].state) then
+    if viewplayer.psprites[i].state <> nil then
       R_DrawPSprite(@viewplayer.psprites[i]);
   end;
 end;
@@ -821,7 +812,7 @@ var
 begin
   count := vissprite_p;
 
-  if not boolval(count) then
+  if count = 0 then
     exit;
 
   unsorted.next := @unsorted;
@@ -841,14 +832,13 @@ begin
   vissprites[vissprite_p - 1].next := @unsorted;
 
   // pull the vissprites out by scale
-  //best = 0;		// shut up the compiler warning
   vsprsortedhead.next := @vsprsortedhead;
   vsprsortedhead.prev := @vsprsortedhead;
   for i := 0 to count - 1 do
   begin
     bestscale := MAXINT;
     ds := unsorted.next;
-    best := nil; // VJ - > avoid compiler warning
+    best := nil; // JVAL - > avoid compiler warning
     while ds <> @unsorted do
     begin
       if ds.scale < bestscale then
@@ -859,7 +849,7 @@ begin
       ds := ds.next;
     end;
 
-    if best <> nil then // VJ - > avoid compiler warning
+    if best <> nil then // JVAL - > avoid compiler warning
     begin
       best.next.prev := best.prev;
       best.prev.next := best.next;
@@ -905,7 +895,7 @@ begin
     // determine if the drawseg obscures the sprite
     if (ds.x1 > spr.x2) or
        (ds.x2 < spr.x1) or
-       ((not boolval(ds.silhouette)) and (not boolval(ds.maskedtexturecol))) then
+       ((ds.silhouette = 0) and (ds.maskedtexturecol = nil)) then
     begin
       // does not cover sprite
       continue;
@@ -926,7 +916,7 @@ begin
     end;
 
     if (scale < spr.scale) or
-	     ((lowscale < spr.scale) and not R_PointOnSegSide(spr.gx, spr.gy, ds.curline)) then
+       ((lowscale < spr.scale) and not R_PointOnSegSide(spr.gx, spr.gy, ds.curline)) then
     begin
       // masked mid texture?
       if ds.maskedtexturecol <> nil then
@@ -1020,7 +1010,7 @@ begin
 
   // draw the psprites on top of everything
   //  but does not draw on side views
-  if not boolval(viewangleoffset) then
+  if viewangleoffset = 0 then
     R_DrawPlayerSprites;
 end;
 
