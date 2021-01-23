@@ -369,6 +369,8 @@ begin
       texturecompositesize[texnum] := texturecompositesize[texnum] + texture.height;
     end;
   end;
+
+  FreeMem(patchcount);
 end;
 
 //
@@ -728,6 +730,7 @@ begin
       W_CacheLumpNum(lump, PU_CACHE);
     end;
   end;
+  FreeMem(flatpresent);
 
   // Precache textures.
   texturepresent := malloc(numtextures);
@@ -762,6 +765,7 @@ begin
       W_CacheLumpNum(lump, PU_CACHE);
     end;
   end;
+  FreeMem(texturepresent);
 
   // Precache sprites.
   spritepresent := malloc(numsprites);
@@ -778,7 +782,7 @@ begin
   spritememory := 0;
   for i := 0 to numsprites - 1 do
   begin
-    if not boolval(spritepresent[i]) then
+    if spritepresent[i] = 0 then
       continue;
 
     for j := 0 to sprites[i].numframes - 1 do
@@ -792,6 +796,8 @@ begin
       end;
     end;
   end;
+
+  FreeMem(spritepresent);
 end;
 
 procedure R_SetupLevel;
