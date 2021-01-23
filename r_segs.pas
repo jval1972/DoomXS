@@ -564,7 +564,7 @@ begin
     begin
       // top texture
       toptexture := texturetranslation[sidedef.toptexture];
-      if boolval(linedef.flags and ML_DONTPEGTOP) then
+      if linedef.flags and ML_DONTPEGTOP <> 0 then
       begin
         // top of texture at top
         rw_toptexturemid := worldtop;
@@ -583,7 +583,7 @@ begin
       // bottom texture
       bottomtexture := texturetranslation[sidedef.bottomtexture];
 
-      if boolval(linedef.flags and ML_DONTPEGBOTTOM) then
+      if linedef.flags and ML_DONTPEGBOTTOM <> 0 then
       begin
         // bottom of texture at bottom
         // top of texture at top
@@ -596,7 +596,7 @@ begin
     rw_bottomtexturemid := rw_bottomtexturemid + sidedef.rowoffset;
 
     // allocate space for masked texture tables
-    if boolval(sidedef.midtexture) then
+    if sidedef.midtexture <> 0 then
     begin
       // masked midtexture
       maskedtexture := true;
@@ -607,7 +607,7 @@ begin
   end;
 
   // calculate rw_offset (only needed for textured lines)
-  segtextured := boolval(midtexture or toptexture or bottomtexture) or maskedtexture;
+  segtextured := (midtexture <> 0) or (toptexture <> 0) or (bottomtexture <> 0) or maskedtexture;
 
   if segtextured then
   begin
@@ -632,7 +632,7 @@ begin
     //  use different light tables
     //  for horizontal / vertical / diagonal
     // OPTIMIZE: get rid of LIGHTSEGSHIFT globally
-    if not boolval(fixedcolormap) then
+    if fixedcolormap = nil then
     begin
       lightnum := _SHR(frontsector.lightlevel, LIGHTSEGSHIFT) + extralight;
 
@@ -736,6 +736,5 @@ begin
   end;
   inc(ds_p);
 end;
-
 
 end.
