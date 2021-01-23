@@ -50,7 +50,7 @@ const
   SIL_TOP = 2;
   SIL_BOTH = 3;
 
-  MAXDRAWSEGS = 256; // VJ maybe bigger ????
+  MAXDRAWSEGS = 256;
 
 type
 
@@ -111,7 +111,7 @@ type
     soundtarget: Pmobj_t;
 
     // mapblock bounding box for height changes
-    blockbox: packed array[0..3] of integer;
+    blockbox: array[0..3] of integer;
 
     // origin for any sounds played by the sector
     soundorg: degenmobj_t;
@@ -272,10 +272,6 @@ type
     topdelta: byte; // -1 is the last post in a column
     length: byte;   // length data bytes follows
   end;
-{  post_t = packed record
-    topdelta: smallint; // -1 is the last post in a column
-    length: smallint;   // length data bytes follows
-  end;}
   Ppost_t = ^post_t;
 
   // column_t is a list of 0 or more post_t, (byte)-1 terminated
@@ -411,7 +407,6 @@ type
     rotate: integer;
 
     // Lump to use for view angles 0-7.
-    //    lump: packed array[0..7] of smallint;
     lump: array[0..7] of integer;
 
     // Flip bit (1 = flip) to use for view angles 0-7.
