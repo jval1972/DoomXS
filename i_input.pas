@@ -105,34 +105,18 @@ var
   curkeys: PKeyboardState;
   oldkeys: PKeyboardState;
 
-//-----------------------------------------------------------------------------
-// Name: CreateDInput()
-// Desc: Initialize the DirectInput variables using:
-//           DirectInputCreate
-//           IDirectInput::CreateDevice
-//           IDirectInputDevice::SetDataFormat
-//           IDirectInputDevice::SetCooperativeLevel
-//-----------------------------------------------------------------------------
 procedure I_InitInput;
 begin
   curkeys := malloc(SizeOf(TKeyboardState));
   oldkeys := malloc(SizeOf(TKeyboardState));
 end;
 
-//-----------------------------------------------------------------------------
-// Name: I_ShutDownInput
-// Desc: Terminate our usage of DirectInput
-//-----------------------------------------------------------------------------
 procedure I_ShutDownInput;
 begin
   FreeMem(curkeys);
   FreeMem(oldkeys);
 end;
 
-//-----------------------------------------------------------------------------
-// Name: I_ProcessInput;
-// Desc: The game plays here. Read keyboard data and displaying it.
-//-----------------------------------------------------------------------------
 procedure I_ProcessInput;
 var
   i: integer;
@@ -141,7 +125,7 @@ var
   p: PKeyboardState;
 begin
   if I_GameFinished then
-    Åxit;
+    Exit;
 
   GetKeyboardState(curkeys^);
 
