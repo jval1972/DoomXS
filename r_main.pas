@@ -807,8 +807,6 @@ begin
   printf(#13#10 + 'R_InitTables');
 
   R_SetViewSize(screenblocks, detailLevel);
-  R_InitPlanes;
-  printf(#13#10 + 'R_InitPlanes');
   R_InitLightTables;
   printf(#13#10 + 'R_InitLightTables');
   R_InitSkyMap;

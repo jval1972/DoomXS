@@ -34,7 +34,6 @@ uses
   r_data,
   r_defs;
 
-procedure R_InitPlanes;
 procedure R_ClearPlanes;
 
 procedure R_MapPlane(y: integer; x1: integer; x2: integer);
@@ -60,16 +59,11 @@ var
   floorplane: Pvisplane_t;
   ceilingplane: Pvisplane_t;
 
-//
-// opening
-//
-
-// ?
 const
   MAXOPENINGS = SCREENWIDTH * 64;
 
 var
-  openings: packed array[0..MAXOPENINGS - 1] of smallint; // VJ maybe not packed
+  openings: packed array[0..MAXOPENINGS - 1] of smallint;
   lastopening: integer;
 
   yslope: array[0..SCREENHEIGHT - 1] of fixed_t;
@@ -118,15 +112,6 @@ var
   cachedxstep: array[0..SCREENHEIGHT -1] of fixed_t;
   cachedystep: array[0..SCREENHEIGHT - 1] of fixed_t;
 
-
-//
-// R_InitPlanes
-// Only at game startup.
-//
-procedure R_InitPlanes;
-begin
-  // Doh!
-end;
 
 //
 // R_MapPlane
