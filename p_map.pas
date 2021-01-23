@@ -124,7 +124,7 @@ function PIT_StompThing(thing: Pmobj_t): boolean;
 var
   blockdist: fixed_t;
 begin
-  if not boolval(thing.flags and MF_SHOOTABLE) then
+  if thing.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True;
     exit;
@@ -147,7 +147,7 @@ begin
   end;
 
   // monsters don't stomp things except on boss level
-  if (not boolval(tmthing.player)) and (gamemap <> 30) then
+  if (tmthing.player = nil) and (gamemap <> 30) then
   begin
     Result := False;
     exit;
@@ -261,21 +261,21 @@ begin
   // so two special lines that are only 8 pixels apart
   // could be crossed in either order.
 
-  if not boolval(ld.backsector) then
+  if ld.backsector = nil then
   begin
     Result := False;  // one sided line
     exit;
   end;
 
-  if not boolval(tmthing.flags and MF_MISSILE) then
+  if tmthing.flags and MF_MISSILE = 0 then
   begin
-    if boolval(ld.flags and ML_BLOCKING) then
+    if ld.flags and ML_BLOCKING <> 0 then
     begin
       Result := False;  // explicitly blocking everything
       exit;
     end;
 
-    if (not boolval(tmthing.player)) and boolval(ld.flags and ML_BLOCKMONSTERS) then
+    if (tmthing.player = nil) and ((ld.flags and ML_BLOCKMONSTERS) <> 0) then
     begin
       Result := False;  // block monsters only
       exit;
@@ -299,12 +299,11 @@ begin
     tmdropoffz := lowfloor;
 
   // if contacted a special line, add it to the list
-  if boolval(ld.special) then
+  if ld.special <> 0 then
   begin
     spechit[numspechit] := ld;
 
     Inc(numspechit);
-    //    fprintf(stderr, 'numspechit = %d' + #13#10, [numspechit]);
   end;
 
   Result := True;
@@ -319,7 +318,7 @@ var
   solid: boolean;
   damage: integer;
 begin
-  if not boolval(thing.flags and (MF_SOLID or MF_SPECIAL or MF_SHOOTABLE)) then
+  if (thing.flags and (MF_SOLID or MF_SPECIAL or MF_SHOOTABLE)) = 0 then
   begin
     Result := True;
     exit;
@@ -342,7 +341,7 @@ begin
   end;
 
   // check for skulls slamming into things
-  if boolval(tmthing.flags and MF_SKULLFLY) then
+  if tmthing.flags and MF_SKULLFLY <> 0 then
   begin
     damage := ((P_Random mod 8) + 1) * tmthing.info.damage;
     P_DamageMobj(thing, tmthing, tmthing, damage);
@@ -359,7 +358,7 @@ begin
   end;
 
   // missiles can hit other things
-  if boolval(tmthing.flags and MF_MISSILE) then
+  if tmthing.flags and MF_MISSILE <> 0 then
   begin
     // see if it went over / under
     if tmthing.z > thing.z + thing.Height then
@@ -373,7 +372,7 @@ begin
       exit;
     end;
 
-    if boolval(tmthing.target) and ((tmthing.target._type = thing._type) or
+    if (tmthing.target <> nil) and ((tmthing.target._type = thing._type) or
       ((tmthing.target._type = MT_KNIGHT) and (thing._type = MT_BRUISER)) or
       ((tmthing.target._type = MT_BRUISER) and (thing._type = MT_KNIGHT))) then
     begin
@@ -393,10 +392,10 @@ begin
       end;
     end;
 
-    if not boolval(thing.flags and MF_SHOOTABLE) then
+    if thing.flags and MF_SHOOTABLE = 0 then
     begin
       // didn't do any damage
-      Result := not boolval(thing.flags and MF_SOLID);
+      result := (thing.flags and MF_SOLID) = 0;
       exit;
     end;
 
@@ -410,10 +409,10 @@ begin
   end;
 
   // check for special pickup
-  if boolval(thing.flags and MF_SPECIAL) then
+  if thing.flags and MF_SPECIAL <> 0 then
   begin
-    solid := boolval(thing.flags and MF_SOLID);
-    if boolval(tmflags and MF_PICKUP) then
+    solid := (thing.flags and MF_SOLID) <> 0;
+    if tmflags and MF_PICKUP <> 0 then
     begin
       // can remove thing
       P_TouchSpecialThing(thing, tmthing);
@@ -421,7 +420,7 @@ begin
     Result := not solid;
   end
   else
-    Result := not boolval(thing.flags and MF_SOLID);
+    result := (thing.flags and MF_SOLID) = 0;
 end;
 
 
@@ -487,7 +486,7 @@ begin
   Inc(validcount);
   numspechit := 0;
 
-  if boolval(tmflags and MF_NOCLIP) then
+  if tmflags and MF_NOCLIP <> 0 then
   begin
     Result := True;
     exit;
@@ -548,7 +547,7 @@ begin
     exit;
   end;
 
-  if not boolval(thing.flags and MF_NOCLIP) then
+  if thing.flags and MF_NOCLIP = 0 then
   begin
     if tmceilingz - tmfloorz < thing.Height then
     begin
@@ -558,21 +557,21 @@ begin
 
     floatok := True;
 
-    if (not boolval(thing.flags and MF_TELEPORT)) and
+    if (thing.flags and MF_TELEPORT = 0) and
       (tmceilingz - thing.z < thing.Height) then
     begin
       Result := False;  // mobj must lower itself to fit
       exit;
     end;
 
-    if (not boolval(thing.flags and MF_TELEPORT)) and
+    if (thing.flags and MF_TELEPORT = 0) and
       (tmfloorz - thing.z > 24 * FRACUNIT) then
     begin
       Result := False;  // too big a step up
       exit;
     end;
 
-    if (not boolval(thing.flags and (MF_DROPOFF or MF_FLOAT))) and
+    if ((thing.flags and (MF_DROPOFF or MF_FLOAT)) = 0) and
       (tmfloorz - tmdropoffz > 24 * FRACUNIT) then
     begin
       Result := False;  // don't stand over a dropoff
@@ -594,7 +593,7 @@ begin
   P_SetThingPosition(thing);
 
   // if any special lines were hit, do the effect
-  if not boolval(thing.flags and (MF_TELEPORT or MF_NOCLIP)) then
+  if thing.flags and (MF_TELEPORT or MF_NOCLIP) = 0 then
   begin
     while numspechit > 0 do
     begin
@@ -605,7 +604,7 @@ begin
       oldside := P_PointOnLineSide(oldx, oldy, ld);
       if side <> oldside then
       begin
-        if boolval(ld.special) then
+        if ld.special <> 0 then
           P_CrossSpecialLine(pOperation(ld, @Lines[0], '-', SizeOf(ld^)),
             oldside, thing);
       end;
@@ -706,7 +705,6 @@ begin
 
   if deltaangle > ANG180 then
     deltaangle := deltaangle + ANG180;
-  //  I_Error ("SlideLine: ang>ANG180");
 
   lineangle := _SHRW(lineangle, ANGLETOFINESHIFT);
   deltaangle := _SHRW(deltaangle, ANGLETOFINESHIFT);
@@ -744,9 +742,9 @@ begin
 
   li := _in.d.line;
 
-  if not boolval(li.flags and ML_TWOSIDED) then
+  if li.flags and ML_TWOSIDED = 0 then
   begin
-    if boolval(P_PointOnLineSide(slidemo.x, slidemo.y, li)) then
+    if P_PointOnLineSide(slidemo.x, slidemo.y, li) <> 0 then
     begin
       // don't hit the back side
       Result := True;
@@ -928,7 +926,7 @@ begin
   begin
     li := _in.d.line;
 
-    if not boolval(li.flags and ML_TWOSIDED) then
+    if li.flags and ML_TWOSIDED = 0 then
     begin
       Result := False; // stop
       exit;
@@ -979,7 +977,7 @@ begin
     exit;
   end;
 
-  if not boolval(th.flags and MF_SHOOTABLE) then
+  if th.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True; // corpse or something
     exit;
@@ -1051,7 +1049,7 @@ var
       end;
 
       // it's a sky hack wall
-      if boolval(li.backsector) and (li.backsector.ceilingpic = skyflatnum) then
+      if (li.backsector <> nil) and (li.backsector.ceilingpic = skyflatnum) then
       begin
         Result := False;
         exit;
@@ -1069,10 +1067,10 @@ begin
   begin
     li := _in.d.line;
 
-    if boolval(li.special) then
+    if li.special <> 0 then
       P_ShootSpecialLine(shootthing, li);
 
-    if not boolval(li.flags and ML_TWOSIDED) then
+    if li.flags and ML_TWOSIDED = 0 then
     begin
       Result := hitline;
       exit;
@@ -1116,7 +1114,7 @@ begin
     exit;
   end;
 
-  if not boolval(th.flags and MF_SHOOTABLE) then
+  if th.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True; // corpse or something
     exit;
@@ -1151,12 +1149,12 @@ begin
 
   // Spawn bullet puffs or blod spots,
   // depending on target type.
-  if boolval(_in.d.thing.flags and MF_NOBLOOD) then
+  if _in.d.thing.flags and MF_NOBLOOD <> 0 then
     P_SpawnPuff(x, y, z)
   else
     P_SpawnBlood(x, y, z, la_damage);
 
-  if boolval(la_damage) then
+  if la_damage <> 0 then
     P_DamageMobj(th, shootthing, shootthing, la_damage);
 
   // don't go any farther
@@ -1188,7 +1186,7 @@ begin
 
   P_PathTraverse(t1.x, t1.y, x2, y2, PT_ADDLINES or PT_ADDTHINGS, PTR_AimTraverse);
 
-  if boolval(linetarget) then
+  if linetarget <> nil then
     Result := aimslope
   else
     Result := 0;
@@ -1227,7 +1225,7 @@ function PTR_UseTraverse(_in: Pintercept_t): boolean;
 var
   side: integer;
 begin
-  if not boolval(_in.d.line.special) then
+  if _in.d.line.special = 0 then
   begin
     P_LineOpening(_in.d.line);
     if openrange <= 0 then
@@ -1298,7 +1296,7 @@ var
   dy: fixed_t;
   dist: fixed_t;
 begin
-  if not boolval(thing.flags and MF_SHOOTABLE) then
+  if thing.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True;
     exit;
@@ -1422,7 +1420,7 @@ begin
     exit;
   end;
 
-  if not boolval(thing.flags and MF_SHOOTABLE) then
+  if thing.flags and MF_SHOOTABLE = 0 then
   begin
     // assume it is bloody gibs or something
     Result := True;
@@ -1431,7 +1429,7 @@ begin
 
   nofit := True;
 
-  if crushchange and (not boolval(leveltime and 3)) then
+  if crushchange and ((leveltime and 3) = 0) then
   begin
     P_DamageMobj(thing, nil, nil, 10);
 
