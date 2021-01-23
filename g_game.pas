@@ -91,10 +91,6 @@ var
   key_up: integer;
   key_down: integer;
 
-  key_lookup: integer;
-  key_lookdown: integer;
-  key_lookcenter: integer;
-
   key_strafeleft: integer;
   key_straferight: integer;
   key_fire: integer;
@@ -259,8 +255,6 @@ var
   gamekeydown: array[0..NUMKEYS - 1] of boolean;
   turnheld: integer;
 
-  lookheld: integer;
-
   mousearray: array[0..3] of boolean;
   mousebuttons: PBooleanArray;
 
@@ -314,10 +308,8 @@ var
   bstrafe: boolean;
   speed: integer;
   tspeed: integer;
-  lspeed: integer;
   _forward: integer;
   side: integer;
-  look: integer;
   base: Pticcmd_t;
 begin
   base := I_BaseTiccmd;    // empty, or external driver
@@ -333,7 +325,6 @@ begin
 
   _forward := 0;
   side := 0;
-  look := 0;
 
   // use two stage accelerative turning
   // on the keyboard and joystick
@@ -349,16 +340,6 @@ begin
     tspeed := 2             // slow turn
   else
     tspeed := speed;
-
-  if gamekeydown[key_lookdown] or gamekeydown[key_lookup] then
-    lookheld := lookheld + ticdup
-  else
-    lookheld := 0;
-
-  if lookheld < SLOWTURNTICS then
-    lspeed := 1
-  else
-    lspeed := 2;
 
   // let movement keys cancel each other out
   if strafe then
@@ -389,16 +370,6 @@ begin
 
   if gamekeydown[key_down] then
     _forward := _forward - forwardmove[speed]; // fprintf(stderr, "down\n");
-
-  // Look up/down/center keys
-  if gamekeydown[key_lookup] then
-    look := lspeed;
-
-  if gamekeydown[key_lookdown] then
-    look := -lspeed;
-
-  if gamekeydown[key_lookcenter] then
-    look := TOCENTER;
 
   if joyymove < 0 then
     _forward := _forward + forwardmove[speed];
@@ -511,12 +482,6 @@ begin
 
   cmd.forwardmove := cmd.forwardmove + _forward;
   cmd.sidemove := cmd.sidemove + side;
-  if players[consoleplayer].playerstate = PST_LIVE then
-  begin
-    if look < 0 then
-      look := look + 16;
-    cmd.look := look;
-  end;
 
   // special buttons
   if sendpause then
@@ -898,8 +863,6 @@ begin
   memset(@p.powers, 0, SizeOf(p.powers));
   memset(@p.cards, 0, SizeOf(p.cards));
   p.mo.flags := p.mo.flags and (not MF_SHADOW); // cancel invisibility
-  p.lookdir := 0;       // cancel lookdir
-  p.centering := false; 
   p.extralight := 0;    // cancel gun flashes
   p.fixedcolormap := 0; // cancel ir gogles
   p.damagecount := 0;   // no palette changes
@@ -942,8 +905,6 @@ begin
   p.weaponowned[Ord(wp_fist)] := True;
   p.weaponowned[Ord(wp_pistol)] := True;
   p.ammo[Ord(am_clip)] := 50;
-  p.lookdir := 0;
-  p.centering := false;
 
   for i := 0 to Ord(NUMAMMO) - 1 do
     p.maxammo[i] := maxammo[i];
@@ -1588,9 +1549,6 @@ begin
 
   cmd.buttons := demo_p[0];
   demo_p := PByteArray(integer(demo_p) + 1);
-
-  cmd.look := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
 end;
 
 procedure G_WriteDemoTiccmd(cmd: Pticcmd_t);
@@ -1610,10 +1568,7 @@ begin
   demo_p[0] := cmd.buttons;
   demo_p := PByteArray(integer(demo_p) + 1);
 
-  demo_p[0] := cmd.look;
-  demo_p := PByteArray(integer(demo_p) + 1);
-
-  demo_p := PByteArray(integer(demo_p) - 5);
+  demo_p := PByteArray(integer(demo_p) - 4);
 
   if integer(demo_p) > integer(demoend) - 16 then
   begin

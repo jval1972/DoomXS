@@ -90,9 +90,6 @@ type
     // bounded/scaled total momentum.
     bob: fixed_t;
 
-    lookdir: integer;
-    centering: boolean;
-
     // This is only used between levels,
     // mo->health is used during levels.
     health : integer;

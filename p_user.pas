@@ -154,7 +154,6 @@ end;
 procedure P_MovePlayer(player: Pplayer_t);
 var
   cmd: Pticcmd_t;
-  look: integer;
 begin
   cmd := @player.cmd;
 
@@ -164,46 +163,15 @@ begin
   //  if not onground.
   onground := player.mo.z <= player.mo.floorz;
 
-  if boolval(cmd.forwardmove) and onground then
+  if (cmd.forwardmove <> 0) and onground then
     P_Thrust(player, player.mo.angle, cmd.forwardmove * 2048);
 
-  if boolval(cmd.sidemove) and onground then
+  if (cmd.sidemove <> 0) and onground then
     P_Thrust(player, player.mo.angle - ANG90, cmd.sidemove * 2048);
 
-  if (boolval(cmd.forwardmove) or boolval(cmd.sidemove)) and
+  if ((cmd.forwardmove <> 0) or (cmd.sidemove <> 0)) and
     (player.mo.state = @states[Ord(S_PLAY)]) then
     P_SetMobjState(player.mo, S_PLAY_RUN1);
-
-  look := cmd.look;
-  if look > 7 then
-    look := look - 16;
-
-  if boolval(look) then
-  begin
-    if look = TOCENTER then
-      player.centering := True
-    else
-    begin
-      player.lookdir := player.lookdir + 5 * look;
-      if (player.lookdir > 90) or (player.lookdir < -110) then
-        player.lookdir := player.lookdir - 5 * look;
-    end;
-  end;
-
-  if player.centering then
-  begin
-    if player.lookdir > 0 then
-      player.lookdir := player.lookdir - 8
-    else if player.lookdir < 0 then
-      player.lookdir := player.lookdir + 8;
-
-    if abs(player.lookdir) < 8 then
-    begin
-      player.lookdir := 0;
-      player.centering := False;
-    end;
-  end;
-
 end;
 
 

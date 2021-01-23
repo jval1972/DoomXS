@@ -833,7 +833,6 @@ end;
 procedure R_SetupFrame(player: Pplayer_t);
 var
   i: integer;
-  cy: integer;
 begin
   viewplayer := player;
   viewx := player.mo.x;
@@ -842,19 +841,6 @@ begin
   extralight := player.extralight;
 
   viewz := player.viewz;
-
-//{***********************
-// Enable this for z axis shift (still buggy)
-  cy := viewheight div 2 + player.lookdir * screenblocks div 10;
-  if centery <> cy then
-  begin
-    centery := cy;
-    centeryfrac := centery * FRACUNIT;
-    for i := 0 to viewwidth - 1 do
-      yslope[i] := FixedDiv(viewwidth div 2 * FRACUNIT,
-        abs(((i - centery) * FRACUNIT) + FRACUNIT div 2));
-  end;
-//******************************}
 
   viewsin := finesine[_SHRW(viewangle, ANGLETOFINESHIFT)];
   viewcos := finecosine[_SHRW(viewangle, ANGLETOFINESHIFT)];

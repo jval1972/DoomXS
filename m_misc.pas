@@ -115,7 +115,7 @@ type
   end;
 
 const
-  NUMDEFAULTS = 40;
+  NUMDEFAULTS = 37;
 
   defaults: array[0..NUMDEFAULTS - 1] of default_t = (
     (name: 'mouse_sensitivity';
@@ -177,19 +177,6 @@ const
      location: @key_speed;
      defaultivalue: KEY_RSHIFT;
      _type: tInteger),
-    (name: 'key_lookup';
-     location: @key_lookup;
-     defaultivalue: KEY_PAGEDOWN;
-     _type: tInteger),
-    (name: 'key_lookdown';
-     location: @key_lookdown;
-     defaultivalue: KEY_PAGEUP;
-     _type: tInteger),
-    (name: 'key_lookcenter';
-     location: @key_lookcenter;
-     defaultivalue: KEY_INS;
-     _type: tInteger),
-
 
     (name: 'use_mouse';
      location: @usemouse;

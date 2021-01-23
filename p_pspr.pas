@@ -559,19 +559,14 @@ begin
   an := mo.angle;
   bulletslope := P_AimLineAttack(mo, an, 16 * 64 * FRACUNIT);
 
-  if not boolval(linetarget) then
+  if linetarget = nil then
   begin
     an := an + _SHLW(1, 26);
     bulletslope := P_AimLineAttack(mo, an, 16 * 64 * FRACUNIT);
-    if not boolval(linetarget) then
+    if linetarget = nil then
     begin
       an := an - _SHLW(2, 26);
       bulletslope := P_AimLineAttack(mo, an, 16 * 64 * FRACUNIT);
-      if not boolval(linetarget) then
-      begin
-        //        an := an + _SHLW(2, 26);
-        bulletslope := (Pplayer_t(mo.player).lookdir * FRACUNIT) div 173;
-      end;
     end;
   end;
 end;

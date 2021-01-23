@@ -40,7 +40,6 @@ type
     consistancy: smallint; // checks for net game
     chatchar: byte;
     buttons: byte;
-    look: byte; // look/fly up/down/centering
   end;
   Pticcmd_t = ^ticcmd_t;
 

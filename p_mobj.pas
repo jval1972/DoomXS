@@ -921,32 +921,31 @@ begin
   an := Source.angle;
   slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
 
-  if not boolval(linetarget) then
+  if linetarget = nil then
   begin
     an := an + _SHLW(1, 26);
     slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
 
-    if not boolval(linetarget) then
+    if linetarget = nil then
     begin
       an := an - _SHLW(2, 26);
       slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
     end;
 
-    if not boolval(linetarget) then
+    if linetarget = nil then
     begin
       an := Source.angle;
-      slope := (Pplayer_t(Source.player).lookdir * FRACUNIT) div 173;
+      slope := 0;
     end;
   end;
 
   x := Source.x;
   y := Source.y;
-  z := Source.z + 4 * 8 * FRACUNIT + (Pplayer_t(Source.player).lookdir *
-    FRACUNIT) div 173;
+  z := Source.z + 4 * 8 * FRACUNIT;
 
   th := P_SpawnMobj(x, y, z, _type);
 
-  if boolval(th.info.seesound) then
+  if th.info.seesound <> 0 then
     S_StartSound(th, th.info.seesound);
 
   th.target := Source;
@@ -958,6 +957,5 @@ begin
 
   P_CheckMissileSpawn(th);
 end;
-
 
 end.
