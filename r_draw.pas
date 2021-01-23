@@ -146,8 +146,8 @@ uses
 //
 
 var
-  ylookup: array[0..MAXHEIGHT - 1] of PByteArray;
-  columnofs: array[0..MAXWIDTH - 1] of integer;
+  ylookup: array[0..SCREENHEIGHT - 1] of PByteArray;
+  columnofs: array[0..SCREENWIDTH - 1] of integer;
 
 {// Color tables for different players,
 //  translate a limited part to another
@@ -707,14 +707,14 @@ begin
   src := W_CacheLumpName(name, PU_CACHE);
   dest := screens[_TMP];
 
-  for y := 0 to 200 - ST_HEIGHT - 1 do //- 1 do // do // - 1 do
+  for y := 0 to 200 - ST_HEIGHT - 1 do
   begin
     for x := 0 to 320 div 64 - 1 do
     begin
       memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
       incp(pointer(dest), 64);
     end;
-    if (320 and 63) <> 0 then
+    if 320 and 63 <> 0 then
     begin
       memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 320 and 63);
       incp(pointer(dest), (320 and 63));

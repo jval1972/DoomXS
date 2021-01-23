@@ -65,10 +65,6 @@ type
   );
 
 const
-// ?
-  MAXWIDTH = 1600;
-  MAXHEIGHT = 1200;
-
   SCREENWIDTH = 640;
   SCREENHEIGHT = 400;
 
