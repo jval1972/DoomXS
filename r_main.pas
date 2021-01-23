@@ -700,10 +700,7 @@ begin
   end
   else
   begin
-//    scaledviewwidth := setblocks * 32;
     scaledviewwidth := setblocks * (SCREENWIDTH div 10);
-//    viewheight := (setblocks * (SCREENHEIGHT - ST_HEIGHT) div 10) and (not 7);
-//    viewheight := (setblocks * (200 - ST_HEIGHT) * SCREENHEIGHT div 2000) and (not 7); //and (not 7);
     if setblocks = 10 then
       viewheight := V_PreserveY(200 - ST_HEIGHT)
     else
@@ -711,7 +708,6 @@ begin
   end;
 
   detailshift := setdetail;
-//  viewwidth := _SHR(scaledviewwidth, detailshift);
   viewwidth := scaledviewwidth;
 
   centery := viewheight div 2;
@@ -768,7 +764,7 @@ begin
   begin
     dy := ((i - viewheight div 2) * FRACUNIT) + FRACUNIT div 2;
     dy := abs(dy);
-    yslope[i] := FixedDiv(viewwidth * FRACUNIT div 2, dy); // VJ operation priorities ???
+    yslope[i] := FixedDiv(viewwidth * FRACUNIT div 2, dy);
   end;
 
   for i := 0 to viewwidth - 1 do
@@ -848,7 +844,7 @@ begin
     nodenum := node.children[side];
   end;
 
-  result := @subsectors[nodenum and (not NF_SUBSECTOR)];
+  result := @subsectors[nodenum and not NF_SUBSECTOR];
 end;
 
 //
@@ -885,7 +881,7 @@ begin
 
   sscount := 0;
 
-  if boolval(player.fixedcolormap) then
+  if player.fixedcolormap <> 0 then
   begin
     fixedcolormap := Plighttable_tArray(
       integer(colormaps) + player.fixedcolormap * 256 * SizeOf(lighttable_t));
