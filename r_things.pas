@@ -244,11 +244,6 @@ begin
     maxframe := -1;
     intname := PInteger(@spritename[1])^;
 
-{    intname := integer(Ord(spritename[1]) or
-                      (Ord(spritename[2]) shl 8) or
-                      (Ord(spritename[3]) shl 16) or
-                      (Ord(spritename[4]) shl 24)); }
-
     // scan the lumps,
     //  filling in the frames for whatever is found
     for l := start + 1 to _end - 1 do
@@ -265,7 +260,6 @@ begin
 
         R_InstallSpriteLump(patched, frame, rotation, false);
 
-//        if boolval(Ord(lumpinfo[l].name[6])) then
         if lumpinfo[l].name[6] <> #0 then
         begin
           frame := Ord(lumpinfo[l].name[6]) - Ord('A');
@@ -766,7 +760,7 @@ begin
   else if boolval(psp.state.frame and FF_FULLBRIGHT) then
   begin
     // full bright
-    vis.colormap := colormaps; // VJ ???
+    vis.colormap := colormaps;
   end
   else
   begin
@@ -932,10 +926,10 @@ begin
     end;
 
     if (scale < spr.scale) or
-	     ((lowscale < spr.scale) and (not R_PointOnSegSide(spr.gx, spr.gy, ds.curline))) then
+	     ((lowscale < spr.scale) and not R_PointOnSegSide(spr.gx, spr.gy, ds.curline)) then
     begin
       // masked mid texture?
-      if boolval(ds.maskedtexturecol) then
+      if ds.maskedtexturecol <> nil then
         R_RenderMaskedSegRange(ds, r1, r2);
       // seg is behind sprite
       continue;
@@ -945,10 +939,10 @@ begin
     silhouette := ds.silhouette;
 
     if spr.gz >= ds.bsilheight then
-      silhouette := silhouette and (not SIL_BOTTOM);
+      silhouette := silhouette and not SIL_BOTTOM;
 
     if spr.gzt <= ds.tsilheight then
-      silhouette := silhouette and (not SIL_TOP);
+      silhouette := silhouette and not SIL_TOP;
 
     if silhouette = 1 then
     begin
@@ -1020,7 +1014,7 @@ begin
   for i := ds_p - 1 downto 0 do
   begin
     ds := @drawsegs[i];
-    if boolval(ds.maskedtexturecol) then
+    if ds.maskedtexturecol <> nil then
       R_RenderMaskedSegRange(ds, ds.x1, ds.x2);
   end;
 
