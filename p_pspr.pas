@@ -114,26 +114,9 @@ uses
 
 // VJ
 // Adjust weapon bottom and top
-
 const
-  adjweapons: set of weapontype_t =
-    [wp_chainsaw, wp_fist, wp_pistol, wp_shotgun, wp_plasma, wp_supershotgun];
-
-function WEAPONBOTTOM(wp: weapontype_t): fixed_t;
-begin
-  if (SCREENHEIGHT <> 200) and (wp in adjweapons) then
-    Result := 148 * FRACUNIT
-  else
-    Result := 128 * FRACUNIT;
-end;
-
-function WEAPONTOP(wp: weapontype_t): fixed_t;
-begin
-  if (SCREENHEIGHT <> 200) and (wp in adjweapons) then
-    Result := 52 * FRACUNIT
-  else
-    Result := 32 * FRACUNIT;
-end;
+  WEAPONTOP = 32 * FRACUNIT;
+  WEAPONBOTTOM = WEAPONTOP + 96 * FRACUNIT;
 
 const
   LOWERSPEED = FRACUNIT * 6;
@@ -142,9 +125,7 @@ const
   // plasma cells for a bfg attack
   BFGCELLS = 40;
 
-
 // P_SetPsprite
-
 procedure P_SetPsprite(player: Pplayer_t; position: integer; stnum: statenum_t);
 var
   psp: Ppspdef_t;
@@ -152,7 +133,7 @@ var
 begin
   psp := @player.psprites[position];
   repeat
-    if not boolval(Ord(stnum)) then
+    if Ord(stnum) = 0 then
     begin
       // object removed itself
       psp.state := nil;
@@ -163,25 +144,23 @@ begin
     psp.state := state;
     psp.tics := state.tics; // could be 0
 
-    if boolval(state.misc1) then
-    begin
-      // coordinate set
-      psp.sx := (state.misc1 * FRACUNIT) div 320 * SCREENWIDTH;
-      psp.sy := (state.misc2 * FRACUNIT) div 200 * SCREENHEIGHT;
-    end;
+    if state.misc1 <> 0 then
+      psp.sx := state.misc1 * FRACUNIT;
+    if state.misc2 <> 0 then
+      psp.sy := state.misc2 * FRACUNIT;
 
     // Call action routine.
     // Modified handling.
     if Assigned(state.action.acp2) then
     begin
       state.action.acp2(player, psp);
-      if not boolval(psp.state) then
+      if psp.state = nil then
         break;
     end;
 
     stnum := psp.state.nextstate;
 
-  until boolval(psp.tics);
+  until psp.tics <> 0;
   // an initial state of 0 could cycle through
 end;
 
@@ -228,16 +207,14 @@ begin
   newstate := statenum_t(weaponinfo[Ord(player.pendingweapon)].upstate);
 
   player.pendingweapon := wp_nochange;
-  player.psprites[Ord(ps_weapon)].sy := WEAPONBOTTOM(player.readyweapon);
+  player.psprites[Ord(ps_weapon)].sy := WEAPONBOTTOM;
 
   P_SetPsprite(player, Ord(ps_weapon), newstate);
 end;
 
-
 // P_CheckAmmo
 // Returns true if there is enough ammo to shoot.
 // If not, selects the next weapon to use.
-
 function P_CheckAmmo(player: Pplayer_t): boolean;
 var
   ammo: ammotype_t;
@@ -373,8 +350,7 @@ begin
   angle := (128 * leveltime) and FINEMASK;
   psp.sx := FRACUNIT + FixedMul(player.bob, finecosine[angle]);
   angle := angle and (FINEANGLES div 2 - 1);
-  //  psp.sy := WEAPONTOP + FixedMul(player.bob, finesine[angle]) div 200 * SCREENHEIGHT;
-  psp.sy := WEAPONTOP(player.readyweapon) + FixedMul(player.bob, finesine[angle]);
+  psp.sy := WEAPONTOP + FixedMul(player.bob, finesine[angle]);
 end;
 
 
@@ -412,13 +388,13 @@ begin
   psp.sy := psp.sy + LOWERSPEED;
 
   // Is already down.
-  if psp.sy < WEAPONBOTTOM(player.readyweapon) then
+  if psp.sy < WEAPONBOTTOM then
     exit;
 
   // Player is dead.
   if player.playerstate = PST_DEAD then
   begin
-    psp.sy := WEAPONBOTTOM(player.readyweapon);
+    psp.sy := WEAPONBOTTOM;
     // don't bring weapon back up
     exit;
   end;
@@ -444,10 +420,10 @@ var
 begin
   psp.sy := psp.sy - RAISESPEED;
 
-  if psp.sy > WEAPONTOP(player.readyweapon) then
+  if psp.sy > WEAPONTOP then
     exit;
 
-  psp.sy := WEAPONTOP(player.readyweapon);
+  psp.sy := WEAPONTOP;
 
   // The weapon has been raised all the way,
   //  so change to the ready state.

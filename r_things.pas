@@ -623,7 +623,7 @@ begin
   else if thing.frame and FF_FULLBRIGHT <> 0 then
   begin
     // full bright
-    vis.colormap := Plighttable_tArray(colormaps); // VJ ???
+    vis.colormap := Plighttable_tArray(colormaps);
   end
   else
   begin
