@@ -33,7 +33,7 @@ interface
 //
 // DOOM version
 const
-  VERSION =  110;
+  VERSION = 109;
 
 type
 // Game mode handling - identify IWAD version
