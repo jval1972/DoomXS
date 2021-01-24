@@ -128,7 +128,7 @@ begin
       res := T_MovePlane(ceiling.sector, ceiling.speed,
         ceiling.topheight, False, 1, ceiling.direction);
 
-      if not boolval(leveltime and 7) then
+      if leveltime and 7 = 0 then
       begin
         if ceiling._type <> silentCrushAndRaise then
           S_StartSound(Pmobj_t(@ceiling.sector.soundorg),
@@ -157,7 +157,7 @@ begin
       res := T_MovePlane(ceiling.sector, ceiling.speed,
         ceiling.bottomheight, ceiling.crush, 1, ceiling.direction);
 
-      if not boolval(leveltime and 7) then
+      if leveltime and 7 = 0 then
       begin
         if ceiling._type <> silentCrushAndRaise then
           S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_stnmov));
@@ -233,7 +233,7 @@ begin
       break;
 
     sec := @sectors[secnum];
-    if boolval(sec.specialdata) then
+    if sec.specialdata <> nil then
       continue;
 
     // new door thinker
