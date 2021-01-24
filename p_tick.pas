@@ -112,6 +112,7 @@ end;
 procedure P_RunThinkers;
 var
   currentthinker: Pthinker_t;
+  nextthinker: Pthinker_t;
 begin
   currentthinker := thinkercap.Next;
   while currentthinker <> @thinkercap do
@@ -121,14 +122,16 @@ begin
       // time to remove it
       currentthinker.Next.prev := currentthinker.prev;
       currentthinker.prev.Next := currentthinker.Next;
+      nextthinker := currentthinker.next; // JVAL: 20201228 - Keep next pointer in nextthinker
       Z_Free(currentthinker);
+      currentthinker := nextthinker;      // JVAL: 20201228 - Set currentthinker to next pointer
     end
     else
     begin
       if Assigned(currentthinker._function.acp1) then
         currentthinker._function.acp1(currentthinker);
+      currentthinker := currentthinker.next;
     end;
-    currentthinker := currentthinker.Next;
   end;
 end;
 
