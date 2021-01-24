@@ -729,10 +729,10 @@ begin
 
   modifiedgame := False;
 
-  nomonsters := boolval(M_CheckParm('-nomonsters'));
-  respawnparm := boolval(M_CheckParm('-respawn'));
-  fastparm := boolval(M_CheckParm('-fast'));
-  devparm := boolval(M_CheckParm('-devparm'));
+  nomonsters := M_CheckParm('-nomonsters') > 0;
+  respawnparm := M_CheckParm('-respawn') > 0;
+  fastparm := M_CheckParm('-fast') > 0;
+  devparm := M_CheckParm('-devparm') > 0;
 
   if M_CheckParm('-altdeath') > 0 then
     deathmatch := 2
@@ -889,7 +889,7 @@ begin
   end;
 
   p := M_CheckParm('-timer');
-  if (p <> 0) and (p < myargc - 1) and boolval(deathmatch) then
+  if (p <> 0) and (p < myargc - 1) and (deathmatch <> 0) then
   begin
     _time := atoi(myargv[p + 1]);
     if _time > 1 then
@@ -899,7 +899,7 @@ begin
   end;
 
   p := M_CheckParm('-avg');
-  if (p <> 0) and (p <= myargc - 1) and boolval(deathmatch) then
+  if (p <> 0) and (p <= myargc - 1) and (deathmatch <> 0) then
     printf('Austin Virtual Gaming: Levels will end after 20 minutes' + #13#10);
 
   p := M_CheckParm('-warp');
