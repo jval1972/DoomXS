@@ -99,7 +99,7 @@ begin
     exit;
   end;
 
-  if boolval(num) then
+  if num <> 0 then
     num := num * clipammo[Ord(ammo)]
   else
     num := clipammo[Ord(ammo)] div 2;
@@ -121,7 +121,7 @@ begin
   // If non zero ammo,
   // don't change up weapons,
   // player was lower on purpose.
-  if boolval(oldammo) then
+  if oldammo <> 0 then
   begin
     Result := True;
     exit;
@@ -194,7 +194,7 @@ begin
     player.bonuscount := player.bonuscount + BONUSADD;
     player.weaponowned[Ord(weapon)] := True;
 
-    if boolval(deathmatch) then
+    if deathmatch <> 0 then
       P_GiveAmmo(player, weaponinfo[Ord(weapon)].ammo, 5)
     else
       P_GiveAmmo(player, weaponinfo[Ord(weapon)].ammo, 2);
@@ -326,7 +326,7 @@ begin
     exit;
   end;
 
-  if boolval(player.powers[power]) then
+  if player.powers[power] <> 0 then
     Result := False // already got it
   else
   begin
@@ -392,7 +392,7 @@ begin
       player.armorpoints := player.armorpoints + 1; // can go over 100%
       if player.armorpoints > 200 then
         player.armorpoints := 200;
-      if not boolval(player.armortype) then
+      if player.armortype = 0 then
         player.armortype := 1;
       player._message := GOTARMBONUS;
     end;
@@ -547,7 +547,7 @@ begin
     // ammo
     SPR_CLIP:
     begin
-      if boolval(special.flags and MF_DROPPED) then
+      if special.flags and MF_DROPPED <> 0 then
       begin
         if not P_GiveAmmo(player, am_clip, 0) then
           exit;
@@ -634,7 +634,7 @@ begin
     SPR_MGUN:
     begin
       if not P_GiveWeapon(player, wp_chaingun,
-        boolval(special.flags and MF_DROPPED)) then
+        special.flags and MF_DROPPED <> 0) then
         exit;
       player._message := GOTCHAINGUN;
       sound := Ord(sfx_wpnup);
@@ -667,7 +667,7 @@ begin
     SPR_SHOT:
     begin
       if not P_GiveWeapon(player, wp_shotgun,
-        boolval(special.flags and MF_DROPPED)) then
+        special.flags and MF_DROPPED <> 0) then
         exit;
       player._message := GOTSHOTGUN;
       sound := Ord(sfx_wpnup);
@@ -676,7 +676,7 @@ begin
     SPR_SGN2:
     begin
       if not P_GiveWeapon(player, wp_supershotgun,
-        boolval(special.flags and MF_DROPPED)) then
+        special.flags and MF_DROPPED <> 0) then
         exit;
       player._message := GOTSHOTGUN2;
       sound := Ord(sfx_wpnup);
@@ -686,7 +686,7 @@ begin
       I_Error('P_TouchSpecialThing(): Unknown gettable thing');
   end;
 
-  if boolval(special.flags and MF_COUNTITEM) then
+  if special.flags and MF_COUNTITEM <> 0 then
     player.itemcount := player.itemcount + 1;
   P_RemoveMobj(special);
   player.bonuscount := player.bonuscount + BONUSADD;
@@ -710,19 +710,19 @@ begin
   target.flags := target.flags or (MF_CORPSE or MF_DROPOFF);
   target.height := _SHR(target.height, 2);
 
-  if boolval(Source) and boolval(Source.player) then
+  if (Source <> nil) and (Source.player <> nil) then
   begin
     // count for intermission
-    if boolval(target.flags and MF_COUNTKILL) then
+    if target.flags and MF_COUNTKILL <> 0 then
       Pplayer_t(Source.player).killcount := Pplayer_t(Source.player).killcount + 1;
 
-    if boolval(target.player) then
+    if target.player <> nil then
       Pplayer_t(Source.player).frags[pOperation(target.player, @players[0],
         '-', SizeOf(players[0]))] :=
         Pplayer_t(Source.player).frags[pOperation(target.player,
         @players[0], '-', SizeOf(players[0]))] + 1;
   end
-  else if (not netgame) and boolval(target.flags and MF_COUNTKILL) then
+  else if not netgame and (target.flags and MF_COUNTKILL <> 0) then
   begin
     // count all monster deaths,
     // even those caused by other monsters
@@ -732,7 +732,7 @@ begin
   if target.player <> nil then
   begin
     // count environment kills against you
-    if not boolval(Source) then
+    if Source = nil then
       Pplayer_t(target.player).frags[pOperation(target.player, @players[0],
         '-', SizeOf(players[0]))] :=
         Pplayer_t(target.player).frags[pOperation(target.player,
@@ -751,7 +751,7 @@ begin
 
   end;
 
-  if (target.health < -target.info.spawnhealth) and boolval(target.info.xdeathstate) then
+  if (target.health < -target.info.spawnhealth) and (target.info.xdeathstate <> 0) then
     P_SetMobjState(target, statenum_t(target.info.xdeathstate))
   else
     P_SetMobjState(target, statenum_t(target.info.deathstate));
@@ -800,13 +800,13 @@ var
   player: Pplayer_t;
   thrust: fixed_t;
 begin
-  if not boolval(target.flags and MF_SHOOTABLE) then
+  if target.flags and MF_SHOOTABLE = 0 then
     exit; // shouldn't happen...
 
   if target.health <= 0 then
     exit;
 
-  if boolval(target.flags and MF_SKULLFLY) then
+  if target.flags and MF_SKULLFLY <> 0 then
   begin
     target.momx := 0;
     target.momy := 0;
@@ -814,15 +814,15 @@ begin
   end;
 
   player := target.player;
-  if boolval(player) and (gameskill = sk_baby) then
+  if (player <> nil) and (gameskill = sk_baby) then
     damage := _SHR(damage, 1); // take half damage in trainer mode
 
 
   // Some close combat weapons should not
   // inflict thrust and push the victim out of reach,
   // thus kick away unless using the chainsaw.
-  if boolval(inflictor) and (not boolval(target.flags and MF_NOCLIP)) and
-    (not boolval(Source) or (not boolval(Source.player)) or
+  if (inflictor <> nil) and (target.flags and MF_NOCLIP = 0) and
+    ((Source = nil) or ((Source.player = nil)) or
     (Pplayer_t(Source.player).readyweapon <> wp_chainsaw)) then
   begin
     ang := R_PointToAngle2(inflictor.x, inflictor.y, target.x, target.y);
@@ -831,7 +831,7 @@ begin
 
     // make fall forwards sometimes
     if (damage < 40) and (damage > target.health) and
-      (target.z - inflictor.z > 64 * FRACUNIT) and boolval(P_Random and 1) then
+      (target.z - inflictor.z > 64 * FRACUNIT) and (P_Random and 1 <> 0) then
     begin
       ang := ang + ANG180;
       thrust := thrust * 4;
@@ -843,7 +843,7 @@ begin
   end;
 
   // player specific
-  if boolval(player) then
+  if player <> nil then
   begin
     // end of game hell hack
     if (Psubsector_t(target.subsector).sector.special = 11) and
@@ -852,11 +852,11 @@ begin
 
     // Below certain threshold,
     // ignore damage in GOD mode, or with INVUL power.
-    if (damage < 1000) and (boolval(player.cheats and CF_GODMODE) or
-      boolval(player.powers[Ord(pw_invulnerability)])) then
+    if (damage < 1000) and ((player.cheats and CF_GODMODE <> 0) or
+      (player.powers[Ord(pw_invulnerability)] <> 0)) then
       exit;
 
-    if boolval(player.armortype) then
+    if player.armortype <> 0 then
     begin
       if player.armortype = 1 then
         saved := damage div 3
@@ -894,7 +894,7 @@ begin
   end;
 
   if (P_Random < target.info.painchance) and
-    (not boolval(target.flags and MF_SKULLFLY)) then
+    (target.flags and MF_SKULLFLY = 0) then
   begin
     target.flags := target.flags or MF_JUSTHIT; // fight back!
     P_SetMobjState(target, statenum_t(target.info.painstate));
@@ -902,8 +902,8 @@ begin
 
   target.reactiontime := 0; // we're awake now...
 
-  if ((not boolval(target.threshold)) or (target._type = MT_VILE)) and
-    boolval(Source) and (Source <> target) and (Source._type <> MT_VILE) then
+  if ((target.threshold = 0) or (target._type = MT_VILE)) and
+    (Source <> nil) and (Source <> target) and (Source._type <> MT_VILE) then
   begin
     // if not intent on another player,
     // chase after this one
