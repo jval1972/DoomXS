@@ -653,7 +653,7 @@ begin
   end;
 
   // Find lowest height in list
-  if not boolval(h) then
+  if h = 0 then
   begin
     Result := currentheight;
     exit;
