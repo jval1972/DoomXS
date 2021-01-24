@@ -213,7 +213,7 @@ begin
   res := T_MovePlane(floor.sector, floor.speed, floor.floordestheight,
     floor.crush, 0, floor.direction);
 
-  if not boolval(leveltime and 7) then
+  if leveltime and 7 = 0 then
     S_StartSound(Pmobj_t(@floor.sector.soundorg), Ord(sfx_stnmov));
 
   if res = pastdest then
@@ -265,7 +265,7 @@ begin
     sec := @sectors[secnum];
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
-    if boolval(sec.specialdata) then
+    if sec.specialdata <> nil then
       continue;
 
     // new floor thinker
@@ -361,7 +361,7 @@ begin
         floor.speed := FLOORSPEED;
         for i := 0 to sec.linecount - 1 do
         begin
-          if boolval(twoSided(secnum, i)) then
+          if twoSided(secnum, i) <> 0 then
           begin
             side := getSide(secnum, i, 0);
             if side.bottomtexture >= 0 then
@@ -384,7 +384,7 @@ begin
         floor.texture := sec.floorpic;
         for i := 0 to sec.linecount - 1 do
         begin
-          if boolval(twoSided(secnum, i)) then
+          if twoSided(secnum, i) <> 0 then
           begin
             side := getSide(secnum, i, 0);
             if pOperation(side.sector, @sectors[0], '-', SizeOf(side.sector^)) =
@@ -443,7 +443,7 @@ begin
     sec := @sectors[secnum];
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
-    if boolval(sec.specialdata) then
+    if sec.specialdata <> nil then
       continue;
 
     // new floor thinker
@@ -485,12 +485,11 @@ begin
       ok := 0;
       for i := 0 to sec.linecount - 1 do
       begin
-        if not boolval(sec.Lines[i].flags and ML_TWOSIDED) then
+        if sec.Lines[i].flags and ML_TWOSIDED = 0 then
           continue;
 
         tsec := sec.Lines[i].frontsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
-        //        (integer(tsec) - integer(@sectors[0])) div ;
 
         if secnum <> newsecnum then
           continue;
@@ -504,7 +503,7 @@ begin
 
         Height := Height + stairsize;
 
-        if boolval(tsec.specialdata) then
+        if tsec.specialdata <> nil then
           continue;
 
         sec := tsec;
@@ -522,7 +521,7 @@ begin
         ok := 1;
         break;
       end;
-    until not boolval(ok);
+    until ok = 0;
   until secnum < 0;
 end;
 
