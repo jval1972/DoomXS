@@ -212,7 +212,7 @@ begin
   // nothing special about it during gameplay
   sector.special := 0;
 
-  if not boolval(inSync) then
+  if inSync = 0 then
     flash.Count := (P_Random and 7) + 1
   else
     flash.Count := 1;
@@ -233,7 +233,7 @@ begin
     if secnum >= 0 then
     begin
       sec := @sectors[secnum];
-      if not boolval(sec.specialdata) then
+      if sec.specialdata = nil then
         P_SpawnStrobeFlash(sec, SLOWDARK, 0);
     end;
   until secnum < 0;
@@ -261,7 +261,7 @@ begin
       begin
         templine := sector.Lines[j];
         tsec := getNextSector(templine, sector);
-        if boolval(tsec) then
+        if tsec <> nil then
         begin
           if tsec.lightlevel < min then
             min := tsec.lightlevel;
@@ -291,13 +291,13 @@ begin
       // bright = 0 means to search
       // for highest light level
       // surrounding sector
-      if not boolval(bright) then
+      if bright = 0 then
       begin
         for j := 0 to sector.linecount - 1 do
         begin
           templine := sector.Lines[j];
           temp := getNextSector(templine, sector);
-          if boolval(temp) then
+          if temp <> nil then
           begin
             if temp.lightlevel > bright then
               bright := temp.lightlevel;
