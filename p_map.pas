@@ -116,7 +116,6 @@ var
   tmx: fixed_t;
   tmy: fixed_t;
 
-
 // TELEPORT MOVE
 
 // PIT_StompThing
@@ -226,14 +225,10 @@ begin
   Result := True;
 end;
 
-
 // MOVEMENT ITERATOR FUNCTIONS
-
-
 
 // PIT_CheckLine
 // Adjusts tmfloorz and tmceilingz as lines are contacted
-
 function PIT_CheckLine(ld: Pline_t): boolean;
 begin
   if (tmbbox[BOXRIGHT] <= ld.bbox[BOXLEFT]) or (tmbbox[BOXLEFT] >=
@@ -309,9 +304,7 @@ begin
   Result := True;
 end;
 
-
 // PIT_CheckThing
-
 function PIT_CheckThing(thing: Pmobj_t): boolean;
 var
   blockdist: fixed_t;
@@ -324,18 +317,18 @@ begin
     exit;
   end;
 
+  // don't clip against self
+  if thing = tmthing then
+  begin
+    Result := True;
+    exit;
+  end;
+
   blockdist := thing.radius + tmthing.radius;
 
   if (abs(thing.x - tmx) >= blockdist) or (abs(thing.y - tmy) >= blockdist) then
   begin
     // didn't hit it
-    Result := True;
-    exit;
-  end;
-
-  // don't clip against self
-  if thing = tmthing then
-  begin
     Result := True;
     exit;
   end;
@@ -423,10 +416,7 @@ begin
     result := (thing.flags and MF_SOLID) = 0;
 end;
 
-
 // MOVEMENT CLIPPING
-
-
 
 // P_CheckPosition
 // This is purely informative, nothing is modified
@@ -436,11 +426,11 @@ end;
 //  a mobj_t (can be valid or invalid)
 //  a position to be checked
 //   (doesn't need to be related to the mobj_t->x,y)
-
+//
 // during:
 //  special things are touched if MF_PICKUP
 //  early out on solid lines?
-
+//
 // out:
 //  newsubsec
 //  floorz
@@ -450,7 +440,6 @@ end;
 //   (monsters won't move to a dropoff)
 //  speciallines[]
 //  numspeciallines
-
 function P_CheckPosition(thing: Pmobj_t; x, y: fixed_t): boolean;
 var
   xl: integer;
@@ -527,11 +516,9 @@ begin
   Result := True;
 end;
 
-
 // P_TryMove
 // Attempt to move to a new position,
 // crossing special lines unless MF_TELEPORT is set.
-
 function P_TryMove(thing: Pmobj_t; x, y: fixed_t): boolean;
 var
   oldx: fixed_t;
@@ -598,7 +585,7 @@ begin
     while numspechit > 0 do
     begin
       // see if the line was crossed
-      Dec(numspechit); // VJ what happens to while loops ???
+      Dec(numspechit);
       ld := spechit[numspechit];
       side := P_PointOnLineSide(thing.x, thing.y, ld);
       oldside := P_PointOnLineSide(oldx, oldy, ld);
@@ -614,7 +601,6 @@ begin
   Result := True;
 end;
 
-
 // P_ThingHeightClip
 // Takes a valid thing and adjusts the thing->floorz,
 // thing->ceilingz, and possibly thing->z.
@@ -623,7 +609,6 @@ end;
 // If the thing doesn't fit,
 // the z will be set to the lowest value
 // and false will be returned.
-
 function P_ThingHeightClip(thing: Pmobj_t): boolean;
 var
   onfloor: boolean;
@@ -651,27 +636,21 @@ begin
   Result := thing.ceilingz - thing.floorz >= thing.height;
 end;
 
-
 // SLIDE MOVE
 // Allows the player to slide along any angled walls.
-
 var
   bestslidefrac: fixed_t;
-  secondslidefrac: fixed_t;
 
   bestslideline: Pline_t;
-  secondslideline: Pline_t;
 
   slidemo: Pmobj_t;
 
   tmxmove: fixed_t;
   tmymove: fixed_t;
 
-
 // P_HitSlideLine
 // Adjusts the xmove / ymove
 // so that the next move will slide along the wall.
-
 procedure P_HitSlideLine(ld: Pline_t);
 var
   side: integer;
@@ -716,9 +695,7 @@ begin
   tmymove := FixedMul(newlen, finesine[lineangle]);
 end;
 
-
 // PTR_SlideTraverse
-
 function PTR_SlideTraverse(_in: Pintercept_t): boolean;
 var
   li: Pline_t;
@@ -729,8 +706,6 @@ var
     // see if it is closer than best so far
     if _in.frac < bestslidefrac then
     begin
-      secondslidefrac := bestslidefrac;
-      secondslideline := bestslideline;
       bestslidefrac := _in.frac;
       bestslideline := li;
     end;
@@ -783,7 +758,6 @@ begin
   Result := True;
 end;
 
-
 // P_SlideMove
 // The momx / momy move is bad, so try to slide
 // along a wall.
@@ -791,7 +765,6 @@ end;
 // and slide along it
 
 // This is a kludgy mess.
-
 procedure P_SlideMove(mo: Pmobj_t);
 var
   leadx: fixed_t;
@@ -895,9 +868,7 @@ begin
   until P_TryMove(mo, mo.x + tmxmove, mo.y + tmymove);
 end;
 
-
 // P_LineAttack
-
 var
   shootthing: Pmobj_t;
 
@@ -909,10 +880,8 @@ var
 
   aimslope: fixed_t;
 
-
 // PTR_AimTraverse
 // Sets linetaget and aimslope when a target is aimed at.
-
 function PTR_AimTraverse(_in: Pintercept_t): boolean;
 var
   li: Pline_t;
@@ -1014,9 +983,7 @@ begin
   Result := False; // don't go any farther
 end;
 
-
 // PTR_ShootTraverse
-
 function PTR_ShootTraverse(_in: Pintercept_t): boolean;
 var
   x: fixed_t;
@@ -1147,7 +1114,7 @@ begin
   y := trace.y + FixedMul(trace.dy, frac);
   z := shootz + FixedMul(aimslope, FixedMul(frac, attackrange));
 
-  // Spawn bullet puffs or blod spots,
+  // Spawn bullet puffs or blood spots,
   // depending on target type.
   if _in.d.thing.flags and MF_NOBLOOD <> 0 then
     P_SpawnPuff(x, y, z)
@@ -1161,10 +1128,7 @@ begin
   Result := False;
 end;
 
-
 // P_AimLineAttack
-
-
 function P_AimLineAttack(t1: Pmobj_t; angle: angle_t; distance: fixed_t): fixed_t;
 var
   x2: fixed_t;
@@ -1178,8 +1142,8 @@ begin
   shootz := t1.z + _SHR(t1.height, 1) + 8 * FRACUNIT;
 
   // can't shoot outside view angles
-  topslope := (100 * FRACUNIT) div 160; // VJ maybe screenwidth / 2
-  bottomslope := -topslope; // VJ
+  topslope := (100 * FRACUNIT) div 160;
+  bottomslope := -topslope;
 
   attackrange := distance;
   linetarget := nil;
@@ -1192,11 +1156,9 @@ begin
     Result := 0;
 end;
 
-
 // P_LineAttack
 // If damage == 0, it is just a test trace
 // that will leave linetarget set.
-
 procedure P_LineAttack(t1: Pmobj_t; angle: angle_t; distance: fixed_t;
   slope: fixed_t; damage: integer);
 var
@@ -1215,9 +1177,7 @@ begin
   P_PathTraverse(t1.x, t1.y, x2, y2, PT_ADDLINES or PT_ADDTHINGS, PTR_ShootTraverse);
 end;
 
-
 // USE LINES
-
 var
   usething: Pmobj_t;
 
@@ -1252,10 +1212,8 @@ begin
   Result := False;
 end;
 
-
 // P_UseLines
 // Looks for special lines in front of the player to activate.
-
 procedure P_UseLines(player: Pplayer_t);
 var
   angle: angle_t;
@@ -1276,20 +1234,16 @@ begin
   P_PathTraverse(x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse);
 end;
 
-
 // RADIUS ATTACK
-
 var
   bombsource: Pmobj_t;
   bombspot: Pmobj_t;
   bombdamage: integer;
 
 
-
 // PIT_RadiusAttack
 // "bombsource" is the creature
 // that caused the explosion at "bombspot".
-
 function PIT_RadiusAttack(thing: Pmobj_t): boolean;
 var
   dx: fixed_t;
@@ -1337,10 +1291,8 @@ begin
   Result := True;
 end;
 
-
 // P_RadiusAttack
 // Source is the creature that caused the explosion at spot.
-
 procedure P_RadiusAttack(spot: Pmobj_t; Source: Pmobj_t; damage: integer);
 var
   x: integer;
@@ -1377,14 +1329,11 @@ end;
 // If Crunch is false, you should set the sector height back
 //  the way it was and call P_ChangeSector again
 //  to undo the changes.
-
 var
   crushchange: boolean;
   nofit: boolean;
 
-
 // PIT_ChangeSector
-
 function PIT_ChangeSector(thing: Pmobj_t): boolean;
 var
   mo: Pmobj_t;
@@ -1444,9 +1393,7 @@ begin
   Result := True;
 end;
 
-
 // P_ChangeSector
-
 function P_ChangeSector(sector: Psector_t; crunch: boolean): boolean;
 var
   x: integer;
