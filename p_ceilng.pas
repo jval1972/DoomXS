@@ -61,9 +61,7 @@ uses
   p_setup,
   p_floor;
 
-
 // Add an active ceiling
-
 procedure P_AddActiveCeiling(c: Pceiling_t);
 var
   i: integer;
@@ -76,9 +74,7 @@ begin
     end;
 end;
 
-
 // Remove a ceiling's thinker
-
 procedure P_RemoveActiveCeiling(c: Pceiling_t);
 var
   i: integer;
@@ -93,9 +89,7 @@ begin
     end;
 end;
 
-
 // Restart a ceiling that's in-stasis
-
 procedure P_ActivateInStasisCeiling(line: Pline_t);
 var
   i: integer;
@@ -109,10 +103,7 @@ begin
     end;
 end;
 
-
 // T_MoveCeiling
-
-
 procedure T_MoveCeiling(ceiling: Pceiling_t);
 var
   res: result_e;
@@ -202,10 +193,8 @@ begin
   end;
 end;
 
-
 // EV_DoCeiling
 // Move a ceiling up/down and all around!
-
 function EV_DoCeiling(line: Pline_t; _type: ceiling_e): integer;
 var
   initial: boolean;
@@ -238,7 +227,7 @@ begin
 
     // new door thinker
     Result := 1;
-    ceiling := Z_Malloc(sizeof(ceiling^), PU_LEVSPEC, nil);
+    ceiling := Z_Malloc(SizeOf(ceiling_t), PU_LEVSPEC, nil);
     P_AddThinker(@ceiling.thinker);
     sec.specialdata := ceiling;
     ceiling.thinker._function.acp1 := @T_MoveCeiling;
