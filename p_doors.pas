@@ -81,7 +81,7 @@ begin
     begin
       // WAITING
       door := Pvldoor_t(integer(door) - SizeOf(vldoor_t));
-      if not boolval(door.topcountdown) then
+      if door.topcountdown = 0 then
       begin
         case door._type of
           blazeRaise:
@@ -106,7 +106,7 @@ begin
     begin
       //  INITIAL WAIT
       door := Pvldoor_t(integer(door) - SizeOf(vldoor_t));
-      if not boolval(door.topcountdown) then
+      if door.topcountdown = 0 then
       begin
         case door._type of
           raiseIn5Mins:
@@ -268,7 +268,7 @@ begin
       break;
 
     sec := @sectors[secnum];
-    if boolval(sec.specialdata) then
+    if sec.specialdata <> nil then
       continue;
 
     // new door thinker
@@ -395,7 +395,7 @@ begin
   // if the sector has an active thinker, use it
   sec := sides[line.sidenum[side xor 1]].sector;
 
-  if boolval(sec.specialdata) then
+  if sec.specialdata <> nil then
   begin
     door := sec.specialdata;
     case line.special of
@@ -409,7 +409,7 @@ begin
           door.direction := 1 // go back up
         else
         begin
-          if not boolval(thing.player) then
+          if thing.player = nil then
             exit; // JDC: bad guys never close doors
 
           door.direction := -1; // start going down immediately
