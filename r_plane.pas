@@ -107,12 +107,6 @@ var
   basexscale: fixed_t;
   baseyscale: fixed_t;
 
-  cachedheight: array[0..SCREENHEIGHT - 1] of fixed_t;
-  cacheddistance: array[0..SCREENHEIGHT -1] of fixed_t;
-  cachedxstep: array[0..SCREENHEIGHT -1] of fixed_t;
-  cachedystep: array[0..SCREENHEIGHT - 1] of fixed_t;
-
-
 //
 // R_MapPlane
 //
@@ -133,29 +127,16 @@ var
   length: fixed_t;
   index: LongWord;
 begin
-  if planeheight <> cachedheight[y] then // JVAL: remove ?
-  begin
-    cachedheight[y] := planeheight;
-    cacheddistance[y] := FixedMul(planeheight, yslope[y]);
-    distance := cacheddistance[y];
-    cachedxstep[y] := FixedMul(distance, basexscale);
-    ds_xstep := cachedxstep[y];
-    cachedystep[y] := FixedMul(distance, baseyscale);
-    ds_ystep := cachedystep[y];
-  end
-  else
-  begin
-    distance := cacheddistance[y];
-    ds_xstep := cachedxstep[y];
-    ds_ystep := cachedystep[y];
-  end;
+  distance := FixedMul(planeheight, yslope[y]);
+  ds_xstep := FixedMul(distance, basexscale);
+  ds_ystep := FixedMul(distance, baseyscale);
 
   length := FixedMul(distance, distscale[x1]);
   angle := _SHRW(viewangle + xtoviewangle[x1], ANGLETOFINESHIFT);
   ds_xfrac := viewx + FixedMul(finecosine[angle], length);
   ds_yfrac := -viewy - FixedMul(finesine[angle], length);
 
-  if boolval(fixedcolormap) then
+  if fixedcolormap <> nil then
     ds_colormap := fixedcolormap
   else
   begin
@@ -193,9 +174,6 @@ begin
 
   lastvisplane := 0;
   lastopening := 0;
-
-  // texture calculation
-  memset(@cachedheight, 0, SizeOf(cachedheight));
 
   // left to right mapping
   angle := _SHRW(viewangle - ANG90, ANGLETOFINESHIFT);
