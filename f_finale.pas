@@ -206,7 +206,7 @@ begin
     i := 0;
     while i < MAXPLAYERS do
     begin
-      if boolval(players[i].cmd.buttons) then
+      if players[i].cmd.buttons <> 0 then
         break;
       inc(i);
     end;
@@ -231,7 +231,7 @@ begin
   if gamemode = commercial then
     exit;
 
-  if (not boolval(finalestage)) and (finalecount > Length(finaletext) * TEXTSPEED + TEXTWAIT) then
+  if (finalestage = 0) and (finalecount > Length(finaletext) * TEXTSPEED + TEXTWAIT) then
   begin
     finalecount := 0;
     finalestage := 1;
@@ -392,7 +392,7 @@ begin
     castdeath := false;
     if castorder[castnum].name = '' then
       castnum := 0;
-    if boolval(mobjinfo[Ord(castorder[castnum]._type)].seesound) then
+    if mobjinfo[Ord(castorder[castnum]._type)].seesound <> 0 then
       S_StartSound(nil, mobjinfo[Ord(castorder[castnum]._type)].seesound);
     caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
     castframes := 0;
