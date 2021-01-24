@@ -317,7 +317,7 @@ begin
 
   // check for a custom default file
   i := M_CheckParm ('-config');
-  if boolval(i) and (i < myargc - 1) then
+  if (i > 0) and (i < myargc - 1) then
   begin
     defaultfile := myargv[i + 1];
     printf(' default file: %s' + #13#10, [defaultfile]);
