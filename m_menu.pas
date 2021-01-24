@@ -739,7 +739,7 @@ end;
 
 procedure M_Episode(choice: integer);
 begin
-  if (gamemode = shareware) and boolval(choice) then
+  if (gamemode = shareware) and (choice <> 0) then
   begin
     M_StartMessage(SWSTRING, nil, False);
     M_SetupNextMenu(@ReadDef1);
@@ -794,7 +794,7 @@ procedure M_ChangeMessages(choice: integer);
 begin
   showMessages := 1 - showMessages;
 
-  if not boolval(showMessages) then
+  if showMessages = 0 then
     players[consoleplayer]._message := MSGOFF
   else
     players[consoleplayer]._message := MSGON;
@@ -921,7 +921,7 @@ begin
 
   R_SetViewSize(screenblocks, detailLevel);
 
-  if not boolval(detailLevel) then
+  if detailLevel = 0 then
     players[consoleplayer]._message := DETAILHI
   else
     players[consoleplayer]._message := DETAILLO;
@@ -1069,7 +1069,7 @@ begin
     c := Ord(_string[ch]);
     Inc(ch);
 
-    if not boolval(c) then
+    if c = 0 then
       break;
 
     if c = 10 then
@@ -1146,12 +1146,12 @@ begin
       joywait := I_GetTime + 2;
     end;
 
-    if boolval(ev.data1 and 1) then
+    if ev.data1 and 1 <> 0 then
     begin
       ch := KEY_ENTER;
       joywait := I_GetTime + 5;
     end;
-    if boolval(ev.data1 and 2) then
+    if ev.data1 and 2 <> 0 then
     begin
       ch := KEY_BACKSPACE;
       joywait := I_GetTime + 5;
@@ -1191,13 +1191,13 @@ begin
       mousex := lastx;
     end;
 
-    if boolval(ev.data1 and 1) then
+    if ev.data1 and 1 <> 0 then
     begin
       ch := KEY_ENTER;
       mousewait := I_GetTime + 15;
     end;
 
-    if boolval(ev.data1 and 2) then
+    if ev.data1 and 2 <> 0 then
     begin
       ch := KEY_BACKSPACE;
       mousewait := I_GetTime + 15;
@@ -1213,7 +1213,7 @@ begin
   end;
 
   // Save Game string input
-  if boolval(saveStringEnter) then
+  if saveStringEnter <> 0 then
   begin
     case ch of
       KEY_BACKSPACE:
@@ -1257,7 +1257,7 @@ begin
   end;
 
   // Take care of any messages that need input
-  if boolval(messageToPrint) then
+  if messageToPrint <> 0 then
   begin
     if messageNeedsInput and (not ((ch = Ord(' ')) or (ch = Ord('n')) or
       (ch = Ord('y')) or (ch = KEY_ESCAPE))) then
@@ -1438,7 +1438,7 @@ begin
     KEY_UPARROW:
     begin
       repeat
-        if not boolval(itemOn) then
+        if itemOn = 0 then
           itemOn := currentMenu.numitems - 1
         else
           Dec(itemOn);
@@ -1472,7 +1472,7 @@ begin
     KEY_ENTER:
     begin
       if Assigned(currentMenu.menuitems[itemOn].routine) and
-        boolval(currentMenu.menuitems[itemOn].status) then
+        (currentMenu.menuitems[itemOn].status <> 0) then
       begin
         currentMenu.lastOn := itemOn;
         if currentMenu.menuitems[itemOn].status = 2 then
@@ -1565,7 +1565,7 @@ begin
   inhelpscreens := False;
 
   // Horiz. & Vertically center string and print it.
-  if boolval(messageToPrint) then
+  if messageToPrint <> 0 then
   begin
     //    y := (SCREENHEIGHT - M_StringHeight(messageString)) div 2;
     y := (200 - M_StringHeight(messageString)) div 2;
