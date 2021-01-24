@@ -1031,14 +1031,14 @@ end;
 function M_StringHeight(const _string: string): integer;
 var
   i: integer;
-  Height: integer;
+  height: integer;
 begin
-  Height := hu_font[0].Height;
+  height := hu_font[0].height;
 
-  Result := Height;
+  Result := height;
   for i := 1 to Length(_string) do
     if _string[i] = #13 then
-      Result := Result + Height;
+      Result := Result + height;
 end;
 
 
@@ -1574,7 +1574,7 @@ begin
     for i := 1 to len do
     begin
       if messageString[i] = #13 then
-        y := y + hu_font[0].Height
+        y := y + hu_font[0].height
       else if messageString[i] = #10 then
       begin
         //        x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
@@ -1589,7 +1589,7 @@ begin
     begin
       //      x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
       x := (320 - M_StringWidth(_string)) div 2;
-      y := y + hu_font[0].Height;
+      y := y + hu_font[0].height;
       M_WriteText(x, y, _string);
     end;
     exit;

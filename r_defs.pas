@@ -334,7 +334,7 @@ type
   // of patches.
   patch_t = packed record
     Width: smallint; // bounding box size
-    Height: smallint;
+    height: smallint;
     leftoffset: smallint; // pixels to the left of origin
     topoffset: smallint;  // pixels below the origin
     columnofs: array[0..7] of integer; // only [width] used
@@ -442,7 +442,7 @@ type
   // Now what is a visplane, anyway?
 
   visplane_t = packed record
-    Height: fixed_t;
+    height: fixed_t;
     picnum: integer;
     lightlevel: integer;
     minx: integer;

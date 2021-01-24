@@ -361,12 +361,12 @@ begin
   if tmthing.flags and MF_MISSILE <> 0 then
   begin
     // see if it went over / under
-    if tmthing.z > thing.z + thing.Height then
+    if tmthing.z > thing.z + thing.height then
     begin
       Result := True; // overhead
       exit;
     end;
-    if tmthing.z + tmthing.Height < thing.z then
+    if tmthing.z + tmthing.height < thing.z then
     begin
       Result := True; // underneath
       exit;
@@ -549,7 +549,7 @@ begin
 
   if thing.flags and MF_NOCLIP = 0 then
   begin
-    if tmceilingz - tmfloorz < thing.Height then
+    if tmceilingz - tmfloorz < thing.height then
     begin
       Result := False;  // doesn't fit
       exit;
@@ -558,7 +558,7 @@ begin
     floatok := True;
 
     if (thing.flags and MF_TELEPORT = 0) and
-      (tmceilingz - thing.z < thing.Height) then
+      (tmceilingz - thing.z < thing.height) then
     begin
       Result := False;  // mobj must lower itself to fit
       exit;
@@ -644,11 +644,11 @@ begin
   else
   begin
     // don't adjust a floating monster unless forced to
-    if thing.z + thing.Height > thing.ceilingz then
-      thing.z := thing.ceilingz - thing.Height;
+    if thing.z + thing.height > thing.ceilingz then
+      thing.z := thing.ceilingz - thing.height;
   end;
 
-  Result := thing.ceilingz - thing.floorz >= thing.Height;
+  Result := thing.ceilingz - thing.floorz >= thing.height;
 end;
 
 
@@ -758,14 +758,14 @@ begin
   // set openrange, opentop, openbottom
   P_LineOpening(li);
 
-  if openrange < slidemo.Height then
+  if openrange < slidemo.height then
   begin
     isblocking; // doesn't fit
     Result := False; // stop
     exit;
   end;
 
-  if opentop - slidemo.z < slidemo.Height then
+  if opentop - slidemo.z < slidemo.height then
   begin
     isblocking; // mobj is too high
     Result := False; // stop
@@ -901,7 +901,7 @@ end;
 var
   shootthing: Pmobj_t;
 
-  // Height if not aiming up or down
+  // height if not aiming up or down
   // ???: use slope for monsters?
   shootz: fixed_t;
 
@@ -985,7 +985,7 @@ begin
 
   // check angles to see if the thing can be aimed at
   dist := FixedMul(attackrange, _in.frac);
-  thingtopslope := FixedDiv(th.z + th.Height - shootz, dist);
+  thingtopslope := FixedDiv(th.z + th.height - shootz, dist);
 
   if thingtopslope < bottomslope then
   begin
@@ -1122,7 +1122,7 @@ begin
 
   // check angles to see if the thing can be aimed at
   dist := FixedMul(attackrange, _in.frac);
-  thingtopslope := FixedDiv(th.z + th.Height - shootz, dist);
+  thingtopslope := FixedDiv(th.z + th.height - shootz, dist);
 
   if thingtopslope < aimslope then
   begin
@@ -1175,7 +1175,7 @@ begin
 
   x2 := t1.x + (distance div FRACUNIT) * finecosine[angle];
   y2 := t1.y + (distance div FRACUNIT) * finesine[angle];
-  shootz := t1.z + _SHR(t1.Height, 1) + 8 * FRACUNIT;
+  shootz := t1.z + _SHR(t1.height, 1) + 8 * FRACUNIT;
 
   // can't shoot outside view angles
   topslope := (100 * FRACUNIT) div 160; // VJ maybe screenwidth / 2
@@ -1208,7 +1208,7 @@ begin
   la_damage := damage;
   x2 := t1.x + (distance div FRACUNIT) * finecosine[angle];
   y2 := t1.y + (distance div FRACUNIT) * finesine[angle];
-  shootz := t1.z + (_SHR(t1.Height, 1)) + 8 * FRACUNIT;
+  shootz := t1.z + (_SHR(t1.height, 1)) + 8 * FRACUNIT;
   attackrange := distance;
   aimslope := slope;
 
@@ -1402,7 +1402,7 @@ begin
     P_SetMobjState(thing, S_GIBS);
 
     thing.flags := thing.flags and (not MF_SOLID);
-    thing.Height := 0;
+    thing.height := 0;
     thing.radius := 0;
 
     // keep checking
@@ -1434,7 +1434,7 @@ begin
     P_DamageMobj(thing, nil, nil, 10);
 
     // spray blood in a random direction
-    mo := P_SpawnMobj(thing.x, thing.y, thing.z + thing.Height div 2, MT_BLOOD);
+    mo := P_SpawnMobj(thing.x, thing.y, thing.z + thing.height div 2, MT_BLOOD);
 
     mo.momx := _SHL(P_Random - P_Random, 12);
     mo.momy := _SHL(P_Random - P_Random, 12);

@@ -311,7 +311,7 @@ begin
     begin
       dist := P_AproxDistance(mo.x - mo.target.x, mo.y - mo.target.y);
 
-      delta := (mo.target.z + (_SHR(mo.Height, 1))) - mo.z; // VJ is it right ???
+      delta := (mo.target.z + (_SHR(mo.height, 1))) - mo.z; // VJ is it right ???
 
       if (delta < 0) and (dist < -(delta * 3)) then
         mo.z := mo.z - FLOATSPEED
@@ -363,13 +363,13 @@ begin
       mo.momz := mo.momz - GRAVITY;
   end;
 
-  if mo.z + mo.Height > mo.ceilingz then
+  if mo.z + mo.height > mo.ceilingz then
   begin
     // hit the ceiling
     if mo.momz > 0 then
       mo.momz := 0;
 
-    mo.z := mo.ceilingz - mo.Height;
+    mo.z := mo.ceilingz - mo.height;
 
     if boolval(mo.flags and MF_SKULLFLY) then
       mo.momz := -mo.momz; // the skull slammed into something
@@ -512,7 +512,7 @@ begin
   mobj.x := x;
   mobj.y := y;
   mobj.radius := info.radius;
-  mobj.Height := info.Height;
+  mobj.height := info.height;
   mobj.flags := info.flags;
   mobj.health := info.spawnhealth;
 
@@ -538,7 +538,7 @@ begin
   if z = ONFLOORZ then
     mobj.z := mobj.floorz
   else if z = ONCEILINGZ then
-    mobj.z := mobj.ceilingz - mobj.info.Height
+    mobj.z := mobj.ceilingz - mobj.info.height
   else
     mobj.z := z;
   @mobj.thinker._function.acp1 := @P_MobjThinker;

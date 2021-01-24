@@ -421,7 +421,7 @@ end;
 function EV_BuildStairs(line: Pline_t; _type: stair_e): integer;
 var
   secnum: integer;
-  Height: integer;
+  height: integer;
   i: integer;
   newsecnum: integer;
   texture: integer;
@@ -473,8 +473,8 @@ begin
     end;
     floor.speed := speed;
 
-    Height := sec.floorheight + stairsize;
-    floor.floordestheight := Height;
+    height := sec.floorheight + stairsize;
+    floor.floordestheight := height;
 
     texture := sec.floorpic;
 
@@ -501,7 +501,7 @@ begin
         if tsec.floorpic <> texture then
           continue;
 
-        Height := Height + stairsize;
+        height := height + stairsize;
 
         if tsec.specialdata <> nil then
           continue;
@@ -517,7 +517,7 @@ begin
         floor.direction := 1;
         floor.sector := sec;
         floor.speed := speed;
-        floor.floordestheight := Height;
+        floor.floordestheight := height;
         ok := 1;
         break;
       end;

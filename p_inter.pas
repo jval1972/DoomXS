@@ -347,7 +347,7 @@ var
 begin
   delta := special.z - toucher.z;
 
-  if (delta > toucher.Height) or (delta < -8 * FRACUNIT) then
+  if (delta > toucher.height) or (delta < -8 * FRACUNIT) then
     // out of reach
     exit;
 
@@ -708,7 +708,7 @@ begin
     target.flags := target.flags and (not MF_NOGRAVITY);
 
   target.flags := target.flags or (MF_CORPSE or MF_DROPOFF);
-  target.Height := _SHR(target.Height, 2);
+  target.height := _SHR(target.height, 2);
 
   if boolval(Source) and boolval(Source.player) then
   begin

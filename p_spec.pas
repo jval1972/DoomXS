@@ -624,10 +624,10 @@ var
   h: integer;
   check: Pline_t;
   other: Psector_t;
-  Height: fixed_t;
+  height: fixed_t;
   heightlist: array[0..MAX_ADJOINING_SECTORS - 1] of fixed_t;
 begin
-  Height := currentheight;
+  height := currentheight;
 
   h := 0;
   for i := 0 to sec.linecount - 1 do
@@ -637,7 +637,7 @@ begin
 
     if other <> nil then
     begin
-      if other.floorheight > Height then
+      if other.floorheight > height then
       begin
         heightlist[h] := other.floorheight;
         Inc(h);

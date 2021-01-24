@@ -719,7 +719,7 @@ begin
       continue;
 
     P_SpawnMobj(
-      linetarget.x, linetarget.y, linetarget.z + _SHR(linetarget.Height, 2),
+      linetarget.x, linetarget.y, linetarget.z + _SHR(linetarget.height, 2),
       MT_EXTRABFG);
 
     damage := 0;

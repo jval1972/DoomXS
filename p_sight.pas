@@ -356,8 +356,8 @@ begin
 
   Inc(validcount);
 
-  sightzstart := t1.z + t1.Height - _SHR(t1.Height, 2);
-  topslope := (t2.z + t2.Height) - sightzstart;
+  sightzstart := t1.z + t1.height - _SHR(t1.height, 2);
+  topslope := (t2.z + t2.height) - sightzstart;
   bottomslope := t2.z - sightzstart;
 
   strace.x := t1.x;

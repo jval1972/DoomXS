@@ -1224,9 +1224,9 @@ begin
   corpsehit := thing;
   corpsehit.momx := 0;
   corpsehit.momy := 0;
-  corpsehit.Height := _SHL(corpsehit.Height, 2);
+  corpsehit.height := _SHL(corpsehit.height, 2);
   check := P_CheckPosition(corpsehit, corpsehit.x, corpsehit.y);
-  corpsehit.Height := _SHR(corpsehit.Height, 2);
+  corpsehit.height := _SHR(corpsehit.height, 2);
 
   if not check then
     Result := True    // doesn't fit here
@@ -1283,7 +1283,7 @@ begin
           info := corpsehit.info;
 
           P_SetMobjState(corpsehit, statenum_t(info.raisestate));
-          corpsehit.Height := _SHL(corpsehit.Height, 2);
+          corpsehit.height := _SHL(corpsehit.height, 2);
           corpsehit.flags := info.flags;
           corpsehit.health := info.spawnhealth;
           corpsehit.target := nil;
@@ -1495,7 +1495,7 @@ begin
 
   if dist < 1 then
     dist := 1;
-  actor.momz := (dest.z + (_SHR(dest.Height, 1)) - actor.z) div dist;
+  actor.momz := (dest.z + (_SHR(dest.height, 1)) - actor.z) div dist;
 end;
 
 
