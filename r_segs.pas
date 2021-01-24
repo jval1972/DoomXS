@@ -170,7 +170,7 @@ begin
   end;
   dc_texturemid := dc_texturemid + curline.sidedef.rowoffset;
 
-  if boolval(fixedcolormap) then
+  if fixedcolormap <> nil then
     dc_colormap := fixedcolormap;
 
   // draw the columns
