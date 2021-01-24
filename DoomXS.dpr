@@ -106,7 +106,10 @@ uses
   i_music in 'i_music.pas',
   i_input in 'i_input.pas',
   i_io in 'i_io.pas',
-  i_midi in 'i_midi.pas';
+  i_midi in 'i_midi.pas',
+  DirectDraw in 'DirectDraw.pas',
+  DirectSound in 'DirectSound.pas',
+  DXTypes in 'DXTypes.pas';
 
 var
   Saved8087CW: Word;

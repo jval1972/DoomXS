@@ -58,7 +58,7 @@ implementation
 
 uses
   doomdef,
-  directx,
+  DirectDraw,
   i_system,
   i_main,
   v_video;
@@ -176,8 +176,8 @@ begin
   destrect.Top := 0;
   destrect.Right := I_NativeWidth;
   destrect.Bottom := I_NativeHeight;
-  if g_pDDSPrimary.Blt(destrect, g_pDDScreen, srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, PDDBltFX(0)^) = DDERR_SURFACELOST then
-    g_pDDSPrimary.Restore;
+  if g_pDDSPrimary.Blt(@destrect, g_pDDScreen, @srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, nil) = DDERR_SURFACELOST then
+    g_pDDSPrimary._Restore;
 end;
 
 

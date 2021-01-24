@@ -71,7 +71,7 @@ implementation
 
 uses
   d_delphi,
-  DirectX,
+  DirectSound,
   mmsystem,
   z_memory,
   m_argv,
@@ -484,7 +484,7 @@ begin
   end
   else
   begin
-    hres := pDSBPrimary.SetFormat(SampleFormat);
+    hres := pDSBPrimary.SetFormat(@SampleFormat);
     if hres <> DS_OK then
       printf('I_InitSound(): Unable to set primary sound buffer format, result = %d',
         [hres]);
