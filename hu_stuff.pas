@@ -425,7 +425,7 @@ begin
       if not playeringame[i] then
         continue;
       c := Chr(players[i].cmd.chatchar);
-      if (i <> consoleplayer) and boolval(c) then
+      if (i <> consoleplayer) and (c <> #0) then
       begin
         if c <= Chr(HU_BROADCAST) then
           chat_dest[i] := c
