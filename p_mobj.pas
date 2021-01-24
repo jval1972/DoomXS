@@ -209,14 +209,14 @@ begin
     if not P_TryMove(mo, ptryx, ptryy) then
     begin
       // blocked move
-      if boolval(mo.player) then
+      if mo.player <> nil then
       begin // try to slide along it
         P_SlideMove(mo);
       end
       else if (mo.flags and MF_MISSILE) <> 0 then
       begin
         // explode a missile
-        if boolval(ceilingline) and boolval(ceilingline.backsector) and
+        if (ceilingline <> nil) and (ceilingline.backsector <> nil) and
           (ceilingline.backsector.ceilingpic = skyflatnum) then
         begin
           // Hack to prevent missiles exploding
@@ -236,7 +236,7 @@ begin
   until not ((xmove <> 0) or (ymove <> 0));
 
   // slow down
-  if boolval(player) and ((player.cheats and CF_NOMOMENTUM) <> 0) then
+  if (player <> nil) and ((player.cheats and CF_NOMOMENTUM) <> 0) then
   begin
     // debug option for no sliding at all
     mo.momx := 0;
@@ -264,7 +264,7 @@ begin
 
   if (mo.momx > -STOPSPEED) and (mo.momx < STOPSPEED) and
     (mo.momy > -STOPSPEED) and (mo.momy < STOPSPEED) and
-    ((not boolval(player)) or ((player.cmd.forwardmove = 0) and
+    ((player = nil) or ((player.cmd.forwardmove = 0) and
     (player.cmd.sidemove = 0))) then
   begin
     // if in a walking frame, stop moving
@@ -292,7 +292,7 @@ var
   delta: fixed_t;
 begin
   // check for smooth step up
-  if boolval(mo.player) and (mo.z < mo.floorz) then
+  if (mo.player <> nil) and (mo.z < mo.floorz) then
   begin
     Pplayer_t(mo.player).viewheight :=
       Pplayer_t(mo.player).viewheight - (mo.floorz - mo.z);
@@ -303,11 +303,11 @@ begin
   // adjust height
   mo.z := mo.z + mo.momz;
 
-  if ((mo.flags and MF_FLOAT) <> 0) and boolval(mo.target) then
+  if (mo.flags and MF_FLOAT <> 0) and (mo.target <> nil) then
   begin
     // float down towards target if too close
-    if (not boolval(mo.flags and MF_SKULLFLY)) and
-      (not boolval(mo.flags and MF_INFLOAT)) then
+    if (mo.flags and MF_SKULLFLY = 0) and
+      (mo.flags and MF_INFLOAT = 0) then
     begin
       dist := P_AproxDistance(mo.x - mo.target.x, mo.y - mo.target.y);
 
@@ -328,7 +328,7 @@ begin
     // Note (id):
     //  somebody left this after the setting momz to 0,
     //  kinda useless there.
-    if boolval(mo.flags and MF_SKULLFLY) then
+    if mo.flags and MF_SKULLFLY <> 0 then
     begin
       // the skull slammed into something
       mo.momz := -mo.momz;
@@ -336,7 +336,7 @@ begin
 
     if mo.momz < 0 then
     begin
-      if boolval(mo.player) and (mo.momz < -GRAVITY * 8) then
+      if (mo.player <> nil) and (mo.momz < -GRAVITY * 8) then
       begin
         // Squat down.
         // Decrease viewheight for a moment
@@ -349,13 +349,13 @@ begin
     end;
     mo.z := mo.floorz;
 
-    if boolval(mo.flags and MF_MISSILE) and (not boolval(mo.flags and MF_NOCLIP)) then
+    if (mo.flags and MF_MISSILE <> 0) and (mo.flags and MF_NOCLIP = 0) then
     begin
       P_ExplodeMissile(mo);
       exit;
     end;
   end
-  else if not boolval(mo.flags and MF_NOGRAVITY) then
+  else if mo.flags and MF_NOGRAVITY = 0 then
   begin
     if mo.momz = 0 then
       mo.momz := -GRAVITY * 2
@@ -371,10 +371,10 @@ begin
 
     mo.z := mo.ceilingz - mo.height;
 
-    if boolval(mo.flags and MF_SKULLFLY) then
+    if mo.flags and MF_SKULLFLY <> 0 then
       mo.momz := -mo.momz; // the skull slammed into something
 
-    if boolval(mo.flags and MF_MISSILE) and (not boolval(mo.flags and MF_NOCLIP)) then
+    if (mo.flags and MF_MISSILE <> 0) and (mo.flags and MF_NOCLIP = 0) then
       P_ExplodeMissile(mo);
   end;
 end;
@@ -416,7 +416,7 @@ begin
   mthing := @mobj.spawnpoint;
 
   // spawn it
-  if boolval(mobj.info.flags and MF_SPAWNCEILING) then
+  if mobj.info.flags and MF_SPAWNCEILING <> 0 then
     z := ONCEILINGZ
   else
     z := ONFLOORZ;
@@ -426,7 +426,7 @@ begin
   mo.spawnpoint := mobj.spawnpoint;
   mo.angle := ANG45 * (mthing.angle div 45);
 
-  if boolval(mthing.options and MTF_AMBUSH) then
+  if mthing.options and MTF_AMBUSH <> 0 then
     mo.flags := mo.flags or MF_AMBUSH;
 
   mo.reactiontime := 18;
@@ -441,8 +441,8 @@ end;
 procedure P_MobjThinker(mobj: Pmobj_t);
 begin
   // momentum movement
-  if boolval(mobj.momx) or boolval(mobj.momy) or
-    boolval(mobj.flags and MF_SKULLFLY) then
+  if (mobj.momx <> 0) or (mobj.momy <> 0) or
+    (mobj.flags and MF_SKULLFLY <> 0) then
   begin
     P_XYMovement(mobj);
 
@@ -450,7 +450,7 @@ begin
       exit; // mobj was removed
   end;
 
-  if (mobj.z <> mobj.floorz) or boolval(mobj.momz) then
+  if (mobj.z <> mobj.floorz) or (mobj.momz <> 0) then
   begin
     P_ZMovement(mobj);
 
@@ -466,14 +466,14 @@ begin
     mobj.tics := mobj.tics - 1;
 
     // you can cycle through multiple states in a tic
-    if not boolval(mobj.tics) then
+    if mobj.tics = 0 then
       if not P_SetMobjState(mobj, mobj.state.nextstate) then
         exit; // freed itself
   end
   else
   begin
     // check for nightmare respawn
-    if not boolval(mobj.flags and MF_COUNTKILL) then
+    if mobj.flags and MF_COUNTKILL = 0 then
       exit;
 
     if not respawnmonsters then
@@ -484,7 +484,7 @@ begin
     if mobj.movecount < 12 * 35 then // ??? VJ 12 * TICKRATE
       exit;
 
-    if boolval(leveltime and 31) then
+    if leveltime and 31 <> 0 then
       exit;
 
     if P_Random > 4 then
@@ -557,8 +557,8 @@ var
 
 procedure P_RemoveMobj(mobj: Pmobj_t);
 begin
-  if boolval(mobj.flags and MF_SPECIAL) and
-    (not boolval(mobj.flags and MF_DROPPED)) and (mobj._type <> MT_INV) and
+  if (mobj.flags and MF_SPECIAL <> 0) and
+    (mobj.flags and MF_DROPPED = 0) and (mobj._type <> MT_INV) and
     (mobj._type <> MT_INS) then
   begin
     itemrespawnque[iquehead] := mobj.spawnpoint;
@@ -625,7 +625,7 @@ begin
   end;
 
   // spawn it
-  if boolval(mobjinfo[i].flags and MF_SPAWNCEILING) then
+  if mobjinfo[i].flags and MF_SPAWNCEILING <> 0 then
     z := ONCEILINGZ
   else
     z := ONFLOORZ;
@@ -689,7 +689,7 @@ begin
   P_SetupPsprites(p);
 
   // give all cards in death match mode
-  if boolval(deathmatch) then
+  if deathmatch <> 0 then
     for i := 0 to Ord(NUMCARDS) - 1 do
       p.cards[i] := True;
 
@@ -732,13 +732,13 @@ begin
   begin
     // save spots for respawning in network games
     playerstarts[mthing._type - 1] := mthing^;
-    if not boolval(deathmatch) then
+    if deathmatch = 0 then
       P_SpawnPlayer(mthing);
     exit;
   end;
 
   // check for apropriate skill level
-  if (not netgame) and boolval(mthing.options and 16) then
+  if not netgame and (mthing.options and 16 <> 0) then
     exit;
 
   if gameskill = sk_baby then
@@ -748,7 +748,7 @@ begin
   else
     bit := _SHL(1, Ord(gameskill) - 1);
 
-  if not boolval(mthing.options and bit) then
+  if mthing.options and bit = 0 then
     exit;
 
   // find which type to spawn
@@ -765,19 +765,19 @@ begin
       [mthing._type, mthing.x, mthing.y]);
 
   // don't spawn keycards and players in deathmatch
-  if boolval(deathmatch) and boolval(mobjinfo[i].flags and MF_NOTDMATCH) then
+  if (deathmatch <> 0) and (mobjinfo[i].flags and MF_NOTDMATCH <> 0) then
     exit;
 
   // don't spawn any monsters if -nomonsters
   if nomonsters and ((i = Ord(MT_SKULL)) or
-    boolval(mobjinfo[i].flags and MF_COUNTKILL)) then
+    (mobjinfo[i].flags and MF_COUNTKILL <> 0)) then
     exit;
 
   // spawn it
   x := mthing.x * FRACUNIT;
   y := mthing.y * FRACUNIT;
 
-  if boolval(mobjinfo[i].flags and MF_SPAWNCEILING) then
+  if mobjinfo[i].flags and MF_SPAWNCEILING <> 0 then
     z := ONCEILINGZ
   else
     z := ONFLOORZ;
@@ -787,13 +787,13 @@ begin
 
   if mobj.tics > 0 then
     mobj.tics := 1 + (P_Random mod mobj.tics);
-  if boolval(mobj.flags and MF_COUNTKILL) then
+  if mobj.flags and MF_COUNTKILL <> 0 then
     Inc(totalkills);
-  if boolval(mobj.flags and MF_COUNTITEM) then
+  if mobj.flags and MF_COUNTITEM <> 0 then
     Inc(totalitems);
 
   mobj.angle := ANG45 * (mthing.angle div 45);
-  if boolval(mthing.options and MTF_AMBUSH) then
+  if mthing.options and MTF_AMBUSH <> 0 then
     mobj.flags := mobj.flags or MF_AMBUSH;
 end;
 
@@ -877,14 +877,14 @@ var
 begin
   th := P_SpawnMobj(Source.x, Source.y, Source.z + 4 * 8 * FRACUNIT, _type);
 
-  if boolval(th.info.seesound) then
+  if th.info.seesound <> 0 then
     S_StartSound(th, th.info.seesound);
 
   th.target := Source;  // where it came from
   an := R_PointToAngle2(Source.x, Source.y, dest.x, dest.y);
 
   // fuzzy player
-  if boolval(dest.flags and MF_SHADOW) then
+  if dest.flags and MF_SHADOW <> 0 then
     an := an + _SHLW(P_Random - P_Random, 20);
 
   th.angle := an;
