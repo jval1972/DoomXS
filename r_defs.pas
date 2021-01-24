@@ -333,7 +333,7 @@ type
   // and we compose textures from the TEXTURE1/2 lists
   // of patches.
   patch_t = packed record
-    Width: smallint; // bounding box size
+    width: smallint; // bounding box size
     height: smallint;
     leftoffset: smallint; // pixels to the left of origin
     topoffset: smallint;  // pixels below the origin

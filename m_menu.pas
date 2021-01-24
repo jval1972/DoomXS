@@ -1021,7 +1021,7 @@ begin
     if (c < 0) or (c >= HU_FONTSIZE) then
       Result := Result + 4
     else
-      Result := Result + hu_font[c].Width;
+      Result := Result + hu_font[c].width;
   end;
 end;
 
@@ -1091,7 +1091,7 @@ begin
       continue;
     end;
 
-    w := hu_font[c].Width;
+    w := hu_font[c].width;
     //    if (cx + w) > SCREENWIDTH then
     if (cx + w) > 320 then
       break;
