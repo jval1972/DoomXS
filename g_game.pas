@@ -387,11 +387,11 @@ begin
   cmd.chatchar := Ord(HU_dequeueChatChar);
 
   if gamekeydown[key_fire] or
-     (boolval(usemouse) and mousebuttons[mousebfire]) or
-     (boolval(usejoystick) and joybuttons[joybfire]) then
+     ((usemouse <> 0) and mousebuttons[mousebfire]) or
+     ((usejoystick <> 0) and joybuttons[joybfire]) then
     cmd.buttons := cmd.buttons or BT_ATTACK;
 
-  if gamekeydown[key_use] or (boolval(usejoystick) and joybuttons[joybuse]) then
+  if gamekeydown[key_use] or ((usejoystick <> 0) and joybuttons[joybuse]) then
   begin
     cmd.buttons := cmd.buttons or BT_USE;
   // clear double clicks if hit use button
@@ -408,14 +408,14 @@ begin
     end;
 
   // mouse
-  if (boolval(usemouse) and mousebuttons[mousebforward]) then
+  if ((usemouse <> 0) and mousebuttons[mousebforward]) then
     _forward := _forward + forwardmove[speed];
 
   // forward double click
-  if boolval(usemouse) and (mousebuttons[mousebforward] <> boolval(dclickstate)) and (dclicktime > 1) then
+  if (usemouse <> 0) and (mousebuttons[mousebforward] <> (dclickstate <> 0)) and (dclicktime > 1) then
   begin
     dclickstate := intval(mousebuttons[mousebforward]);
-    if boolval(dclickstate) then
+    if dclickstate <> 0 then
       inc(dclicks);
     if dclicks = 2 then
     begin
@@ -436,12 +436,12 @@ begin
   end;
 
   // strafe double click
-  bstrafe := (boolval(usemouse) and mousebuttons[mousebstrafe]) or
-             (boolval(usejoystick) and joybuttons[joybstrafe]);
-  if (bstrafe <> boolval(dclickstate2)) and (dclicktime2 > 1) then
+  bstrafe := ((usemouse <> 0) and mousebuttons[mousebstrafe]) or
+             ((usejoystick <> 0) and joybuttons[joybstrafe]);
+  if (bstrafe <> (dclickstate2 <> 0)) and (dclicktime2 > 1) then
   begin
     dclickstate2 := intval(bstrafe);
-    if boolval(dclickstate2) then
+    if dclickstate2 <> 0 then
       inc(dclicks2);
     if dclicks2 = 2 then
     begin
@@ -564,7 +564,7 @@ function G_Responder(ev: Pevent_t): boolean;
 begin
   // allow spy mode changes even during the demo
   if (gamestate = GS_LEVEL) and (ev._type = ev_keydown) and
-     (ev.data1 = KEY_F12) and (singledemo or (not boolval(deathmatch))) then
+     (ev.data1 = KEY_F12) and (singledemo or (deathmatch = 0)) then
   begin
   // spy mode
     repeat
@@ -645,9 +645,9 @@ begin
       begin
         if usemouse <> 0 then
         begin
-          mousebuttons[0] := boolval(ev.data1 and 1);
-          mousebuttons[1] := boolval(ev.data1 and 2);
-          mousebuttons[2] := boolval(ev.data1 and 4);
+          mousebuttons[0] := (ev.data1 and 1) <> 0;
+          mousebuttons[1] := (ev.data1 and 2) <> 0;
+          mousebuttons[2] := (ev.data1 and 4) <> 0;
           mousex := ev.data2 * (mouseSensitivity + 5) div 10;
           mousey := ev.data3 * (mouseSensitivity + 5) div 10;
         end
@@ -666,10 +666,10 @@ begin
       begin
         if usejoystick <> 0 then
         begin
-          joybuttons[0] := boolval(ev.data1 and 1);
-          joybuttons[1] := boolval(ev.data1 and 2);
-          joybuttons[2] := boolval(ev.data1 and 4);
-          joybuttons[3] := boolval(ev.data1 and 8);
+          joybuttons[0] := (ev.data1 and 1) <> 0;
+          joybuttons[1] := (ev.data1 and 2) <> 0;
+          joybuttons[2] := (ev.data1 and 4) <> 0;
+          joybuttons[3] := (ev.data1 and 8) <> 0;
           joyxmove := ev.data2;
           joyymove := ev.data3;
         end
@@ -766,7 +766,7 @@ begin
            (consistancy[i][buf] <> cmd.consistancy) then
           I_Error('G_Ticker(): consistency failure (%d should be %d)',
             [cmd.consistancy, consistancy[i][buf]]);
-        if boolval(players[i].mo) then
+        if players[i].mo <> nil then
           consistancy[i][buf] := players[i].mo.x
         else
           consistancy[i][buf] := rndindex;
@@ -784,7 +784,7 @@ begin
         case players[i].cmd.buttons and BT_SPECIALMASK of
           BTS_PAUSE:
             begin
-              paused := boolval(intval(paused) xor 1);
+              paused := not paused;
               if paused then
                 S_PauseSound
               else
@@ -925,7 +925,7 @@ var
   mo: Pmobj_t;
   i: integer;
 begin
-  if not boolval(players[playernum].mo) then
+  if players[playernum].mo = nil then
   begin
     // first spawn of level, before corpses
     for i := 0 to playernum - 1 do
@@ -1014,7 +1014,7 @@ begin
     players[playernum].mo.player := nil;
 
     // spawn at random spot if in death match
-    if boolval(deathmatch) then
+    if deathmatch <> 0 then
     begin
       G_DeathMatchSpawnPlayer(playernum);
       exit;
@@ -1172,7 +1172,7 @@ begin
   viewactive := false;
   automapactive := false;
 
-  if boolval(statcopy) then
+  if statcopy <> nil then
     memcpy(statcopy, @wminfo, SizeOf(wminfo));
 
   WI_Start(@wminfo);
@@ -1261,7 +1261,7 @@ begin
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
-    playeringame[i] := boolval(save_p[0]);
+    playeringame[i] := save_p[0] <> 0;
     save_p := PByteArray(integer(save_p) + 1);
   end;
 
@@ -1684,13 +1684,13 @@ begin
   deathmatch := demo_p[0];
   demo_p := PByteArray(integer(demo_p) + 1);
 
-  respawnparm := boolval(demo_p[0]);
+  respawnparm := demo_p[0] <> 0;
   demo_p := PByteArray(integer(demo_p) + 1);
 
-  fastparm := boolval(demo_p[0]);
+  fastparm := demo_p[0] <> 0;
   demo_p := PByteArray(integer(demo_p) + 1);
 
-  nomonsters := boolval(demo_p[0]);
+  nomonsters := demo_p[0] <> 0;
   demo_p := PByteArray(integer(demo_p) + 1);
 
   consoleplayer := demo_p[0];
@@ -1698,7 +1698,7 @@ begin
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
-    playeringame[i] := boolval(demo_p[0]);
+    playeringame[i] := demo_p[0] <> 0;
     demo_p := PByteArray(integer(demo_p) + 1);
   end;
 
@@ -1722,8 +1722,8 @@ end;
 //
 procedure G_TimeDemo(const name: string);
 begin
-  nodrawers := boolval(M_CheckParm('-nodraw'));
-  noblit := boolval(M_CheckParm ('-noblit'));
+  nodrawers := M_CheckParm('-nodraw') > 0;
+  noblit := M_CheckParm ('-noblit') > 0;
   timingdemo := true;
   singletics := true;
 
