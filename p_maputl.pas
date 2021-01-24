@@ -98,7 +98,7 @@ var
   left: fixed_t;
   right: fixed_t;
 begin
-  if not boolval(line.dx) then
+  if line.dx = 0 then
   begin
     if x <= line.v1.x then
       Result := intval(line.dy > 0)
@@ -107,7 +107,7 @@ begin
     exit;
   end;
 
-  if not boolval(line.dy) then
+  if line.dy = 0 then
   begin
     if y <= line.v1.y then
       Result := intval(line.dx < 0)
@@ -193,7 +193,7 @@ var
   left: fixed_t;
   right: fixed_t;
 begin
-  if not boolval(line.dx) then
+  if line.dx = 0 then
   begin
     if x <= line.x then
       Result := intval(line.dy > 0)
@@ -202,7 +202,7 @@ begin
     exit;
   end;
 
-  if not boolval(line.dy) then
+  if line.dy = 0 then
   begin
     if y <= line.y then
       Result := intval(line.dx < 0)
@@ -215,7 +215,7 @@ begin
   dy := y - line.y;
 
   // try to quickly decide by looking at sign bits
-  if boolval((line.dy xor line.dx xor dx xor dy) and $80000000) then
+  if (line.dy xor line.dx xor dx xor dy) and $80000000 <> 0 then
   begin                                                              //(left is negative)
     Result := intval(boolval((line.dy xor dx) and $80000000)); // VJ
     exit;
@@ -321,27 +321,27 @@ var
   blockx: integer;
   blocky: integer;
 begin
-  if not boolval(thing.flags and MF_NOSECTOR) then
+  if thing.flags and MF_NOSECTOR = 0 then
   begin
     // inert things don't need to be in blockmap?
     // unlink from subsector
-    if boolval(thing.snext) then
+    if thing.snext <> nil then
       thing.snext.sprev := thing.sprev;
 
-    if boolval(thing.sprev) then
+    if thing.sprev <> nil then
       thing.sprev.snext := thing.snext
     else
       Psubsector_t(thing.subsector).sector.thinglist := thing.snext;
   end;
 
-  if not boolval(thing.flags and MF_NOBLOCKMAP) then
+  if thing.flags and MF_NOBLOCKMAP = 0 then
   begin
     // inert things don't need to be in blockmap
     // unlink from block map
-    if boolval(thing.bnext) then
+    if thing.bnext <> nil then
       thing.bnext.bprev := thing.bprev;
 
-    if boolval(thing.bprev) then
+    if thing.bprev <> nil then
       thing.bprev.bnext := thing.bnext
     else
     begin
@@ -373,7 +373,7 @@ begin
   ss := R_PointInSubsector(thing.x, thing.y);
   thing.subsector := ss;
 
-  if not boolval(thing.flags and MF_NOSECTOR) then
+  if thing.flags and MF_NOSECTOR = 0 then
   begin
     // invisible things don't go into the sector links
     sec := ss.sector;
@@ -381,14 +381,14 @@ begin
     thing.sprev := nil;
     thing.snext := sec.thinglist;
 
-    if boolval(sec.thinglist) then
+    if sec.thinglist <> nil then
       sec.thinglist.sprev := thing;
 
     sec.thinglist := thing;
   end;
 
   // link into blockmap
-  if not boolval(thing.flags and MF_NOBLOCKMAP) then
+  if thing.flags and MF_NOBLOCKMAP = 0 then
   begin
     // inert things don't need to be in blockmap
     blockx := _SHR((thing.x - bmaporgx), MAPBLOCKSHIFT);
@@ -400,7 +400,7 @@ begin
       link := @blocklinks[blocky * bmapwidth + blockx];
       thing.bprev := nil;
       thing.bnext := link^;
-      if boolval(link^) then
+      if link^ <> nil then
         (link^).bprev := thing;
 
       link^ := thing;
@@ -479,7 +479,7 @@ begin
 
   mobj := blocklinks[y * bmapwidth + x];
 
-  while boolval(mobj) do
+  while mobj <> nil do
   begin
     if not func(mobj) then
     begin
@@ -548,7 +548,7 @@ begin
   end;
 
   // try to early out the check
-  if earlyout and (frac < FRACUNIT) and (not boolval(ld.backsector)) then
+  if earlyout and (frac < FRACUNIT) and (ld.backsector = nil) then
   begin
     Result := False; // stop checking
     exit;
@@ -694,7 +694,7 @@ var
   mapystep: integer;
   Count: integer;
 begin
-  earlyout := boolval(flags and PT_EARLYOUT);
+  earlyout := flags and PT_EARLYOUT <> 0;
 
   Inc(validcount);
   intercept_p := 0;
@@ -770,7 +770,7 @@ begin
 
   for Count := 0 to 63 do
   begin
-    if boolval(flags and PT_ADDLINES) then
+    if flags and PT_ADDLINES <> 0 then
     begin
       if not P_BlockLinesIterator(mapx, mapy, PIT_AddLineIntercepts) then
       begin
@@ -779,7 +779,7 @@ begin
       end;
     end;
 
-    if boolval(flags and PT_ADDTHINGS) then
+    if flags and PT_ADDTHINGS <> 0 then
     begin
       if not P_BlockThingsIterator(mapx, mapy, PIT_AddThingIntercepts) then
       begin
