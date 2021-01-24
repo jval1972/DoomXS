@@ -582,8 +582,6 @@ begin
 
   for i := 0 to numspritelumps - 1 do
   begin
-    if not boolval(i and 63) then
-      printf('.');
 
     patch := W_CacheLumpNum(firstspritelump + i, PU_CACHE);
     spritewidth[i] := patch.width * FRACUNIT;
@@ -711,8 +709,6 @@ begin
 
   // Precache flats.
   flatpresent := malloc(numflats);
-  for i := 0 to numflats - 1 do
-    flatpresent[i] := 0;
 
   for i := 0 to numsectors - 1 do
   begin
@@ -770,8 +766,6 @@ begin
 
   // Precache sprites.
   spritepresent := malloc(numsprites);
-  for i := 0 to numsprites - 1 do
-    spritepresent[i] := 0;
   th := thinkercap.next;
   while th <> @thinkercap do
   begin
