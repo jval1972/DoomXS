@@ -1411,7 +1411,7 @@ begin
   end;
 
   // crunch dropped items
-  if boolval(thing.flags and MF_DROPPED) then
+  if thing.flags and MF_DROPPED <> 0 then
   begin
     P_RemoveMobj(thing);
 
