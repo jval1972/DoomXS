@@ -73,10 +73,8 @@ uses
   p_setup,
   r_main;
 
-
 // P_AproxDistance
 // Gives an estimation of distance (not exact)
-
 function P_AproxDistance(dx: fixed_t; dy: fixed_t): fixed_t;
 begin
   dx := abs(dx);
@@ -87,10 +85,8 @@ begin
     Result := dx + dy - _SHR(dy, 1);
 end;
 
-
 // P_PointOnLineSide
 // Returns 0 or 1
-
 function P_PointOnLineSide(x: fixed_t; y: fixed_t; line: Pline_t): integer;
 var
   dx: fixed_t;
@@ -217,7 +213,9 @@ begin
   // try to quickly decide by looking at sign bits
   if (line.dy xor line.dx xor dx xor dy) and $80000000 <> 0 then
   begin                                                              //(left is negative)
-    Result := intval(boolval((line.dy xor dx) and $80000000)); // VJ
+    result := (line.dy xor dx) and $80000000;
+    if result <> 0 then
+      result := 1;
     exit;
   end;
 
@@ -232,7 +230,6 @@ end;
 
 
 // P_MakeDivline
-
 procedure P_MakeDivline(li: Pline_t; dl: Pdivline_t);
 begin
   dl.x := li.v1.x;
@@ -241,13 +238,11 @@ begin
   dl.dy := li.dy;
 end;
 
-
 // P_InterceptVector
 // Returns the fractional intercept point
 // along the first divline.
 // This is only called by the addthings
 // and addlines traversers.
-
 function P_InterceptVector(v2: Pdivline_t; v1: Pdivline_t): fixed_t;
 var
   num: fixed_t;
@@ -265,12 +260,10 @@ begin
   end;
 end;
 
-
 // P_LineOpening
 // Sets opentop and openbottom to the window
 // through a two sided line.
 // OPTIMIZE: keep this precalculated
-
 procedure P_LineOpening(linedef: Pline_t);
 var
   front: Psector_t;
@@ -305,17 +298,13 @@ begin
   openrange := opentop - openbottom;
 end;
 
-
 // THING POSITION SETTING
-
-
 
 // P_UnsetThingPosition
 // Unlinks a thing from block map and sectors.
 // On each position change, BLOCKMAP and other
 // lookups maintaining lists ot things inside
 // these structures need to be updated.
-
 procedure P_UnsetThingPosition(thing: Pmobj_t);
 var
   blockx: integer;
@@ -355,12 +344,10 @@ begin
   end;
 end;
 
-
 // P_SetThingPosition
 // Links a thing into both a block and a subsector
 // based on it's x y.
 // Sets thing->subsector properly
-
 procedure P_SetThingPosition(thing: Pmobj_t);
 var
   ss: Psubsector_t;
@@ -414,15 +401,11 @@ begin
   end;
 end;
 
-
 // BLOCK MAP ITERATORS
 // For each line/thing in the given mapblock,
 // call the passed PIT_* function.
 // If the function returns false,
 // exit with false without checking anything else.
-
-
-
 
 // P_BlockLinesIterator
 // The validcount flags are used to avoid checking lines
@@ -430,10 +413,9 @@ end;
 // so increment validcount before the first call
 // to P_BlockLinesIterator, then make one or more calls
 // to it.
-
 function P_BlockLinesIterator(x, y: integer; func: ltraverser_t): boolean;
 var
-  offset: integer;
+  offset: PSmallInt;
   ld: Pline_t;
 begin
   if (x < 0) or (y < 0) or (x >= bmapwidth) or (y >= bmapheight) then
@@ -442,12 +424,11 @@ begin
     exit;
   end;
 
-  offset := blockmap[y * bmapwidth + x];
-  //  offset := PInteger(integer(blockmap) + y * bmapwidth + x)^;
+  offset := @blockmaplump[blockmap[y * bmapwidth + x]];
 
-  while blockmaplump[offset] <> -1 do
+  while offset^ <> - 1 do
   begin
-    ld := @Lines[blockmaplump[offset]];
+    ld := @lines[offset^];
     Inc(offset);
     if ld.validcount = validcount then
       continue; // line has already been checked
@@ -464,9 +445,7 @@ begin
   Result := True; // everything was checked
 end;
 
-
 // P_BlockThingsIterator
-
 function P_BlockThingsIterator(x, y: integer; func: ttraverser_t): boolean;
 var
   mobj: Pmobj_t;
@@ -501,7 +480,6 @@ var
 
   earlyout: boolean;
 
-
 // PIT_AddLineIntercepts.
 // Looks for lines in the given block
 // that intercept the given trace
@@ -510,7 +488,6 @@ var
 // A line is crossed if its endpoints
 // are on opposite sides of the trace.
 // Returns true if earlyout and a solid line hit.
-
 function PIT_AddLineIntercepts(ld: Pline_t): boolean;
 var
   s1: integer;
@@ -562,9 +539,7 @@ begin
   Result := True; // continue
 end;
 
-
 // PIT_AddThingIntercepts
-
 function PIT_AddThingIntercepts(thing: Pmobj_t): boolean;
 var
   x1: fixed_t;
@@ -625,11 +600,9 @@ begin
   Result := True; // keep going
 end;
 
-
 // P_TraverseIntercepts
 // Returns true if the traverser function returns true
 // for all lines.
-
 function P_TraverseIntercepts(func: traverser_t; maxfrac: fixed_t): boolean;
 var
   i: integer;
@@ -669,13 +642,11 @@ begin
   Result := True;  // everything was traversed
 end;
 
-
 // P_PathTraverse
 // Traces a line from x1,y1 to x2,y2,
 // calling the traverser function for each.
 // Returns true if the traverser function returns true
 // for all lines.
-
 function P_PathTraverse(x1, y1, x2, y2: fixed_t; flags: integer;
   trav: traverser_t): boolean;
 var
