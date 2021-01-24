@@ -72,14 +72,12 @@ uses
 const
   BONUSADD = 6;
 
-
 // GET STUFF
 
 // P_GiveAmmo
 // Num is the number of clip loads,
 // not the individual count (0= 1/2 clip).
 // Returns false if the ammo can't be picked up at all
-
 function P_GiveAmmo(player: Pplayer_t; ammo: ammotype_t; num: integer): boolean;
 var
   oldammo: integer;
@@ -108,7 +106,7 @@ begin
   begin
     // give double ammo in trainer mode,
     // you'll need in nightmare
-    num := _SHL(num, 1);
+    num := num * 2
   end;
 
 
@@ -230,10 +228,8 @@ begin
   Result := gaveweapon or gaveammo;
 end;
 
-
 // P_GiveBody
 // Returns false if the body isn't needed at all
-
 function P_GiveBody(player: Pplayer_t; num: integer): boolean;
 begin
   if player.health >= MAXHEALTH then
@@ -250,11 +246,9 @@ begin
   Result := True;
 end;
 
-
 // P_GiveArmor
 // Returns false if the armor is worse
 // than the current armor.
-
 function P_GiveArmor(player: Pplayer_t; armortype: integer): boolean;
 var
   hits: integer;
@@ -272,9 +266,7 @@ begin
   Result := True;
 end;
 
-
 // P_GiveCard
-
 procedure P_GiveCard(player: Pplayer_t; card: card_t);
 begin
   if player.cards[Ord(card)] then
@@ -335,9 +327,7 @@ begin
   end;
 end;
 
-
 // P_TouchSpecialThing
-
 procedure P_TouchSpecialThing(special: Pmobj_t; toucher: Pmobj_t);
 var
   player: Pplayer_t;
@@ -350,7 +340,6 @@ begin
   if (delta > toucher.height) or (delta < -8 * FRACUNIT) then
     // out of reach
     exit;
-
 
   sound := Ord(sfx_itemup);
   player := toucher.player;
@@ -694,9 +683,7 @@ begin
     S_StartSound(nil, sound);
 end;
 
-
 // KillMobj
-
 procedure P_KillMobj(Source: Pmobj_t; target: Pmobj_t);
 var
   item: mobjtype_t;
@@ -760,9 +747,6 @@ begin
   if target.tics < 1 then
     target.tics := 1;
 
-  //  I_StartSound (&actor->r, actor->info->deathsound);
-
-
   // Drop stuff.
   // This determines the kind of object spawned
   // during the death frame of a thing.
@@ -782,7 +766,6 @@ begin
   mo.flags := mo.flags or MF_DROPPED; // special versions of items
 end;
 
-
 // P_DamageMobj
 // Damages both enemies and players
 // "inflictor" is the thing that caused the damage
@@ -792,7 +775,6 @@ end;
 // Source and inflictor are the same for melee attacks.
 // Source can be NULL for slime, barrel explosions
 // and other environmental stuff.
-
 procedure P_DamageMobj(target, inflictor, Source: Pmobj_t; damage: integer);
 var
   ang: angle_t;
@@ -827,7 +809,7 @@ begin
   begin
     ang := R_PointToAngle2(inflictor.x, inflictor.y, target.x, target.y);
 
-    thrust := (damage * (_SHR(FRACUNIT, 3)) * 100) div target.info.mass;
+    thrust := (damage * $2000 * 100) div target.info.mass;
 
     // make fall forwards sometimes
     if (damage < 40) and (damage > target.health) and
