@@ -684,7 +684,7 @@ begin
   // scan the remaining thinkers
   // to see if all Keens are dead
 
-  th := thinkercap.Next;
+  th := thinkercap.next;
   while th <> @thinkercap do
   begin
     if @th._function.acp1 = @P_MobjThinker then
@@ -693,7 +693,7 @@ begin
       if (mo2 <> mo) and (mo2._type = mo._type) and (mo2.health > 0) then
         exit; // other Keen not dead
     end;
-    th := th.Next;
+    th := th.next;
   end;
 
   junk.tag := 666;
@@ -1516,13 +1516,13 @@ begin
   // count total number of skull currently on the level
   Count := 0;
 
-  currentthinker := thinkercap.Next;
+  currentthinker := thinkercap.next;
   while currentthinker <> @thinkercap do
   begin
     if (@currentthinker._function.acp1 = @P_MobjThinker) and
       (Pmobj_t(currentthinker)._type = MT_SKULL) then
       Inc(Count);
-    currentthinker := currentthinker.Next;
+    currentthinker := currentthinker.next;
   end;
 
   // if there are allready 20 skulls on the level,
@@ -1695,7 +1695,7 @@ begin
 
   // scan the remaining thinkers to see
   // if all bosses are dead
-  th := thinkercap.Next;
+  th := thinkercap.next;
   while th <> @thinkercap do
   begin
     if @th._function.acp1 = @P_MobjThinker then
@@ -1707,7 +1707,7 @@ begin
         exit;
       end;
     end;
-    th := th.Next;
+    th := th.next;
   end;
 
   // victory!
@@ -1809,7 +1809,7 @@ begin
   numbraintargets := 0;
   braintargeton := 0;
 
-  thinker := thinkercap.Next;
+  thinker := thinkercap.next;
   while thinker <> @thinkercap do
   begin
     if @thinker._function.acp1 = @P_MobjThinker then // is a mobj
@@ -1824,7 +1824,7 @@ begin
         Inc(numbraintargets);
       end;
     end;
-    thinker := thinker.Next;
+    thinker := thinker.next;
   end;
 
   S_StartSound(nil, Ord(sfx_bossit));

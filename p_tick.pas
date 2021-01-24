@@ -72,7 +72,7 @@ uses
 procedure P_InitThinkers;
 begin
   thinkercap.prev := @thinkercap;
-  thinkercap.Next := @thinkercap;
+  thinkercap.next := @thinkercap;
 end;
 
 
@@ -81,8 +81,8 @@ end;
 
 procedure P_AddThinker(thinker: Pthinker_t);
 begin
-  thinkercap.prev.Next := thinker;
-  thinker.Next := @thinkercap;
+  thinkercap.prev.next := thinker;
+  thinker.next := @thinkercap;
   thinker.prev := thinkercap.prev;
   thinkercap.prev := thinker;
 end;
@@ -114,14 +114,14 @@ var
   currentthinker: Pthinker_t;
   nextthinker: Pthinker_t;
 begin
-  currentthinker := thinkercap.Next;
+  currentthinker := thinkercap.next;
   while currentthinker <> @thinkercap do
   begin
     if not Assigned(currentthinker._function.acv) then
     begin
       // time to remove it
-      currentthinker.Next.prev := currentthinker.prev;
-      currentthinker.prev.Next := currentthinker.Next;
+      currentthinker.next.prev := currentthinker.prev;
+      currentthinker.prev.next := currentthinker.next;
       nextthinker := currentthinker.next; // JVAL: 20201228 - Keep next pointer in nextthinker
       Z_Free(currentthinker);
       currentthinker := nextthinker;      // JVAL: 20201228 - Set currentthinker to next pointer

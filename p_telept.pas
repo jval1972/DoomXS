@@ -88,13 +88,13 @@ begin
   begin
     if sectors[i].tag = tag then
     begin
-      thinker := thinkercap.Next;
+      thinker := thinkercap.next;
       while thinker <> @thinkercap do
       begin
         // not a mobj
         if @thinker._function.acp1 <> @P_MobjThinker then
         begin
-          thinker := thinker.Next;
+          thinker := thinker.next;
           continue;
         end;
 
@@ -103,7 +103,7 @@ begin
         // not a teleportman
         if m._type <> MT_TELEPORTMAN then
         begin
-          thinker := thinker.Next;
+          thinker := thinker.next;
           continue;
         end;
 
@@ -111,7 +111,7 @@ begin
         // wrong sector
         if sector <> @sectors[i] then // VJ (was (sector-sectors != i ))
         begin
-          thinker := thinker.Next;
+          thinker := thinker.next;
           continue;
         end;
 

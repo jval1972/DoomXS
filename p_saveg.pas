@@ -297,7 +297,7 @@ var
   mobj: Pmobj_t;
 begin
   // save off the current thinkers
-  th := thinkercap.Next;
+  th := thinkercap.next;
   while th <> @thinkercap do
   begin
     if @th._function.acp1 = @P_MobjThinker then
@@ -316,7 +316,7 @@ begin
           '-', SizeOf(players[0])) + 1);
     end;
     // I_Error ("P_ArchiveThinkers: Unknown thinker function");
-    th := th.Next;
+    th := th.next;
   end;
 
   // add a terminating marker
@@ -331,21 +331,21 @@ procedure P_UnArchiveThinkers;
 var
   tclass: byte;
   currentthinker: Pthinker_t;
-  Next: Pthinker_t;
+  next: Pthinker_t;
   mobj: Pmobj_t;
 begin
   // remove all the current thinkers
-  currentthinker := thinkercap.Next;
+  currentthinker := thinkercap.next;
   while currentthinker <> @thinkercap do
   begin
-    Next := currentthinker.Next;
+    next := currentthinker.next;
 
     if @currentthinker._function.acp1 = @P_MobjThinker then
       P_RemoveMobj(Pmobj_t(currentthinker))
     else
       Z_Free(currentthinker);
 
-    currentthinker := Next;
+    currentthinker := next;
   end;
   P_InitThinkers;
 
@@ -427,11 +427,11 @@ var
   i: integer;
 begin
   // save off the current thinkers
-  th1 := thinkercap.Next;
+  th1 := thinkercap.next;
   while th1 <> @thinkercap do
   begin
     th := th1;
-    th1 := th1.Next;
+    th1 := th1.next;
     if not Assigned(th._function.acv) then
     begin
       i := 0;

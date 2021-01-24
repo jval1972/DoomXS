@@ -109,20 +109,20 @@ var
 
 procedure R_ClipSolidWallSegment(First, last: integer);
 var
-  Next: integer;
+  next: integer;
   start: integer;
 
   procedure crunch;
   begin
-    if Next = start then
+    if next = start then
       // Post just extended past the bottom of one post.
       exit;
-    while Next <> newend do
+    while next <> newend do
     begin
       // Remove a post.
       Inc(start);
-      Inc(Next);       // VJ maybe after????
-      solidsegs[start] := solidsegs[Next];
+      Inc(next);       // VJ maybe after????
+      solidsegs[start] := solidsegs[next];
     end;
     newend := start + 1;
   end;
@@ -141,16 +141,16 @@ begin
       // Post is entirely visible (above start),
       //  so insert a new clippost.
       R_StoreWallRange(First, last);
-      Next := newend;
+      next := newend;
       Inc(newend);
 
-      while Next <> start do
+      while next <> start do
       begin
-        solidsegs[Next] := solidsegs[Next - 1];
-        Dec(Next);
+        solidsegs[next] := solidsegs[next - 1];
+        Dec(next);
       end;
-      solidsegs[Next].First := First;
-      solidsegs[Next].last := last;
+      solidsegs[next].First := First;
+      solidsegs[next].last := last;
       exit;
     end;
 
@@ -164,25 +164,25 @@ begin
   if last <= solidsegs[start].last then
     exit;
 
-  Next := start;
-  while last >= solidsegs[Next + 1].First - 1 do
+  next := start;
+  while last >= solidsegs[next + 1].First - 1 do
   begin
     // There is a fragment between two posts.
-    R_StoreWallRange(solidsegs[Next].last + 1, solidsegs[Next + 1].First - 1);
-    Inc(Next);
+    R_StoreWallRange(solidsegs[next].last + 1, solidsegs[next + 1].First - 1);
+    Inc(next);
 
-    if last <= solidsegs[Next].last then
+    if last <= solidsegs[next].last then
     begin
       // Bottom is contained in next.
       // Adjust the clip size.
-      solidsegs[start].last := solidsegs[Next].last;
+      solidsegs[start].last := solidsegs[next].last;
       crunch;
       exit;
     end;
   end;
 
   // There is a fragment after *next.
-  R_StoreWallRange(solidsegs[Next].last + 1, last);
+  R_StoreWallRange(solidsegs[next].last + 1, last);
   // Adjust the clip size.
   solidsegs[start].last := last;
 

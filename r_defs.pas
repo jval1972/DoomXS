@@ -354,7 +354,7 @@ type
   vissprite_t = packed record
     // Doubly linked list.
     prev: Pvissprite_t;
-    Next: Pvissprite_t;
+    next: Pvissprite_t;
 
     x1: integer;
     x2: integer;
