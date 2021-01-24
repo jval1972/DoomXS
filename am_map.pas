@@ -1,20 +1,20 @@
 //------------------------------------------------------------------------------
-
+//
 //  DoomXS - A basic Windows source port of Doom
 //  based on original Linux Doom as published by "id Software"
 //  Copyright (C) 1993-1996 by id Software, Inc.
 //  Copyright (C) 2021 by Jim Valavanis
-
+//
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
 //  as published by the Free Software Foundation; either version 2
 //  of the License, or (at your option) any later version.
-
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
@@ -103,11 +103,11 @@ const
 
   AM_NUMMARKPOINTS = 10;
 
-  { scale on entry }
+// scale on entry
   INITSCALEMTOF = FRACUNIT div 5;
 
-  { how much the automap moves window per tic in frame-buffer coordinates }
-  { moves 140 pixels in 1 second }
+// how much the automap moves window per tic in frame-buffer coordinates }
+// moves 140 pixels in 1 second }
   F_PANINC = 4;
 
 { how much zoom-in per tic }
@@ -162,11 +162,9 @@ type
   end;
   Pislope_t = ^islope_t;
 
-
-{ The vector graphics for the automap. }
-{  A line drawing of the player pointing right, }
-{   starting from the middle. }
-
+// The vector graphics for the automap.
+//  A line drawing of the player pointing right,
+//   starting from the middle.
 const
   NUMPLYRLINES = 7;
 
@@ -221,9 +219,7 @@ var
   m_x, m_y: fixed_t;    // LL x,y where the window is on the map (map coords)
   m_x2, m_y2: fixed_t;  // UR x,y where the window is on the map (map coords)
 
-
   // width/height of window on map (map coords)
-
   m_w: fixed_t;
   m_h: fixed_t;
 
@@ -280,11 +276,11 @@ var
 
 function AM_Responder(ev: Pevent_t): boolean;
 
-{ Called by main loop. }
+// Called by main loop.
 procedure AM_Ticker;
 
-{ Called by main loop, }
-{ called instead of view drawer if automap active. }
+// Called by main loop,
+// called instead of view drawer if automap active.
 procedure AM_Drawer;
 
 { Called to force the automap to quit }
@@ -362,9 +358,6 @@ begin
     _is.slp := FixedDiv(dy, dx);
 end;
 
-
-
-
 procedure AM_activateNewScale;
 begin
   m_x := m_x + m_w div 2;
@@ -377,9 +370,6 @@ begin
   m_y2 := m_y + m_h;
 end;
 
-
-
-
 procedure AM_saveScaleAndLoc;
 begin
   old_m_x := m_x;
@@ -387,9 +377,6 @@ begin
   old_m_w := m_w;
   old_m_h := m_h;
 end;
-
-
-
 
 procedure AM_restoreScaleAndLoc;
 begin
@@ -414,9 +401,7 @@ begin
   scale_ftom := FixedDiv(FRACUNIT, scale_mtof);
 end;
 
-
 // adds a marker at the current location
-
 procedure AM_addMark;
 begin
   markpoints[markpointnum].x := m_x + m_w div 2;
@@ -424,10 +409,8 @@ begin
   markpointnum := (markpointnum + 1) mod AM_NUMMARKPOINTS;
 end;
 
-
 // Determines bounding box of all vertices,
 // sets global variables controlling zoom range.
-
 procedure AM_findMinMaxBoundaries;
 var
   i: integer;
@@ -469,9 +452,6 @@ begin
   max_scale_mtof := FixedDiv(f_h * FRACUNIT, 2 * PLAYERRADIUS);
 end;
 
-
-
-
 procedure AM_changeWindowLoc;
 begin
   if (m_paninc.x <> 0) or (m_paninc.y <> 0) then
@@ -496,9 +476,6 @@ begin
   m_x2 := m_x + m_w;
   m_y2 := m_y + m_h;
 end;
-
-
-
 
 var
   st_notify_AM_initVariables: event_t;
@@ -550,9 +527,6 @@ begin
   ST_Responder(@st_notify_AM_initVariables);
 end;
 
-
-
-
 procedure AM_loadPics;
 var
   i: integer;
@@ -582,10 +556,8 @@ begin
   markpointnum := 0;
 end;
 
-
 // should be called at the start of every level
 // right now, i figure it out myself
-
 procedure AM_LevelInit;
 begin
   leveljuststarted := 0;
@@ -604,9 +576,6 @@ begin
   scale_ftom := FixedDiv(FRACUNIT, scale_mtof);
 end;
 
-
-
-
 var
   st_notify_AM_Stop: event_t;
 
@@ -617,9 +586,6 @@ begin
   ST_Responder(@st_notify_AM_Stop);
   stopped := True;
 end;
-
-
-
 
 var
   lastlevel: integer = -1;
@@ -641,9 +607,7 @@ begin
   AM_loadPics;
 end;
 
-
 // set the window scale to the maximum size
-
 procedure AM_minOutWindowScale;
 begin
   scale_mtof := min_scale_mtof;
@@ -651,9 +615,7 @@ begin
   AM_activateNewScale;
 end;
 
-
 // set the window scale to the minimum size
-
 procedure AM_maxOutWindowScale;
 begin
   scale_mtof := max_scale_mtof;
@@ -661,9 +623,7 @@ begin
   AM_activateNewScale;
 end;
 
-
 // Handle events (user inputs) in automap mode
-
 var
   cheatstate: integer = 0;
   bigstate: boolean = False;
@@ -834,9 +794,6 @@ begin
     AM_activateNewScale;
 end;
 
-
-
-
 procedure AM_doFollowPlayer;
 begin
   if (f_oldloc.x <> plr.mo.x) or (f_oldloc.y <> plr.mo.y) then
@@ -849,9 +806,6 @@ begin
     f_oldloc.y := plr.mo.y;
   end;
 end;
-
-
-
 
 const
   NUMLITELEVELS = 8;
