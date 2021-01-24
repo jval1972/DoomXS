@@ -258,7 +258,7 @@ function P_UseSpecialLine(thing: Pmobj_t; line: Pline_t; side: integer): boolean
 begin
   // Err...
   // Use the back sides of VERY SPECIAL lines...
-  if boolval(side) then
+  if side <> 0 then
   begin
     case line.special of
       124:
@@ -278,7 +278,7 @@ begin
   if thing.player = nil then
   begin
     // never open secret doors
-    if boolval(line.flags and ML_SECRET) then
+    if line.flags and ML_SECRET <> 0 then
     begin
       Result := False;
       exit;
