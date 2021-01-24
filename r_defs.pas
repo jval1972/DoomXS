@@ -53,27 +53,18 @@ const
   MAXDRAWSEGS = 256;
 
 type
-
   // INTERNAL MAP TYPES
   //  used by play and refresh
-
-
 
   // Your plain vanilla vertex.
   // Note: transformed values not buffered locally,
   //  like some DOOM-alikes ("wt", "WebView") did.
-
   vertex_t = packed record
-    x: fixed_t;
-    y: fixed_t;
+    x, y: fixed_t;
   end;
   Pvertex_t = ^vertex_t;
   vertex_tArray = packed array[0..$FFFF] of vertex_t;
   Pvertex_tArray = ^vertex_tArray;
-
-{// Forward of LineDefs, for Sectors.
-  line_t = record;}
-
 
   // Each sector has a degenmobj_t in its center
   //  for sound origin purposes.
@@ -83,9 +74,7 @@ type
   //  updated.
   degenmobj_t = packed record
     thinker: thinker_t; // not used for anything
-    x: fixed_t;
-    y: fixed_t;
-    z: fixed_t;
+    x, y, z: fixed_t;
   end;
   Pdegenmobj_t = ^degenmobj_t;
 
@@ -94,7 +83,6 @@ type
 
   // The SECTORS record, at runtime.
   // Stores things/mobjs.
-
   sector_t = packed record
     floorheight: fixed_t;
     ceilingheight: fixed_t;
@@ -103,28 +91,20 @@ type
     lightlevel: smallint;
     special: smallint;
     tag: smallint;
-
     // 0 = untraversed, 1,2 = sndlines -1
     soundtraversed: integer;
-
     // thing that made a sound (or null)
     soundtarget: Pmobj_t;
-
     // mapblock bounding box for height changes
     blockbox: array[0..3] of integer;
-
     // origin for any sounds played by the sector
     soundorg: degenmobj_t;
-
     // if == validcount, already checked
     validcount: integer;
-
     // list of mobjs in sector
     thinglist: Pmobj_t;
-
     // thinker_t for reversable actions
     specialdata: pointer;
-
     linecount: integer;
     Lines: Pline_tPArray;  // [linecount] size
   end;
@@ -134,21 +114,16 @@ type
 
 
   // The SideDef.
-
-
   side_t = packed record
     // add this to the calculated texture column
     textureoffset: fixed_t;
-
     // add this to the calculated texture top
     rowoffset: fixed_t;
-
     // Texture indices.
     // We do not maintain names here.
     toptexture: smallint;
     bottomtexture: smallint;
     midtexture: smallint;
-
     // Sector the SideDef is facing.
     sector: Psector_t;
   end;
@@ -164,41 +139,31 @@ type
     ST_VERTICAL,
     ST_POSITIVE,
     ST_NEGATIVE
-    );
+  );
 
   line_t = packed record
     // Vertices, from v1 to v2.
-    v1: Pvertex_t;
-    v2: Pvertex_t;
-
+    v1, v2: Pvertex_t;
     // Precalculated v2 - v1 for side checking.
-    dx: fixed_t;
-    dy: fixed_t;
-
+    dx, dy: fixed_t;
     // Animation related.
     flags: smallint;
     special: smallint;
     tag: smallint;
-
     // Visual appearance: SideDefs.
     //  sidenum[1] will be -1 if one sided
     sidenum: packed array[0..1] of smallint;
-
     // Neat. Another bounding box, for the extent
     //  of the LineDef.
     bbox: packed array[0..3] of fixed_t;
-
     // To aid move clipping.
     slopetype: slopetype_t;
-
     // Front and back sector.
     // Note: redundant? Can be retrieved from SideDefs.
     frontsector: Psector_t;
     backsector: Psector_t;
-
     // if == validcount, already checked
     validcount: integer;
-
     // thinker_t for reversable actions
     specialdata: pointer;
   end;
@@ -206,14 +171,11 @@ type
   line_tArray = packed array[0..$FFFF] of line_t;
   line_tPArray = packed array[0..$FFFF] of Pline_t;
 
-
-
   // A SubSector.
   // References a Sector.
   // Basically, this is a list of LineSegs,
   //  indicating the visible walls that define
   //  (all or some) sides of a convex BSP leaf.
-
   subsector_t = packed record
     sector: Psector_t;
     numlines: smallint;
@@ -223,20 +185,13 @@ type
   subsector_tArray = packed array[0..$FFFF] of subsector_t;
   Psubsector_tArray = ^subsector_tArray;
 
-
   // The LineSeg.
-
   seg_t = packed record
-    v1: Pvertex_t;
-    v2: Pvertex_t;
-
+    v1, v2: Pvertex_t;
     offset: fixed_t;
-
     angle: angle_t;
-
     sidedef: Pside_t;
     linedef: Pline_t;
-
     // Sector references.
     // Could be retrieved from linedef, too.
     // backsector is NULL for one sided lines
@@ -247,19 +202,13 @@ type
   seg_tArray = packed array[0..$FFFF] of seg_t;
   Pseg_tArray = ^seg_tArray;
 
-
   // BSP node.
-
   node_t = packed record
     // Partition line.
-    x: fixed_t;
-    y: fixed_t;
-    dx: fixed_t;
-    dy: fixed_t;
-
+    x, y: fixed_t;
+    dx, dy: fixed_t;
     // Bounding box for each child.
     bbox: packed array[0..1, 0..3] of fixed_t;
-
     // If NF_SUBSECTOR its a subsector.
     children: packed array[0..1] of word;
   end;
@@ -281,7 +230,6 @@ type
 
   // OTHER TYPES
 
-
   // This could be wider for >8 bit display.
   // Indeed, true color support is posibble
   //  precalculating 24bpp lightmap/colormap LUT.
@@ -298,27 +246,17 @@ type
   lighttable_tPArray = packed array[0..$FFFF] of Plighttable_tArray;
   Plighttable_tPArray = ^lighttable_tPArray;
 
-
-  // ?
-
   drawseg_t = packed record
     curline: Pseg_t;
-    x1: integer;
-    x2: integer;
-
-    scale1: fixed_t;
-    scale2: fixed_t;
+    x1, x2: integer;
+    scale1, scale2: fixed_t;
     scalestep: fixed_t;
-
     // 0=none, 1=bottom, 2=top, 3=both
     silhouette: integer;
-
     // do not clip sprites above this
     bsilheight: fixed_t;
-
     // do not clip sprites below this
     tsilheight: fixed_t;
-
     // Pointers to lists for sprite clipping,
     //  all three adjusted so [x1] is first value.
     sprtopclip: PSmallIntArray;
