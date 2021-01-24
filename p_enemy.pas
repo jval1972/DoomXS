@@ -1096,7 +1096,7 @@ var
   dest: Pmobj_t;
   th: Pmobj_t;
 begin
-  if boolval(gametic and 3) then
+  if gametic and 3 <> 0 then
     exit;
 
   // spawn a puff of smoke behind the rocket
