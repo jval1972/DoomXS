@@ -776,7 +776,7 @@ begin
         Result := False;
       end
     end;
-    if (not boolval(deathmatch)) and cht_CheckCheat(@cheat_amap, Chr(ev.data1)) then
+    if (deathmatch = 0) and cht_CheckCheat(@cheat_amap, Chr(ev.data1)) then
     begin
       Result := False;
       cheating := (cheating + 1) mod 3;
@@ -1184,7 +1184,7 @@ begin
     l.b.y := Lines[i].v2.y;
     if (cheating <> 0) or ((Lines[i].flags and ML_MAPPED) <> 0) then
     begin
-      if ((Lines[i].flags and LINE_NEVERSEE) <> 0) and (not boolval(cheating)) then
+      if ((Lines[i].flags and LINE_NEVERSEE) <> 0) and (cheating = 0) then
         continue;
       if Lines[i].backsector = nil then
       begin
