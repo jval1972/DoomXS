@@ -134,7 +134,7 @@ begin
             S_StartSound(Pmobj_t(@door.sector.soundorg), Ord(sfx_bdcls));
           end;
           normal,
-          Close:
+          close:
           begin
             door.sector.specialdata := nil;
             P_RemoveThinker(@door.thinker);  // unlink and free
@@ -177,7 +177,7 @@ begin
           end;
           close30ThenOpen,
           blazeOpen,
-          Open:
+          open:
           begin
             door.sector.specialdata := nil;
             P_RemoveThinker(@door.thinker); // unlink and free
@@ -320,7 +320,7 @@ begin
       end;
 
       normal,
-      Open:
+      open:
       begin
         door.direction := 1;
         door.topheight := P_FindLowestCeilingSurrounding(sec);
@@ -452,7 +452,7 @@ begin
     33,
     34:
     begin
-      door._type := Open;
+      door._type := open;
       line.special := 0;
     end;
     117: // blazing door raise
