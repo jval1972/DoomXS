@@ -60,7 +60,7 @@ const
 
 //
 // Utility functions.
-function R_PointOnSide(x: fixed_t; y: fixed_t; node: Pnode_t): integer;
+function R_PointOnSide(const x: fixed_t; const y: fixed_t; const node: Pnode_t): boolean;
 
 function R_PointOnSegSide(x: fixed_t; y: fixed_t; line: Pseg_t): boolean;
 
@@ -216,52 +216,45 @@ end;
 //  check point against partition plane.
 // Returns side 0 (front) or 1 (back).
 //
-function R_PointOnSide(x: fixed_t; y: fixed_t; node: Pnode_t): integer;
+function R_PointOnSide(const x: fixed_t; const y: fixed_t; const node: Pnode_t): boolean;
 var
   dx: fixed_t;
   dy: fixed_t;
   left: fixed_t;
   right: fixed_t;
 begin
-  if not boolval(node.dx) then
+  if node.dx = 0 then
   begin
     if x <= node.x then
-      result := intval(node.dy > 0)
+      result := node.dy > 0
     else
-      result := intval(node.dy < 0);
+      result := node.dy < 0;
     exit;
   end;
 
-  if not boolval(node.dy) then
+  if node.dy = 0 then
   begin
     if y <= node.y then
-      result := intval(node.dx < 0)
+      result := node.dx < 0
     else
-      result := intval(node.dx > 0);
+      result := node.dx > 0;
     exit;
   end;
 
   dx := (x - node.x);
   dy := (y - node.y);
 
-    // Try to quickly decide by looking at sign bits.
-  if boolval((node.dy xor node.dx xor dx xor dy) and $80000000) then
+  // Try to quickly decide by looking at sign bits.
+  if ((node.dy xor node.dx xor dx xor dy) and $80000000) <> 0 then
   begin
-    if boolval((node.dy xor dx) and $80000000) then
-      // (left is negative)
-      result := 1
-    else
-      result := 0;
+    result := ((node.dy xor dx) and $80000000) <> 0;
     exit;
   end;
 
-  left := FixedMul(node.dy div FRACUNIT, dx);
-  right := FixedMul(dy, node.dx div FRACUNIT);
+  left := FixedMul(_SHR(node.dy, FRACBITS), dx);
+  right := FixedMul(dy, _SHR(node.dx, FRACBITS));
 
-  if right < left then
-    result := 0  // front side
-  else
-    result := 1; // back side
+  result := right >= left;
 end;
 
 function R_PointOnSegSide(x: fixed_t; y: fixed_t; line: Pseg_t): boolean;
@@ -281,7 +274,7 @@ begin
   ldx := line.v2.x - lx;
   ldy := line.v2.y - ly;
 
-  if not boolval(ldx) then
+  if ldx = 0 then
   begin
     if x <= lx then
       result := ldy > 0
@@ -290,7 +283,7 @@ begin
     exit;
   end;
 
-  if not boolval(ldy) then
+  if ldy = 0 then
   begin
     if y <= ly then
       result := ldx < 0
@@ -303,23 +296,16 @@ begin
   dy := y - ly;
 
   // Try to quickly decide by looking at sign bits.
-  if boolval((ldy xor ldx xor dx xor dy) and $80000000) then
+  if ((ldy xor ldx xor dx xor dy) and $80000000) <> 0 then
   begin
-    if  boolval((ldy xor dx) and $80000000) then
-      // (left is negative)
-      result := true
-    else
-      result := false;
+    result := ((ldy xor dx) and $80000000) <> 0;
     exit;
   end;
 
-  left := FixedMul(ldy div FRACUNIT, dx);
-  right := FixedMul(dy, ldx div FRACUNIT);
+  left := FixedMul(_SHR(ldy, FRACBITS), dx);
+  right := FixedMul(dy, _SHR(ldx, FRACBITS));
 
-  if right < left then
-    result := false // front side
-  else
-    result := true; // back side
+  result := left <= right;
 end;
 
 //
@@ -337,7 +323,7 @@ begin
   x := x - viewx;
   y := y - viewy;
 
-  if (not boolval(x)) and (not boolval(y)) then
+  if (x = 0) and (y = 0) then
   begin
     result := 0;
     exit;
@@ -626,7 +612,6 @@ begin
     startmap := ((LIGHTLEVELS - 1 - i) * 2) * NUMCOLORMAPS div LIGHTLEVELS;
     for j := 0 to MAXLIGHTZ - 1 do
     begin
-//      scale := FixedDiv((SCREENWIDTH div 2 * FRACUNIT), _SHL(j + 1, LIGHTZSHIFT)); // VJ maybe 320 ????
       scale := FixedDiv(160 * FRACUNIT, _SHL(j + 1, LIGHTZSHIFT));
       scale := _SHR(scale, LIGHTSCALESHIFT);
       level := startmap - scale div DISTMAP;
@@ -815,10 +800,13 @@ begin
 
   nodenum := numnodes - 1;
 
-  while (nodenum and NF_SUBSECTOR) = 0 do
+  while nodenum and NF_SUBSECTOR = 0 do
   begin
     node := @nodes[nodenum];
-    side := R_PointOnSide(x, y, node);
+    if R_PointOnSide(x, y, node) then
+      side := 1
+    else
+      side := 0;
     nodenum := node.children[side];
   end;
 
