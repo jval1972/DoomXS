@@ -110,11 +110,11 @@ var
 begin
   case ceiling.direction of
     0:
-      // IN STASIS
+    // IN STASIS
     begin
     end;
     1:
-      // UP
+    // UP
     begin
       res := T_MovePlane(ceiling.sector, ceiling.speed,
         ceiling.topheight, False, 1, ceiling.direction);
@@ -143,7 +143,7 @@ begin
       end;
     end;
     -1:
-      // DOWN
+    // DOWN
     begin
       res := T_MovePlane(ceiling.sector, ceiling.speed,
         ceiling.bottomheight, ceiling.crush, 1, ceiling.direction);
