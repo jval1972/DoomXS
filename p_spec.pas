@@ -343,7 +343,6 @@ uses
   info_h,
   g_game,
   p_setup,
-  p_tick,
   p_inter,
   p_switch,
   p_ceilng,
@@ -352,14 +351,13 @@ uses
   p_doors,
   p_floor,
   p_telept,
+  p_tick,
   s_sound,
   // Data.
   sounds;
 
-
 // Animating textures and planes
 // There is another anim_t used in wi_stuff, unrelated.
-
 type
   anim_t = record
     istexture: boolean;
@@ -382,9 +380,7 @@ type
 const
   MAXANIMS = 32;
 
-
   // P_InitPicAnims
-
 
   // Floor/ceiling animation sequences,
   //  defined by first and last frame,
