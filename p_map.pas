@@ -58,7 +58,7 @@ procedure P_LineAttack(t1: Pmobj_t; angle: angle_t; distance: fixed_t;
 
 procedure P_UseLines(player: Pplayer_t);
 
-procedure P_RadiusAttack(spot: Pmobj_t; Source: Pmobj_t; damage: integer);
+procedure P_RadiusAttack(spot: Pmobj_t; source: Pmobj_t; damage: integer);
 
 function P_ChangeSector(sector: Psector_t; crunch: boolean): boolean;
 
@@ -1292,8 +1292,8 @@ begin
 end;
 
 // P_RadiusAttack
-// Source is the creature that caused the explosion at spot.
-procedure P_RadiusAttack(spot: Pmobj_t; Source: Pmobj_t; damage: integer);
+// source is the creature that caused the explosion at spot.
+procedure P_RadiusAttack(spot: Pmobj_t; source: Pmobj_t; damage: integer);
 var
   x: integer;
   y: integer;
@@ -1309,7 +1309,7 @@ begin
   xh := _SHR((spot.x + dist - bmaporgx), MAPBLOCKSHIFT);
   xl := _SHR((spot.x - dist - bmaporgx), MAPBLOCKSHIFT);
   bombspot := spot;
-  bombsource := Source;
+  bombsource := source;
   bombdamage := damage;
 
   for y := yl to yh do

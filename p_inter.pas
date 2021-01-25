@@ -46,7 +46,7 @@ function P_GivePower(player: Pplayer_t; power: (*powertype_t*)integer): boolean;
 
 procedure P_TouchSpecialThing(special: Pmobj_t; toucher: Pmobj_t);
 
-procedure P_DamageMobj(target, inflictor, Source: Pmobj_t; damage: integer);
+procedure P_DamageMobj(target, inflictor, source: Pmobj_t; damage: integer);
 
 const
   // a weapon is found with two clip loads,
@@ -684,7 +684,7 @@ begin
 end;
 
 // KillMobj
-procedure P_KillMobj(Source: Pmobj_t; target: Pmobj_t);
+procedure P_KillMobj(source: Pmobj_t; target: Pmobj_t);
 var
   item: mobjtype_t;
   mo: Pmobj_t;
@@ -697,16 +697,16 @@ begin
   target.flags := target.flags or (MF_CORPSE or MF_DROPOFF);
   target.height := _SHR(target.height, 2);
 
-  if (Source <> nil) and (Source.player <> nil) then
+  if (source <> nil) and (source.player <> nil) then
   begin
     // count for intermission
     if target.flags and MF_COUNTKILL <> 0 then
-      Pplayer_t(Source.player).killcount := Pplayer_t(Source.player).killcount + 1;
+      Pplayer_t(source.player).killcount := Pplayer_t(source.player).killcount + 1;
 
     if target.player <> nil then
-      Pplayer_t(Source.player).frags[pOperation(target.player, @players[0],
+      Pplayer_t(source.player).frags[pOperation(target.player, @players[0],
         '-', SizeOf(players[0]))] :=
-        Pplayer_t(Source.player).frags[pOperation(target.player,
+        Pplayer_t(source.player).frags[pOperation(target.player,
         @players[0], '-', SizeOf(players[0]))] + 1;
   end
   else if not netgame and (target.flags and MF_COUNTKILL <> 0) then
@@ -719,7 +719,7 @@ begin
   if target.player <> nil then
   begin
     // count environment kills against you
-    if Source = nil then
+    if source = nil then
       Pplayer_t(target.player).frags[pOperation(target.player, @players[0],
         '-', SizeOf(players[0]))] :=
         Pplayer_t(target.player).frags[pOperation(target.player,
@@ -772,10 +772,10 @@ end;
 //  creature or missile, can be NULL (slime, etc)
 // "source" is the thing to target after taking damage
 //  creature or NULL
-// Source and inflictor are the same for melee attacks.
-// Source can be NULL for slime, barrel explosions
+// source and inflictor are the same for melee attacks.
+// source can be NULL for slime, barrel explosions
 // and other environmental stuff.
-procedure P_DamageMobj(target, inflictor, Source: Pmobj_t; damage: integer);
+procedure P_DamageMobj(target, inflictor, source: Pmobj_t; damage: integer);
 var
   ang: angle_t;
   saved: integer;
@@ -804,8 +804,8 @@ begin
   // inflict thrust and push the victim out of reach,
   // thus kick away unless using the chainsaw.
   if (inflictor <> nil) and (target.flags and MF_NOCLIP = 0) and
-    ((Source = nil) or ((Source.player = nil)) or
-    (Pplayer_t(Source.player).readyweapon <> wp_chainsaw)) then
+    ((source = nil) or ((source.player = nil)) or
+    (Pplayer_t(source.player).readyweapon <> wp_chainsaw)) then
   begin
     ang := R_PointToAngle2(inflictor.x, inflictor.y, target.x, target.y);
 
@@ -858,7 +858,7 @@ begin
     if player.health < 0 then
       player.health := 0;
 
-    player.attacker := Source;
+    player.attacker := source;
     player.damagecount := player.damagecount + damage;
     // add damage after armor / invuln
 
@@ -871,7 +871,7 @@ begin
   target.health := target.health - damage;
   if target.health <= 0 then
   begin
-    P_KillMobj(Source, target);
+    P_KillMobj(source, target);
     exit;
   end;
 
@@ -885,11 +885,11 @@ begin
   target.reactiontime := 0; // we're awake now...
 
   if ((target.threshold = 0) or (target._type = MT_VILE)) and
-    (Source <> nil) and (Source <> target) and (Source._type <> MT_VILE) then
+    (source <> nil) and (source <> target) and (source._type <> MT_VILE) then
   begin
     // if not intent on another player,
     // chase after this one
-    target.target := Source;
+    target.target := source;
     target.threshold := BASETHRESHOLD;
     if (target.state = @states[target.info.spawnstate]) and
       (target.info.seestate <> Ord(S_NULL)) then

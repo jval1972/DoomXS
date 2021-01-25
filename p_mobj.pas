@@ -48,9 +48,9 @@ procedure P_SpawnMapThing(mthing: Pmapthing_t);
 
 procedure P_SpawnPuff(x, y, z: fixed_t);
 
-function P_SpawnMissile(Source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
 
-procedure P_SpawnPlayerMissile(Source: Pmobj_t; _type: mobjtype_t);
+procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
 
 procedure P_RespawnSpecials;
 
@@ -869,19 +869,19 @@ end;
 // P_SpawnMissile
 
 
-function P_SpawnMissile(Source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
 var
   th: Pmobj_t;
   an: angle_t;
   dist: integer;
 begin
-  th := P_SpawnMobj(Source.x, Source.y, Source.z + 4 * 8 * FRACUNIT, _type);
+  th := P_SpawnMobj(source.x, source.y, source.z + 4 * 8 * FRACUNIT, _type);
 
   if th.info.seesound <> 0 then
     S_StartSound(th, th.info.seesound);
 
-  th.target := Source;  // where it came from
-  an := R_PointToAngle2(Source.x, Source.y, dest.x, dest.y);
+  th.target := source;  // where it came from
+  an := R_PointToAngle2(source.x, source.y, dest.x, dest.y);
 
   // fuzzy player
   if dest.flags and MF_SHADOW <> 0 then
@@ -892,13 +892,13 @@ begin
   th.momx := FixedMul(th.info.speed, finecosine[an]);
   th.momy := FixedMul(th.info.speed, finesine[an]);
 
-  dist := P_AproxDistance(dest.x - Source.x, dest.y - Source.y);
+  dist := P_AproxDistance(dest.x - source.x, dest.y - source.y);
   dist := dist div th.info.speed;
 
   if dist < 1 then
     dist := 1;
 
-  th.momz := (dest.z - Source.z) div dist;
+  th.momz := (dest.z - source.z) div dist;
   P_CheckMissileSpawn(th);
 
   Result := th;
@@ -908,7 +908,7 @@ end;
 // P_SpawnPlayerMissile
 // Tries to aim at a nearby monster
 
-procedure P_SpawnPlayerMissile(Source: Pmobj_t; _type: mobjtype_t);
+procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
 var
   th: Pmobj_t;
   an: angle_t;
@@ -918,37 +918,37 @@ var
   slope: fixed_t;
 begin
   // see which target is to be aimed at
-  an := Source.angle;
-  slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
+  an := source.angle;
+  slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
 
   if linetarget = nil then
   begin
     an := an + _SHLW(1, 26);
-    slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
+    slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
 
     if linetarget = nil then
     begin
       an := an - _SHLW(2, 26);
-      slope := P_AimLineAttack(Source, an, 16 * 64 * FRACUNIT);
+      slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
     end;
 
     if linetarget = nil then
     begin
-      an := Source.angle;
+      an := source.angle;
       slope := 0;
     end;
   end;
 
-  x := Source.x;
-  y := Source.y;
-  z := Source.z + 4 * 8 * FRACUNIT;
+  x := source.x;
+  y := source.y;
+  z := source.z + 4 * 8 * FRACUNIT;
 
   th := P_SpawnMobj(x, y, z, _type);
 
   if th.info.seesound <> 0 then
     S_StartSound(th, th.info.seesound);
 
-  th.target := Source;
+  th.target := source;
 
   th.angle := an;
   th.momx := FixedMul(th.info.speed, finecosine[_SHRW(an, ANGLETOFINESHIFT)]);
