@@ -279,10 +279,8 @@ begin
   end;
 end;
 
-
 // EV_CeilingCrushStop
 // Stop a ceiling from crushing!
-
 function EV_CeilingCrushStop(line: Pline_t): integer;
 var
   i: integer;
