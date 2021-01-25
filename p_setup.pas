@@ -543,7 +543,7 @@ begin
     end;
     if pOperation(linebuffer, sector.Lines, '-', SizeOf(pointer)) <>
       sector.linecount then
-      I_Error('P_GroupLines(): miscounted'); // VJ ?????
+      I_Error('P_GroupLines(): miscounted');
 
     // set the degenmobj_t to the middle of the bounding box
     sector.soundorg.x := (bbox[BOXRIGHT] + bbox[BOXLEFT]) div 2;
@@ -603,7 +603,6 @@ begin
 
   R_SetupLevel;
 
-  // UNUSED W_Profile ();
   P_InitThinkers;
 
   // if working with a devlopment map, reload it
