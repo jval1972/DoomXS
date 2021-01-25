@@ -213,7 +213,6 @@ begin
   // are meant to be obstacles.
 end;
 
-
 // ENEMY THINKING
 // Enemies are allways spawned
 // with targetplayer = -1, threshold = 0
@@ -221,12 +220,9 @@ end;
 // but some can be made preaware
 
 
-
-
 // Called by P_NoiseAlert.
 // Recursively traverse adjacent sectors,
 // sound blocking lines cut off traversal.
-
 
 var
   soundtarget: Pmobj_t;
@@ -271,11 +267,9 @@ begin
   end;
 end;
 
-
 // P_NoiseAlert
 // If a monster yells at a player,
 // it will alert other monsters to the player.
-
 procedure P_NoiseAlert(target: Pmobj_t; emmiter: Pmobj_t);
 begin
   soundtarget := target;
@@ -283,9 +277,7 @@ begin
   P_RecursiveSound(Psubsector_t(emmiter.subsector).sector, 0);
 end;
 
-
 // P_CheckMeleeRange
-
 function P_CheckMeleeRange(actor: Pmobj_t): boolean;
 var
   pl: Pmobj_t;
@@ -309,9 +301,7 @@ begin
   Result := P_CheckSight(actor, actor.target);
 end;
 
-
 // P_CheckMissileRange
-
 function P_CheckMissileRange(actor: Pmobj_t): boolean;
 var
   dist: fixed_t;
@@ -344,7 +334,7 @@ begin
   if actor.info.meleestate = 0 then
     dist := dist - 128 * FRACUNIT;  // no melee attack, so fire more
 
-  dist := _SHR(dist, 16);
+  dist := _SHR(dist, FRACBITS);
 
   if actor._type = MT_VILE then
     if dist > 14 * 64 then
@@ -381,19 +371,15 @@ begin
     Result := True;
 end;
 
-
 // P_Move
 // Move in the current direction,
 // returns false if the move is blocked.
-
 const
   xspeed: array[0..7] of fixed_t =
     (FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000, 0, 47000);
 
   yspeed: array[0..7] of fixed_t =
     (0, 47000, FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000);
-
-  MAXSPECIALCROSS = 8;
 
 function P_Move(actor: Pmobj_t): boolean;
 var
@@ -460,7 +446,6 @@ begin
   Result := True;
 end;
 
-
 // TryWalk
 // Attempts to move actor on
 // in its current (ob->moveangle) direction.
@@ -470,7 +455,6 @@ end;
 // returns TRUE and sets...
 // If a door is in the way,
 // an OpenDoor call is made to start it opening.
-
 function P_TryWalk(actor: Pmobj_t): boolean;
 begin
   if not P_Move(actor) then
@@ -605,7 +589,6 @@ end;
 // P_LookForPlayers
 // If allaround is false, only look 180 degrees in front.
 // Returns true if a player is targeted.
-
 function P_LookForPlayers(actor: Pmobj_t; allaround: boolean): boolean;
 var
   c: integer;
@@ -667,12 +650,9 @@ begin
   Result := False;
 end;
 
-
-
 // A_KeenDie
 // DOOM II special, map 32.
 // Uses special tag 666.
-
 procedure A_KeenDie(mo: Pmobj_t);
 var
   th: Pthinker_t;
@@ -700,14 +680,11 @@ begin
   EV_DoDoor(@junk, open);
 end;
 
-
 // ACTION ROUTINES
-
 
 
 // A_Look
 // Stay in state until a player is sighted.
-
 procedure A_Look(actor: Pmobj_t);
 var
   targ: Pmobj_t;
@@ -762,11 +739,9 @@ begin
   P_SetMobjState(actor, statenum_t(actor.info.seestate));
 end;
 
-
 // A_Chase
 // Actor has a melee attack,
 // so it tries to close as fast as possible
-
 procedure A_Chase(actor: Pmobj_t);
 var
   delta: integer;
@@ -859,9 +834,7 @@ begin
     S_StartSound(actor, actor.info.activesound);
 end;
 
-
 // A_FaceTarget
-
 procedure A_FaceTarget(actor: Pmobj_t);
 begin
   if actor.target = nil then
@@ -876,9 +849,7 @@ begin
     actor.angle := actor.angle + _SHLW(P_Random - P_Random, 21);
 end;
 
-
 // A_PosAttack
-
 procedure A_PosAttack(actor: Pmobj_t);
 var
   angle: angle_t;
@@ -980,9 +951,7 @@ begin
   P_SpawnMissile(actor, actor.target, MT_ARACHPLAZ);
 end;
 
-
 // A_TroopAttack
-
 procedure A_TroopAttack(actor: Pmobj_t);
 var
   damage: integer;
@@ -1065,9 +1034,7 @@ begin
   P_SpawnMissile(actor, actor.target, MT_BRUISERSHOT);
 end;
 
-
 // A_SkelMissile
-
 procedure A_SkelMissile(actor: Pmobj_t);
 var
   mo: Pmobj_t;
@@ -1180,13 +1147,10 @@ begin
   end;
 end;
 
-
 // PIT_VileCheck
 // Detect a corpse that could be raised.
-
 var
   corpsehit: Pmobj_t;
-  vileobj: Pmobj_t;
   viletryx: fixed_t;
   viletryy: fixed_t;
 
@@ -1234,10 +1198,8 @@ begin
     Result := False;  // got one, so stop checking
 end;
 
-
 // A_VileChase
 // Check for ressurecting a body
-
 procedure A_VileChase(actor: Pmobj_t);
 var
   xl: integer;
@@ -1262,7 +1224,6 @@ begin
     yl := _SHR((viletryy - bmaporgy - MAXRADIUS * 2), MAPBLOCKSHIFT);
     yh := _SHR((viletryy - bmaporgy + MAXRADIUS * 2), MAPBLOCKSHIFT);
 
-    vileobj := actor;
     for bx := xl to xh do
     begin
       for by := yl to yh do
@@ -1297,18 +1258,14 @@ begin
   A_Chase(actor);
 end;
 
-
 // A_VileStart
-
 procedure A_VileStart(actor: Pmobj_t);
 begin
   S_StartSound(actor, Ord(sfx_vilatk));
 end;
 
-
 // A_Fire
 // Keep fire in front of player unless out of sight
-
 procedure A_Fire(actor: Pmobj_t);
 var
   dest: Pmobj_t;
@@ -1343,10 +1300,8 @@ begin
   A_Fire(actor);
 end;
 
-
 // A_VileTarget
 // Spawn the hellfire
-
 procedure A_VileTarget(actor: Pmobj_t);
 var
   fog: Pmobj_t;
@@ -1364,9 +1319,7 @@ begin
   A_Fire(fog);
 end;
 
-
 // A_VileAttack
-
 procedure A_VileAttack(actor: Pmobj_t);
 var
   fire: Pmobj_t;
@@ -1397,12 +1350,10 @@ begin
   P_RadiusAttack(fire, actor, 70);
 end;
 
-
 // Mancubus attack,
 // firing three missiles (bruisers)
 // in three different directions?
 // Doesn't look like it.
-
 const
   FATSPREAD = ANG90 div 8;
 
@@ -1498,10 +1449,8 @@ begin
   actor.momz := (dest.z + (_SHR(dest.height, 1)) - actor.z) div dist;
 end;
 
-
 // A_PainShootSkull
 // Spawn a lost soul and launch it at the target
-
 procedure A_PainShootSkull(actor: Pmobj_t; angle: angle_t);
 var
   x: fixed_t;
@@ -1620,11 +1569,9 @@ begin
   P_RadiusAttack(thingy, thingy.target, 128);
 end;
 
-
 // A_BossDeath
 // Possibly trigger special effects
 // if on first boss level
-
 procedure A_BossDeath(mo: Pmobj_t);
 var
   th: Pthinker_t;
@@ -1930,7 +1877,7 @@ begin
 
   targ := mo.target;
 
-  if targ = nil then  // VJ
+  if targ = nil then
   begin
     P_RemoveMobj(mo);
     exit;
