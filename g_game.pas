@@ -1153,9 +1153,9 @@ begin
   wminfo.maxsecret := totalsecret;
   wminfo.maxfrags := 0;
   if gamemode = commercial then
-    wminfo.partime := TICKRATE * cpars[gamemap - 1]
+    wminfo.partime := TICRATE * cpars[gamemap - 1]
   else
-    wminfo.partime := TICKRATE * pars[gameepisode][gamemap];
+    wminfo.partime := TICRATE * pars[gameepisode][gamemap];
   wminfo.pnum := consoleplayer;
 
   for i := 0 to MAXPLAYERS - 1 do

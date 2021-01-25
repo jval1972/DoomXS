@@ -1489,7 +1489,7 @@ begin
   if boolval(i) and boolval(deathmatch) then
   begin
     levelTimer := True;
-    levelTimeCount := 20 * 60 * TICKRATE;
+    levelTimeCount := 20 * 60 * TICRATE;
   end;
 
   i := M_CheckParm('-timer');
