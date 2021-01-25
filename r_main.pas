@@ -149,16 +149,6 @@ var
 //
   clipangle: angle_t;
 
-// UNUSED.
-// The finetangentgent[angle+FINEANGLES/4] table
-// holds the fixed_t tangent values for view angles,
-// ranging from MININT to 0 to MAXINT.
-// fixed_t    finetangent[FINEANGLES/2];
-
-// fixed_t    finesine[5*FINEANGLES/4];
-// fixed_t*    finecosine = &finesine[FINEANGLES/4]; // VJ -> moved to tables.pas
-
-
   sscount: integer;
   linecount: integer;
   loopcount: integer;
@@ -442,7 +432,7 @@ end;
 //
 // R_InitPointToAngle
 //
-procedure R_InitPointToAngle; 
+procedure R_InitPointToAngle;
 // UNUSED - now getting from tables.c
 var
   i: integer;
