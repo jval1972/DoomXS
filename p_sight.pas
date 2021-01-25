@@ -60,12 +60,8 @@ var
   t2x: fixed_t;
   t2y: fixed_t;
 
-  sightcounts: array[0..1] of integer;
-
-
 // P_DivlineSide
 // Returns side 0 (front), 1 (back), or 2 (on).
-
 function P_DivlineSide(x, y: fixed_t; node: Pdivline_t): integer;
 var
   dx: fixed_t;
@@ -73,7 +69,7 @@ var
   left: fixed_t;
   right: fixed_t;
 begin
-  if not boolval(node.dx) then
+  if node.dx = 0 then
   begin
     if x = node.x then
     begin
@@ -82,14 +78,20 @@ begin
     end;
     if x <= node.x then
     begin
-      Result := intval(node.dy > 0);
+      if node.dy > 0 then
+        result := 1
+      else
+        result := 0;
       exit;
     end;
-    Result := intval(node.dy < 0);
+    if node.dy < 0 then
+      result := 1
+    else
+      result := 0;
     exit;
   end;
 
-  if not boolval(node.dy) then
+  if node.dy = 0 then
   begin
     if x = node.y then
     begin
@@ -98,18 +100,24 @@ begin
     end;
     if y <= node.y then
     begin
-      Result := intval(node.dx < 0);
+      if node.dx < 0 then
+        result := 1
+      else
+        result := 0;
       exit;
     end;
-    Result := intval(node.dx > 0);
+    if node.dx > 0 then
+      result := 1
+    else
+      result := 0;
     exit;
   end;
 
   dx := (x - node.x);
   dy := (y - node.y);
 
-  left := (node.dy div FRACUNIT) * (dx div FRACUNIT);
-  right := (dy div FRACUNIT) * (node.dx div FRACUNIT);
+  left := _SHR(node.dy, FRACBITS) * _SHR(dx, FRACBITS);
+  right := _SHR(dy, FRACBITS) * _SHR(node.dx, FRACBITS);
 
   if right < left then
   begin
@@ -123,12 +131,10 @@ begin
     Result := 1; // back side
 end;
 
-
 // P_InterceptVector2
 // Returns the fractional intercept point
 // along the first divline.
 // This is only called by the addthings and addlines traversers.
-
 function P_InterceptVector2(v2, v1: Pdivline_t): fixed_t;
 var
   num: fixed_t;
@@ -140,7 +146,6 @@ begin
   begin
     Result := 0;
     exit;
-    //  I_Error ("P_InterceptVector: parallel");
   end;
 
   num := FixedMul(_SHR(v1.x - v2.x, 8), v1.dy) +
@@ -149,11 +154,9 @@ begin
   Result := FixedDiv(num, den);
 end;
 
-
 // P_CrossSubsector
 // Returns true
 //  if strace crosses the given subsector successfully.
-
 function P_CrossSubsector(num: integer): boolean;
 var
   seg: Pseg_t;
@@ -208,7 +211,7 @@ begin
 
     // stop because it is not two sided anyway
     // might do this after updating validcount?
-    if not boolval(line.flags and ML_TWOSIDED) then
+    if line.flags and ML_TWOSIDED = 0 then
     begin
       Result := False;
       exit;
@@ -270,17 +273,15 @@ begin
   Result := True;
 end;
 
-
 // P_CrossBSPNode
 // Returns true
 //  if strace crosses the given node successfully.
-
 function P_CrossBSPNode(bspnum: integer): boolean;
 var
   bsp: Pnode_t;
   side: integer;
 begin
-  if boolval(bspnum and NF_SUBSECTOR) then
+  if bspnum and NF_SUBSECTOR <> 0 then
   begin
     if bspnum = -1 then
       Result := P_CrossSubsector(0)
@@ -315,12 +316,10 @@ begin
   Result := P_CrossBSPNode(bsp.children[side xor 1]);
 end;
 
-
 // P_CheckSight
 // Returns true
 //  if a straight line between t1 and t2 is unobstructed.
 // Uses REJECT.
-
 function P_CheckSight(t1: Pmobj_t; t2: Pmobj_t): boolean;
 var
   s1: integer;
@@ -341,10 +340,8 @@ begin
   bitnum := 1 shl (pnum and 7);
 
   // Check in REJECT table.
-  if boolval(rejectmatrix[bytenum] and bitnum) then
+  if rejectmatrix[bytenum] and bitnum <> 0 then
   begin
-    sightcounts[0] := sightcounts[0] + 1;
-
     // can't possibly be connected
     Result := False;
     exit;
@@ -352,8 +349,6 @@ begin
 
   // An unobstructed LOS is possible.
   // Now look from eyes of t1 to any part of t2.
-  sightcounts[1] := sightcounts[1] + 1;
-
   Inc(validcount);
 
   sightzstart := t1.z + t1.height - _SHR(t1.height, 2);
