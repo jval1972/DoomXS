@@ -167,14 +167,14 @@ const
 function GetSongLength(Data: PByteArray): integer;
 var
   done: boolean;
-  events: integer;
+  midievents: integer;
   header: Pmusheader_t;
   time: boolean;
   i: integer;
 begin
   header := Pmusheader_t(Data);
   i := header.scoreStart;
-  events := 0;
+  midievents := 0;
   done := header.ID <> MUSMAGIC;
   time := False;
   while not done do
@@ -185,7 +185,7 @@ begin
     case _SHR(Data[i - 1], 4) and 7 of
       1:
       begin
-        if boolval(Data[i] and $80) then
+        if Data[i] and $80 <> 0 then
           Inc(i);
         Inc(i);
       end;
@@ -196,16 +196,16 @@ begin
       else
         done := True;
     end;
-    Inc(events);
+    Inc(midievents);
     if time then
     begin
-      while boolval(Data[i] and $80) do
+      while Data[i] and $80 <> 0 do
         Inc(i);
       Inc(i);
       time := False;
     end;
   end;
-  Result := events + NUMTEMPOEVENTS;
+  Result := midievents + NUMTEMPOEVENTS;
 end;
 
 function I_MusToMidi(MusData: PByteArray; MidiEvents: PMidiEvent_tArray): boolean;
