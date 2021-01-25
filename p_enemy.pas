@@ -697,7 +697,7 @@ begin
   end;
 
   junk.tag := 666;
-  EV_DoDoor(@junk, Open);
+  EV_DoDoor(@junk, open);
 end;
 
 
