@@ -164,32 +164,6 @@ begin
   // an initial state of 0 could cycle through
 end;
 
-
-// P_CalcSwing
-
-var
-  swingx: fixed_t;
-  swingy: fixed_t;
-
-procedure P_CalcSwing(player: Pplayer_t);
-var
-  swing: fixed_t;
-  angle: integer;
-begin
-  // OPTIMIZE: tablify this.
-  // A LUT would allow for different modes,
-  //  and add flexibility.
-
-  swing := player.bob;
-
-  angle := (FINEANGLES div 70 * leveltime) and FINEMASK;
-  swingx := FixedMul(swing, finesine[angle]);
-
-  angle := (FINEANGLES div 70 * leveltime + FINEANGLES div 2) and FINEMASK;
-  swingy := -FixedMul(swingx, finesine[angle]);
-end;
-
-
 // P_BringUpWeapon
 // Starts bringing the pending weapon up
 // from the bottom of the screen.
@@ -242,23 +216,23 @@ begin
   // Preferences are set here.
   repeat
     if player.weaponowned[Ord(wp_plasma)] and
-      boolval(player.ammo[Ord(am_cell)]) and (gamemode <> shareware) then
+      (player.ammo[Ord(am_cell)] <> 0) and (gamemode <> shareware) then
       player.pendingweapon := wp_plasma
     else if player.weaponowned[Ord(wp_supershotgun)] and
       (player.ammo[Ord(am_shell)] > 2) and (gamemode = commercial) then
       player.pendingweapon := wp_supershotgun
     else if player.weaponowned[Ord(wp_chaingun)] and
-      boolval(player.ammo[Ord(am_clip)]) then
+      (player.ammo[Ord(am_clip)] <> 0) then
       player.pendingweapon := wp_chaingun
     else if player.weaponowned[Ord(wp_shotgun)] and
-      boolval(player.ammo[Ord(am_shell)]) then
+      (player.ammo[Ord(am_shell)] <> 0) then
       player.pendingweapon := wp_shotgun
-    else if boolval(player.ammo[Ord(am_clip)]) then
+    else if player.ammo[Ord(am_clip)] <> 0 then
       player.pendingweapon := wp_pistol
     else if player.weaponowned[Ord(wp_chainsaw)] then
       player.pendingweapon := wp_chainsaw
     else if player.weaponowned[Ord(wp_missile)] and
-      boolval(player.ammo[Ord(am_misl)]) then
+      (player.ammo[Ord(am_misl)] <> 0) then
       player.pendingweapon := wp_missile
     else if player.weaponowned[Ord(wp_bfg)] and
       (player.ammo[Ord(am_cell)] > 40) and (gamemode <> shareware) then
@@ -290,23 +264,19 @@ begin
   end;
 end;
 
-
 // P_DropWeapon
 // Player died, so put the weapon away.
-
 procedure P_DropWeapon(player: Pplayer_t);
 begin
   P_SetPsprite(player, Ord(ps_weapon),
     statenum_t(weaponinfo[Ord(player.readyweapon)].downstate));
 end;
 
-
 // A_WeaponReady
 // The player can fire the weapon
 // or change to another weapon at this time.
 // Follows after getting weapon up,
 // or after previous attack/fire sequence.
-
 procedure A_WeaponReady(player: Pplayer_t; psp: Ppspdef_t);
 var
   newstate: statenum_t;
@@ -322,7 +292,7 @@ begin
 
   // check for change
   //  if player is dead, put the weapon away
-  if (player.pendingweapon <> wp_nochange) or (not boolval(player.health)) then
+  if (player.pendingweapon <> wp_nochange) or (player.health = 0) then
   begin
     // change weapon
     //  (pending weapon should allready be validated)
@@ -333,7 +303,7 @@ begin
 
   // check for fire
   //  the missile launcher and bfg do not auto fire
-  if boolval(player.cmd.Buttons and BT_ATTACK) then
+  if player.cmd.buttons and BT_ATTACK <> 0 then
   begin
     if (not player.attackdown) or ((player.readyweapon <> wp_missile) and
       (player.readyweapon <> wp_bfg)) then
@@ -353,7 +323,6 @@ begin
   psp.sy := WEAPONTOP + FixedMul(player.bob, finesine[angle]);
 end;
 
-
 // A_ReFire
 // The player can re-fire the weapon
 // without lowering it entirely.
@@ -361,7 +330,7 @@ procedure A_ReFire(player: Pplayer_t; psp: Ppspdef_t);
 begin
   // check for fire
   //  (if a weaponchange is pending, let it go through instead)
-  if boolval(player.cmd.Buttons and BT_ATTACK) and
+  if (player.cmd.buttons and BT_ATTACK <> 0) and
     (player.pendingweapon = wp_nochange) and boolval(player.health) then
   begin
     player.refire := player.refire + 1;
@@ -378,7 +347,6 @@ procedure A_CheckReload(player: Pplayer_t; psp: Ppspdef_t);
 begin
   P_CheckAmmo(player);
 end;
-
 
 // A_Lower
 // Lowers current weapon,
@@ -401,7 +369,7 @@ begin
 
   // The old weapon has been lowered off the screen,
   // so change the weapon and start raising it
-  if not boolval(player.health) then
+  if player.health = 0 then
   begin
     // Player is dead, so keep the weapon off screen.
     P_SetPsprite(player, Ord(ps_weapon), S_NULL);
@@ -440,7 +408,6 @@ begin
     statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate));
 end;
 
-
 // WEAPON ATTACKS
 
 // A_Punch
@@ -450,7 +417,7 @@ var
   damage: integer;
   slope: integer;
 begin
-  damage := _SHL(P_Random mod 10 + 1, 1);
+  damage := (P_Random mod 10 + 1) * 2;
 
   if boolval(player.powers[Ord(pw_strength)]) then
     damage := damage * 10;
@@ -461,14 +428,13 @@ begin
   P_LineAttack(player.mo, angle, MELEERANGE, slope, damage);
 
   // turn to face target
-  if linetarget <>  nil then
+  if linetarget <> nil then
   begin
     S_StartSound(player.mo, Ord(sfx_punch));
     player.mo.angle :=
       R_PointToAngle2(player.mo.x, player.mo.y, linetarget.x, linetarget.y);
   end;
 end;
-
 
 // A_Saw
 procedure A_Saw(player: Pplayer_t; psp: Ppspdef_t);
@@ -485,7 +451,7 @@ begin
   slope := P_AimLineAttack(player.mo, angle, MELEERANGE + 1);
   P_LineAttack(player.mo, angle, MELEERANGE + 1, slope, damage);
 
-  if not boolval(linetarget) then
+  if linetarget = nil then
   begin
     S_StartSound(player.mo, Ord(sfx_sawful));
     exit;
@@ -530,7 +496,6 @@ begin
   P_SpawnPlayerMissile(player.mo, MT_BFG);
 end;
 
-
 // A_FirePlasma
 procedure A_FirePlasma(player: Pplayer_t; psp: Ppspdef_t);
 begin
@@ -561,19 +526,17 @@ begin
 
   if linetarget = nil then
   begin
-    an := an + _SHLW(1, 26);
+    an := an + $4000000;
     bulletslope := P_AimLineAttack(mo, an, 16 * 64 * FRACUNIT);
     if linetarget = nil then
     begin
-      an := an - _SHLW(2, 26);
+      an := an - $8000000;
       bulletslope := P_AimLineAttack(mo, an, 16 * 64 * FRACUNIT);
     end;
   end;
 end;
 
-
 // P_GunShot
-
 procedure P_GunShot(mo: Pmobj_t; accurate: boolean);
 var
   angle: angle_t;
@@ -588,9 +551,7 @@ begin
   P_LineAttack(mo, angle, MISSILERANGE, bulletslope, damage);
 end;
 
-
 // A_FirePistol
-
 procedure A_FirePistol(player: Pplayer_t; psp: Ppspdef_t);
 begin
   S_StartSound(player.mo, Ord(sfx_pistol));
@@ -603,12 +564,10 @@ begin
     statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate));
 
   P_BulletSlope(player.mo);
-  P_GunShot(player.mo, not boolval(player.refire));
+  P_GunShot(player.mo, player.refire = 0);
 end;
 
-
 // A_FireShotgun
-
 procedure A_FireShotgun(player: Pplayer_t; psp: Ppspdef_t);
 var
   i: integer;
@@ -628,9 +587,7 @@ begin
     P_GunShot(player.mo, False);
 end;
 
-
 // A_FireShotgun2
-
 procedure A_FireShotgun2(player: Pplayer_t; psp: Ppspdef_t);
 var
   i: integer;
@@ -658,13 +615,12 @@ begin
   end;
 end;
 
-
 // A_FireCGun
 procedure A_FireCGun(player: Pplayer_t; psp: Ppspdef_t);
 begin
   S_StartSound(player.mo, Ord(sfx_pistol));
 
-  if not boolval(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]) then
+  if player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] = 0 then
     exit;
 
   P_SetMobjState(player.mo, S_PLAY_ATK2);
@@ -677,7 +633,7 @@ begin
 
   P_BulletSlope(player.mo);
 
-  P_GunShot(player.mo, not boolval(player.refire));
+  P_GunShot(player.mo, player.refire = 0);
 end;
 
 procedure A_Light0(player: Pplayer_t; psp: Ppspdef_t);
@@ -715,7 +671,7 @@ begin
     //  of the missile
     P_AimLineAttack(mo.target, an, 16 * 64 * FRACUNIT);
 
-    if not boolval(linetarget) then
+    if linetarget = nil then
       continue;
 
     P_SpawnMobj(
@@ -729,7 +685,6 @@ begin
     P_DamageMobj(linetarget, mo.target, mo.target, damage);
   end;
 end;
-
 
 // A_BFGsound
 procedure A_BFGsound(player: Pplayer_t; psp: Ppspdef_t);
@@ -765,14 +720,14 @@ begin
     psp := @player.psprites[i];
     // a null state means not active
     state := psp.state;
-    if boolval(state) then
+    if state <> nil then
     begin
       // drop tic count and possibly change state
       // a -1 tic count never changes
       if psp.tics <> -1 then
       begin
         psp.tics := psp.tics - 1;
-        if not boolval(psp.tics) then
+        if psp.tics = 0 then
           P_SetPsprite(player, i, psp.state.nextstate);
       end;
     end;
