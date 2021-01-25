@@ -213,8 +213,6 @@ const
   KEY_PAGEUP = $80 + $46;
   KEY_INS = $80 + $47;
 
-  KEY_LALT = KEY_RALT;
-
 implementation
 
 end.

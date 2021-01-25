@@ -512,7 +512,7 @@ begin
     shiftdown := Ord(ev_keydown) <> 0;
     exit;
   end
-  else if (ev.data1 = KEY_RALT) or (ev.data1 = KEY_LALT) then
+  else if ev.data1 = KEY_RALT then
   begin
     altdown := Ord(ev_keydown) <> 0;
     exit;
