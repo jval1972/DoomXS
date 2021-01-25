@@ -485,9 +485,10 @@ asm
 @@exit:
 end;
 
-function _SHL(const x: integer; const bits: integer): integer;
-begin
-  Result := x * (1 shl bits);
+function _SHL(const x: integer; const bits: integer): integer; assembler;
+asm
+  mov ecx, edx
+  sal eax, cl
 end;
 
 function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
@@ -495,9 +496,10 @@ begin
   Result := x shl bits;
 end;
 
-function _SHR(const x: integer; const bits: integer): integer;
-begin
-  Result := x div (1 shl bits);
+function _SHR(const x: integer; const bits: integer): integer; assembler;
+asm
+  mov ecx, edx
+  sar eax, cl
 end;
 
 function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
