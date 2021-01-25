@@ -322,7 +322,7 @@ begin
     118: // Blazing door open
       EV_VerticalDoor(line, thing);
 
-    //UNUSED - Door Slide Open&Close
+    //UNUSED - Door Slide open&close
     // case 124:
     // EV_SlidingDoor (line, thing);
     // break;
