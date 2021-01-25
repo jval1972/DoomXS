@@ -62,13 +62,9 @@ uses
   p_tick,
   p_setup;
 
-
 // FIRELIGHT FLICKER
 
-
-
 // T_FireFlicker
-
 procedure T_FireFlicker(flick: Pfireflicker_t);
 var
   amount: integer;
@@ -87,9 +83,7 @@ begin
   flick.count := 4;
 end;
 
-
 // P_SpawnFireFlicker
-
 procedure P_SpawnFireFlicker(sector: Psector_t);
 var
   flick: Pfireflicker_t;
@@ -109,14 +103,10 @@ begin
   flick.count := 4;
 end;
 
-
 // BROKEN LIGHT FLASHING
-
-
 
 // T_LightFlash
 // Do flashing lights.
-
 procedure T_LightFlash(flash: Plightflash_t);
 begin
   flash.count := flash.count - 1;
@@ -135,11 +125,9 @@ begin
   end;
 end;
 
-
 // P_SpawnLightFlash
 // After the map has been loaded, scan each sector
 // for specials that spawn thinkers
-
 procedure P_SpawnLightFlash(sector: Psector_t);
 var
   flash: Plightflash_t;
@@ -161,13 +149,10 @@ begin
   flash.count := (P_Random and flash.maxtime) + 1;
 end;
 
-
 // STROBE LIGHT FLASHING
 
 
-
 // T_StrobeFlash
-
 procedure T_StrobeFlash(flash: Pstrobe_t);
 begin
   flash.count := flash.count - 1;
@@ -186,11 +171,9 @@ begin
   end;
 end;
 
-
 // P_SpawnStrobeFlash
 // After the map has been loaded, scan each sector
 // for specials that spawn thinkers
-
 procedure P_SpawnStrobeFlash(sector: Psector_t; fastOrSlow, inSync: integer);
 var
   flash: Pstrobe_t;
@@ -218,9 +201,7 @@ begin
     flash.count := 1;
 end;
 
-
 // Start strobing lights (usually from a trigger)
-
 procedure EV_StartLightStrobing(line: Pline_t);
 var
   secnum: integer;
@@ -239,9 +220,7 @@ begin
   until secnum < 0;
 end;
 
-
 // TURN LINE'S TAG LIGHTS OFF
-
 procedure EV_TurnTagLightsOff(line: Pline_t);
 var
   i: integer;
@@ -272,9 +251,7 @@ begin
   end;
 end;
 
-
 // TURN LINE'S TAG LIGHTS ON
-
 procedure EV_LightTurnOn(line: Pline_t; bright: integer);
 var
   i: integer;
@@ -309,9 +286,7 @@ begin
   end;
 end;
 
-
 // Spawn glowing light
-
 procedure T_Glow(g: Pglow_t);
 begin
   case g.direction of
