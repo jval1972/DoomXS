@@ -36,9 +36,7 @@ uses
   p_mobj_h,
   r_defs;
 
-
 // End-level timer (-TIMER option)
-
 
 const
   //      Define values for map objects
@@ -82,14 +80,10 @@ function P_FindMinSurroundingLight(sector: Psector_t; max: integer): integer;
 
 function getNextSector(line: Pline_t; sec: Psector_t): Psector_t;
 
-
 // SPECIAL
-
 function EV_DoDonut(line: Pline_t): integer;
 
-
 // P_LIGHTS
-
 type
   fireflicker_t = record
     thinker: thinker_t;
@@ -138,12 +132,11 @@ const
   SLOWDARK = 35;
 
 type
-
   bwhere_e = (
     top,
     middle,
     bottom
-    );
+  );
 
   button_t = record
     line: Pline_t;
@@ -154,26 +147,24 @@ type
   end;
 
 const
-  // max # of wall switches in a level
+// max # of wall switches in a level
   MAXSWITCHES = 50;
 
-  // 4 players, 4 buttons each at once, max.
+// 4 players, 4 buttons each at once, max.
   MAXBUTTONS = 16;
 
-  // 1 second, in ticks.
+// 1 second, in ticks.
   BUTTONTIME = 35;
 
 
 type
-
-  // P_PLATS
-
+// P_PLATS
   plat_e = (
     up,
     down,
     waiting,
     in_stasis
-    );
+  );
 
   plattype_e = (
     perpetualRaise,
@@ -181,7 +172,7 @@ type
     raiseAndChange,
     raiseToNearestAndChange,
     blazeDWUS
-    );
+  );
 
   plat_t = record
     thinker: thinker_t;
@@ -205,19 +196,17 @@ const
   MAXPLATS = 30;
 
 type
-
-  // P_DOORS
-
+// P_DOORS
   vldoor_e = (
     normal,
     close30ThenOpen,
-    Close,
-    Open,
+    close,
+    open,
     raiseIn5Mins,
     blazeRaise,
     blazeOpen,
     blazeClose
-    );
+  );
 
   vldoor_t = record
     thinker: thinker_t;
@@ -242,9 +231,7 @@ const
   VDOORWAIT = 150;
 
 type
-
-  // P_CEILNG
-
+// P_CEILNG
   ceiling_e = (
     lowerToFloor,
     raiseToHighest,
@@ -252,7 +239,7 @@ type
     crushAndRaise,
     fastCrushAndRaise,
     silentCrushAndRaise
-    );
+  );
 
   ceiling_t = record
     thinker: thinker_t;
@@ -277,9 +264,7 @@ const
   MAXCEILINGS = 30;
 
 type
-
-  // P_FLOOR
-
+// P_FLOOR
   floor_e = (
     // lower floor to highest surrounding floor
     lowerFloor,
@@ -311,12 +296,12 @@ type
     raiseFloorTurbo,
     donutRaise,
     raiseFloor512
-    );
+  );
 
   stair_e = (
     build8, // slowly build by 8
     turbo16 // quickly build by 16
-    );
+  );
 
   floormove_t = record
     thinker: thinker_t;
@@ -339,7 +324,7 @@ type
     ok,
     crushed,
     pastdest
-    );
+  );
 
 implementation
 
@@ -385,9 +370,7 @@ type
   end;
   Panim_t = ^anim_t;
 
-
-  //      source animation definition
-
+//      source animation definition
   animdef_t = record
     istexture: boolean; // if false, it is a flat
     endname: string[8];
@@ -449,9 +432,7 @@ var
   lastanim: integer;
 
 const
-
-  //      Animating line specials
-
+//      Animating line specials
   MAXLINEANIMS = 64;
 
 procedure P_InitPicAnims;
@@ -486,7 +467,6 @@ begin
       anims[lastanim].picnum := R_FlatNumForName(animdefs[i].endname);
       anims[lastanim].basepic := R_FlatNumForName(animdefs[i].startname);
     end;
-
     anims[lastanim].istexture := animdefs[i].istexture;
     anims[lastanim].numpics := anims[lastanim].picnum - anims[lastanim].basepic + 1;
 
@@ -500,47 +480,38 @@ begin
   end;
 end;
 
-
 // UTILITIES
-
 
 
 // getSide()
 // Will return a side_t*
 //  given the number of the current sector,
 //  the line number, and the side (0/1) that you want.
-
 function getSide(currentSector: integer; line: integer; side: integer): Pside_t;
 begin
   Result := @sides[(sectors[currentSector].Lines[line]).sidenum[side]];
 end;
 
-
 // getSector()
 // Will return a sector_t*
 //  given the number of the current sector,
 //  the line number and the side (0/1) that you want.
-
 function getSector(currentSector: integer; line: integer; side: integer): Psector_t;
 begin
   Result := sides[(sectors[currentSector].Lines[line]).sidenum[side]].sector;
 end;
 
-
 // twoSided()
 // Given the sector number and the line number,
 //  it will tell you whether the line is two-sided or not.
-
 function twoSided(sector: integer; line: integer): integer;
 begin
   Result := (sectors[sector].Lines[line]).flags and ML_TWOSIDED;
 end;
 
-
 // getNextSector()
 // Return sector_t * of sector next to current.
 // NULL if not two-sided line
-
 function getNextSector(line: Pline_t; sec: Psector_t): Psector_t;
 begin
   if not boolval(line.flags and ML_TWOSIDED) then
@@ -554,10 +525,8 @@ begin
   end;
 end;
 
-
 // P_FindLowestFloorSurrounding()
 // FIND LOWEST FLOOR HEIGHT IN SURROUNDING SECTORS
-
 function P_FindLowestFloorSurrounding(sec: Psector_t): fixed_t;
 var
   i: integer;
@@ -577,10 +546,8 @@ begin
   end;
 end;
 
-
 // P_FindHighestFloorSurrounding()
 // FIND HIGHEST FLOOR HEIGHT IN SURROUNDING SECTORS
-
 function P_FindHighestFloorSurrounding(sec: Psector_t): fixed_t;
 var
   i: integer;
@@ -599,7 +566,6 @@ begin
         Result := other.floorheight;
   end;
 end;
-
 
 // P_FindNextHighestFloor
 // FIND NEXT HIGHEST FLOOR IN SURROUNDING SECTORS
@@ -660,7 +626,6 @@ end;
 
 
 // FIND LOWEST CEILING IN THE SURROUNDING SECTORS
-
 function P_FindLowestCeilingSurrounding(sec: Psector_t): fixed_t;
 var
   i: integer;
@@ -680,9 +645,7 @@ begin
   end;
 end;
 
-
 // FIND HIGHEST CEILING IN THE SURROUNDING SECTORS
-
 function P_FindHighestCeilingSurrounding(sec: Psector_t): fixed_t;
 var
   i: integer;
@@ -704,7 +667,6 @@ end;
 
 
 // RETURN NEXT SECTOR # THAT LINE TAG REFERS TO
-
 function P_FindSectorFromLineTag(line: Pline_t; start: integer): integer;
 var
   i: integer;
@@ -721,7 +683,6 @@ end;
 
 
 // Find minimum light from an adjacent sector
-
 function P_FindMinSurroundingLight(sector: Psector_t; max: integer): integer;
 var
   i: integer;
@@ -740,17 +701,14 @@ begin
   end;
 end;
 
-
 // EVENTS
 // Events are operations triggered by using, crossing,
 // or shooting special lines, or by timed thinkers.
 
 
-
 // P_CrossSpecialLine - TRIGGER
 // Called every time a thing origin is about
 //  to cross a line with a non 0 special.
-
 procedure P_CrossSpecialLine(linenum: integer; side: integer; thing: Pmobj_t);
 var
   line: Pline_t;
@@ -758,7 +716,7 @@ begin
   line := @Lines[linenum];
 
   //  Triggers that other things can activate
-  if not boolval(thing.player) then
+  if thing.player = nil then
   begin
     // Things that should NOT trigger specials...
     case thing._type of
@@ -793,7 +751,7 @@ begin
     2:
     begin
       // Open Door
-      EV_DoDoor(line, Open);
+      EV_DoDoor(line, open);
       line.special := 0;
     end;
 
@@ -1149,7 +1107,7 @@ begin
     86:
     begin
       // Open Door
-      EV_DoDoor(line, Open);
+      EV_DoDoor(line, open);
     end;
 
     87:
@@ -1253,7 +1211,7 @@ begin
     126:
     begin
       // TELEPORT MonsterONLY.
-      if not boolval(thing.player) then
+      if thing.player = nil then
         EV_Teleport(line, side, thing);
     end;
 
@@ -1278,7 +1236,7 @@ end;
 procedure P_ShootSpecialLine(thing: Pmobj_t; line: Pline_t);
 begin
   //  Impacts that other things can activate.
-  if not boolval(thing.player) then
+  if thing.player = nil then
     case line.special of
       46: ; // OPEN DOOR IMPACT
       else
@@ -1296,7 +1254,7 @@ begin
     46:
     begin
       // OPEN DOOR
-      EV_DoDoor(line, Open);
+      EV_DoDoor(line, open);
       P_ChangeSwitchTexture(line, 1);
     end;
 
@@ -1327,25 +1285,25 @@ begin
     5:
     begin
       // HELLSLIME DAMAGE
-      if not boolval(player.powers[Ord(pw_ironfeet)]) then
-        if not boolval(leveltime and $1f) then
+      if player.powers[Ord(pw_ironfeet)] = 0 then
+        if leveltime and $1f = 0 then
           P_DamageMobj(player.mo, nil, nil, 10);
     end;
 
     7:
     begin
       // NUKAGE DAMAGE
-      if not boolval(player.powers[Ord(pw_ironfeet)]) then
-        if not boolval(leveltime and $1f) then
+      if player.powers[Ord(pw_ironfeet)] = 0 then
+        if leveltime and $1f = 0 then
           P_DamageMobj(player.mo, nil, nil, 5);
     end;
 
     16, // SUPER HELLSLIME DAMAGE
     4: // STROBE HURT
     begin
-      if (not boolval(player.powers[Ord(pw_ironfeet)])) or
+      if (player.powers[Ord(pw_ironfeet)] = 0) or
         (P_Random < 5) then
-        if not boolval(leveltime and $1f) then
+        if leveltime and $1f = 0 then
           P_DamageMobj(player.mo, nil, nil, 20);
     end;
 
@@ -1361,7 +1319,7 @@ begin
       // EXIT SUPER DAMAGE! (for E1M8 finale)
       player.cheats := player.cheats and (not CF_GODMODE);
 
-      if not boolval(leveltime and $1f) then
+      if leveltime and $1f = 0 then
         P_DamageMobj(player.mo, nil, nil, 20);
 
       if player.health <= 10 then
@@ -1376,7 +1334,6 @@ end;
 var
   numlinespecials: smallint;
   linespeciallist: array[0..MAXLINEANIMS - 1] of Pline_t;
-
 
 
 // P_UpdateSpecials
@@ -1397,7 +1354,7 @@ begin
   if levelTimer then
   begin
     Dec(levelTimeCount);
-    if not boolval(levelTimeCount) then
+    if levelTimeCount = 0 then
       G_ExitLevel;
   end;
 
@@ -1428,11 +1385,11 @@ begin
   // DO BUTTONS
   for i := 0 to MAXBUTTONS - 1 do
   begin
-    if boolval(buttonlist[i].btimer) then
+    if buttonlist[i].btimer <> 0 then
     begin
       buttonlist[i].btimer := buttonlist[i].btimer - 1;
 
-      if not boolval(buttonlist[i].btimer) then
+      if buttonlist[i].btimer = 0 then
       begin
         case buttonlist[i].where of
           top:
@@ -1470,20 +1427,20 @@ begin
     secnum := P_FindSectorFromLineTag(line, secnum);
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
-    if boolval(s1.specialdata) then
+    if s1.specialdata <> nil then
       continue;
 
     Result := 1;
     s2 := getNextSector(s1.Lines[0], s1);
     for i := 0 to s2.linecount - 1 do
     begin
-      if (not boolval(s2.Lines[i].flags and ML_TWOSIDED)) or
+      if (s2.lines[i].flags and ML_TWOSIDED = 0) or
         (s2.Lines[i].backsector = s1) then
         continue;
       s3 := s2.Lines[i].backsector;
 
       //  Spawn rising slime
-      floor := Z_Malloc(SizeOf(floor^), PU_LEVSPEC, nil);
+      floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
       P_AddThinker(@floor.thinker);
       s2.specialdata := floor;
       floor.thinker._function.acp1 := @T_MoveFloor;
@@ -1497,7 +1454,7 @@ begin
       floor.floordestheight := s3.floorheight;
 
       //  Spawn lowering donut-hole
-      floor := Z_Malloc(sizeof(floor^), PU_LEVSPEC, nil);
+      floor := Z_Malloc(sizeof(floormove_t), PU_LEVSPEC, nil);
       P_AddThinker(@floor.thinker);
       s1.specialdata := floor;
       floor.thinker._function.acp1 := @T_MoveFloor;
@@ -1512,9 +1469,7 @@ begin
   end;
 end;
 
-
 // SPECIAL SPAWNING
-
 
 
 // P_SpawnSpecials
@@ -1542,7 +1497,7 @@ begin
   end;
 
   i := M_CheckParm('-timer');
-  if boolval(i) and boolval(deathmatch) then
+  if (i <> 0) and (i < myargc - 1) and (deathmatch <> 0) then
   begin
     time := atoi(myargv[i + 1]) * 60 * 35;
     levelTimer := True;
@@ -1553,7 +1508,7 @@ begin
   for i := 0 to numsectors - 1 do
   begin
     sector := @sectors[i];
-    if not boolval(sector.special) then
+    if sector.special = 0 then
       continue;
 
     case sector.special of
