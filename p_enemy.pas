@@ -243,7 +243,7 @@ begin
 
   for i := 0 to sec.linecount - 1 do
   begin
-    check := sec.Lines[i];
+    check := sec.lines[i];
     if check.flags and ML_TWOSIDED = 0 then
       continue;
 

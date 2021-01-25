@@ -174,11 +174,9 @@ begin
     P_SetMobjState(player.mo, S_PLAY_RUN1);
 end;
 
-
 // P_DeathThink
 // Fall on your face when dying.
 // Decrease POV height to floor height.
-
 const
   ANG5 = ANG90 div 18;
   ANG355 = ANG270 + ANG5 * 17; // add by VJ
@@ -226,7 +224,7 @@ begin
     player.damagecount := player.damagecount - 1;
 
 
-  if player.cmd.Buttons and BT_USE <> 0 then
+  if player.cmd.buttons and BT_USE <> 0 then
     player.playerstate := PST_REBORN;
 end;
 
@@ -277,15 +275,15 @@ begin
   // Check for weapon change.
 
   // A special event has no other buttons.
-  if cmd.Buttons and BT_SPECIAL <> 0 then
-    cmd.Buttons := 0;
+  if cmd.buttons and BT_SPECIAL <> 0 then
+    cmd.buttons := 0;
 
-  if cmd.Buttons and BT_CHANGE <> 0 then
+  if cmd.buttons and BT_CHANGE <> 0 then
   begin
     // The actual changing of the weapon is done
     //  when the weapon psprite can do it
     //  (read: not in the middle of an attack).
-    newweapon := weapontype_t(_SHR(cmd.Buttons and BT_WEAPONMASK, BT_WEAPONSHIFT));
+    newweapon := weapontype_t(_SHR(cmd.buttons and BT_WEAPONMASK, BT_WEAPONSHIFT));
 
     if (newweapon = wp_fist) and player.weaponowned[Ord(wp_chainsaw)] and
       (not ((player.readyweapon = wp_chainsaw) and
@@ -309,7 +307,7 @@ begin
   end;
 
   // check for use
-  if cmd.Buttons and BT_USE <> 0 then
+  if cmd.buttons and BT_USE <> 0 then
   begin
     if not player.usedown then
     begin

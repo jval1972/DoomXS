@@ -182,7 +182,7 @@ begin
   i := 0;
   while i < numlines do
   begin
-    li := Pline_t(@Lines[i]);
+    li := Pline_t(@lines[i]);
     put[0] := li.flags;
     incp(pointer(put), SizeOf(smallint));
     put[0] := li.special;
@@ -256,7 +256,7 @@ begin
   i := 0;
   while i < numlines do
   begin
-    li := Pline_t(@Lines[i]);
+    li := Pline_t(@lines[i]);
     li.flags := get[0];
     incp(pointer(get), SizeOf(smallint));
     li.special := get[0];

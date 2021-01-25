@@ -1132,37 +1132,37 @@ var
 begin
   for i := 0 to numlines - 1 do
   begin
-    l.a.x := Lines[i].v1.x;
-    l.a.y := Lines[i].v1.y;
-    l.b.x := Lines[i].v2.x;
-    l.b.y := Lines[i].v2.y;
-    if (cheating <> 0) or ((Lines[i].flags and ML_MAPPED) <> 0) then
+    l.a.x := lines[i].v1.x;
+    l.a.y := lines[i].v1.y;
+    l.b.x := lines[i].v2.x;
+    l.b.y := lines[i].v2.y;
+    if (cheating <> 0) or ((lines[i].flags and ML_MAPPED) <> 0) then
     begin
-      if ((Lines[i].flags and LINE_NEVERSEE) <> 0) and (cheating = 0) then
+      if ((lines[i].flags and LINE_NEVERSEE) <> 0) and (cheating = 0) then
         continue;
-      if Lines[i].backsector = nil then
+      if lines[i].backsector = nil then
       begin
         AM_drawMline(@l, WALLCOLORS + lightlev);
       end
       else
       begin
-        if Lines[i].special = 39 then
+        if lines[i].special = 39 then
         begin // teleporters
           AM_drawMline(@l, WALLCOLORS + WALLRANGE div 2);
         end
-        else if (Lines[i].flags and ML_SECRET) <> 0 then // secret door
+        else if (lines[i].flags and ML_SECRET) <> 0 then // secret door
         begin
           if cheating <> 0 then
             AM_drawMline(@l, SECRETWALLCOLORS + lightlev)
           else
             AM_drawMline(@l, WALLCOLORS + lightlev);
         end
-        else if Lines[i].backsector.floorheight <> Lines[i].frontsector.floorheight then
+        else if lines[i].backsector.floorheight <> lines[i].frontsector.floorheight then
         begin
           AM_drawMline(@l, FDWALLCOLORS + lightlev); // floor level change
         end
-        else if Lines[i].backsector.ceilingheight <>
-          Lines[i].frontsector.ceilingheight then
+        else if lines[i].backsector.ceilingheight <>
+          lines[i].frontsector.ceilingheight then
         begin
           AM_drawMline(@l, CDWALLCOLORS + lightlev); // ceiling level change
         end
@@ -1174,7 +1174,7 @@ begin
     end
     else if plr.powers[Ord(pw_allmap)] <> 0 then
     begin
-      if (Lines[i].flags and LINE_NEVERSEE) = 0 then
+      if (lines[i].flags and LINE_NEVERSEE) = 0 then
         AM_drawMline(@l, GRAYS + 3);
     end;
   end;

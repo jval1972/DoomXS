@@ -592,7 +592,7 @@ begin
       if side <> oldside then
       begin
         if ld.special <> 0 then
-          P_CrossSpecialLine(pOperation(ld, @Lines[0], '-', SizeOf(ld^)),
+          P_CrossSpecialLine(pOperation(ld, @lines[0], '-', SizeOf(ld^)),
             oldside, thing);
       end;
     end;

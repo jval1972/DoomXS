@@ -485,7 +485,7 @@ end;
 //  the line number, and the side (0/1) that you want.
 function getSide(currentSector: integer; line: integer; side: integer): Pside_t;
 begin
-  Result := @sides[(sectors[currentSector].Lines[line]).sidenum[side]];
+  Result := @sides[(sectors[currentSector].lines[line]).sidenum[side]];
 end;
 
 // getSector()
@@ -494,7 +494,7 @@ end;
 //  the line number and the side (0/1) that you want.
 function getSector(currentSector: integer; line: integer; side: integer): Psector_t;
 begin
-  Result := sides[(sectors[currentSector].Lines[line]).sidenum[side]].sector;
+  Result := sides[(sectors[currentSector].lines[line]).sidenum[side]].sector;
 end;
 
 // twoSided()
@@ -502,7 +502,7 @@ end;
 //  it will tell you whether the line is two-sided or not.
 function twoSided(sector: integer; line: integer): integer;
 begin
-  Result := (sectors[sector].Lines[line]).flags and ML_TWOSIDED;
+  Result := (sectors[sector].lines[line]).flags and ML_TWOSIDED;
 end;
 
 // getNextSector()
@@ -533,7 +533,7 @@ begin
 
   for i := 0 to sec.linecount - 1 do
   begin
-    check := sec.Lines[i];
+    check := sec.lines[i];
     other := getNextSector(check, sec);
 
     if other <> nil then
@@ -554,7 +554,7 @@ begin
 
   for i := 0 to sec.linecount - 1 do
   begin
-    check := sec.Lines[i];
+    check := sec.lines[i];
     other := getNextSector(check, sec);
 
     if other <> nil then
@@ -585,7 +585,7 @@ begin
   h := 0;
   for i := 0 to sec.linecount - 1 do
   begin
-    check := sec.Lines[i];
+    check := sec.lines[i];
     other := getNextSector(check, sec);
 
     if other <> nil then
@@ -632,7 +632,7 @@ begin
 
   for i := 0 to sec.linecount - 1 do
   begin
-    check := sec.Lines[i];
+    check := sec.lines[i];
     other := getNextSector(check, sec);
 
     if other <> nil then
@@ -652,7 +652,7 @@ begin
 
   for i := 0 to sec.linecount - 1 do
   begin
-    check := sec.Lines[i];
+    check := sec.lines[i];
     other := getNextSector(check, sec);
 
     if other <> nil then
@@ -688,7 +688,7 @@ begin
   Result := max;
   for i := 0 to sector.linecount - 1 do
   begin
-    line := sector.Lines[i];
+    line := sector.lines[i];
     check := getNextSector(line, sector);
 
     if check <> nil then
@@ -709,7 +709,7 @@ procedure P_CrossSpecialLine(linenum: integer; side: integer; thing: Pmobj_t);
 var
   line: Pline_t;
 begin
-  line := @Lines[linenum];
+  line := @lines[linenum];
 
   //  Triggers that other things can activate
   if thing.player = nil then
@@ -1427,13 +1427,13 @@ begin
       continue;
 
     Result := 1;
-    s2 := getNextSector(s1.Lines[0], s1);
+    s2 := getNextSector(s1.lines[0], s1);
     for i := 0 to s2.linecount - 1 do
     begin
       if (s2.lines[i].flags and ML_TWOSIDED = 0) or
-        (s2.Lines[i].backsector = s1) then
+        (s2.lines[i].backsector = s1) then
         continue;
-      s3 := s2.Lines[i].backsector;
+      s3 := s2.lines[i].backsector;
 
       //  Spawn rising slime
       floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
@@ -1580,10 +1580,10 @@ begin
   numlinespecials := 0;
   for i := 0 to numlines - 1 do
   begin
-    if Lines[i].special = 48 then
+    if lines[i].special = 48 then
     begin
       // EFFECT FIRSTCOL SCROLL+
-      linespeciallist[numlinespecials] := @Lines[i];
+      linespeciallist[numlinespecials] := @lines[i];
       Inc(numlinespecials);
     end;
   end;

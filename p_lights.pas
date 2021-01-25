@@ -238,7 +238,7 @@ begin
       min := sector.lightlevel;
       for j := 0 to sector.linecount - 1 do
       begin
-        templine := sector.Lines[j];
+        templine := sector.lines[j];
         tsec := getNextSector(templine, sector);
         if tsec <> nil then
         begin
@@ -272,7 +272,7 @@ begin
       begin
         for j := 0 to sector.linecount - 1 do
         begin
-          templine := sector.Lines[j];
+          templine := sector.lines[j];
           temp := getNextSector(templine, sector);
           if temp <> nil then
           begin

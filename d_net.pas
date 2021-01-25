@@ -845,8 +845,8 @@ begin
         begin
           cmd := @netcmds[j][buf];
           cmd.chatchar := 0;
-          if cmd.Buttons and BT_SPECIAL <> 0 then
-            cmd.Buttons := 0;
+          if cmd.buttons and BT_SPECIAL <> 0 then
+            cmd.buttons := 0;
         end;
       end;
     end;

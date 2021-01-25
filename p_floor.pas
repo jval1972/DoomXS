@@ -485,16 +485,16 @@ begin
       ok := 0;
       for i := 0 to sec.linecount - 1 do
       begin
-        if sec.Lines[i].flags and ML_TWOSIDED = 0 then
+        if sec.lines[i].flags and ML_TWOSIDED = 0 then
           continue;
 
-        tsec := sec.Lines[i].frontsector;
+        tsec := sec.lines[i].frontsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
 
         if secnum <> newsecnum then
           continue;
 
-        tsec := sec.Lines[i].backsector;
+        tsec := sec.lines[i].backsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
         //integer(tsec) - integer(sectors)) div SizeOf(sector_t);
 

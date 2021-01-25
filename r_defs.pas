@@ -106,7 +106,7 @@ type
     // thinker_t for reversable actions
     specialdata: pointer;
     linecount: integer;
-    Lines: Pline_tPArray;  // [linecount] size
+    lines: Pline_tPArray;  // [linecount] size
   end;
   Psector_t = ^sector_t;
   sector_tArray = packed array[0..$FFFF] of sector_t;

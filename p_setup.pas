@@ -63,7 +63,7 @@ var
   nodes: Pnode_tArray;
 
   numlines: integer;
-  Lines: Pline_tArray;
+  lines: Pline_tArray;
 
   numsides: integer;
   sides: Pside_tArray;
@@ -188,7 +188,7 @@ begin
     li.angle := _SHL(ml.angle, 16);
     li.offset := _SHL(ml.offset, 16);
     linedef := ml.linedef;
-    ldef := @Lines[linedef];
+    ldef := @lines[linedef];
     li.linedef := ldef;
     side := ml.side;
     li.sidedef := @sides[ldef.sidenum[side]];
@@ -362,14 +362,14 @@ var
   v2: Pvertex_t;
 begin
   numlines := W_LumpLength(lump) div SizeOf(maplinedef_t);
-  Lines := Z_Malloc(numlines * SizeOf(line_t), PU_LEVEL, nil);
-  memset(Lines, 0, numlines * SizeOf(line_t));
+  lines := Z_Malloc(numlines * SizeOf(line_t), PU_LEVEL, nil);
+  memset(lines, 0, numlines * SizeOf(line_t));
   Data := W_CacheLumpNum(lump, PU_STATIC);
 
   mld := Pmaplinedef_t(Data);
   for i := 0 to numlines - 1 do
   begin
-    ld := @Lines[i];
+    ld := @lines[i];
     ld.flags := smallint(mld.flags);
     ld.special := smallint(mld.special);
     ld.tag := smallint(mld.tag);
@@ -512,7 +512,7 @@ begin
   total := 0;
   for i := 0 to numlines - 1 do
   begin
-    li := @Lines[i];
+    li := @lines[i];
     Inc(total);
     li.frontsector.linecount := li.frontsector.linecount + 1;
 
@@ -529,10 +529,10 @@ begin
   begin
     sector := @sectors[i];
     M_ClearBox(@bbox);
-    sector.Lines := linebuffer;
+    sector.lines := linebuffer;
     for j := 0 to numlines - 1 do
     begin
-      li := @Lines[j];
+      li := @lines[j];
       if (li.frontsector = sector) or (li.backsector = sector) then
       begin
         linebuffer[0] := li;
@@ -541,7 +541,7 @@ begin
         M_AddToBox(@bbox, li.v2.x, li.v2.y);
       end;
     end;
-    if pOperation(linebuffer, sector.Lines, '-', SizeOf(pointer)) <>
+    if pOperation(linebuffer, sector.lines, '-', SizeOf(pointer)) <>
       sector.linecount then
       I_Error('P_GroupLines(): miscounted');
 
