@@ -115,8 +115,8 @@ begin
   dx := x - line.v1.x;
   dy := y - line.v1.y;
 
-  left := FixedMul(line.dy div FRACUNIT, dx);
-  right := FixedMul(dy, line.dx div FRACUNIT);
+  left := FixedMul(_SHR(line.dy, FRACBITS), dx);
+  right := FixedMul(dy, _SHR(line.dx, FRACBITS));
 
   if right < left then
     Result := 0  // front side
@@ -762,12 +762,12 @@ begin
     if (mapx = xt2) and (mapy = yt2) then
       break;
 
-    if yintercept div FRACUNIT = mapy then
+    if _SHR(yintercept, FRACBITS) = mapy then
     begin
       yintercept := yintercept + ystep;
       mapx := mapx + mapxstep;
     end
-    else if xintercept div FRACUNIT = mapx then
+    else if _SHR(xintercept, FRACBITS) = mapx then
     begin
       xintercept := xintercept + xstep;
       mapy := mapy + mapystep;
