@@ -663,7 +663,7 @@ var
   mapy: integer;
   mapxstep: integer;
   mapystep: integer;
-  Count: integer;
+  count: integer;
 begin
   earlyout := flags and PT_EARLYOUT <> 0;
 
@@ -734,12 +734,12 @@ begin
   xintercept := _SHR(x1, MAPBTOFRAC) + FixedMul(partial, xstep);
 
   // Step through map blocks.
-  // Count is present to prevent a round off error
+  // count is present to prevent a round off error
   // from skipping the break.
   mapx := xt1;
   mapy := yt1;
 
-  for Count := 0 to 63 do
+  for count := 0 to 63 do
   begin
     if flags and PT_ADDLINES <> 0 then
     begin

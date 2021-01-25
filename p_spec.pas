@@ -94,7 +94,7 @@ type
   fireflicker_t = record
     thinker: thinker_t;
     sector: Psector_t;
-    Count: integer;
+    count: integer;
     maxlight: integer;
     minlight: integer;
   end;
@@ -103,7 +103,7 @@ type
   lightflash_t = record
     thinker: thinker_t;
     sector: Psector_t;
-    Count: integer;
+    count: integer;
     maxlight: integer;
     minlight: integer;
     maxtime: integer;
@@ -114,7 +114,7 @@ type
   strobe_t = record
     thinker: thinker_t;
     sector: Psector_t;
-    Count: integer;
+    count: integer;
     minlight: integer;
     maxlight: integer;
     darktime: integer;
@@ -138,15 +138,6 @@ const
   SLOWDARK = 35;
 
 type
-
-  // P_SWITCH
-
-  switchlist_t = record
-    name1: string[8];
-    name2: string[8];
-    episode: smallint;
-  end;
-  Pswitchlist_t = ^switchlist_t;
 
   bwhere_e = (
     top,
@@ -199,7 +190,7 @@ type
     low: fixed_t;
     high: fixed_t;
     wait: integer;
-    Count: integer;
+    count: integer;
     status: plat_e;
     oldstatus: plat_e;
     crush: boolean;

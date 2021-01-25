@@ -1510,24 +1510,24 @@ var
   newmobj: Pmobj_t;
   an: angle_t;
   prestep: integer;
-  Count: integer;
+  count: integer;
   currentthinker: Pthinker_t;
 begin
   // count total number of skull currently on the level
-  Count := 0;
+  count := 0;
 
   currentthinker := thinkercap.next;
   while currentthinker <> @thinkercap do
   begin
     if (@currentthinker._function.acp1 = @P_MobjThinker) and
       (Pmobj_t(currentthinker)._type = MT_SKULL) then
-      Inc(Count);
+      Inc(count);
     currentthinker := currentthinker.next;
   end;
 
   // if there are allready 20 skulls on the level,
   // don't spit another one
-  if Count > 20 then
+  if count > 20 then
     exit;
 
   // okay, there's playe for another one

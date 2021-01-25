@@ -219,7 +219,7 @@ var
   delta: integer;
   finished: boolean;
   channelvol: array[0..15] of byte;
-  Count: integer;
+  count: integer;
   i: integer;
 begin
   header := Pmusheader_t(MusData);
@@ -230,7 +230,7 @@ begin
     exit;
   end;
 
-  Count := GetSongLength(MusData);
+  count := GetSongLength(MusData);
   score := PByteArray(@MusData[header.scoreStart]);
   event := MidiEvents;
 
@@ -325,8 +325,8 @@ begin
     if finished then
       break;
     Inc(i);
-    Dec(Count);
-    if Count < 3 then
+    Dec(count);
+    if count < 3 then
       I_Error('I_MusToMidi(): Overflow');
     if delta = -1 then
     begin

@@ -218,21 +218,21 @@ end;
 function P_CheckAmmo(player: Pplayer_t): boolean;
 var
   ammo: ammotype_t;
-  Count: integer;
+  count: integer;
 begin
   ammo := weaponinfo[Ord(player.readyweapon)].ammo;
 
   // Minimal amount for one shot varies.
   if player.readyweapon = wp_bfg then
-    Count := BFGCELLS
+    count := BFGCELLS
   else if player.readyweapon = wp_supershotgun then
-    Count := 2 // Double barrel.
+    count := 2 // Double barrel.
   else
-    Count := 1; // Regular.
+    count := 1; // Regular.
 
   // Some do not need ammunition anyway.
   // Return if current ammunition sufficient.
-  if (ammo = am_noammo) or (player.ammo[Ord(ammo)] >= Count) then
+  if (ammo = am_noammo) or (player.ammo[Ord(ammo)] >= count) then
   begin
     Result := True;
     exit;

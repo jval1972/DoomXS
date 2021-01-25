@@ -521,7 +521,7 @@ end;
 
 procedure R_Subsector(num: integer);
 var
-  Count: integer;
+  count: integer;
   line: Pseg_t;
   i_line: integer;
   sub: Psubsector_t;
@@ -529,7 +529,7 @@ begin
   Inc(sscount);
   sub := @subsectors[num];
   frontsector := sub.sector;
-  Count := sub.numlines;
+  count := sub.numlines;
   i_line := sub.firstline;
   line := @segs[i_line];
 
@@ -554,12 +554,12 @@ begin
 
   R_AddSprites(frontsector);
 
-  while boolval(Count) do
+  while count <> 0 do
   begin
     R_AddLine(line);
     Inc(i_line);
     line := @segs[i_line];
-    Dec(Count);
+    Dec(count);
   end;
 end;
 

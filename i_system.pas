@@ -79,7 +79,7 @@ procedure I_ProcessWindows;
 
 function I_GameFinished: boolean;
 
-procedure I_WaitVBL(const Count: integer);
+procedure I_WaitVBL(const cnt: integer);
 
 function I_SetDPIAwareness: boolean;
 
@@ -205,9 +205,9 @@ begin
 end;
 
 // Wait for vertical retrace or pause a bit.
-procedure I_WaitVBL(const Count: integer);
+procedure I_WaitVBL(const cnt: integer);
 begin
-  sleep(Count);
+  sleep(cnt);
 end;
 
 // I_Error

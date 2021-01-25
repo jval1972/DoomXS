@@ -468,7 +468,7 @@ end;
 // P_LoadBlockMap
 procedure P_LoadBlockMap(lump: integer);
 var
-  Count: integer;
+  count: integer;
 begin
   blockmaplump := W_CacheLumpNum(lump, PU_LEVEL);
   blockmap := @blockmaplump[4];
@@ -479,9 +479,9 @@ begin
   bmapheight := blockmaplump[3];
 
   // clear out mobj chains
-  Count := SizeOf(Pmobj_t) * bmapwidth * bmapheight;
-  blocklinks := Z_Malloc(Count, PU_LEVEL, nil);
-  memset(blocklinks, 0, Count);
+  count := SizeOf(Pmobj_t) * bmapwidth * bmapheight;
+  blocklinks := Z_Malloc(count, PU_LEVEL, nil);
+  memset(blocklinks, 0, count);
 end;
 
 

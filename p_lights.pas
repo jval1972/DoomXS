@@ -73,8 +73,8 @@ procedure T_FireFlicker(flick: Pfireflicker_t);
 var
   amount: integer;
 begin
-  flick.Count := flick.Count - 1;
-  if flick.Count > 0 then
+  flick.count := flick.count - 1;
+  if flick.count > 0 then
     exit;
 
   amount := (P_Random and 3) * 16;
@@ -84,7 +84,7 @@ begin
   else
     flick.sector.lightlevel := flick.maxlight - amount;
 
-  flick.Count := 4;
+  flick.count := 4;
 end;
 
 
@@ -106,7 +106,7 @@ begin
   flick.sector := sector;
   flick.maxlight := sector.lightlevel;
   flick.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel) + 16;
-  flick.Count := 4;
+  flick.count := 4;
 end;
 
 
@@ -119,19 +119,19 @@ end;
 
 procedure T_LightFlash(flash: Plightflash_t);
 begin
-  flash.Count := flash.Count - 1;
-  if flash.Count > 0 then
+  flash.count := flash.count - 1;
+  if flash.count > 0 then
     exit;
 
   if flash.sector.lightlevel = flash.maxlight then
   begin
     flash.sector.lightlevel := flash.minlight;
-    flash.Count := (P_Random and flash.mintime) + 1;
+    flash.count := (P_Random and flash.mintime) + 1;
   end
   else
   begin
     flash.sector.lightlevel := flash.maxlight;
-    flash.Count := (P_Random and flash.maxtime) + 1;
+    flash.count := (P_Random and flash.maxtime) + 1;
   end;
 end;
 
@@ -158,7 +158,7 @@ begin
   flash.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel);
   flash.maxtime := 64;
   flash.mintime := 7;
-  flash.Count := (P_Random and flash.maxtime) + 1;
+  flash.count := (P_Random and flash.maxtime) + 1;
 end;
 
 
@@ -170,19 +170,19 @@ end;
 
 procedure T_StrobeFlash(flash: Pstrobe_t);
 begin
-  flash.Count := flash.Count - 1;
-  if flash.Count > 0 then
+  flash.count := flash.count - 1;
+  if flash.count > 0 then
     exit;
 
   if flash.sector.lightlevel = flash.minlight then
   begin
     flash.sector.lightlevel := flash.maxlight;
-    flash.Count := flash.brighttime;
+    flash.count := flash.brighttime;
   end
   else
   begin
     flash.sector.lightlevel := flash.minlight;
-    flash.Count := flash.darktime;
+    flash.count := flash.darktime;
   end;
 end;
 
@@ -213,9 +213,9 @@ begin
   sector.special := 0;
 
   if inSync = 0 then
-    flash.Count := (P_Random and 7) + 1
+    flash.count := (P_Random and 7) + 1
   else
-    flash.Count := 1;
+    flash.count := 1;
 end;
 
 

@@ -64,6 +64,14 @@ uses
   // State
   doomstat;
 
+type
+  switchlist_t = record
+    name1: string[8];
+    name2: string[8];
+    episode: smallint;
+  end;
+  Pswitchlist_t = ^switchlist_t;
+
 const
   alphSwitchList: array[0..40] of switchlist_t = (
     // Doom shareware episode 1 switches
