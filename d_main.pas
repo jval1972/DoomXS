@@ -136,11 +136,8 @@ const
 
 procedure D_DoomLoop; forward;
 
-
-
 // D_PostEvent
 // Called by the I/O functions when input is detected
-
 procedure D_PostEvent(ev: Pevent_t);
 begin
   events[eventhead] := ev^;
@@ -148,10 +145,8 @@ begin
   eventhead := eventhead and (MAXEVENTS - 1);
 end;
 
-
 // D_ProcessEvents
 // Send all the events of the given timestamp down the responder chain
-
 procedure D_ProcessEvents;
 var
   ev: Pevent_t;
@@ -180,11 +175,8 @@ begin
   end;
 end;
 
-
 // D_Display
 //  draw current display, possibly wiping it from the previous
-
-
 var
   viewactivestate: boolean = False;
   menuactivestate: boolean = False;
@@ -239,8 +231,7 @@ begin
           redrawsbar := True;
         if inhelpscreensstate and (not inhelpscreens) then
           redrawsbar := True; // just put away the help screen
-        ST_Drawer(viewheight = SCREENHEIGHT{200}, redrawsbar);
-//        fullscreen := viewheight = SCREENHEIGHT{200};
+        ST_Drawer(viewheight = SCREENHEIGHT, redrawsbar);
       end;
     end;
     GS_INTERMISSION:
@@ -382,9 +373,7 @@ begin
     D_AdvanceDemo;
 end;
 
-
 // D_PageDrawer
-
 procedure D_PageDrawer;
 begin
   V_DrawPatch(0, 0, 0, W_CacheLumpName(pagename, PU_CACHE), True);
