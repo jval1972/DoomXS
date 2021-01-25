@@ -38,29 +38,25 @@ type
   fixed_tArray = packed array[0..$FFFF] of fixed_t;
   Pfixed_tArray = ^fixed_tArray;
 
-function FixedMul(a: fixed_t; b: fixed_t): fixed_t;
+function FixedMul(const a, b: fixed_t): fixed_t;
 
-function FixedDiv(a: fixed_t; b: fixed_t): fixed_t;
+function FixedDiv(const a, b: fixed_t): fixed_t;
 
-function FixedDiv2(a: fixed_t; b: fixed_t): fixed_t;
+function FixedDiv2(const a, b: fixed_t): fixed_t;
 
 implementation
 
 uses
-  i_system,
   d_delphi,
   doomtype;
 
-function FixedMul(a: fixed_t; b: fixed_t): fixed_t;
-var
-  c: extended;
-begin
-  //  result := (a * b) div FRACUNIT;
-  c := a / FRACUNIT;
-  Result := trunc(c * b);
+function FixedMul(const a, b: fixed_t): fixed_t; assembler;
+asm
+  imul b
+  shrd eax, edx, 16
 end;
 
-function FixedDiv(a: fixed_t; b: fixed_t): fixed_t;
+function FixedDiv(const a, b: fixed_t): fixed_t;
 begin
   if _SHR(abs(a), 14) >= abs(b) then
   begin
@@ -73,16 +69,13 @@ begin
     Result := FixedDiv2(a, b);
 end;
 
-function FixedDiv2(a: fixed_t; b: fixed_t): fixed_t;
-var
-  c: extended;
-begin
-  c := (a / b) * FRACUNIT;
-
-  if (c >= 2147483648.0) or (c < -2147483648.0) then
-    I_Error('FixedDiv(): divide by zero' + #13#10);
-
-  Result := trunc(c);
+function FixedDiv2(const a, b: fixed_t): fixed_t; assembler;
+asm
+  mov ebx, b
+  mov edx, eax
+  sal eax, 16
+  sar edx, 16
+  idiv ebx
 end;
 
 end.
