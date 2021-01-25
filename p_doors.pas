@@ -65,13 +65,9 @@ uses
   p_setup,
   p_floor;
 
-
 // VERTICAL DOORS
 
-
-
 // T_VerticalDoor
-
 procedure T_VerticalDoor(door: Pvldoor_t);
 var
   res: result_e;
@@ -80,7 +76,7 @@ begin
     0:
     begin
       // WAITING
-      door := Pvldoor_t(integer(door) - SizeOf(vldoor_t));
+      dec(door.topcountdown);
       if door.topcountdown = 0 then
       begin
         case door._type of
@@ -105,7 +101,7 @@ begin
     2:
     begin
       //  INITIAL WAIT
-      door := Pvldoor_t(integer(door) - SizeOf(vldoor_t));
+      dec(door.topcountdown);
       if door.topcountdown = 0 then
       begin
         case door._type of
@@ -142,7 +138,7 @@ begin
           close30ThenOpen:
           begin
             door.direction := 0;
-            door.topcountdown := 35 * 30; // ticrate * 30 ?? VJ
+            door.topcountdown := TICRATE * 30;
           end;
         end;
       end
@@ -150,7 +146,7 @@ begin
       begin
         case door._type of
           blazeClose,
-          Close:    // DO NOT GO BACK UP!
+          close:    // DO NOT GO BACK UP!
           begin
           end;
           else
@@ -188,11 +184,8 @@ begin
   end;
 end;
 
-
 // EV_DoLockedDoor
 // Move a locked door up/down
-
-
 function EV_DoLockedDoor(line: Pline_t; _type: vldoor_e; thing: Pmobj_t): integer;
 var
   p: Pplayer_t;
@@ -273,7 +266,7 @@ begin
 
     // new door thinker
     Result := 1;
-    door := Z_Malloc(SizeOf(door^), PU_LEVSPEC, nil);
+    door := Z_Malloc(SizeOf(vldoor_t), PU_LEVSPEC, nil);
     P_AddThinker(@door.thinker);
     sec.specialdata := door;
 
@@ -332,9 +325,7 @@ begin
   end;
 end;
 
-
 // EV_VerticalDoor : open a door manually, no tag value
-
 procedure EV_VerticalDoor(line: Pline_t; thing: Pmobj_t);
 var
   player: Pplayer_t;
@@ -432,7 +423,7 @@ begin
   end;
 
   // new door thinker
-  door := Z_Malloc(SizeOf(door^), PU_LEVSPEC, nil);
+  door := Z_Malloc(SizeOf(vldoor_t), PU_LEVSPEC, nil);
   P_AddThinker(@door.thinker);
   sec.specialdata := door;
   door.thinker._function.acp1 := @T_VerticalDoor;
@@ -473,9 +464,7 @@ begin
   door.topheight := door.topheight - 4 * FRACUNIT;
 end;
 
-
 // Spawn a door that closes after 30 seconds
-
 procedure P_SpawnDoorCloseIn30(sec: Psector_t);
 var
   door: Pvldoor_t;
@@ -492,13 +481,10 @@ begin
   door.direction := 0;
   door._type := normal;
   door.speed := VDOORSPEED;
-  door.topcountdown := 30 * 35; // 30 * tickrate ???? VJ
+  door.topcountdown := 30 * TICRATE;
 end;
 
-
 // Spawn a door that opens after 5 minutes
-
-
 procedure P_SpawnDoorRaiseIn5Mins(sec: Psector_t; secnum: integer);
 var
   door: Pvldoor_t;
@@ -518,7 +504,7 @@ begin
   door.topheight := P_FindLowestCeilingSurrounding(sec);
   door.topheight := door.topheight - 4 * FRACUNIT;
   door.topwait := VDOORWAIT;
-  door.topcountdown := 5 * 60 * 35; // 5 * 60 * tickrate ???? VJ
+  door.topcountdown := 5 * 60 * TICRATE;
 end;
 
 end.
