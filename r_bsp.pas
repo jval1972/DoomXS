@@ -588,7 +588,10 @@ begin
 
   // Decide which side the view point is on.
 
-  side := R_PointOnSide(viewx, viewy, bsp);
+  if R_PointOnSide(viewx, viewy, bsp) then
+    side := 1
+  else
+    side := 0;
 
   // Recursively divide front space.
   R_RenderBSPNode(bsp.children[side]);
