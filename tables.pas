@@ -34,7 +34,6 @@ uses
 const
   d_PI = 3.141592657;
 
-
 const
   FINEANGLES = 8192;
   FINEMASK = FINEANGLES - 1;
@@ -71,9 +70,7 @@ var
 
 // Utility function,
 // called by R_PointToAngle.
-
 function SlopeDiv(const num: integer; const den: integer): integer;
-// VJ was function SlopeDiv(num: LongWord; den: LongWord): integer;
 
 implementation
 
@@ -95,9 +92,6 @@ begin
       result := SLOPERANGE;
   end;
 end;
-
-initialization
-  finecosine := Pfixed_tArray(@finesine[FINEANGLES div 4]);
 
 end.
 

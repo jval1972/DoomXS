@@ -433,7 +433,6 @@ end;
 // R_InitPointToAngle
 //
 procedure R_InitPointToAngle;
-// UNUSED - now getting from tables.c
 var
   i: integer;
   t: integer;
@@ -444,8 +443,8 @@ begin
 //
   for i := 0 to SLOPERANGE do
   begin
-    f := arctan(i / SLOPERANGE) / (3.141592657 * 2); // VJ was atan() function
-    t := round($ffffffff * f);
+    f := arctan(i / SLOPERANGE) / (d_PI * 2);
+    t := trunc($100000000 * f);
     tantoangle[i] := t;
   end;
 end;
@@ -502,8 +501,8 @@ begin
   for i := 0 to FINEANGLES div 2 - 1 do
   begin
     a := (i - FINEANGLES / 4 + 0.5) * d_PI * 2 / FINEANGLES;
-    fv := FRACUNIT * tan(a);
-    t := round(fv);
+    fv := FRACUNIT * ftan(a);
+    t := trunc(fv);
     finetangent[i] := t;
   end;
 
@@ -512,10 +511,10 @@ begin
   begin
     // OPTIMIZE: mirror...
     a := (i + 0.5) * d_PI * 2 / FINEANGLES;
-    t := round(FRACUNIT * sin(a));
+    t := trunc(FRACUNIT * sin(a));
     finesine[i] := t;
   end;
-  
+
   finecosine := Pfixed_tArray(@finesine[FINEANGLES div 4]);
 end;
 
