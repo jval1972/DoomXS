@@ -684,6 +684,8 @@ begin
       begin
         myargv[index] := s.Strings[i];
         Inc(index);
+        if index = MAXARGS then
+          break;
       end;
     myargc := index;
   finally
