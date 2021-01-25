@@ -1137,8 +1137,8 @@ begin
   angle := _SHRW(angle, ANGLETOFINESHIFT);
   shootthing := t1;
 
-  x2 := t1.x + (distance div FRACUNIT) * finecosine[angle];
-  y2 := t1.y + (distance div FRACUNIT) * finesine[angle];
+  x2 := t1.x + _SHR(distance, FRACBITS) * finecosine[angle];
+  y2 := t1.y + _SHR(distance, FRACBITS) * finesine[angle];
   shootz := t1.z + _SHR(t1.height, 1) + 8 * FRACUNIT;
 
   // can't shoot outside view angles
@@ -1168,8 +1168,8 @@ begin
   angle := _SHRW(angle, ANGLETOFINESHIFT);
   shootthing := t1;
   la_damage := damage;
-  x2 := t1.x + (distance div FRACUNIT) * finecosine[angle];
-  y2 := t1.y + (distance div FRACUNIT) * finesine[angle];
+  x2 := t1.x + _SHR(distance, FRACBITS) * finecosine[angle];
+  y2 := t1.y + _SHR(distance, FRACBITS) * finesine[angle];
   shootz := t1.z + (_SHR(t1.height, 1)) + 8 * FRACUNIT;
   attackrange := distance;
   aimslope := slope;
@@ -1228,8 +1228,8 @@ begin
 
   x1 := player.mo.x;
   y1 := player.mo.y;
-  x2 := x1 + (USERANGE div FRACUNIT) * finecosine[angle];
-  y2 := y1 + (USERANGE div FRACUNIT) * finesine[angle];
+  x2 := x1 + USERANGEINT * finecosine[angle];
+  y2 := y1 + USERANGEINT * finesine[angle];
 
   P_PathTraverse(x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse);
 end;
@@ -1271,7 +1271,7 @@ begin
     dist := dx
   else
     dist := dy;
-  dist := (dist - thing.radius) div FRACUNIT;
+  dist := _SHR(dist - thing.radius, FRACBITS);
 
   if dist < 0 then
     dist := 0;
