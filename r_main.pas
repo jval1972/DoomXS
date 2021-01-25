@@ -668,7 +668,7 @@ begin
     if setblocks = 10 then
       viewheight := V_PreserveY(200 - ST_HEIGHT)
     else
-      viewheight := (setblocks * V_PreserveY(200 - ST_HEIGHT) div 10) and (not 7); //and (not 7);
+      viewheight := (setblocks * V_PreserveY(200 - ST_HEIGHT) div 10) and (not 7);
   end;
 
   detailshift := setdetail;
