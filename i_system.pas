@@ -146,6 +146,7 @@ var
 function I_BaseTiccmd: Pticcmd_t;
 begin
   Result := @emptycmd;
+  ZeroMemory(Result, SizeOf(ticcmd_t));
 end;
 
 // I_GetTime

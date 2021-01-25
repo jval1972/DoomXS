@@ -594,7 +594,7 @@ var
   gotinfo: array[0..MAXNETNODES - 1] of boolean;
 begin
   autostart := True;
-  ZeroMemory(gotinfo, SizeOf(gotinfo));
+  ZeroMemory(@gotinfo, SizeOf(gotinfo));
 
   if doomcom.consoleplayer <> 0 then
   begin

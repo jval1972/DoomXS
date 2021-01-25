@@ -93,7 +93,7 @@ var
 begin
   I_SetDPIAwareness;
 
-  ZeroMemory(WindowClass, SizeOf(WindowClass));
+  ZeroMemory(@WindowClass, SizeOf(WindowClass));
   WindowClass.lpfnWndProc := @WindowProc;
   WindowClass.hbrBackground := GetStockObject(BLACK_BRUSH);
   WindowClass.lpszClassName := 'Doom32';

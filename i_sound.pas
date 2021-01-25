@@ -335,7 +335,7 @@ begin
   else
     channel := oldchannel;
   CacheSFX(id);
-  ZeroMemory(dsbd, SizeOf(DSBUFFERDESC));
+  ZeroMemory(@dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := Sizeof(DSBUFFERDESC);
   dsbd.dwFlags := DSBCAPS_CTRLVOLUME or DSBCAPS_CTRLFREQUENCY or
     DSBCAPS_CTRLPAN or DSBCAPS_GETCURRENTPOSITION2 or DSBCAPS_STATIC;
@@ -470,7 +470,7 @@ begin
     SampleFormat.wBitsPerSample := 8;
   end;
 
-  ZeroMemory(dsbd, SizeOf(DSBUFFERDESC));
+  ZeroMemory(@dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := SizeOf(DSBUFFERDESC);
   dsbd.dwFlags := DSBCAPS_PRIMARYBUFFER;
   dsbd.dwBufferBytes := 0;

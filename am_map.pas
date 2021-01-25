@@ -1533,12 +1533,12 @@ begin
   cheat_amap.p := get_cheatseq_string(0);
 
   ////////////////////////////////////////////////////////////////////////////////
-  ZeroMemory(st_notify_AM_initVariables, SizeOf(st_notify_AM_initVariables));
+  ZeroMemory(@st_notify_AM_initVariables, SizeOf(st_notify_AM_initVariables));
   st_notify_AM_initVariables._type := ev_keyup;
   st_notify_AM_initVariables.data1 := AM_MSGENTERED;
 
   ////////////////////////////////////////////////////////////////////////////////
-  ZeroMemory(st_notify_AM_Stop, SizeOf(st_notify_AM_Stop));
+  ZeroMemory(@st_notify_AM_Stop, SizeOf(st_notify_AM_Stop));
   st_notify_AM_Stop._type := ev_keyup;
   st_notify_AM_Stop.data1 := AM_MSGEXITED;
 end;

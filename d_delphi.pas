@@ -175,7 +175,7 @@ function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
 
 function StringVal(const Str: PChar): string;
 
-procedure ZeroMemory(var X; Count: integer);
+procedure ZeroMemory(const P: Pointer; Count: integer);
 
 implementation
 
@@ -298,7 +298,7 @@ end;
 function malloc(size: integer): Pointer;
 begin
   GetMem(Result, size);
-  ZeroMemory(Result^, size);
+  ZeroMemory(Result, size);
 end;
 
 function IntToStrZfill(const z: integer; const x: integer): string;
@@ -412,7 +412,7 @@ function getenv(const env: string): string;
 var
   buf: array[0..255] of char;
 begin
-  ZeroMemory(buf, SizeOf(buf));
+  ZeroMemory(@buf, SizeOf(buf));
   GetEnvironmentVariable(PChar(env), buf, 255);
   Result := Trim(StringVal(buf));
 end;
@@ -511,9 +511,9 @@ begin
   Result := Str;
 end;
 
-procedure ZeroMemory(var X; Count: integer);
+procedure ZeroMemory(const P: Pointer; Count: integer);
 begin
-  FillChar(X, Count, Chr(0));
+  FillChar(P^, Count, Chr(0));
 end;
 
 end.

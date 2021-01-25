@@ -129,7 +129,7 @@ begin
 
   GetKeyboardState(curkeys^);
 
-  ZeroMemory(ev, SizeOf(ev));
+  ZeroMemory(@ev, SizeOf(ev));
 
   for i := 0 to SizeOf(curkeys^) - 1 do
   begin

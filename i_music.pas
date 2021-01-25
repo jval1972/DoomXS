@@ -248,7 +248,7 @@ begin
 
   delta := 0;
   spos := 0;
-  ZeroMemory(channelvol, SizeOf(channelvol));
+  ZeroMemory(@channelvol, SizeOf(channelvol));
 
   finished := False;
   while True do
@@ -358,7 +358,7 @@ begin
   if hMidiStream <> 0 then
     exit;
 
-  ZeroMemory(midicaps, SizeOf(midicaps));
+  ZeroMemory(@midicaps, SizeOf(midicaps));
   MidiDevice := MIDI_MAPPER;
 
   // First try midi mapper

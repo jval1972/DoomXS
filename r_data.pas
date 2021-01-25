@@ -427,7 +427,7 @@ var
   directory: PIntegerArray;
 begin
   // Load the patch names from pnames.lmp.
-  ZeroMemory(name, SizeOf(name));
+  ZeroMemory(@name, SizeOf(name));
   names := W_CacheLumpName('PNAMES', PU_STATIC);
   nummappatches := PInteger(names)^;
   name_p := PByteArray(integer(names) + 4);

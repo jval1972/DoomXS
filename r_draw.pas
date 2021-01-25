@@ -604,7 +604,7 @@ begin
     if SCREENHEIGHT <> 200 then
     begin
       dest := @screens[0][viewheight * SCREENWIDTH];
-      ZeroMemory(dest^, SCREENWIDTH * (V_PreserveY(200 - ST_HEIGHT) - viewheight));
+      ZeroMemory(dest, SCREENWIDTH * (V_PreserveY(200 - ST_HEIGHT) - viewheight));
     end;
     exit;
   end;

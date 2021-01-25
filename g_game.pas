@@ -255,7 +255,7 @@ var
   gamekeydown: array[0..NUMKEYS - 1] of boolean;
   turnheld: integer;
 
-  mousearray: array[0..3] of boolean;
+  mousearray: array[0..2] of boolean;
   mousebuttons: PBooleanArray;
 
 // mouse values are used once 
@@ -319,8 +319,8 @@ begin
   cmd.consistancy := consistancy[consoleplayer][maketic mod BACKUPTICS];
 
   strafe := gamekeydown[key_strafe] or
-            mousebuttons[mousebstrafe] or
-            joybuttons[joybstrafe];
+            ((usemouse <> 0) and mousebuttons[mousebstrafe]) or
+            ((usejoystick <> 0) and joybuttons[joybstrafe]);
   speed := intval(gamekeydown[key_speed] or joybuttons[joybspeed]);
 
   _forward := 0;
@@ -328,8 +328,7 @@ begin
 
   // use two stage accelerative turning
   // on the keyboard and joystick
-  if (joyxmove < 0) or
-     (joyxmove > 0) or
+  if (joyxmove <> 0) or
      (gamekeydown[key_right]) or
      (gamekeydown[key_left]) then
     turnheld := turnheld + ticdup
@@ -345,9 +344,9 @@ begin
   if strafe then
   begin
     if gamekeydown[key_right] then
-      side := side + sidemove[speed]; // fprintf(stderr, "strafe right\n");
+      side := side + sidemove[speed];
     if gamekeydown[key_left] then
-      side := side - sidemove[speed]; // fprintf(stderr, "strafe left\n");
+      side := side - sidemove[speed];
     if joyxmove > 0 then
       side := side + sidemove[speed];
     if joyxmove < 0 then
@@ -366,10 +365,10 @@ begin
   end;
 
   if gamekeydown[key_up] then
-    _forward := _forward + forwardmove[speed]; // fprintf(stderr, "up\n");
+    _forward := _forward + forwardmove[speed];
 
   if gamekeydown[key_down] then
-    _forward := _forward - forwardmove[speed]; // fprintf(stderr, "down\n");
+    _forward := _forward - forwardmove[speed];
 
   if joyymove < 0 then
     _forward := _forward + forwardmove[speed];
@@ -498,7 +497,7 @@ begin
 end;
 
 //
-// G_DoLoadLevel 
+// G_DoLoadLevel
 //
 procedure G_DoLoadLevel;
 var
@@ -1802,11 +1801,11 @@ initialization
   angleturn[1] := 1280;
   angleturn[2] := 320;
 
-  mousebuttons := PBooleanArray(@mousearray[1]);
-  joybuttons := PBooleanArray(@joyarray[1]);
+  mousebuttons := @mousearray[0];
+  joybuttons := @joyarray[0];
 
 
-  ZeroMemory(pars, SizeOf(pars));
+  ZeroMemory(@pars, SizeOf(pars));
 
   pars[1, 1] := 30;
   pars[1, 2] := 75;
@@ -1839,7 +1838,7 @@ initialization
   pars[3, 9] := 135;
 
 
-  ZeroMemory(cpars, SizeOf(cpars));
+  ZeroMemory(@cpars, SizeOf(cpars));
 
   cpars[0] := 30;
   cpars[1] := 90;

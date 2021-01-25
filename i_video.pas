@@ -233,7 +233,7 @@ begin
   if hres <> DD_OK then
     I_ErrorInitGraphics('SetCooperativeLevel');
 
-  ZeroMemory(ddsd, SizeOf(ddsd));
+  ZeroMemory(@ddsd, SizeOf(ddsd));
   ddsd.dwSize := SizeOf(ddsd);
   ddsd.dwFlags := DDSD_CAPS;
   ddsd.ddsCaps.dwCaps := DDSCAPS_PRIMARYSURFACE;
@@ -241,8 +241,8 @@ begin
   if hres <> DD_OK then
     I_ErrorInitGraphics('CreateSurface');
 
-  ZeroMemory(ddsd, SizeOf(ddsd));
-  ZeroMemory(ddsd.ddpfPixelFormat, SizeOf(ddsd.ddpfPixelFormat));
+  ZeroMemory(@ddsd, SizeOf(ddsd));
+  ZeroMemory(@ddsd.ddpfPixelFormat, SizeOf(ddsd.ddpfPixelFormat));
 
   ddsd.ddpfPixelFormat.dwSize := SizeOf(ddsd.ddpfPixelFormat);
   g_pDDSPrimary.GetPixelFormat(ddsd.ddpfPixelFormat);
