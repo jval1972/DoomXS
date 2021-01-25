@@ -418,7 +418,7 @@ begin
     0:
     begin
       if gamemode = commercial then
-        pagetic := 35 * 11
+        pagetic := TICKRATE * 11
       else
         pagetic := 170;
       gamestate := GS_DEMOSCREEN;
@@ -447,7 +447,7 @@ begin
       gamestate := GS_DEMOSCREEN;
       if gamemode = commercial then
       begin
-        pagetic := 35 * 11;
+        pagetic := TICKRATE * 11;
         pagename := 'TITLEPIC';
         S_StartMusic(Ord(mus_dm2ttl));
       end
