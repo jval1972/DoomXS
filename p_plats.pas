@@ -84,7 +84,7 @@ begin
 
       if (res = crushed) and (not plat.crush) then
       begin
-        plat.Count := plat.wait;
+        plat.count := plat.wait;
         plat.status := down;
         S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstart));
       end
@@ -92,7 +92,7 @@ begin
       begin
         if res = pastdest then
         begin
-          plat.Count := plat.wait;
+          plat.count := plat.wait;
           plat.status := waiting;
           S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstop));
 
@@ -114,14 +114,14 @@ begin
 
       if res = pastdest then
       begin
-        plat.Count := plat.wait;
+        plat.count := plat.wait;
         plat.status := waiting;
         S_StartSound(Pmobj_t(@plat.sector.soundorg), Ord(sfx_pstop));
       end;
     end;
     waiting:
     begin
-      plat.Count := plat.Count - 1;
+      plat.count := plat.count - 1;
         if plat.count = 0 then
       begin
         if plat.sector.floorheight = plat.low then
