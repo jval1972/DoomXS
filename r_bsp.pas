@@ -321,7 +321,7 @@ begin
   backsector := line.backsector;
 
   // Single sided line?
-  if not boolval(backsector) then
+  if backsector = nil then
   begin
     R_ClipSolidWallSegment(x1, x2 - 1);
     exit;
@@ -575,12 +575,12 @@ var
   side: integer;
 begin
   // Found a subsector?
-  if boolval(bspnum and NF_SUBSECTOR) then
+  if bspnum and NF_SUBSECTOR <> 0 then
   begin
     if bspnum = -1 then
       R_Subsector(0)
     else
-      R_Subsector(bspnum and (not NF_SUBSECTOR));
+      R_Subsector(bspnum and not NF_SUBSECTOR);
     exit;
   end;
 

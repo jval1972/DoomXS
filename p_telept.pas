@@ -69,7 +69,7 @@ var
   oldz: fixed_t;
 begin
   // don't teleport missiles
-  if boolval(thing.flags and MF_MISSILE) then
+  if thing.flags and MF_MISSILE <> 0 then
   begin
     Result := 0;
     exit;

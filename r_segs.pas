@@ -152,7 +152,7 @@ begin
   mceilingclip := ds.sprtopclip;
 
   // find positioning
-  if boolval(curline.linedef.flags and ML_DONTPEGBOTTOM) then
+  if curline.linedef.flags and ML_DONTPEGBOTTOM <> 0 then
   begin
     if frontsector.floorheight > backsector.floorheight then
       dc_texturemid := frontsector.floorheight
@@ -180,7 +180,7 @@ begin
     // calculate lighting
     if maskedtexturecol[dc_x] <> MAXSHORT then
     begin
-      if not boolval(fixedcolormap) then
+      if fixedcolormap = nil then
       begin
         index := _SHR(spryscale, LIGHTSCALESHIFT);
 
@@ -289,7 +289,7 @@ begin
     end;
 
     // draw the wall tiers
-    if boolval(midtexture) then
+    if midtexture <> 0 then
     begin
       // single sided line
       dc_yl := yl;
@@ -303,7 +303,7 @@ begin
     else
     begin
       // two sided line
-      if boolval(toptexture) then
+      if toptexture <> 0 then
       begin
         // top wall
         mid := _SHR(pixhigh, HEIGHTBITS);
@@ -441,17 +441,17 @@ begin
   midtexture := 0;
   toptexture := 0;
   bottomtexture := 0;
-  maskedtexture := boolval(0);
+  maskedtexture := false;
   drawsegs[ds_p].maskedtexturecol := nil;
 
-  if not boolval(backsector) then
+  if backsector = nil then
   begin
     // single sided line
     midtexture := texturetranslation[sidedef.midtexture];
     // a single sided line is terminal, so it must mark ends
     markfloor := true;
     markceiling := true;
-    if boolval(linedef.flags and ML_DONTPEGBOTTOM) then
+    if linedef.flags and ML_DONTPEGBOTTOM <> 0 then
     begin
       vtop := frontsector.floorheight + textureheight[sidedef.midtexture];
       // bottom of texture at bottom
@@ -679,7 +679,7 @@ begin
   bottomstep := -FixedMul(rw_scalestep, worldbottom);
   bottomfrac := _SHR(centeryfrac, 4) - FixedMul(worldbottom, rw_scale);
 
-  if boolval(backsector) then
+  if backsector <> nil then
   begin
     worldhigh := _SHR(worldhigh, 4);
     worldlow := _SHR(worldlow, 4);
@@ -708,28 +708,28 @@ begin
 
 
   // save sprite clipping info
-  if (boolval(drawsegs[ds_p].silhouette and SIL_TOP) or maskedtexture) and
-     (not boolval(drawsegs[ds_p].sprtopclip)) then
+  if ((drawsegs[ds_p].silhouette and SIL_TOP <> 0) or maskedtexture) and
+     (drawsegs[ds_p].sprtopclip = nil) then
   begin
     memcpy(@openings[lastopening], @ceilingclip[start], SizeOf(ceilingclip[0]) * (rw_stopx - start));
     drawsegs[ds_p].sprtopclip := PSmallIntArray(@openings[lastopening - start]);
     lastopening := lastopening + rw_stopx - start;
   end;
 
-  if (boolval(drawsegs[ds_p].silhouette and SIL_BOTTOM) or maskedtexture) and
-     (not boolval(drawsegs[ds_p].sprbottomclip)) then
+  if ((drawsegs[ds_p].silhouette and SIL_BOTTOM <> 0) or maskedtexture) and
+     (drawsegs[ds_p].sprbottomclip = nil) then
   begin
     memcpy(@openings[lastopening], @floorclip[start], SizeOf(floorclip[0]) * (rw_stopx - start));
     drawsegs[ds_p].sprbottomclip := PSmallIntArray(@openings[lastopening - start]);
     lastopening := lastopening + rw_stopx - start;
   end;
 
-  if maskedtexture and (not boolval(drawsegs[ds_p].silhouette and SIL_TOP)) then
+  if maskedtexture and (drawsegs[ds_p].silhouette and SIL_TOP = 0) then
   begin
     drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
     drawsegs[ds_p].tsilheight := MININT;
   end;
-  if maskedtexture and (not boolval(drawsegs[ds_p].silhouette and SIL_BOTTOM)) then
+  if maskedtexture and (drawsegs[ds_p].silhouette and SIL_BOTTOM = 0) then
   begin
     drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_BOTTOM;
     drawsegs[ds_p].bsilheight := MAXINT;

@@ -510,7 +510,7 @@ end;
 // NULL if not two-sided line
 function getNextSector(line: Pline_t; sec: Psector_t): Psector_t;
 begin
-  if not boolval(line.flags and ML_TWOSIDED) then
+  if line.flags and ML_TWOSIDED = 0 then
     Result := nil
   else
   begin
@@ -1006,7 +1006,7 @@ begin
     125:
     begin
       // TELEPORT MonsterONLY
-      if not boolval(thing.player) then
+      if thing.player = nil then
       begin
         EV_Teleport(line, side, thing);
         line.special := 0;
@@ -1486,7 +1486,7 @@ begin
   levelTimer := False;
 
   i := M_CheckParm('-avg');
-  if boolval(i) and boolval(deathmatch) then
+  if (i <> 0) and (deathmatch <> 0) then
   begin
     levelTimer := True;
     levelTimeCount := 20 * 60 * TICRATE;

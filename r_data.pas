@@ -392,7 +392,7 @@ begin
     exit;
   end;
 
-  if not boolval(texturecomposite[tex]) then
+  if texturecomposite[tex] = nil then
     R_GenerateComposite(tex);
 
   result := PByteArray(integer(texturecomposite[tex]) + ofs);

@@ -104,7 +104,7 @@ begin
   if player.bob > MAXBOB then
     player.bob := MAXBOB;
 
-  if boolval(player.cheats and CF_NOMOMENTUM) or (not onground) then
+  if (player.cheats and CF_NOMOMENTUM <> 0) or not onground then
   begin
     player.viewz := player.mo.z + PVIEWHEIGHT;
 
@@ -137,10 +137,10 @@ begin
         player.deltaviewheight := 1;
     end;
 
-    if boolval(player.deltaviewheight) then
+    if player.deltaviewheight <> 0 then
     begin
       player.deltaviewheight := player.deltaviewheight + FRACUNIT div 4;
-      if not boolval(player.deltaviewheight) then
+      if player.deltaviewheight = 0 then
         player.deltaviewheight := 1;
     end;
   end;
@@ -201,7 +201,7 @@ begin
   onground := player.mo.z <= player.mo.floorz;
   P_CalcHeight(player);
 
-  if boolval(player.attacker) and (player.attacker <> player.mo) then
+  if (player.attacker <> nil) and (player.attacker <> player.mo) then
   begin
     angle := R_PointToAngle2(player.mo.x, player.mo.y,
       player.attacker.x, player.attacker.y);
@@ -226,7 +226,7 @@ begin
     player.damagecount := player.damagecount - 1;
 
 
-  if boolval(player.cmd.Buttons and BT_USE) then
+  if player.cmd.Buttons and BT_USE <> 0 then
     player.playerstate := PST_REBORN;
 end;
 
@@ -239,10 +239,10 @@ var
   newweapon: weapontype_t;
 begin
   // fixme: do this in the cheat code
-  if boolval(player.cheats and CF_NOCLIP) then
+  if player.cheats and CF_NOCLIP <> 0 then
     player.mo.flags := player.mo.flags or MF_NOCLIP
   else
-    player.mo.flags := player.mo.flags and (not MF_NOCLIP);
+    player.mo.flags := player.mo.flags and not MF_NOCLIP;
 
   // chain saw run forward
   cmd := @player.cmd;
@@ -264,23 +264,23 @@ begin
   // Move around.
   // Reactiontime is used to prevent movement
   //  for a bit after a teleport.
-  if boolval(player.mo.reactiontime) then
+  if player.mo.reactiontime <> 0 then
     player.mo.reactiontime := player.mo.reactiontime - 1
   else
     P_MovePlayer(player);
 
   P_CalcHeight(player);
 
-  if boolval(Psubsector_t(player.mo.subsector).sector.special) then
+  if Psubsector_t(player.mo.subsector).sector.special <> 0 then
     P_PlayerInSpecialSector(player);
 
   // Check for weapon change.
 
   // A special event has no other buttons.
-  if boolval(cmd.Buttons and BT_SPECIAL) then
+  if cmd.Buttons and BT_SPECIAL <> 0 then
     cmd.Buttons := 0;
 
-  if boolval(cmd.Buttons and BT_CHANGE) then
+  if cmd.Buttons and BT_CHANGE <> 0 then
   begin
     // The actual changing of the weapon is done
     //  when the weapon psprite can do it
@@ -289,7 +289,7 @@ begin
 
     if (newweapon = wp_fist) and player.weaponowned[Ord(wp_chainsaw)] and
       (not ((player.readyweapon = wp_chainsaw) and
-      boolval(player.powers[Ord(pw_strength)]))) then
+      (player.powers[Ord(pw_strength)] <> 0))) then
       newweapon := wp_chainsaw;
 
     if (gamemode = commercial) and (newweapon = wp_shotgun) and
@@ -309,7 +309,7 @@ begin
   end;
 
   // check for use
-  if boolval(cmd.Buttons and BT_USE) then
+  if cmd.Buttons and BT_USE <> 0 then
   begin
     if not player.usedown then
     begin
@@ -326,7 +326,7 @@ begin
   // Counters, time dependend power ups.
 
   // Strength counts up to diminish fade.
-  if boolval(player.powers[Ord(pw_strength)]) then
+  if player.powers[Ord(pw_strength)] <> 0 then
     player.powers[Ord(pw_strength)] := player.powers[Ord(pw_strength)] + 1;
 
   if player.powers[Ord(pw_invulnerability)] > 0 then
@@ -356,7 +356,7 @@ begin
   if player.powers[Ord(pw_invulnerability)] > 0 then
   begin
     if (player.powers[Ord(pw_invulnerability)] > 4 * 32) or
-      boolval(player.powers[Ord(pw_invulnerability)] and 8) then
+      (player.powers[Ord(pw_invulnerability)] and 8 <> 0) then
       player.fixedcolormap := INVERSECOLORMAP
     else
       player.fixedcolormap := 0;
@@ -364,7 +364,7 @@ begin
   else if player.powers[Ord(pw_infrared)] > 0 then
   begin
     if (player.powers[Ord(pw_infrared)] > 4 * 32) or
-      boolval(player.powers[Ord(pw_infrared)] and 8) then
+      (player.powers[Ord(pw_infrared)] and 8 <> 0) then
 
       // almost full bright
       player.fixedcolormap := 1

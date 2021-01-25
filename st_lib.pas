@@ -244,8 +244,7 @@ begin
   x := n.x;
 
   // in the special case of 0, you draw 0
-  if not boolval(num) then
-//    V_DrawPatch(x - w, n.y, _FG, n.p[0], true);
+  if num = 0 then
     V_DrawPatch(x - w, n.y - ST_Y, _BG, n.p[0], false);
 
   // draw the new number
@@ -279,10 +278,10 @@ end;
 
 procedure STlib_updatePercent(per: Pst_percent_t; refresh: integer);
 begin
-  if boolval(refresh) and per.n._on^ then
+  if (refresh <> 0) and per.n._on^ then
     V_DrawPatch(per.n.x, per.n.y - ST_Y, _BG, per.p, false);
 
-  STlib_updateNum(@per.n, boolval(refresh));
+  STlib_updateNum(@per.n, refresh <> 0);
 end;
 
 procedure STlib_initMultIcon(i: Pst_multicon_t; x, y: integer; il: Ppatch_tPArray;

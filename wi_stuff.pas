@@ -994,7 +994,9 @@ var
 
 function NG_STATSX: integer;
 begin
-  result := 32 + star.width div 2 + 32 * (not intval(boolval(dofrags))); // VJ ???
+  result := 32 + star.width div 2;
+  if dofrags = 0 then
+    result := result + 32;
 end;
 
 procedure WI_InitNetgameStats;
@@ -1199,7 +1201,7 @@ begin
 
   V_DrawPatch(NG_STATSX + 3 * NG_SPACINGX - secret.width, NG_STATSY, _FG, secret, true);
 
-  if boolval(dofrags) then
+  if dofrags <> 0 then
     V_DrawPatch(NG_STATSX + 4 * NG_SPACINGX - frags.width, NG_STATSY, _FG, frags, true);
 
   // draw stats

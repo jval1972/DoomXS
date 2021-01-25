@@ -223,7 +223,7 @@ begin
   while namelist[numsprites] <> '' do
     inc(numsprites);
 
-  if not boolval(numsprites) then
+  if numsprites = 0 then
     exit;
 
   sprites := Z_Malloc(numsprites * SizeOf(spritedef_t), PU_STATIC, nil);
@@ -465,12 +465,12 @@ begin
 
   dc_colormap := vis.colormap;
 
-  if not boolval(dc_colormap) then
+  if dc_colormap = nil then
   begin
     // NULL colormap = shadow draw
     colfunc := fuzzcolfunc;
   end
-  else if boolval(vis.mobjflags and MF_TRANSLATION) then
+  else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
     if SCREENHEIGHT = 200 then
       colfunc := R_DrawTranslatedColumn320x200
@@ -551,7 +551,7 @@ begin
   sprdef := @sprites[Ord(thing.sprite)];
   sprframe := @sprdef.spriteframes[thing.frame and FF_FRAMEMASK];
 
-  if boolval(sprframe.rotate) then
+  if sprframe.rotate <> 0 then
   begin
     // choose a different rotation based on player view
     ang := R_PointToAngle(thing.x, thing.y);

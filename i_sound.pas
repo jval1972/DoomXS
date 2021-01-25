@@ -247,7 +247,7 @@ function I_RestartChannel(channel: integer; volume: integer): integer;
 var
   dsb: LPDIRECTSOUNDBUFFER;
 begin
-  if not boolval(pointer(pDS)) then
+  if pDS = nil then
   begin
     Result := HandleCount;
     Inc(HandleCount);

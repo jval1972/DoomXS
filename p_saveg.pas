@@ -106,7 +106,7 @@ begin
     memcpy(dest, @players[i], SizeOf(player_t));
     save_p := PByteArray(integer(save_p) + SizeOf(player_t));
     for j := 0 to Ord(NUMPSPRITES) - 1 do
-      if boolval(dest.psprites[j].state) then
+      if dest.psprites[j].state <> nil then
         dest.psprites[j].state :=
           Pstate_t(pOperation(dest.psprites[j].state, @states[0], '-',
           SizeOf(dest.psprites[j].state^)));
@@ -137,7 +137,7 @@ begin
     players[i].attacker := nil;
 
     for j := 0 to Ord(NUMPSPRITES) - 1 do
-      if boolval(players[i].psprites[j].state) then
+      if players[i].psprites[j].state <> nil then
         players[i].psprites[j].state := @states[integer(players[i].psprites[j].state)];
   end;
 end;
@@ -311,7 +311,7 @@ begin
       mobj.state := Pstate_t(pOperation(mobj.state, @states[0], '-',
         SizeOf(mobj.state^)));
 
-      if boolval(mobj.player) then
+      if mobj.player <> nil then
         mobj.player := Pplayer_t(pOperation(mobj.player, @players[0],
           '-', SizeOf(players[0])) + 1);
     end;
@@ -366,7 +366,7 @@ begin
         incp(pointer(save_p), SizeOf(mobj^));
         mobj.state := @states[integer(mobj.state)];
         mobj.target := nil;
-        if boolval(mobj.player) then
+        if mobj.player <> nil then
         begin
           mobj.player := @players[integer(mobj.player) - 1];
 

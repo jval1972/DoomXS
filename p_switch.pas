@@ -146,7 +146,7 @@ begin
   index := 0;
   for i := 0 to MAXSWITCHES - 1 do
   begin
-    if not boolval(alphSwitchList[i].episode) then
+    if alphSwitchList[i].episode = 0 then
     begin
       numswitches := index div 2;
       switchlist[index] := -1;
@@ -172,12 +172,12 @@ var
 begin
   // See if button is already pressed
   for i := 0 to MAXBUTTONS - 1 do
-    if boolval(buttonlist[i].btimer) and (buttonlist[i].line = line) then
+    if (buttonlist[i].btimer <> 0) and (buttonlist[i].line = line) then
       exit;
 
   for i := 0 to MAXBUTTONS - 1 do
   begin
-    if not boolval(buttonlist[i].btimer) then
+    if buttonlist[i].btimer = 0 then
     begin
       buttonlist[i].line := line;
       buttonlist[i].where := w;
@@ -331,13 +331,13 @@ begin
     7:
     begin
       // Build Stairs
-      if boolval(EV_BuildStairs(line, build8)) then
+      if EV_BuildStairs(line, build8) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
     9:
     begin
       // Change Donut
-      if boolval(EV_DoDonut(line)) then
+      if EV_DoDonut(line) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
     11:
@@ -350,77 +350,77 @@ begin
     14:
     begin
       // Raise Floor 32 and change texture
-      if boolval(EV_DoPlat(line, raiseAndChange, 32)) then
+      if EV_DoPlat(line, raiseAndChange, 32) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     15:
     begin
       // Raise Floor 24 and change texture
-      if boolval(EV_DoPlat(line, raiseAndChange, 24)) then
+      if EV_DoPlat(line, raiseAndChange, 24) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     18:
     begin
       // Raise Floor to next highest floor
-      if boolval(EV_DoFloor(line, raiseFloorToNearest)) then
+      if EV_DoFloor(line, raiseFloorToNearest) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     20:
     begin
       // Raise Plat next highest floor and change texture
-      if boolval(EV_DoPlat(line, raiseToNearestAndChange, 0)) then
+      if EV_DoPlat(line, raiseToNearestAndChange, 0) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     21:
     begin
       // PlatDownWaitUpStay
-      if boolval(EV_DoPlat(line, downWaitUpStay, 0)) then
+      if EV_DoPlat(line, downWaitUpStay, 0) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     23:
     begin
       // Lower Floor to Lowest
-      if boolval(EV_DoFloor(line, lowerFloorToLowest)) then
+      if EV_DoFloor(line, lowerFloorToLowest) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     29:
     begin
       // Raise Door
-      if boolval(EV_DoDoor(line, normal)) then
+      if EV_DoDoor(line, normal) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     41:
     begin
       // Lower Ceiling to Floor
-      if boolval(EV_DoCeiling(line, lowerToFloor)) then
+      if EV_DoCeiling(line, lowerToFloor) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     71:
     begin
       // Turbo Lower Floor
-      if boolval(EV_DoFloor(line, turboLower)) then
+      if EV_DoFloor(line, turboLower) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     49:
     begin
       // Ceiling Crush And Raise
-      if boolval(EV_DoCeiling(line, crushAndRaise)) then
+      if EV_DoCeiling(line, crushAndRaise) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     50:
     begin
       // Close Door
-      if boolval(EV_DoDoor(line, Close)) then
+      if EV_DoDoor(line, Close) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
@@ -434,70 +434,70 @@ begin
     55:
     begin
       // Raise Floor Crush
-      if boolval(EV_DoFloor(line, raiseFloorCrush)) then
+      if EV_DoFloor(line, raiseFloorCrush) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     101:
     begin
       // Raise Floor
-      if boolval(EV_DoFloor(line, raiseFloor)) then
+      if EV_DoFloor(line, raiseFloor) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     102:
     begin
       // Lower Floor to Surrounding floor height
-      if boolval(EV_DoFloor(line, lowerFloor)) then
+      if EV_DoFloor(line, lowerFloor) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     103:
     begin
       // Open Door
-      if boolval(EV_DoDoor(line, Open)) then
+      if EV_DoDoor(line, Open) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     111:
     begin
       // Blazing Door Raise (faster than TURBO!)
-      if boolval(EV_DoDoor(line, blazeRaise)) then
+      if EV_DoDoor(line, blazeRaise) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     112:
     begin
       // Blazing Door Open (faster than TURBO!)
-      if boolval(EV_DoDoor(line, blazeOpen)) then
+      if EV_DoDoor(line, blazeOpen) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     113:
     begin
       // Blazing Door Close (faster than TURBO!)
-      if boolval(EV_DoDoor(line, blazeClose)) then
+      if EV_DoDoor(line, blazeClose) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     122:
     begin
       // Blazing PlatDownWaitUpStay
-      if boolval(EV_DoPlat(line, blazeDWUS, 0)) then
+      if EV_DoPlat(line, blazeDWUS, 0) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     127:
     begin
       // Build Stairs Turbo 16
-      if boolval(EV_BuildStairs(line, turbo16)) then
+      if EV_BuildStairs(line, turbo16) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     131:
     begin
       // Raise Floor Turbo
-      if boolval(EV_DoFloor(line, raiseFloorTurbo)) then
+      if EV_DoFloor(line, raiseFloorTurbo) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
@@ -505,14 +505,14 @@ begin
     135, // BlzOpenDoor RED
     137: // BlzOpenDoor YELLOW
     begin
-      if boolval(EV_DoLockedDoor(line, blazeOpen, thing)) then
+      if EV_DoLockedDoor(line, blazeOpen, thing) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
     140:
     begin
       // Raise Floor 512
-      if boolval(EV_DoFloor(line, raiseFloor512)) then
+      if EV_DoFloor(line, raiseFloor512) <> 0 then
         P_ChangeSwitchTexture(line, 0);
     end;
 
@@ -520,133 +520,133 @@ begin
     42:
     begin
       // Close Door
-      if boolval(EV_DoDoor(line, Close)) then
+      if EV_DoDoor(line, Close) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     43:
     begin
       // Lower Ceiling to Floor
-      if boolval(EV_DoCeiling(line, lowerToFloor)) then
+      if EV_DoCeiling(line, lowerToFloor) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     45:
     begin
       // Lower Floor to Surrounding floor height
-      if boolval(EV_DoFloor(line, lowerFloor)) then
+      if EV_DoFloor(line, lowerFloor) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     60:
     begin
       // Lower Floor to Lowest
-      if boolval(EV_DoFloor(line, lowerFloorToLowest)) then
+      if EV_DoFloor(line, lowerFloorToLowest) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     61:
     begin
       // Open Door
-      if boolval(EV_DoDoor(line, Open)) then
+      if EV_DoDoor(line, Open) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     62:
     begin
       // PlatDownWaitUpStay
-      if boolval(EV_DoPlat(line, downWaitUpStay, 1)) then
+      if EV_DoPlat(line, downWaitUpStay, 1) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     63:
     begin
       // Raise Door
-      if boolval(EV_DoDoor(line, normal)) then
+      if EV_DoDoor(line, normal) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     64:
     begin
       // Raise Floor to ceiling
-      if boolval(EV_DoFloor(line, raiseFloor)) then
+      if EV_DoFloor(line, raiseFloor) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     66:
     begin
       // Raise Floor 24 and change texture
-      if boolval(EV_DoPlat(line, raiseAndChange, 24)) then
+      if EV_DoPlat(line, raiseAndChange, 24) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     67:
     begin
       // Raise Floor 32 and change texture
-      if boolval(EV_DoPlat(line, raiseAndChange, 32)) then
+      if EV_DoPlat(line, raiseAndChange, 32) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     65:
     begin
       // Raise Floor Crush
-      if boolval(EV_DoFloor(line, raiseFloorCrush)) then
+      if EV_DoFloor(line, raiseFloorCrush) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     68:
     begin
       // Raise Plat to next highest floor and change texture
-      if boolval(EV_DoPlat(line, raiseToNearestAndChange, 0)) then
+      if EV_DoPlat(line, raiseToNearestAndChange, 0) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     69:
     begin
       // Raise Floor to next highest floor
-      if boolval(EV_DoFloor(line, raiseFloorToNearest)) then
+      if EV_DoFloor(line, raiseFloorToNearest) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     70:
     begin
       // Turbo Lower Floor
-      if boolval(EV_DoFloor(line, turboLower)) then
+      if EV_DoFloor(line, turboLower) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     114:
     begin
       // Blazing Door Raise (faster than TURBO!)
-      if boolval(EV_DoDoor(line, blazeRaise)) then
+      if EV_DoDoor(line, blazeRaise) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     115:
     begin
       // Blazing Door Open (faster than TURBO!)
-      if boolval(EV_DoDoor(line, blazeOpen)) then
+      if EV_DoDoor(line, blazeOpen) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     116:
     begin
       // Blazing Door Close (faster than TURBO!)
-      if boolval(EV_DoDoor(line, blazeClose)) then
+      if EV_DoDoor(line, blazeClose) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     123:
     begin
       // Blazing PlatDownWaitUpStay
-      if boolval(EV_DoPlat(line, blazeDWUS, 0)) then
+      if EV_DoPlat(line, blazeDWUS, 0) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
     132:
     begin
       // Raise Floor Turbo
-      if boolval(EV_DoFloor(line, raiseFloorTurbo)) then
+      if EV_DoFloor(line, raiseFloorTurbo) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 
@@ -654,7 +654,7 @@ begin
     134, // BlzOpenDoor RED
     136: // BlzOpenDoor YELLOW
     begin
-      if boolval(EV_DoLockedDoor(line, blazeOpen, thing)) then
+      if EV_DoLockedDoor(line, blazeOpen, thing) <> 0 then
         P_ChangeSwitchTexture(line, 1);
     end;
 

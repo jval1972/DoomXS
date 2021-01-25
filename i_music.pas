@@ -179,7 +179,7 @@ begin
   time := False;
   while not done do
   begin
-    if boolval(Data[i] and $80) then
+    if Data[i] and $80 <> 0 then
       time := True;
     Inc(i);
     case _SHR(Data[i - 1], 4) and 7 of
@@ -302,7 +302,7 @@ begin
       end;
       4:
       begin
-        if boolval(score[spos]) then
+        if score[spos] <> 0 then
         begin
           event[i].Data[0] := channel or $b0;
           event[i].Data[1] := MidiControlers[score[spos]];
@@ -416,7 +416,7 @@ var
   i: integer;
   rc: MMRESULT;
 begin
-  if not (boolval(song) and boolval(hMidiStream)) then
+  if (song = nil) or (hMidiStream = 0) then
     exit;
 
   loopsong := False;
@@ -428,7 +428,7 @@ begin
 
   for i := 0 to NUMMIDIHEADERS - 1 do
   begin
-    if boolval(song.header[i].lpData) then
+    if song.header[i].lpData <> nil then
     begin
       rc := midiOutUnprepareHeader(HMIDIOUT(hMidiStream), @song.header[i],
         SizeOf(midiheader_t));
@@ -485,7 +485,7 @@ end;
 
 procedure I_PlaySong(handle: integer; looping: boolean);
 begin
-  if not (boolval(handle) and boolval(hMidiStream)) then
+  if (handle = 0) or (hMidiStream = 0) then
     exit;
   loopsong := looping;
   CurrentSong := Psonginfo_t(handle);
@@ -542,7 +542,7 @@ procedure I_StopSong(handle: integer);
 var
   song: Psonginfo_t;
 begin
-  if not (boolval(handle) and boolval(hMidiStream)) then
+  if (handle = 0) or (hMidiStream = 0) then
     exit;
 
   song := Psonginfo_t(handle);
@@ -557,7 +557,7 @@ procedure I_UnRegisterSong(handle: integer);
 var
   song: Psonginfo_t;
 begin
-  if not (boolval(handle) and boolval(hMidiStream)) then
+  if (handle = 0) or (hMidiStream = 0) then
     exit;
 
   I_StopSong(handle);
@@ -647,7 +647,7 @@ begin
   snd_MusicVolume := volume;
   // Now set volume on output device.
   // Whatever( snd_MusciVolume );
-  if boolval(CurrentSong) and (snd_MusicVolume = 0) and started then
+  if (CurrentSong <> nil) and (snd_MusicVolume = 0) and started then
     I_StopMusic(CurrentSong);
 
   if (midicaps.dwSupport and MIDICAPS_VOLUME) <> 0 then
@@ -680,15 +680,15 @@ begin
   if m_type <> m_mus then
     exit;
 
-  if (snd_MusicVolume = 0) or (not boolval(CurrentSong)) then
+  if (snd_MusicVolume = 0) or (CurrentSong = nil) then
     exit;
 
   for i := 0 to NUMMIDIHEADERS - 1 do
   begin
     header := @CurrentSong.header[i];
-    if boolval(header.dwFlags and MHDR_DONE) then
+    if header.dwFlags and MHDR_DONE <> 0 then
     begin
-      if boolval(header.lpData) then
+      if header.lpData <> nil then
       begin
         rc := midiOutUnprepareHeader(HMIDIOUT(hMidiStream), PMidiHdr(header),
           SizeOf(midiheader_t));

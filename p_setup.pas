@@ -193,7 +193,7 @@ begin
     side := ml.side;
     li.sidedef := @sides[ldef.sidenum[side]];
     li.frontsector := sides[ldef.sidenum[side]].sector;
-    if boolval(ldef.flags and ML_TWOSIDED) then
+    if ldef.flags and ML_TWOSIDED <> 0 then
       li.backsector := sides[ldef.sidenum[side xor 1]].sector
     else
       li.backsector := nil;
@@ -380,9 +380,9 @@ begin
     ld.dx := v2.x - v1.x;
     ld.dy := v2.y - v1.y;
 
-    if not boolval(ld.dx) then
+    if ld.dx = 0 then
       ld.slopetype := ST_VERTICAL
-    else if not boolval(ld.dy) then
+    else if ld.dy = 0 then
       ld.slopetype := ST_HORIZONTAL
     else
     begin

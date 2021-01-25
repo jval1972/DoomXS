@@ -613,9 +613,9 @@ begin
       if cht_CheckCheat(@cheat_god, Chr(ev.data1)) then
       begin
         plyr.cheats := plyr.cheats xor CF_GODMODE;
-        if boolval(plyr.cheats and CF_GODMODE) then
+        if plyr.cheats and CF_GODMODE <> 0 then
         begin
-          if boolval(plyr.mo) then
+          if plyr.mo <> nil then
             plyr.mo.health := 100;
 
           plyr.health := 100;
@@ -668,7 +668,7 @@ begin
           if (Ord(buf[1]) - Ord('0')) * 10 + Ord(buf[2]) - Ord('0') > 35 then
             plyr._message := STSTR_NOMUS
           else
-            S_ChangeMusic(musnum, boolval(1));
+            S_ChangeMusic(musnum, true);
         end
         else
         begin
@@ -677,7 +677,7 @@ begin
           if (Ord(buf[1]) - Ord('1')) * 9 + Ord(buf[2]) - Ord('1') > 31 then
             plyr._message := STSTR_NOMUS
           else
-            S_ChangeMusic(musnum, boolval(1));
+            S_ChangeMusic(musnum, true);
         end;
       end
       // Simplified, accepting both "noclip" and "idspispopd".
@@ -687,7 +687,7 @@ begin
       begin
         plyr.cheats := plyr.cheats xor CF_NOCLIP;
 
-        if boolval(plyr.cheats and CF_NOCLIP) then
+        if plyr.cheats and CF_NOCLIP <> 0 then
           plyr._message := STSTR_NCON
         else
           plyr._message := STSTR_NCOFF;
@@ -697,7 +697,7 @@ begin
       begin
         if cht_CheckCheat(@cheat_powerup[i], Chr(ev.data1)) then
         begin
-          if not boolval(plyr.powers[i]) then
+          if plyr.powers[i] = 0 then
             P_GivePower(plyr, i)
           else if i <> Ord(pw_strength) then
             plyr.powers[i] := 1
@@ -816,7 +816,7 @@ begin
   if priority < 10 then
   begin
     // dead
-    if not boolval(plyr.health) then
+    if plyr.health = 0 then
     begin
       priority := 9;
       st_faceindex := ST_DEADFACE;
@@ -826,7 +826,7 @@ begin
 
   if priority < 9 then
   begin
-    if boolval(plyr.bonuscount) then
+    if plyr.bonuscount <> 0 then
     begin
       // picking up bonus
       doevilgrin := false;
@@ -851,8 +851,8 @@ begin
 
   if priority < 8 then
   begin
-    if boolval(plyr.damagecount) and
-       boolval(plyr.attacker) and
+    if (plyr.damagecount <> 0) and
+       (plyr.attacker <> nil) and
        (plyr.attacker <> plyr.mo) then
     begin
       // being attacked
@@ -890,7 +890,7 @@ begin
           // head-on
           st_faceindex := st_faceindex + ST_RAMPAGEOFFSET;
         end
-        else if boolval(i) then
+        else if i <> 0 then
         begin
           // turn face right
           st_faceindex := st_faceindex + ST_TURNOFFSET;
@@ -907,7 +907,7 @@ begin
   if priority < 7 then
   begin
     // getting hurt because of your own damn stupidity
-    if boolval(plyr.damagecount) then
+    if plyr.damagecount <> 0 then
     begin
       if plyr.health - st_oldhealth > ST_MUCHPAIN then
       begin
@@ -934,7 +934,7 @@ begin
       else
       begin
         dec(lastattackdown);
-        if not boolval(lastattackdown) then
+        if lastattackdown = 0 then
         begin
           priority := 5;
           st_faceindex := ST_calcPainOffset + ST_RAMPAGEOFFSET;
@@ -950,8 +950,8 @@ begin
   if priority < 5 then
   begin
     // invulnerability
-    if boolval(plyr.cheats and CF_GODMODE) or
-       boolval(plyr.powers[Ord(pw_invulnerability)]) then
+    if (plyr.cheats and CF_GODMODE <> 0) or
+       (plyr.powers[Ord(pw_invulnerability)] <> 0) then
     begin
       priority := 4;
 
@@ -961,7 +961,7 @@ begin
   end;
 
   // look left or look right if the facecount has timed out
-  if not boolval(st_facecount) then
+  if st_facecount = 0 then
   begin
     st_faceindex := ST_calcPainOffset + (st_randomnumber mod 3);
     st_facecount := ST_STRAIGHTFACECOUNT;
@@ -1016,13 +1016,13 @@ begin
   ST_updateFaceWidget;
 
   // used by the w_armsbg widget
-  st_notdeathmatch := not boolval(deathmatch);
+  st_notdeathmatch := deathmatch = 0;
 
   // used by w_arms[] widgets
   st_armson := st_statusbaron and st_notdeathmatch;
 
   // used by w_frags widget
-  st_fragson := boolval(deathmatch) and st_statusbaron;
+  st_fragson := (deathmatch <> 0) and st_statusbaron;
   st_fragscount := 0;
 
   for i := 0 to MAXPLAYERS - 1 do
@@ -1035,7 +1035,7 @@ begin
 
   // get rid of chat window if up because of message
   dec(st_msgcounter);
-  if not boolval(st_msgcounter) then
+  if st_msgcounter = 0 then
     st_chat := st_oldchat;
 end;
 
@@ -1059,7 +1059,7 @@ var
 begin
   cnt := plyr.damagecount;
 
-  if boolval(plyr.powers[Ord(pw_strength)]) then
+  if plyr.powers[Ord(pw_strength)] <> 0 then
   begin
     // slowly fade the berzerk out
     bzc := 12 - _SHR(plyr.powers[Ord(pw_strength)], 6);
@@ -1087,7 +1087,7 @@ begin
     palette := palette + STARTBONUSPALS;
   end
   else if (plyr.powers[Ord(pw_ironfeet)] > 4 * 32) or
-          boolval(plyr.powers[Ord(pw_ironfeet)] and 8) then
+          (plyr.powers[Ord(pw_ironfeet)] and 8 <> 0) then
     palette := RADIATIONPAL
   else
     palette := 0;
@@ -1105,10 +1105,10 @@ var
   i: integer;
 begin
   // used by w_arms[] widgets
-  st_armson := st_statusbaron and (not boolval(deathmatch));
+  st_armson := st_statusbaron and (deathmatch = 0);
 
   // used by w_frags widget
-  st_fragson := boolval(deathmatch) and st_statusbaron;
+  st_fragson := (deathmatch <> 0) and st_statusbaron;
 
   STlib_updateNum(@w_ready, refresh);
 

@@ -106,12 +106,6 @@ function malloc(size: integer): Pointer;
 
 function IntToStrZfill(const z: integer; const x: integer): string;
 
-function boolval(const x: integer): boolean; overload;
-
-function boolval(const c: char): boolean; overload;
-
-function boolval(const p: pointer): boolean; overload;
-
 function intval(const b: boolean): integer;
 
 function decide(const contition: boolean; const iftrue: integer;
@@ -310,21 +304,6 @@ begin
   len := Length(Result);
   for i := len + 1 to z do
     Result := '0' + Result;
-end;
-
-function boolval(const x: integer): boolean;
-begin
-  Result := x <> 0;
-end;
-
-function boolval(const c: char): boolean;
-begin
-  Result := c <> #0;
-end;
-
-function boolval(const p: pointer): boolean;
-begin
-  Result := p <> nil;
 end;
 
 function intval(const b: boolean): integer;

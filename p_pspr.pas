@@ -331,7 +331,7 @@ begin
   // check for fire
   //  (if a weaponchange is pending, let it go through instead)
   if (player.cmd.buttons and BT_ATTACK <> 0) and
-    (player.pendingweapon = wp_nochange) and boolval(player.health) then
+    (player.pendingweapon = wp_nochange) and (player.health <> 0) then
   begin
     player.refire := player.refire + 1;
     P_FireWeapon(player);
@@ -419,7 +419,7 @@ var
 begin
   damage := (P_Random mod 10 + 1) * 2;
 
-  if boolval(player.powers[Ord(pw_strength)]) then
+  if (player.powers[Ord(pw_strength)] <> 0) then
     damage := damage * 10;
 
   angle := player.mo.angle;

@@ -292,7 +292,7 @@ begin
   // Fill in lumpinfo
   ReAllocMem(lumpinfo, numlumps * SizeOf(lumpinfo_t));
 
-  if not boolval(lumpinfo) then
+  if lumpinfo = nil then
     I_Error('W_AddFile(): Couldn''t realloc lumpinfo');
 
   if reloadname <> '' then
@@ -361,7 +361,7 @@ begin
   for i := reloadlump to reloadlump + lumpcount - 1 do
   begin
     lump_p := @lumpinfo[reloadlump];
-    if boolval(lumpcache[i]) then
+    if lumpcache[i] <> nil then
       Z_Free(lumpcache[i]);
 
     lump_p.position := fileinfo[i - reloadlump].filepos;
@@ -409,7 +409,7 @@ begin
   size := numlumps * SizeOf(pointer);
   GetMem(lumpcache, size);
 
-  if not boolval(lumpcache) then
+  if lumpcache = nil then
     I_Error('W_InitMultipleFiles(): Couldn''t allocate lumpcache');
 
   memset(lumpcache, 0, size);
@@ -561,7 +561,7 @@ begin
   if lump < 0 then
     I_Error('W_CacheLumpNum(): lumn = %d, < 0', [lump]);
 
-  if not boolval(lumpcache[lump]) then
+  if lumpcache[lump] = nil then
   begin
     // read the lump in
     //printf ("cache miss on lump %i\n",lump);
