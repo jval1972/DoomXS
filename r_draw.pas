@@ -92,8 +92,6 @@ var
   translationtables: PByteArray;
   dc_translation: PByteArray;
 
-  viewwidth: integer;
-
 var
   ds_y: integer;
   ds_x1: integer;
@@ -112,6 +110,7 @@ var
 // just for profiling
   dscount: integer;
 
+  viewwidth: integer;
   viewheight: integer;
   scaledviewwidth: integer;
 
@@ -318,7 +317,7 @@ begin
     exit;
 
   // Does not work with blocky mode.
-  dest := PByteArray(integer(ylookup[dc_yl]) + columnofs[dc_x]);
+  dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
 
   // Looks like an attempt at dithering,
   //  using the colormap #6 (of 0-31, a bit
@@ -336,7 +335,7 @@ begin
     if fuzzpos = FUZZTABLE then
       fuzzpos := 0;
 
-    incp(pointer(dest), SCREENWIDTH);
+    dest := @dest[SCREENWIDTH];
 
   end;
 end;
@@ -364,7 +363,7 @@ begin
     exit;
 
   // FIXME. As above.
-  dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
+  dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
 
   // Looks familiar.
   fracstep := dc_iscale;
@@ -396,7 +395,7 @@ procedure R_InitTranslationTables;
 var
   i: integer;
 begin
-  translationtables := Z_Malloc (256 * 3 + 255, PU_STATIC, nil);
+  translationtables := Z_Malloc(256 * 3 + 255, PU_STATIC, nil);
   translationtables := PByteArray((integer(translationtables) + 255 ) and (not 255));
 
   // translate just the 16 green colors
@@ -444,7 +443,7 @@ begin
   xfrac := ds_xfrac;
   yfrac := ds_yfrac;
 
-  dest := PByte(integer(ylookup[ds_y]) + columnofs[ds_x1]);
+  dest := @((ylookup[ds_y]^)[columnofs[ds_x1]]);
 
   // We do not check for zero spans here?
   count := ds_x2 - ds_x1;
@@ -485,7 +484,7 @@ begin
   yfrac := ds_yfrac;
 
 
-  dest := PByte(integer(ylookup[ds_y]) + columnofs[ds_x1]);
+  dest := @((ylookup[ds_y]^)[columnofs[ds_x1]]);
 
   // Blocky mode, multiply by 3 (!!).
   ds_xstep2 := ds_xstep * 3;
@@ -524,7 +523,7 @@ begin
   // Handle resize,
   //  e.g. smaller view windows
   //  with border and/or status bar.
-  viewwindowx := _SHR(SCREENWIDTH - width, 1);
+  viewwindowx := (SCREENWIDTH - width) div 2;
 
   // Column offset. For windows.
   for i := 0 to width - 1 do
@@ -534,7 +533,7 @@ begin
   if width = SCREENWIDTH then
     viewwindowy := 0
   else
-    viewwindowy := _SHR(V_PreserveY(200 - ST_HEIGHT) - height, 1);
+    viewwindowy := (V_PreserveY(ST_Y) - height) div 2;
 
   // Preclaculate all row offsets.
   for i := 0 to height - 1 do
@@ -555,10 +554,10 @@ var
   y: integer;
   patch: Ppatch_t;
   name: string;
-  pscaledviewwidth: integer;
-  pviewwindowx: integer;
-  pviewwindowy: integer;
-  pviewheight: integer;
+  tviewwindowx: integer;
+  tviewwindowy: integer;
+  tviewheight: integer;
+  tscaledviewwidth: integer;
 begin
   if scaledviewwidth = SCREENWIDTH then
     exit;
@@ -576,63 +575,63 @@ begin
     for x := 0 to 320 div 64 - 1 do
     begin
       memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
-      incp(pointer(dest), 64);
+      dest := @dest[64];
     end;
     if 320 and 63 <> 0 then
     begin
       memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 320 and 63);
-      incp(pointer(dest), (320 and 63));
+      dest := @dest[64];
     end;
   end;
 
+  tviewwindowx := viewwindowx * 320 div SCREENWIDTH + 1;
+  tviewwindowy := viewwindowy * 200 div SCREENHEIGHT + 1;
+  tviewheight := viewheight * 200 div SCREENHEIGHT - 2;
+  tscaledviewwidth := scaledviewwidth * 320 div SCREENWIDTH - 2;
+
   patch := W_CacheLumpName('brdr_t', PU_CACHE);
   x := 0;
-  pscaledviewwidth := scaledviewwidth * 320 div SCREENWIDTH;
-  pviewwindowx := viewwindowx * 320 div SCREENWIDTH;
-  pviewwindowy := viewwindowy * 200 div SCREENHEIGHT;
-  pviewheight := viewheight * 200 div SCREENHEIGHT;
-
-  while x < pscaledviewwidth do
+  while x < tscaledviewwidth do
   begin
-    V_DrawPatch(pviewwindowx + x, pviewwindowy - 8, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx + x, tviewwindowy - 8, _TMP, patch, false);
     x := x + 8;
   end;
 
   patch := W_CacheLumpName('brdr_b', PU_CACHE);
   x := 0;
-  while x < pscaledviewwidth do
+  while x < tscaledviewwidth do
   begin
-    V_DrawPatch(pviewwindowx + x, pviewwindowy + pviewheight, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx + x, tviewwindowy + tviewheight, _TMP, patch, false);
     x := x + 8;
   end;
 
   patch := W_CacheLumpName('brdr_l', PU_CACHE);
   y := 0;
-  while y < pviewheight do
+  while y < tviewheight do
   begin
-    V_DrawPatch(pviewwindowx - 8, pviewwindowy + y, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx - 8, tviewwindowy + y, _TMP, patch, false);
     y := y + 8;
   end;
 
   patch := W_CacheLumpName('brdr_r', PU_CACHE);
   y := 0;
-  while y < pviewheight do
+  while y < tviewheight do
   begin
-    V_DrawPatch (pviewwindowx + pscaledviewwidth, pviewwindowy + y, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + y, _TMP, patch, false);
     y := y + 8;
   end;
 
   // Draw beveled edge.
-  V_DrawPatch(pviewwindowx - 8, pviewwindowy - 8, _TMP,
+  V_DrawPatch(tviewwindowx - 8, tviewwindowy - 8, _TMP,
     W_CacheLumpName('brdr_tl', PU_CACHE), false);
 
-  V_DrawPatch(pviewwindowx + pscaledviewwidth, pviewwindowy - 8, _TMP,
+  V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy - 8, _TMP,
     W_CacheLumpName('brdr_tr', PU_CACHE), false);
 
-  V_DrawPatch(pviewwindowx - 8, pviewwindowy + pviewheight, _TMP,
+  V_DrawPatch(tviewwindowx - 8, tviewwindowy + tviewheight, _TMP,
     W_CacheLumpName('brdr_bl', PU_CACHE), false);
 
-  V_DrawPatch(pviewwindowx + pscaledviewwidth, pviewwindowy + pviewheight, _TMP,
+  V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + tviewheight, _TMP,
     W_CacheLumpName('brdr_br', PU_CACHE), false);
 
   V_CopyRect(0, 0, _TMP, 320, 200, 0, 0, 1, true);
