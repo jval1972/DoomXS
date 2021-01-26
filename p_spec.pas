@@ -1245,21 +1245,21 @@ begin
     begin
       // RAISE FLOOR
       EV_DoFloor(line, raiseFloor);
-      P_ChangeSwitchTexture(line, 0);
+      P_ChangeSwitchTexture(line, False);
     end;
 
     46:
     begin
       // OPEN DOOR
       EV_DoDoor(line, open);
-      P_ChangeSwitchTexture(line, 1);
+      P_ChangeSwitchTexture(line, True);
     end;
 
     47:
     begin
       // RAISE FLOOR NEAR AND CHANGE
       EV_DoPlat(line, raiseToNearestAndChange, 0);
-      P_ChangeSwitchTexture(line, 0);
+      P_ChangeSwitchTexture(line, False);
     end;
   end;
 end;

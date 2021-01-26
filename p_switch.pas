@@ -35,7 +35,7 @@ uses
 
 procedure P_InitSwitchList;
 
-procedure P_ChangeSwitchTexture(line: Pline_t; useAgain: integer);
+procedure P_ChangeSwitchTexture(line: Pline_t; useAgain: boolean);
 
 function P_UseSpecialLine(thing: Pmobj_t; line: Pline_t; side: integer): boolean;
 
@@ -73,7 +73,9 @@ type
   Pswitchlist_t = ^switchlist_t;
 
 const
-  alphSwitchList: array[0..40] of switchlist_t = (
+  NUMSWITCHLIST = 41;
+
+  alphSwitchList: array[0..NUMSWITCHLIST - 1] of switchlist_t = (
     // Doom shareware episode 1 switches
     (name1: 'SW1BRCOM'; name2: 'SW2BRCOM'; episode: 1),
     (name1: 'SW1BRN1'; name2: 'SW2BRN1'; episode: 1),
@@ -120,7 +122,7 @@ const
     (name1: 'SW1MARB'; name2: 'SW2MARB'; episode: 3),
     (name1: 'SW1SKULL'; name2: 'SW2SKULL'; episode: 3),
 
-    (name1: ''; name2: ''; episode: 0)
+    (name1: ''; name2: ''; episode: -1)
     );
 
 var
@@ -136,7 +138,7 @@ var
   episode: integer;
 begin
 
-  if gamemode = registered then
+  if (gamemode = registered) or (gamemode = retail) then
     episode := 2
   else if gamemode = commercial then
     episode := 3
@@ -146,7 +148,7 @@ begin
   index := 0;
   for i := 0 to MAXSWITCHES - 1 do
   begin
-    if alphSwitchList[i].episode = 0 then
+    if alphSwitchList[i].episode = -1 then
     begin
       numswitches := index div 2;
       switchlist[index] := -1;
@@ -163,9 +165,7 @@ begin
   end;
 end;
 
-
 // Start a button counting down till it turns off.
-
 procedure P_StartButton(line: Pline_t; w: bwhere_e; texture: integer; time: integer);
 var
   i: integer;
@@ -191,11 +191,9 @@ begin
   I_Error('P_StartButton(): no button slots left!');
 end;
 
-
 // Function that changes wall texture.
 // Tell it if switch is ok to use again (1=yes, it's a button).
-
-procedure P_ChangeSwitchTexture(line: Pline_t; useAgain: integer);
+procedure P_ChangeSwitchTexture(line: Pline_t; useAgain: boolean);
 var
   texTop: integer;
   texMid: integer;
@@ -203,7 +201,7 @@ var
   i: integer;
   sound: integer;
 begin
-  if useAgain = 0 then
+  if not useAgain then
     line.special := 0;
 
   texTop := sides[line.sidenum[0]].toptexture;
@@ -223,7 +221,7 @@ begin
       S_StartSound(buttonlist[0].soundorg, sound);
       sides[line.sidenum[0]].toptexture := switchlist[i xor 1];
 
-      if useAgain <> 0 then
+      if useAgain then
         P_StartButton(line, top, switchlist[i], BUTTONTIME);
 
       exit;
@@ -235,7 +233,7 @@ begin
         S_StartSound(buttonlist[0].soundorg, sound);
         sides[line.sidenum[0]].midtexture := switchlist[i xor 1];
 
-        if useAgain <> 0 then
+        if useAgain then
           P_StartButton(line, middle, switchlist[i], BUTTONTIME);
 
         exit;
@@ -247,7 +245,7 @@ begin
           S_StartSound(buttonlist[0].soundorg, sound);
           sides[line.sidenum[0]].bottomtexture := switchlist[i xor 1];
 
-          if useAgain <> 0 then
+          if useAgain then
             P_StartButton(line, bottom, switchlist[i], BUTTONTIME);
 
           exit;
@@ -257,11 +255,9 @@ begin
   end;
 end;
 
-
 // P_UseSpecialLine
 // Called when a thing uses a special line.
 // Only the front sides of lines are usable.
-
 function P_UseSpecialLine(thing: Pmobj_t; line: Pline_t; side: integer): boolean;
 begin
   // Err...
@@ -322,7 +318,7 @@ begin
     118: // Blazing door open
       EV_VerticalDoor(line, thing);
 
-    //UNUSED - Door Slide open&close
+    //UNUSED - Door Slide Open&Close
     // case 124:
     // EV_SlidingDoor (line, thing);
     // break;
@@ -332,18 +328,18 @@ begin
     begin
       // Build Stairs
       if EV_BuildStairs(line, build8) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
     9:
     begin
       // Change Donut
       if EV_DoDonut(line) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
     11:
     begin
       // Exit level
-      P_ChangeSwitchTexture(line, 0);
+      P_ChangeSwitchTexture(line, False);
       G_ExitLevel;
     end;
 
@@ -351,83 +347,83 @@ begin
     begin
       // Raise Floor 32 and change texture
       if EV_DoPlat(line, raiseAndChange, 32) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     15:
     begin
       // Raise Floor 24 and change texture
       if EV_DoPlat(line, raiseAndChange, 24) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     18:
     begin
       // Raise Floor to next highest floor
       if EV_DoFloor(line, raiseFloorToNearest) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     20:
     begin
       // Raise Plat next highest floor and change texture
       if EV_DoPlat(line, raiseToNearestAndChange, 0) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     21:
     begin
       // PlatDownWaitUpStay
       if EV_DoPlat(line, downWaitUpStay, 0) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     23:
     begin
       // Lower Floor to Lowest
       if EV_DoFloor(line, lowerFloorToLowest) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     29:
     begin
       // Raise Door
       if EV_DoDoor(line, normal) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     41:
     begin
       // Lower Ceiling to Floor
       if EV_DoCeiling(line, lowerToFloor) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     71:
     begin
       // Turbo Lower Floor
       if EV_DoFloor(line, turboLower) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     49:
     begin
       // Ceiling Crush And Raise
       if EV_DoCeiling(line, crushAndRaise) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     50:
     begin
       // Close Door
       if EV_DoDoor(line, Close) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     51:
     begin
       // Secret EXIT
-      P_ChangeSwitchTexture(line, 0);
+      P_ChangeSwitchTexture(line, False);
       G_SecretExitLevel;
     end;
 
@@ -435,70 +431,70 @@ begin
     begin
       // Raise Floor Crush
       if EV_DoFloor(line, raiseFloorCrush) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     101:
     begin
       // Raise Floor
       if EV_DoFloor(line, raiseFloor) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     102:
     begin
       // Lower Floor to Surrounding floor height
       if EV_DoFloor(line, lowerFloor) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     103:
     begin
       // Open Door
-      if EV_DoDoor(line, Open) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+      if EV_DoDoor(line, open) <> 0 then
+        P_ChangeSwitchTexture(line, False);
     end;
 
     111:
     begin
       // Blazing Door Raise (faster than TURBO!)
       if EV_DoDoor(line, blazeRaise) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     112:
     begin
       // Blazing Door Open (faster than TURBO!)
       if EV_DoDoor(line, blazeOpen) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     113:
     begin
       // Blazing Door Close (faster than TURBO!)
       if EV_DoDoor(line, blazeClose) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     122:
     begin
       // Blazing PlatDownWaitUpStay
       if EV_DoPlat(line, blazeDWUS, 0) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     127:
     begin
       // Build Stairs Turbo 16
       if EV_BuildStairs(line, turbo16) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     131:
     begin
       // Raise Floor Turbo
       if EV_DoFloor(line, raiseFloorTurbo) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     133, // BlzOpenDoor BLUE
@@ -506,14 +502,14 @@ begin
     137: // BlzOpenDoor YELLOW
     begin
       if EV_DoLockedDoor(line, blazeOpen, thing) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     140:
     begin
       // Raise Floor 512
       if EV_DoFloor(line, raiseFloor512) <> 0 then
-        P_ChangeSwitchTexture(line, 0);
+        P_ChangeSwitchTexture(line, False);
     end;
 
     // BUTTONS
@@ -521,133 +517,133 @@ begin
     begin
       // Close Door
       if EV_DoDoor(line, Close) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     43:
     begin
       // Lower Ceiling to Floor
       if EV_DoCeiling(line, lowerToFloor) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     45:
     begin
       // Lower Floor to Surrounding floor height
       if EV_DoFloor(line, lowerFloor) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     60:
     begin
       // Lower Floor to Lowest
       if EV_DoFloor(line, lowerFloorToLowest) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     61:
     begin
       // Open Door
       if EV_DoDoor(line, Open) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     62:
     begin
       // PlatDownWaitUpStay
       if EV_DoPlat(line, downWaitUpStay, 1) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     63:
     begin
       // Raise Door
       if EV_DoDoor(line, normal) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     64:
     begin
       // Raise Floor to ceiling
       if EV_DoFloor(line, raiseFloor) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     66:
     begin
       // Raise Floor 24 and change texture
       if EV_DoPlat(line, raiseAndChange, 24) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     67:
     begin
       // Raise Floor 32 and change texture
       if EV_DoPlat(line, raiseAndChange, 32) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     65:
     begin
       // Raise Floor Crush
       if EV_DoFloor(line, raiseFloorCrush) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     68:
     begin
       // Raise Plat to next highest floor and change texture
       if EV_DoPlat(line, raiseToNearestAndChange, 0) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     69:
     begin
       // Raise Floor to next highest floor
       if EV_DoFloor(line, raiseFloorToNearest) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     70:
     begin
       // Turbo Lower Floor
       if EV_DoFloor(line, turboLower) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     114:
     begin
       // Blazing Door Raise (faster than TURBO!)
       if EV_DoDoor(line, blazeRaise) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     115:
     begin
       // Blazing Door Open (faster than TURBO!)
       if EV_DoDoor(line, blazeOpen) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     116:
     begin
       // Blazing Door Close (faster than TURBO!)
       if EV_DoDoor(line, blazeClose) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     123:
     begin
       // Blazing PlatDownWaitUpStay
       if EV_DoPlat(line, blazeDWUS, 0) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     132:
     begin
       // Raise Floor Turbo
       if EV_DoFloor(line, raiseFloorTurbo) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     99, // BlzOpenDoor BLUE
@@ -655,21 +651,21 @@ begin
     136: // BlzOpenDoor YELLOW
     begin
       if EV_DoLockedDoor(line, blazeOpen, thing) <> 0 then
-        P_ChangeSwitchTexture(line, 1);
+        P_ChangeSwitchTexture(line, True);
     end;
 
     138:
     begin
       // Light Turn On
       EV_LightTurnOn(line, 255);
-      P_ChangeSwitchTexture(line, 1);
+      P_ChangeSwitchTexture(line, True);
     end;
 
     139:
     begin
       // Light Turn Off
       EV_LightTurnOn(line, 35);
-      P_ChangeSwitchTexture(line, 1);
+      P_ChangeSwitchTexture(line, True);
     end;
   end;
   Result := True;
