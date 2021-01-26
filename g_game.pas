@@ -130,7 +130,6 @@ var
 
   bodyqueslot: integer;
 
-
   precache: boolean; // if true, load all graphics at start
 
   respawnmonsters: boolean;
@@ -272,7 +271,7 @@ var
 // joystick values are repeated
   joyxmove: integer;
   joyymove: integer;
-  joyarray: array[0..4] of boolean;
+  joyarray: array[0..NUMJOYBUTTONS - 1] of boolean;
   joybuttons: PBooleanArray;
 
   savegameslot: integer;
@@ -462,9 +461,9 @@ begin
 
   _forward := _forward + mousey;
   if strafe then
-    side := side + mousex * 2
+    side := side - mousex * 2
   else
-    cmd.angleturn := cmd.angleturn - mousex * $8;
+    cmd.angleturn := cmd.angleturn + mousex * $8;
 
   mousex := 0;
   mousey := 0;
@@ -560,6 +559,9 @@ end;
 // Get info needed to make ticcmd_ts for the players.
 //
 function G_Responder(ev: Pevent_t): boolean;
+var
+  bmask: integer;
+  i: integer;
 begin
   // allow spy mode changes even during the demo
   if (gamestate = GS_LEVEL) and (ev._type = ev_keydown) and
@@ -665,19 +667,19 @@ begin
       begin
         if usejoystick <> 0 then
         begin
-          joybuttons[0] := (ev.data1 and 1) <> 0;
-          joybuttons[1] := (ev.data1 and 2) <> 0;
-          joybuttons[2] := (ev.data1 and 4) <> 0;
-          joybuttons[3] := (ev.data1 and 8) <> 0;
+          bmask := 1;
+          for i := 0 to NUMJOYBUTTONS - 1 do
+          begin
+            joybuttons[i] := (ev.data1 and bmask) <> 0;
+            bmask := bmask * 2;
+          end;
           joyxmove := ev.data2;
           joyymove := ev.data3;
         end
         else
         begin
-          joybuttons[0] := false;
-          joybuttons[1] := false;
-          joybuttons[2] := false;
-          joybuttons[3] := false;
+          for i := 0 to NUMJOYBUTTONS - 1 do
+            joybuttons[i] := false;
           joyxmove := 0;
           joyymove := 0;
         end;

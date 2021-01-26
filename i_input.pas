@@ -41,6 +41,7 @@ implementation
 uses
   Windows,
   d_delphi,
+  MMSystem, // For joystick support
   doomdef,
   d_event,
   d_main,
@@ -104,17 +105,88 @@ end;
 var
   curkeys: PKeyboardState;
   oldkeys: PKeyboardState;
+// Mouse support
+  mlastx,
+  mlasty: integer;
+  mflags: byte;
+// Joystick support
+  jInfo: TJoyInfoEx;
+  jPresent: boolean;
+  jwXpos: UINT;
+  jwYpos: UINT;
+
+type
+  setcursorposfunc_t = function(x, y:Integer): BOOL; stdcall;
+  getcursorposfunc_t = function(var lpPoint: TPoint): BOOL; stdcall;
+
+var
+  getcursorposfunc: getcursorposfunc_t;
+  setcursorposfunc: setcursorposfunc_t;
+  user32inst: THandle;
+
+procedure I_InitMouse;
+begin
+  user32inst := LoadLibrary(user32);
+  getcursorposfunc := GetProcAddress(user32inst, 'GetPhysicalCursorPos');
+  if not assigned(getcursorposfunc) then
+    getcursorposfunc := GetProcAddress(user32inst, 'GetCursorPos');
+  setcursorposfunc := GetProcAddress(user32inst, 'SetPhysicalCursorPos');
+  if not assigned(setcursorposfunc) then
+    setcursorposfunc := GetProcAddress(user32inst, 'SetCursorPos');
+end;
+
+procedure I_ShutDownMouse;
+begin
+  FreeLibrary(user32inst);
+end;
+
+procedure I_ResetMouse;
+begin
+  mlastx := SCREENWIDTH div 2;
+  mlasty := SCREENHEIGHT div 2;
+  setcursorposfunc(mlastx, mlasty);
+  mflags := 0;
+end;
 
 procedure I_InitInput;
 begin
   curkeys := malloc(SizeOf(TKeyboardState));
   oldkeys := malloc(SizeOf(TKeyboardState));
+
+  I_InitMouse;
+  I_ResetMouse;
+  printf(' Mouse initialized'#13#10);
+
+  jPresent := joyGetNumDevs > 0;
+  if jPresent then
+    jPresent := joySetCapture(hMainWnd, JOYSTICKID1, 0, false) = JOYERR_NOERROR;
+
+  // Get initial joystic position
+  if jPresent then
+  begin
+    ZeroMemory(@jInfo, SizeOf(TJoyInfoEx));
+    jInfo.dwSize := SizeOf(TJoyInfoEx);
+    jInfo.dwFlags := JOY_RETURNALL;
+    if joyGetPosEx(JOYSTICKID1, @jInfo) = JOYERR_NOERROR then
+    begin
+      jwXpos := jInfo.wXpos;
+      jwYpos := jInfo.wYpos;
+    end;
+    printf(' Joystick initialized'#13#10);
+  end
+  else
+    printf(' Joystick not found'#13#10);
+
 end;
 
 procedure I_ShutDownInput;
 begin
   FreeMem(curkeys);
   FreeMem(oldkeys);
+
+  joyReleaseCapture(JOYSTICKID1);
+
+  I_ShutDownMouse;
 end;
 
 procedure I_ProcessInput;
@@ -123,6 +195,7 @@ var
   ev: event_t;
   key: integer;
   p: PKeyboardState;
+  pt: TPoint;
 begin
   if I_GameFinished then
     Exit;
@@ -162,6 +235,44 @@ begin
   p := oldkeys;
   oldkeys := curkeys;
   curkeys := p;
+
+// Mouse
+  if GetKeyState(VK_LBUTTON) < 0 then
+    mflags := mflags or 1;
+  if GetKeyState(VK_RBUTTON) < 0 then
+    mflags := mflags or 2;
+  if GetKeyState(VK_MBUTTON) < 0 then
+    mflags := mflags or 4;
+
+  getcursorposfunc(pt);
+
+  ev._type := ev_mouse;
+  ev.data1 := mflags;
+  ev.data2 := mlastx - pt.x;
+  ev.data3 := mlasty - pt.y;
+  D_PostEvent(@ev);
+
+  I_ResetMouse;
+
+// Joystick
+  if jPresent then
+  begin
+    ZeroMemory(@jInfo, SizeOf(TJoyInfoEx));
+    jInfo.dwSize := SizeOf(TJoyInfoEx);
+    jInfo.dwFlags := JOY_RETURNALL;
+    if joyGetPosEx(JOYSTICKID1, @jInfo) = JOYERR_NOERROR then
+    begin
+      ev._type := ev_joystick;
+      if jInfo.dwButtonNumber > 0 then
+        ev.data1 := jInfo.wButtons and ((1 shl NUMJOYBUTTONS) - 1) // Only first NUMJOYBUTTONS buttons of joystic in use
+      else
+        ev.data1 := 0;
+      ev.data2 := jInfo.wXpos - jwXpos;
+      ev.data3 := jInfo.wYpos - jwYpos;
+      D_PostEvent(@ev);
+    end;
+  end;
+
 end;
 
 procedure I_SynchronizeInput(active: boolean);

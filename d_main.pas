@@ -934,7 +934,6 @@ begin
   printf('M_InitMenus: Initializing menus.'#13#10);
   M_InitMenus;
 
-
   printf('W_Init: Init WADfiles.'#13#10);
   W_InitMultipleFiles(@wadfiles);
 
