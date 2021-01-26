@@ -111,13 +111,11 @@ begin
     if player.viewz > player.mo.ceilingz - 4 * FRACUNIT then
       player.viewz := player.mo.ceilingz - 4 * FRACUNIT;
 
-    player.viewz := player.mo.z + player.viewheight;
     exit;
   end;
 
   angle := (FINEANGLES div 20 * leveltime) and FINEMASK;
   bob := FixedMul(player.bob div 2, finesine[angle]);
-
 
   // move viewheight
   if player.playerstate = PST_LIVE then
