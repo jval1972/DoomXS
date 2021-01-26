@@ -44,17 +44,17 @@ const
 //
 // Background and foreground screen numbers
 //
-  _FG = 0;
-  _SCRF = 4; // Finale Screen Buffer 320x200
-  _TMP = 5;  // Temporary Screen Buffer 320x200
-  _BG = 6;   // Status Bar Screen Buffer
+  SCN_FG = 0;
+  SCN_SCRF = 4; // Finale Screen Buffer 320x200
+  SCN_TMP = 5;  // Temporary Screen Buffer 320x200
+  SCN_ST = 6;   // Status Bar Screen Buffer
 
 var
 // Screen 0 is the screen updated by I_Update screen.
 // Screen 1 is an extra buffer.
 // Screen 4 is an extra buffer for finale.
 // Screen 5 is used by status line
-  screens: array[0.._BG] of PByteArray;
+  screens: array[0..SCN_ST] of PByteArray;
 
 
 // Allocates buffer screens, call before R_Init.

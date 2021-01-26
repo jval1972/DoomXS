@@ -537,7 +537,7 @@ begin
 
   // Preclaculate all row offsets.
   for i := 0 to height - 1 do
-    ylookup[i] := PByteArray(integer(screens[_FG]) + (i + viewwindowy) * SCREENWIDTH);
+    ylookup[i] := PByteArray(integer(screens[SCN_FG]) + (i + viewwindowy) * SCREENWIDTH);
 end;
 
 //
@@ -568,7 +568,7 @@ begin
     name := 'FLOOR7_2'; // DOOM border patch.
 
   src := W_CacheLumpName(name, PU_CACHE);
-  dest := screens[_TMP];
+  dest := screens[SCN_TMP];
 
   for y := 0 to 200 - ST_HEIGHT - 1 do
   begin
@@ -593,7 +593,7 @@ begin
   x := 0;
   while x < tscaledviewwidth do
   begin
-    V_DrawPatch(tviewwindowx + x, tviewwindowy - 8, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx + x, tviewwindowy - 8, SCN_TMP, patch, false);
     x := x + 8;
   end;
 
@@ -601,7 +601,7 @@ begin
   x := 0;
   while x < tscaledviewwidth do
   begin
-    V_DrawPatch(tviewwindowx + x, tviewwindowy + tviewheight, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx + x, tviewwindowy + tviewheight, SCN_TMP, patch, false);
     x := x + 8;
   end;
 
@@ -609,7 +609,7 @@ begin
   y := 0;
   while y < tviewheight do
   begin
-    V_DrawPatch(tviewwindowx - 8, tviewwindowy + y, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx - 8, tviewwindowy + y, SCN_TMP, patch, false);
     y := y + 8;
   end;
 
@@ -617,24 +617,24 @@ begin
   y := 0;
   while y < tviewheight do
   begin
-    V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + y, _TMP, patch, false);
+    V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + y, SCN_TMP, patch, false);
     y := y + 8;
   end;
 
   // Draw beveled edge.
-  V_DrawPatch(tviewwindowx - 8, tviewwindowy - 8, _TMP,
+  V_DrawPatch(tviewwindowx - 8, tviewwindowy - 8, SCN_TMP,
     W_CacheLumpName('brdr_tl', PU_CACHE), false);
 
-  V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy - 8, _TMP,
+  V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy - 8, SCN_TMP,
     W_CacheLumpName('brdr_tr', PU_CACHE), false);
 
-  V_DrawPatch(tviewwindowx - 8, tviewwindowy + tviewheight, _TMP,
+  V_DrawPatch(tviewwindowx - 8, tviewwindowy + tviewheight, SCN_TMP,
     W_CacheLumpName('brdr_bl', PU_CACHE), false);
 
-  V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + tviewheight, _TMP,
+  V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + tviewheight, SCN_TMP,
     W_CacheLumpName('brdr_br', PU_CACHE), false);
 
-  V_CopyRect(0, 0, _TMP, 320, 200, 0, 0, 1, true);
+  V_CopyRect(0, 0, SCN_TMP, 320, 200, 0, 0, 1, true);
 end;
 
 //
@@ -647,7 +647,7 @@ begin
   //  is not optiomal, e.g. byte by byte on
   //  a 32bit CPU, as GNU GCC/Linux libc did
   //  at one point.
-  memcpy(Pointer(integer(screens[_FG]) + ofs), Pointer(integer(screens[1]) + ofs), count);
+  memcpy(Pointer(integer(screens[SCN_FG]) + ofs), Pointer(integer(screens[1]) + ofs), count);
 end;
 
 //

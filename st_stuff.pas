@@ -552,10 +552,10 @@ procedure ST_RefreshBackground;
 begin
   if st_statusbaron then
   begin
-    V_DrawPatch(ST_X, 0, _BG, sbar, false);
+    V_DrawPatch(ST_X, 0, SCN_ST, sbar, false);
 
     if netgame then
-      V_DrawPatch(ST_FX, 0, _BG, faceback, false);
+      V_DrawPatch(ST_FX, 0, SCN_ST, faceback, false);
   end;
 end;
 
@@ -563,12 +563,12 @@ procedure ST_FinishRefresh;
 begin
   V_CopyRect(ST_X,
              0,
-             _BG,
+             SCN_ST,
              ST_WIDTH,
              ST_HEIGHT,
              ST_X,
              ST_Y,
-             _FG,
+             SCN_FG,
              true);
 end;
 
@@ -1475,7 +1475,7 @@ procedure ST_Init;
 begin
   veryfirsttime := 0;
   ST_loadData;
-  screens[_BG] := Z_Malloc(ST_WIDTH * ST_HEIGHT, PU_STATIC, nil);
+  screens[SCN_ST] := Z_Malloc(ST_WIDTH * ST_HEIGHT, PU_STATIC, nil);
 end;
 
 

@@ -486,7 +486,7 @@ var
   i: integer;
 begin
   automapactive := True;
-  fb := screens[_FG];
+  fb := screens[SCN_FG];
 
   f_oldloc.x := MAXINT;
   amclock := 0;
@@ -1315,7 +1315,7 @@ begin
       fx := CXMTOF(markpoints[i].x);
       fy := CYMTOF(markpoints[i].y);
       if (fx >= f_x) and (fx <= f_w - w) and (fy >= f_y) and (fy <= f_h - h) then
-        V_DrawPatch(fx, fy, _FG, marknums[i], False);
+        V_DrawPatch(fx, fy, SCN_FG, marknums[i], False);
     end;
   end;
 end;

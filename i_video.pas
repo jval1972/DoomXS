@@ -153,7 +153,7 @@ var
 begin
   if hMainWnd = 0 then
     exit;
-  if screens[_FG] = nil then
+  if screens[SCN_FG] = nil then
     exit;
 
   begin
@@ -264,7 +264,7 @@ end;
 
 procedure I_ReadScreen(scr: PByteArray);
 begin
-  memcpy(scr, screens[_FG], SCREENWIDTH * SCREENHEIGHT);
+  memcpy(scr, screens[SCN_FG], SCREENWIDTH * SCREENHEIGHT);
 end;
 
 end.

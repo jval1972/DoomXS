@@ -259,10 +259,7 @@ begin
   // erase the entire screen to a tiled background
   src := W_CacheLumpName(finaleflat, PU_CACHE);
   dest := 0;
-  if V_NeedsPreserve then
-    dstscr := _SCRF
-  else
-    dstscr := _FG;
+  dstscr := SCN_SCRF;
 
   for y := 0 to 200 - 1 do
   begin
@@ -278,8 +275,6 @@ begin
       dest := dest + (320 and 63);
     end;
   end;
-
-//  V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT, false);
 
   // draw some of the text onto the screen
   cx := 10;
@@ -325,8 +320,7 @@ begin
     cx := cx + w;
     dec(count);
   end;
-  if dstscr = _SCRF then
-    V_CopyRect(0, 0, _SCRF, 320, 200, 0, 0, _FG, true);
+  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
 
@@ -646,10 +640,7 @@ begin
   p1 := W_CacheLumpName('PFUB2', PU_LEVEL);
   p2 := W_CacheLumpName('PFUB1', PU_LEVEL);
 
-  if V_NeedsPreserve then
-    dstscr := _SCRF
-  else
-    dstscr := _FG;
+  dstscr := SCN_SCRF;
 
   scrolled := 320 - (finalecount - 230) div 2;
   if scrolled > 320 then
@@ -692,8 +683,7 @@ begin
     end;
   end;
 
-  if dstscr = _SCRF then
-    V_CopyRect(0, 0, _SCRF, 320, 200, 0, 0, _FG, true);
+  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
 //

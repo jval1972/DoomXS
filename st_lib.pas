@@ -234,7 +234,7 @@ begin
   if n.y - ST_Y < 0 then
     I_Error('STlib_drawNum() : n.y - ST_Y < 0');
 
-  V_CopyRect(x, n.y - ST_Y, _BG, w * numdigits, h, x, n.y, _FG, true);
+  V_CopyRect(x, n.y - ST_Y, SCN_ST, w * numdigits, h, x, n.y, SCN_FG, true);
 
   // if non-number, do not draw it
   if num = 1994 then
@@ -244,20 +244,20 @@ begin
 
   // in the special case of 0, you draw 0
   if num = 0 then
-    V_DrawPatch(x - w, n.y - ST_Y, _BG, n.p[0], false);
+    V_DrawPatch(x - w, n.y - ST_Y, SCN_ST, n.p[0], false);
 
   // draw the new number
   while (num <> 0) and (numdigits <> 0) do
   begin
     x := x - w;
-    V_DrawPatch(x, n.y - ST_Y, _BG, n.p[num mod 10], false);
+    V_DrawPatch(x, n.y - ST_Y, SCN_ST, n.p[num mod 10], false);
     num := num div 10;
     dec(numdigits);
   end;
 
   // draw a minus sign if necessary
   if neg then
-    V_DrawPatch(x - 8, n.y - ST_Y, _BG, sttminus, false);
+    V_DrawPatch(x - 8, n.y - ST_Y, SCN_ST, sttminus, false);
 end;
 
 //
@@ -278,7 +278,7 @@ end;
 procedure STlib_updatePercent(per: Pst_percent_t; refresh: integer);
 begin
   if (refresh <> 0) and per.n._on^ then
-    V_DrawPatch(per.n.x, per.n.y - ST_Y, _BG, per.p, false);
+    V_DrawPatch(per.n.x, per.n.y - ST_Y, SCN_ST, per.p, false);
 
   STlib_updateNum(@per.n, refresh <> 0);
 end;
@@ -308,7 +308,7 @@ begin
         I_Error('STlib_updateMultIcon(): y - ST_Y < 0');
 
     end;
-    V_DrawPatch(mi.x, mi.y - ST_Y, _BG, mi.p[mi.inum^], false);
+    V_DrawPatch(mi.x, mi.y - ST_Y, SCN_ST, mi.p[mi.inum^], false);
     mi.oldinum := mi.inum^;
   end;
 end;
@@ -336,7 +336,7 @@ begin
       I_Error('STlib_updateBinIcon(): y - ST_Y < 0');
 
     if bi.val^ then
-      V_DrawPatch(bi.x, bi.y - ST_Y, _BG, bi.p, false);
+      V_DrawPatch(bi.x, bi.y - ST_Y, SCN_ST, bi.p, false);
 
     bi.oldval := bi.val^;
   end;

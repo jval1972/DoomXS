@@ -409,7 +409,7 @@ procedure M_DrawLoad;
 var
   i: integer;
 begin
-  V_DrawPatch(72, 28, _FG, W_CacheLumpName('M_LOADG', PU_CACHE), True);
+  V_DrawPatch(72, 28, SCN_FG, W_CacheLumpName('M_LOADG', PU_CACHE), True);
   for i := 0 to Ord(load_end) - 1 do
   begin
     M_DrawSaveLoadBorder(LoadDef.x, LoadDef.y + LINEHEIGHT * i);
@@ -424,15 +424,15 @@ procedure M_DrawSaveLoadBorder(x, y: integer);
 var
   i: integer;
 begin
-  V_DrawPatch(x - 8, y + 7, _FG, W_CacheLumpName('M_LSLEFT', PU_CACHE), True);
+  V_DrawPatch(x - 8, y + 7, SCN_FG, W_CacheLumpName('M_LSLEFT', PU_CACHE), True);
 
   for i := 0 to 23 do
   begin
-    V_DrawPatch(x, y + 7, _FG, W_CacheLumpName('M_LSCNTR', PU_CACHE), True);
+    V_DrawPatch(x, y + 7, SCN_FG, W_CacheLumpName('M_LSCNTR', PU_CACHE), True);
     x := x + 8;
   end;
 
-  V_DrawPatch(x, y + 7, _FG, W_CacheLumpName('M_LSRGHT', PU_CACHE), True);
+  V_DrawPatch(x, y + 7, SCN_FG, W_CacheLumpName('M_LSRGHT', PU_CACHE), True);
 end;
 
 
@@ -472,7 +472,7 @@ procedure M_DrawSave;
 var
   i: integer;
 begin
-  V_DrawPatch(72, 28, _FG, W_CacheLumpName('M_SAVEG', PU_CACHE), True);
+  V_DrawPatch(72, 28, SCN_FG, W_CacheLumpName('M_SAVEG', PU_CACHE), True);
   for i := 0 to Ord(load_end) - 1 do
   begin
     M_DrawSaveLoadBorder(LoadDef.x, LoadDef.y + LINEHEIGHT * i);
@@ -608,11 +608,11 @@ begin
   inhelpscreens := True;
   case gamemode of
     commercial:
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP', PU_CACHE), True);
+      V_DrawPatch(0, 0, SCN_FG, W_CacheLumpName('HELP', PU_CACHE), True);
     shareware,
     registered,
     retail:
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP1', PU_CACHE), True);
+      V_DrawPatch(0, 0, SCN_FG, W_CacheLumpName('HELP1', PU_CACHE), True);
   end;
 end;
 
@@ -626,10 +626,10 @@ begin
     retail,
     commercial:
       // This hack keeps us from having to change menus.
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('CREDIT', PU_CACHE), True);
+      V_DrawPatch(0, 0, SCN_FG, W_CacheLumpName('CREDIT', PU_CACHE), True);
     shareware,
     registered:
-      V_DrawPatch(0, 0, _FG, W_CacheLumpName('HELP2', PU_CACHE), True);
+      V_DrawPatch(0, 0, SCN_FG, W_CacheLumpName('HELP2', PU_CACHE), True);
   end;
 end;
 
@@ -638,7 +638,7 @@ end;
 
 procedure M_DrawSound;
 begin
-  V_DrawPatch(60, 38, _FG, W_CacheLumpName('M_SVOL', PU_CACHE), True);
+  V_DrawPatch(60, 38, SCN_FG, W_CacheLumpName('M_SVOL', PU_CACHE), True);
 
   M_DrawThermo(
     SoundDef.x, SoundDef.y + LINEHEIGHT * (Ord(sfx_vol) + 1), 16, snd_SfxVolume);
@@ -679,7 +679,7 @@ end;
 
 procedure M_DrawMainMenu;
 begin
-  V_DrawPatch(94, 2, _FG, W_CacheLumpName('M_DOOM', PU_CACHE), True);
+  V_DrawPatch(94, 2, SCN_FG, W_CacheLumpName('M_DOOM', PU_CACHE), True);
 end;
 
 
@@ -687,8 +687,8 @@ end;
 
 procedure M_DrawNewGame;
 begin
-  V_DrawPatch(96, 14, _FG, W_CacheLumpName('M_NEWG', PU_CACHE), True);
-  V_DrawPatch(54, 38, _FG, W_CacheLumpName('M_SKILL', PU_CACHE), True);
+  V_DrawPatch(96, 14, SCN_FG, W_CacheLumpName('M_NEWG', PU_CACHE), True);
+  V_DrawPatch(54, 38, SCN_FG, W_CacheLumpName('M_SKILL', PU_CACHE), True);
 end;
 
 procedure M_NewGame(choice: integer);
@@ -713,7 +713,7 @@ var
 
 procedure M_DrawEpisode;
 begin
-  V_DrawPatch(54, 38, _FG, W_CacheLumpName('M_EPISOD', PU_CACHE), True);
+  V_DrawPatch(54, 38, SCN_FG, W_CacheLumpName('M_EPISOD', PU_CACHE), True);
 end;
 
 procedure M_VerifyNightmare(ch: integer);
@@ -766,12 +766,12 @@ var
 
 procedure M_DrawOptions;
 begin
-  V_DrawPatch(108, 15, _FG, W_CacheLumpName('M_OPTTTL', PU_CACHE), True);
+  V_DrawPatch(108, 15, SCN_FG, W_CacheLumpName('M_OPTTTL', PU_CACHE), True);
 
-  V_DrawPatch(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * Ord(detail), _FG,
+  V_DrawPatch(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * Ord(detail), SCN_FG,
     W_CacheLumpName(detailNames[detailLevel], PU_CACHE), True);
 
-  V_DrawPatch(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * Ord(Messages), _FG,
+  V_DrawPatch(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * Ord(Messages), SCN_FG,
     W_CacheLumpName(msgNames[showMessages], PU_CACHE), True);
 
   M_DrawThermo(
@@ -961,28 +961,28 @@ var
   i: integer;
 begin
   xx := x;
-  V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERML', PU_CACHE), True);
+  V_DrawPatch(xx, y, SCN_FG, W_CacheLumpName('M_THERML', PU_CACHE), True);
   xx := xx + 8;
   for i := 0 to thermWidth - 1 do
   begin
-    V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERMM', PU_CACHE), True);
+    V_DrawPatch(xx, y, SCN_FG, W_CacheLumpName('M_THERMM', PU_CACHE), True);
     xx := xx + 8;
   end;
-  V_DrawPatch(xx, y, _FG, W_CacheLumpName('M_THERMR', PU_CACHE), True);
+  V_DrawPatch(xx, y, SCN_FG, W_CacheLumpName('M_THERMR', PU_CACHE), True);
 
-  V_DrawPatch((x + 8) + thermDot * 8, y, _FG,
+  V_DrawPatch((x + 8) + thermDot * 8, y, SCN_FG,
     W_CacheLumpName('M_THERMO', PU_CACHE), True);
 end;
 
 procedure M_DrawEmptyCell(menu: Pmenu_t; item: integer);
 begin
-  V_DrawPatch(menu.x - 10, menu.y + item * LINEHEIGHT - 1, _FG,
+  V_DrawPatch(menu.x - 10, menu.y + item * LINEHEIGHT - 1, SCN_FG,
     W_CacheLumpName('M_CELL1', PU_CACHE), True);
 end;
 
 procedure M_DrawSelCell(menu: Pmenu_t; item: integer);
 begin
-  V_DrawPatch(menu.x - 10, menu.y + item * LINEHEIGHT - 1, _FG,
+  V_DrawPatch(menu.x - 10, menu.y + item * LINEHEIGHT - 1, SCN_FG,
     W_CacheLumpName('M_CELL2', PU_CACHE), True);
 end;
 
@@ -1095,7 +1095,7 @@ begin
     //    if (cx + w) > SCREENWIDTH then
     if (cx + w) > 320 then
       break;
-    V_DrawPatch(cx, cy, _FG, hu_font[c], True);
+    V_DrawPatch(cx, cy, SCN_FG, hu_font[c], True);
     cx := cx + w;
   end;
 end;
@@ -1609,13 +1609,13 @@ begin
   for i := 0 to max - 1 do
   begin
     if currentMenu.menuitems[i].Name <> '' then
-      V_DrawPatch(x, y, _FG,
+      V_DrawPatch(x, y, SCN_FG,
         W_CacheLumpName(currentMenu.menuitems[i].Name, PU_CACHE), True);
     y := y + LINEHEIGHT;
   end;
 
   // DRAW SKULL
-  V_DrawPatch(x + SKULLXOFF, currentMenu.y - 5 + itemOn * LINEHEIGHT, _FG,
+  V_DrawPatch(x + SKULLXOFF, currentMenu.y - 5 + itemOn * LINEHEIGHT, SCN_FG,
     W_CacheLumpName(skullName[whichSkull], PU_CACHE), True);
 end;
 

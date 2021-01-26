@@ -400,7 +400,7 @@ var
 
 procedure WI_SlamBackground;
 begin
-  memcpy(screens[_FG], screens[1], SCREENWIDTH * SCREENHEIGHT);
+  memcpy(screens[SCN_FG], screens[1], SCREENWIDTH * SCREENHEIGHT);
 end;
 
 // The ticker is used to detect keys
@@ -418,12 +418,12 @@ begin
   y := WI_TITLEY;
 
   // draw <LevelName>
-  V_DrawPatch((320 - lnames[wbs.last].width) div 2, y, _FG, lnames[wbs.last], true);
+  V_DrawPatch((320 - lnames[wbs.last].width) div 2, y, SCN_FG, lnames[wbs.last], true);
 
   // draw "Finished!"
   y := y + (5 * lnames[wbs.last].height) div 4;
 
-  V_DrawPatch((320 - finished.width) div 2, y, _FG, finished, true);
+  V_DrawPatch((320 - finished.width) div 2, y, SCN_FG, finished, true);
 end;
 
 // Draws "Entering <LevelName>"
@@ -434,12 +434,12 @@ begin
   y := WI_TITLEY;
 
   // draw "Entering"
-  V_DrawPatch((320 - entering.width) div 2, y, _FG, entering, true);
+  V_DrawPatch((320 - entering.width) div 2, y, SCN_FG, entering, true);
 
   // draw level
   y := y + (5 * lnames[wbs.next].height) div 4;
 
-  V_DrawPatch((320 - lnames[wbs.next].width) div 2, y, _FG, lnames[wbs.next], true);
+  V_DrawPatch((320 - lnames[wbs.next].width) div 2, y, SCN_FG, lnames[wbs.next], true);
 end;
 
 procedure WI_DrawOnLnode(n: integer; c: Ppatch_tPArray);
@@ -470,7 +470,7 @@ begin
   until not ((not fits) and (i <> 2));
 
   if fits and (i < 2) then
-    V_DrawPatch(lnodes[wbs.epsd][n].x, lnodes[wbs.epsd][n].y, _FG, c[i], true)
+    V_DrawPatch(lnodes[wbs.epsd][n].x, lnodes[wbs.epsd][n].y, SCN_FG, c[i], true)
   else
     // DEBUG
     printf('WI_DrawOnLnode(): Could not place patch on level %d', [n + 1]);
@@ -573,7 +573,7 @@ begin
     a := @anims[wbs.epsd, i];
 
     if a.ctr >= 0 then
-      V_DrawPatch(a.loc.x, a.loc.y, _FG, a.p[a.ctr], true);
+      V_DrawPatch(a.loc.x, a.loc.y, SCN_FG, a.p[a.ctr], true);
   end;
 end;
 
@@ -626,7 +626,7 @@ begin
   while digits > 0 do
   begin
     x := x - fontwidth;
-    V_DrawPatch(x, y, _FG, num[n mod 10], true);
+    V_DrawPatch(x, y, SCN_FG, num[n mod 10], true);
     n := n div 10;
     dec(digits);
   end;
@@ -635,7 +635,7 @@ begin
   if neg then
   begin
     x := x - 8;
-    V_DrawPatch(x, y, _FG, wiminus, true);
+    V_DrawPatch(x, y, SCN_FG, wiminus, true);
   end;
 
   result := x;
@@ -646,7 +646,7 @@ begin
   if p < 0 then
     exit;
 
-  V_DrawPatch(x, y, _FG, percent, true);
+  V_DrawPatch(x, y, SCN_FG, percent, true);
   WI_DrawNum(x, y, p, -1);
 end;
 
@@ -673,12 +673,12 @@ begin
 
       // draw
       if (_div = 60) or (t div _div <> 0) then
-        V_DrawPatch(x, y, _FG, colon, true);
+        V_DrawPatch(x, y, SCN_FG, colon, true);
     until t div _div = 0;
   end
   else
     // "sucks"
-    V_DrawPatch(x - sucks.width, y, _FG, sucks, true);
+    V_DrawPatch(x - sucks.width, y, SCN_FG, sucks, true);
 end;
 
 procedure WI_UnloadData; forward;
@@ -931,10 +931,10 @@ begin
   WI_DrawLF;
 
   // draw stat titles (top line)
-  V_DrawPatch(DM_TOTALSX - total.width div 2, DM_MATRIXY - WI_SPACINGY + 10, _FG, total, true);
+  V_DrawPatch(DM_TOTALSX - total.width div 2, DM_MATRIXY - WI_SPACINGY + 10, SCN_FG, total, true);
 
-  V_DrawPatch(DM_KILLERSX, DM_KILLERSY, _FG, killers, true);
-  V_DrawPatch(DM_VICTIMSX, DM_VICTIMSY, _FG, victims, true);
+  V_DrawPatch(DM_KILLERSX, DM_KILLERSY, SCN_FG, killers, true);
+  V_DrawPatch(DM_VICTIMSX, DM_VICTIMSY, SCN_FG, victims, true);
 
   // draw P?
   x := DM_MATRIXX + DM_SPACINGX;
@@ -944,13 +944,13 @@ begin
   begin
     if playeringame[i] then
     begin
-      V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, _FG, p[i], true);
-      V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, _FG, p[i], true);
+      V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, SCN_FG, p[i], true);
+      V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, SCN_FG, p[i], true);
 
       if i = me then
       begin
-        V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, _FG, bstar, true);
-        V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, _FG, star, true);
+        V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, SCN_FG, bstar, true);
+        V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, SCN_FG, star, true);
       end;
     end
     else
@@ -1194,14 +1194,14 @@ begin
   WI_DrawLF;
 
   // draw stat titles (top line)
-  V_DrawPatch(NG_STATSX + NG_SPACINGX - kills.width, NG_STATSY, _FG, kills, true);
+  V_DrawPatch(NG_STATSX + NG_SPACINGX - kills.width, NG_STATSY, SCN_FG, kills, true);
 
-  V_DrawPatch(NG_STATSX + 2 * NG_SPACINGX - items.width, NG_STATSY, _FG, items, true);
+  V_DrawPatch(NG_STATSX + 2 * NG_SPACINGX - items.width, NG_STATSY, SCN_FG, items, true);
 
-  V_DrawPatch(NG_STATSX + 3 * NG_SPACINGX - secret.width, NG_STATSY, _FG, secret, true);
+  V_DrawPatch(NG_STATSX + 3 * NG_SPACINGX - secret.width, NG_STATSY, SCN_FG, secret, true);
 
   if dofrags <> 0 then
-    V_DrawPatch(NG_STATSX + 4 * NG_SPACINGX - frags.width, NG_STATSY, _FG, frags, true);
+    V_DrawPatch(NG_STATSX + 4 * NG_SPACINGX - frags.width, NG_STATSY, SCN_FG, frags, true);
 
   // draw stats
   y := NG_STATSY + kills.height;
@@ -1212,10 +1212,10 @@ begin
       continue;
 
     x := NG_STATSX;
-    V_DrawPatch(x - p[i].width, y, _FG, p[i], true);
+    V_DrawPatch(x - p[i].width, y, SCN_FG, p[i], true);
 
     if i = me then
-      V_DrawPatch(x - p[i].width, y, _FG, star, true);
+      V_DrawPatch(x - p[i].width, y, SCN_FG, star, true);
 
     x := x + NG_SPACINGX;
     WI_DrawPercent(x - pwidth, y + 10, cnt_kills[i]);
@@ -1368,21 +1368,21 @@ begin
 
   WI_DrawLF;
 
-  V_DrawPatch(SP_STATSX, SP_STATSY, _FG, kills, true);
+  V_DrawPatch(SP_STATSX, SP_STATSY, SCN_FG, kills, true);
   WI_DrawPercent(320 - SP_STATSX, SP_STATSY, cnt_kills[0]);
 
-  V_DrawPatch(SP_STATSX, SP_STATSY + lh, _FG, items, true);
+  V_DrawPatch(SP_STATSX, SP_STATSY + lh, SCN_FG, items, true);
   WI_DrawPercent(320 - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
 
-  V_DrawPatch(SP_STATSX, SP_STATSY + 2 * lh, _FG, sp_secret, true);
+  V_DrawPatch(SP_STATSX, SP_STATSY + 2 * lh, SCN_FG, sp_secret, true);
   WI_DrawPercent(320 - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
 
-  V_DrawPatch(SP_TIMEX, SP_TIMEY, _FG, time, true);
+  V_DrawPatch(SP_TIMEX, SP_TIMEY, SCN_FG, time, true);
   WI_DrawTime(160 - SP_TIMEX, SP_TIMEY, cnt_time);
 
   if wbs.epsd < 3 then
   begin
-    V_DrawPatch(160 + SP_TIMEX, SP_TIMEY, _FG, par, true);
+    V_DrawPatch(160 + SP_TIMEX, SP_TIMEY, SCN_FG, par, true);
     WI_DrawTime(320 - SP_TIMEX, SP_TIMEY, cnt_par);
   end;
 end;

@@ -267,7 +267,7 @@ begin
   if not go then
   begin
     go := true;
-    wipe_scr := screens[_FG];
+    wipe_scr := screens[SCN_FG];
 
     WIPES(wipeno * 3)
   end;
