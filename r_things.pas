@@ -352,7 +352,6 @@ end;
 // Masked means: partly transparent, i.e. stored
 //  in posts/runs of opaque pixels.
 //
-
 procedure R_DrawMaskedColumn(column: Pcolumn_t);
 var
   topscreen: integer;

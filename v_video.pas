@@ -35,8 +35,6 @@ uses
 // Needed because we are refering to patches.
   r_defs;
 
-function _CENTERY: integer;
-
 const
 //
 // VIDEO
@@ -193,11 +191,6 @@ uses
   i_system,
   m_fixed,
   m_bbox;
-
-function _CENTERY: integer;
-begin
-  result := SCREENHEIGHT div 2;
-end;
 
 // x and y translation tables for stretcing
 var

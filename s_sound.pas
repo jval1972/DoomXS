@@ -35,14 +35,12 @@ interface
 //
 procedure S_Init(sfxVolume: integer; musicVolume: integer);
 
-
 //
 // Per level startup code.
 // Kills playing sounds at start of level,
 //  determines music if any, changes music.
 //
 procedure S_Start;
-
 
 //
 // Start sound for thing at <origin>
