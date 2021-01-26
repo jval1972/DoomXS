@@ -236,7 +236,7 @@ begin
   ZeroMemory(@ddsd, SizeOf(ddsd));
   ddsd.dwSize := SizeOf(ddsd);
   ddsd.dwFlags := DDSD_CAPS;
-  ddsd.ddsCaps.dwCaps := DDSCAPS_PRIMARYSURFACE;
+  ddsd.ddsCaps.dwCaps := DDSCAPS_PRIMARYSURFACE or DDSCAPS_VIDEOMEMORY;
   hres := g_pDD.CreateSurface(ddsd, g_pDDSPrimary, nil);
   if hres <> DD_OK then
     I_ErrorInitGraphics('CreateSurface');
