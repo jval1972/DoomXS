@@ -415,7 +415,7 @@ var
   patch: Ppatch_t;
   i: integer;
 begin
-  patch := W_CacheLumpNum(vis.patch + firstspritelump, PU_CACHE);
+  patch := W_CacheLumpNum(vis.patch + firstspritelump, PU_STATIC);
 
   dc_colormap := vis.colormap;
 
@@ -450,6 +450,8 @@ begin
   end;
 
   colfunc := basecolfunc;
+
+  Z_ChangeTag(patch, PU_CACHE);
 end;
 
 procedure R_DrawPVisSprite(vis: Pvissprite_t);
