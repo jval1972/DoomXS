@@ -986,22 +986,7 @@ begin
   else
     w_ready.num := @plyr.ammo[Ord(weaponinfo[Ord(plyr.readyweapon)].ammo)];
 
-    //{
-    // static int tic=0;
-    // static int dir=-1;
-    // if (!(tic&15))
-    //   plyr->ammo[weaponinfo[plyr->readyweapon].ammo]+=dir;
-    // if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] == -100)
-    //   dir = 1;
-    // tic++;
-    // }
-
   w_ready.data := Ord(plyr.readyweapon);
-
-    // if (*w_ready.on)
-    //  STlib_updateNum(&w_ready, true);
-    // refresh weapon change
-    //  }
 
   // update keycard multiple widgets
   for i := 0 to 2 do
@@ -1145,7 +1130,7 @@ end;
 
 procedure ST_Drawer(fullscreen: boolean; refresh: boolean);
 begin
-  st_statusbaron := (not fullscreen) or automapactive;
+  st_statusbaron := not fullscreen or automapactive;
   st_firsttime := st_firsttime or refresh;
 
   // Do red-/gold-shifts from damage/items
