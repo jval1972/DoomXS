@@ -96,6 +96,10 @@ begin
 
   // copy start screen to main screen
   memcpy(screens[SCN_FG], wipe_scr_start, SCREENWIDTH * SCREENHEIGHT);
+
+  wipe_shittyColMajorXform(wipe_scr_start, SCREENWIDTH, SCREENHEIGHT);
+  wipe_shittyColMajorXform(wipe_scr_end, SCREENWIDTH, SCREENHEIGHT);
+
   // setup initial column positions
   // (y<0 => not ready to scroll yet)
   yy := Z_Malloc(SCREENWIDTH * SizeOf(integer), PU_STATIC, nil);
