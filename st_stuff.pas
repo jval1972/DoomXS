@@ -1475,7 +1475,7 @@ procedure ST_Init;
 begin
   veryfirsttime := 0;
   ST_loadData;
-  screens[_BG] := PByteArray(Z_Malloc(ST_WIDTH * ST_HEIGHT, PU_STATIC, nil));
+  screens[_BG] := Z_Malloc(ST_WIDTH * ST_HEIGHT, PU_STATIC, nil);
 end;
 
 

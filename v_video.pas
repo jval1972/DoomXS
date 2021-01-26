@@ -51,7 +51,6 @@ const
   _TMP = 5;  // Temporary Screen Buffer 320x200
   _BG = 6;   // Status Bar Screen Buffer
 
-
 var
 // Screen 0 is the screen updated by I_Update screen.
 // Screen 1 is an extra buffer.
@@ -62,7 +61,6 @@ var
 
 // Allocates buffer screens, call before R_Init.
 procedure V_Init;
-
 
 procedure V_CopyRect(
   srcx: integer;
@@ -83,7 +81,6 @@ procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src:
 
 // Reads a linear block of pixels into the view buffer.
 procedure V_GetBlock(x, y: integer; scrn: integer; width, height: integer; dest: PByteArray);
-
 
 procedure V_MarkRect(x, y: integer; width, height: integer; preserve: boolean);
 
@@ -259,7 +256,6 @@ begin
   result := V_PreserveY(y + h) - V_PreserveY(y);
 end;
 
-
 //
 // V_MarkRect
 //
@@ -351,7 +347,7 @@ end;
 
 function V_GetScreenWidth(scrn: integer): integer;
 begin
-  if  scrn in [0..3] then
+  if scrn in [0..3] then
     result := SCREENWIDTH
   else
     result := 320;

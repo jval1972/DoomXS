@@ -72,7 +72,7 @@ var
   x, y: integer;
   dest: PByteArray;
 begin
-  dest := PByteArray(Z_Malloc(width * height, PU_STATIC, nil));
+  dest := Z_Malloc(width * height, PU_STATIC, nil);
 
   for y := 0 to height - 1 do
     for x := 0 to width - 1 do
@@ -150,7 +150,7 @@ begin
 
   // setup initial column positions
   // (y<0 => not ready to scroll yet)
-  y := Pfixed_tArray(Z_Malloc(width * SizeOf(integer), PU_STATIC, nil));
+  y := Z_Malloc(width * SizeOf(integer), PU_STATIC, nil);
   y[0] := -(M_Random mod 16);
   for i := 1 to width - 1 do
   begin

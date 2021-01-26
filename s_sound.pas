@@ -206,7 +206,7 @@ begin
   // Allocating the internal channels for mixing
   // (the maximum numer of sounds rendered
   // simultaneously) within zone memory.
-  channels := Pchannel_tArray(Z_Malloc(numChannels * SizeOf(channel_t), PU_STATIC, nil));
+  channels := Z_Malloc(numChannels * SizeOf(channel_t), PU_STATIC, nil);
 
   // Free all channels for use
   for i := 0 to numChannels - 1 do

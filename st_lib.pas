@@ -182,7 +182,6 @@ begin
   sttminus := Ppatch_t(W_CacheLumpName('STTMINUS', PU_STATIC));
 end;
 
-// ?
 procedure STlib_initNum(n: Pst_number_t; x, y: integer; pl: Ppatch_tPArray;
   num: PInteger; _on: PBoolean; width: integer);
 begin
