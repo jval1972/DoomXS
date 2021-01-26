@@ -264,7 +264,7 @@ begin
   if (gamestate = GS_LEVEL) and not automapactive and
     (scaledviewwidth <> SCREENWIDTH) then
   begin
-    if menuactive or menuactivestate or (not viewactivestate) then
+    if menuactive or menuactivestate or not viewactivestate then
       borderdrawcount := 3;
     if borderdrawcount > 0 then
     begin
