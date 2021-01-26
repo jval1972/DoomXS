@@ -189,6 +189,9 @@ begin
   I_ShutDownMouse;
 end;
 
+var
+  input_active: boolean;
+
 procedure I_ProcessInput;
 var
   i: integer;
@@ -197,7 +200,7 @@ var
   p: PKeyboardState;
   pt: TPoint;
 begin
-  if I_GameFinished then
+  if I_GameFinished or not input_active then
     Exit;
 
   GetKeyboardState(curkeys^);
@@ -277,6 +280,7 @@ end;
 
 procedure I_SynchronizeInput(active: boolean);
 begin
+  input_active := active;
 end;
 
 end.
