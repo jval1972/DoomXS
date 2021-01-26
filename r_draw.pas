@@ -49,9 +49,6 @@ procedure R_DrawFuzzColumn;
 //  Green/Red/Blue/Indigo shirts.
 procedure R_DrawTranslatedColumn;
 
-procedure R_DrawTranslatedColumn320x200;
-//procedure R_DrawTranslatedColumnLow; // VJ ??? not implement ???
-
 procedure R_VideoErase(const ofs: integer; const count: integer);
 
 // Span blitting for rows, floor/ceiling.
@@ -354,7 +351,7 @@ end;
 //  identical sprites, kinda brightened up.
 //
 
-procedure R_DrawTranslatedColumn320x200;
+procedure R_DrawTranslatedColumn;
 var
   count: integer;
   dest: PByte;
@@ -383,46 +380,6 @@ begin
     //  is mapped to gray, red, black/indigo.
     dest^ := dc_colormap[dc_translation[dc_source[frac div FRACUNIT]]];
     inc(dest, SCREENWIDTH);
-
-    frac := frac + fracstep;
-  end;
-end;
-
-procedure R_DrawTranslatedColumn;
-var
-  count: integer;
-  dest: PByte;
-  frac: fixed_t;
-  fracstep: fixed_t;
-  i: integer;
-begin
-  R_DrawTranslatedColumn320x200;
-  exit;
-        ///////////////////////////////
-  /////////////////////////////////////
-  /////// VJ needs debug!!! ///////////
-  /////////////////////////////////////
-  count := dc_yh - dc_yl;
-  if count < 0 then
-    exit;
-
-  // FIXME. As above.
-  dest := PByte(integer(ylookup[dc_yl]) + columnofs[dc_x]);
-
-  // Looks familiar.
-  fracstep := dc_iscale div SCREENHEIGHT * 200;
-  frac := dc_texturemid + (dc_yl - centery) * fracstep;
-
-  // Here we do an additional index re-mapping.
-  for i := 0 to count do     // VJ maybe (for i := 0 to count - 1) ??? or (for i := 0 to count) ????
-  begin
-    // Translation tables are used
-    //  to map certain colorramps to other ones,
-    //  used with PLAY sprites.
-    // Thus the "green" ramp of the player 0 sprite
-    //  is mapped to gray, red, black/indigo.
-    dest^ := dc_colormap[dc_translation[dc_source[frac div FRACUNIT]]];
-    incp(pointer(dest), SCREENWIDTH);
 
     frac := frac + fracstep;
   end;

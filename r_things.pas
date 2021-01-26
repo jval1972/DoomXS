@@ -426,10 +426,7 @@ begin
   end
   else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
-    if SCREENHEIGHT = 200 then
-      colfunc := R_DrawTranslatedColumn320x200
-    else
-      colfunc := R_DrawTranslatedColumn;
+    colfunc := R_DrawTranslatedColumn;
     dc_translation := PByteArray(integer(translationtables) - 256 +
       ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
@@ -474,10 +471,7 @@ begin
   end
   else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
-    if SCREENHEIGHT = 200 then
-      colfunc := R_DrawTranslatedColumn320x200
-    else
-      colfunc := R_DrawTranslatedColumn;
+    colfunc := R_DrawTranslatedColumn;
     dc_translation := PByteArray(integer(translationtables) - 256 +
       ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
