@@ -295,7 +295,8 @@ type
     // raise to next highest floor, turbo-speed
     raiseFloorTurbo,
     donutRaise,
-    raiseFloor512
+    raiseFloor512,
+    buildStair
   );
 
   stair_e = (

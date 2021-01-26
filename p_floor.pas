@@ -39,9 +39,7 @@ uses
   doomstat,
   sounds;
 
-
 // FLOORS
-
 
 function T_MovePlane(sector: Psector_t; speed: fixed_t; dest: fixed_t;
   crush: boolean; floorOrCeiling: integer; direction: integer): result_e;
@@ -63,9 +61,7 @@ uses
   p_setup,
   r_data;
 
-
 // Move a plane (floor or ceiling) and check for crushing
-
 function T_MovePlane(sector: Psector_t; speed: fixed_t; dest: fixed_t;
   crush: boolean; floorOrCeiling: integer; direction: integer): result_e;
 var
@@ -115,7 +111,6 @@ begin
           begin
             sector.floorheight := lastpos;
             P_ChangeSector(sector, crush);
-            //return crushed;
           end;
           Result := pastdest;
           exit;
@@ -203,9 +198,7 @@ begin
   Result := ok;
 end;
 
-
 // MOVE A FLOOR TO IT'S DESTINATION (UP OR DOWN)
-
 procedure T_MoveFloor(floor: Pfloormove_t);
 var
   res: result_e;
@@ -243,9 +236,7 @@ begin
   end;
 end;
 
-
 // HANDLE FLOOR TYPES
-
 function EV_DoFloor(line: Pline_t; floortype: floor_e): integer;
 var
   secnum: integer;
@@ -271,6 +262,7 @@ begin
     // new floor thinker
     Result := 1;
     floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
+    ZeroMemory(floor, SizeOf(floormove_t));
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
     floor.thinker._function.acp1 := @T_MoveFloor;
@@ -415,9 +407,7 @@ begin
   until secnum < 0;
 end;
 
-
 // BUILD A STAIRCASE!
-
 function EV_BuildStairs(line: Pline_t; _type: stair_e): integer;
 var
   secnum: integer;
@@ -425,7 +415,7 @@ var
   i: integer;
   newsecnum: integer;
   texture: integer;
-  ok: integer;
+  ok: boolean;
   sec: Psector_t;
   tsec: Psector_t;
   floor: Pfloormove_t;
@@ -449,11 +439,13 @@ begin
     // new floor thinker
     Result := 1;
     floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
+    ZeroMemory(floor, SizeOf(floormove_t));
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
     floor.thinker._function.acp1 := @T_MoveFloor;
     floor.direction := 1;
     floor.sector := sec;
+    floor._type := buildStair;
     case _type of
       build8:
       begin
@@ -482,7 +474,7 @@ begin
     // 1.  Find 2-sided line with same sector side[0]
     // 2.  Other side is the next sector to raise
     repeat
-      ok := 0;
+      ok := false;
       for i := 0 to sec.linecount - 1 do
       begin
         if sec.lines[i].flags and ML_TWOSIDED = 0 then
@@ -496,7 +488,6 @@ begin
 
         tsec := sec.lines[i].backsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
-        //integer(tsec) - integer(sectors)) div SizeOf(sector_t);
 
         if tsec.floorpic <> texture then
           continue;
@@ -509,7 +500,7 @@ begin
         sec := tsec;
         secnum := newsecnum;
         floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
-
+        ZeroMemory(floor, SizeOf(floormove_t));
         P_AddThinker(@floor.thinker);
 
         sec.specialdata := floor;
@@ -518,10 +509,12 @@ begin
         floor.sector := sec;
         floor.speed := speed;
         floor.floordestheight := height;
-        ok := 1;
+        floor._type := buildStair;
+
+        ok := true;
         break;
       end;
-    until ok = 0;
+    until not ok;
   until secnum < 0;
 end;
 
