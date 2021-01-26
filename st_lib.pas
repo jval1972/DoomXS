@@ -145,7 +145,7 @@ procedure STlib_updateNum(n: Pst_number_t; refresh: boolean);
 procedure STlib_initPercent(p: Pst_percent_t; x, y: integer; pl: Ppatch_tPArray;
   num: PInteger; _on: PBoolean; percent: Ppatch_t);
 
-procedure STlib_updatePercent(per: Pst_percent_t; refresh: integer);
+procedure STlib_updatePercent(per: Pst_percent_t; refresh: boolean);
 
 // Multiple Icon widget routines
 procedure STlib_initMultIcon(i: Pst_multicon_t; x, y: integer; il: Ppatch_tPArray;
@@ -275,12 +275,12 @@ begin
   p.p := percent;
 end;
 
-procedure STlib_updatePercent(per: Pst_percent_t; refresh: integer);
+procedure STlib_updatePercent(per: Pst_percent_t; refresh: boolean);
 begin
-  if (refresh <> 0) and per.n._on^ then
+  if refresh and per.n._on^ then
     V_DrawPatch(per.n.x, per.n.y - ST_Y, SCN_ST, per.p, false);
 
-  STlib_updateNum(@per.n, refresh <> 0);
+  STlib_updateNum(@per.n, refresh);
 end;
 
 procedure STlib_initMultIcon(i: Pst_multicon_t; x, y: integer; il: Ppatch_tPArray;

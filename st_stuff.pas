@@ -1103,8 +1103,8 @@ begin
     STlib_updateNum(@w_maxammo[i], refresh);
   end;
 
-  STlib_updatePercent(@w_health, intval(refresh));
-  STlib_updatePercent(@w_armor, intval(refresh));
+  STlib_updatePercent(@w_health, refresh);
+  STlib_updatePercent(@w_armor, refresh);
 
   STlib_updateBinIcon(@w_armsbg, refresh);
 
