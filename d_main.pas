@@ -125,17 +125,6 @@ const
   BGCOLOR = 7;
   FGCOLOR = 8;
 
-
-// D-DoomLoop()
-// Not a globally visible function,
-//  just included for source reference,
-//  called by D_DoomMain, never exits.
-// Manages timing and IO,
-//  calls all ?_Responder, ?_Ticker, and ?_Drawer,
-//  calls I_GetTime, I_StartFrame, and I_StartTic
-
-procedure D_DoomLoop; forward;
-
 // D_PostEvent
 // Called by the I/O functions when input is detected
 procedure D_PostEvent(ev: Pevent_t);
@@ -306,6 +295,14 @@ begin
     I_FinishUpdate;   // page flip or blit buffer
   until done;
 end;
+
+// D-DoomLoop()
+// Not a globally visible function,
+//  just included for source reference,
+//  called by D_DoomMain, never exits.
+// Manages timing and IO,
+//  calls all ?_Responder, ?_Ticker, and ?_Drawer,
+//  calls I_GetTime, I_StartFrame, and I_StartTic
 
 //  D_DoomLoop
 procedure D_DoomLoop;
