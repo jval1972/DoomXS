@@ -158,7 +158,7 @@ begin
 
   begin
     dest := @screen32;
-    src := @(screens[0]^);
+    src := @(screens[SCN_FG]^);
     for i := 0 to SCREENWIDTH * SCREENHEIGHT - 1 do
     begin
       dest^ := curpal[src^];

@@ -45,6 +45,8 @@ const
 // Background and foreground screen numbers
 //
   SCN_FG = 0;
+  SCN_WIPE_START = 2;
+  SCN_WIPE_END = 3;
   SCN_SCRF = 4; // Finale Screen Buffer 320x200
   SCN_TMP = 5;  // Temporary Screen Buffer 320x200
   SCN_ST = 6;   // Status Bar Screen Buffer
@@ -87,10 +89,6 @@ function V_PreserveY(y: integer): integer;
 function V_PreserveW(x: integer; w: integer): integer;
 
 function V_PreserveH(y: integer; h: integer): integer;
-
-function V_NeedsPreserve: boolean; overload;
-
-function V_NeedsPreserve(preserve: boolean): boolean; overload;
 
 const
 // Now where did these came from?
@@ -192,16 +190,6 @@ var
   preserveX: array[0..319] of integer;
   preserveY: array[0..199] of integer;
 
-function V_NeedsPreserve: boolean;
-begin
-  result := (SCREENWIDTH <> 320) or (SCREENHEIGHT <> 200);
-end;
-
-function V_NeedsPreserve(preserve: boolean): boolean;
-begin
-  result := preserve and V_NeedsPreserve;
-end;
-
 // preserve x coordinates
 function V_PreserveX(x: integer): integer;
 begin
@@ -269,7 +257,7 @@ var
   col: integer;
   row: integer;
 begin
-  if V_NeedsPreserve(preserve) then
+  if preserve then
   begin
     destw := V_PreserveW(destx, width);
 
@@ -339,7 +327,7 @@ var
   lasty: integer;
   swidth: integer;
 begin
-  if not V_NeedsPreserve(preserve) then
+  if not preserve then
   begin
     y := y - patch.topoffset;
     x := x - patch.leftoffset;
@@ -458,7 +446,7 @@ var
   lasty: integer;
   swidth: integer;
 begin
-  if not V_NeedsPreserve(preserve) then
+  if not preserve then
   begin
     y := y - patch.topoffset;
     x := x - patch.leftoffset;

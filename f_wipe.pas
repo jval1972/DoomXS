@@ -231,14 +231,14 @@ end;
 
 function wipe_StartScreen(x, y, width, height: integer): integer;
 begin
-  wipe_scr_start := screens[2];
+  wipe_scr_start := screens[SCN_WIPE_START];
   I_ReadScreen(wipe_scr_start);
   result := 0;
 end;
 
 function wipe_EndScreen(x, y, width, height: integer): integer;
 begin
-  wipe_scr_end := screens[3];
+  wipe_scr_end := screens[SCN_WIPE_END];
   I_ReadScreen(wipe_scr_end);
   V_DrawBlock(x, y, 0, width, height, wipe_scr_start); // restore start scr.
   result := 0;
