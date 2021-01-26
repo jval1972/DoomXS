@@ -135,7 +135,7 @@ begin
 end;
 
 var
-  y: Pfixed_tArray;
+  yy: Pfixed_tArray;
   vy: fixed_t;
 
 function wipe_initMelt(width, height, ticks: integer): integer;
@@ -150,22 +150,22 @@ begin
 
   // setup initial column positions
   // (y<0 => not ready to scroll yet)
-  y := Z_Malloc(width * SizeOf(integer), PU_STATIC, nil);
-  y[0] := -(M_Random mod 16);
+  yy := Z_Malloc(width * SizeOf(integer), PU_STATIC, nil);
+  yy[0] := -(M_Random mod 16);
   for i := 1 to width - 1 do
   begin
     r := (M_Random mod 3) - 1;
-    y[i] := y[i - 1] + r;
-    if y[i] > 0 then
-      y[i] := 0
-    else if y[i] = -16 then
-      y[i] := -15;
+    yy[i] := yy[i - 1] + r;
+    if yy[i] > 0 then
+      yy[i] := 0
+    else if yy[i] = -16 then
+      yy[i] := -15;
   end;
 
   // VJ change wipe timing
   vy := FRACUNIT * SCREENWIDTH div 200;
   for i := 0 to width - 1 do
-    y[i] := y[i] * vy;
+    yy[i] := yy[i] * vy;
 
   result := 0;
 end;
@@ -185,33 +185,33 @@ begin
   begin
     for i := 0 to width - 1 do
     begin
-      if y[i] < 0 then
+      if yy[i] < 0 then
       begin
-        y[i] := y[i] + vy;
+        yy[i] := yy[i] + vy;
         result := 0;
       end
-      else if y[i] < height * FRACUNIT then
+      else if yy[i] < height * FRACUNIT then
       begin
-        if y[i] <= 15 * vy then
-          dy := y[i] + vy
+        if yy[i] <= 15 * vy then
+          dy := yy[i] + vy
         else
           dy := 8 * vy;
-        if (y[i] + dy) div FRACUNIT >= height then
-          dy := height * FRACUNIT - y[i];
-        s := PByteArray(integer(wipe_scr_end) + i * height + y[i] div FRACUNIT);
-        d := PByteArray(integer(wipe_scr) + y[i] div FRACUNIT * width + i);
+        if (yy[i] + dy) div FRACUNIT >= height then
+          dy := height * FRACUNIT - yy[i];
+        s := PByteArray(integer(wipe_scr_end) + i * height + yy[i] div FRACUNIT);
+        d := PByteArray(integer(wipe_scr) + yy[i] div FRACUNIT * width + i);
         idx := 0;
         for j := 0 to dy div FRACUNIT do //- 1 do
         begin
           d[idx] := s[j];
           idx := idx + width;
         end;
-        y[i] := y[i] + dy;
+        yy[i] := yy[i] + dy;
         s := PByteArray(integer(wipe_scr_start) + i * height);
-        d := PByteArray(integer(wipe_scr) + y[i] div FRACUNIT * width + i);
+        d := PByteArray(integer(wipe_scr) + yy[i] div FRACUNIT * width + i);
 
         idx := 0;
-        for j := 0 to height - y[i] div FRACUNIT - 1 do
+        for j := 0 to height - yy[i] div FRACUNIT - 1 do
         begin
           d[idx] := s[j];
           idx := idx + width;
@@ -225,7 +225,7 @@ end;
 
 function wipe_exitMelt(width, height, ticks: integer): integer;
 begin
-  Z_Free(y);
+  Z_Free(yy);
   result := 0;
 end;
 
