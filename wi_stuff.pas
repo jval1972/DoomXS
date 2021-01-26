@@ -396,8 +396,6 @@ var
 
 // slam background
 // UNUSED static unsigned char *background=0;
-
-
 procedure WI_SlamBackground;
 begin
   memcpy(screens[SCN_FG], screens[1], SCREENWIDTH * SCREENHEIGHT);
@@ -729,7 +727,6 @@ begin
   else
     snl_pointeron := (cnt and 31) < 20;
 end;
-
 
 procedure WI_DrawShowNextLoc;
 var
@@ -1673,8 +1670,8 @@ begin
   Z_ChangeTag(victims, PU_CACHE);
   Z_ChangeTag(killers, PU_CACHE);
   Z_ChangeTag(total, PU_CACHE);
-//  Z_ChangeTag(star, PU_CACHE);
-//  Z_ChangeTag(bstar, PU_CACHE);
+  Z_ChangeTag(star, PU_CACHE);
+  Z_ChangeTag(bstar, PU_CACHE);
 
   for i := 0 to MAXPLAYERS - 1 do
     Z_ChangeTag(p[i], PU_CACHE);
