@@ -669,30 +669,11 @@ begin
   centeryfrac := centery * FRACUNIT;
   projection := centerxfrac;
 
-  if detailshift = 0 then
-  begin
-    colfunc := R_DrawColumn;
-
-    skycolfunc := R_DrawSkyColumn;
-
-    basecolfunc := R_DrawColumn;
-
-    fuzzcolfunc := R_DrawFuzzColumn;
-
-    spanfunc := R_DrawSpan;
-  end
-  else
-  begin
-    colfunc := R_DrawColumnLow;
-
-    skycolfunc := R_DrawSkyColumn;
-
-    basecolfunc := R_DrawColumn;
-
-    fuzzcolfunc := R_DrawFuzzColumn;
-
-    spanfunc := R_DrawSpanLow;
-  end;
+  colfunc := R_DrawColumn;
+  skycolfunc := R_DrawSkyColumn;
+  basecolfunc := R_DrawColumn;
+  fuzzcolfunc := R_DrawFuzzColumn;
+  spanfunc := R_DrawSpan;
 
   R_InitBuffer(scaledviewwidth, viewheight);
 

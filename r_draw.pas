@@ -37,7 +37,7 @@ uses
 // Hook in assembler or system specific BLT
 //  here.
 procedure R_DrawColumn;
-procedure R_DrawColumnLow;
+
 procedure R_DrawSkyColumn;
 
 // The Spectre/Invisibility effect.
@@ -54,10 +54,6 @@ procedure R_VideoErase(const ofs: integer; const count: integer);
 // Span blitting for rows, floor/ceiling.
 // No Sepctre effect needed.
 procedure R_DrawSpan;
-
-// Low resolution mode, 160x200?
-procedure R_DrawSpanLow;
-
 
 procedure R_InitBuffer(width, height: integer);
 
@@ -161,10 +157,10 @@ var
 procedure R_DrawColumn;
 var
   count: integer;
-  i: integer;
   dest: PByte;
   frac: fixed_t;
   fracstep: fixed_t;
+  b: byte;
 begin
   count := dc_yh - dc_yl;
 
@@ -185,47 +181,33 @@ begin
   // Inner loop that does the actual texture mapping,
   //  e.g. a DDA-lile scaling.
   // This is as fast as it gets.
-  for i := 0 to count do
+  if (detailshift = 1) and (count > 0) then
+  begin
+    frac := frac + fracstep div 2;
+    fracstep := fracstep * 2;
+    while count > 0 do
+    begin
+      b := dc_colormap[dc_source[(frac div FRACUNIT) and 127]];
+      dest^ := b;
+      inc(dest, SCREENWIDTH);
+      dest^ := b;
+      inc(dest, SCREENWIDTH);
+
+      inc(frac, fracstep);
+      dec(count, 2);
+    end;
+    fracstep := fracstep div 2;
+    frac := frac - fracstep div 2;
+  end;
+
+  while count >= 0 do
   begin
     // Re-map color indices from wall texture column
     //  using a lighting/special effects LUT.
     dest^ := dc_colormap[dc_source[(frac div FRACUNIT) and 127]];
     inc(dest, SCREENWIDTH);
     frac := frac + fracstep;
-  end;
-end;
-
-procedure R_DrawColumnLow;
-var
-  count: integer;
-  i: integer;
-  dest: PByte;
-  bdest: byte;
-  frac: fixed_t;
-  fracstep: fixed_t;
-begin
-  count := (dc_yh - dc_yl) div 3;
-
-  // Zero length.
-  if count < 0 then
-    exit;
-
-  dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
-
-  frac := dc_texturemid + (dc_yl - centery) * dc_iscale;
-  fracstep := 3 * dc_iscale;
-
-  for i := 0 to count do
-  begin
-    // Hack. Does not work corretly.
-    bdest := dc_colormap[dc_source[(frac div FRACUNIT) and 127]];
-    dest^ := bdest;
-    inc(dest, SCREENWIDTH);
-    dest^ := bdest;
-    inc(dest, SCREENWIDTH);
-    dest^ := bdest;
-    inc(dest, SCREENWIDTH);
-    frac := frac + fracstep;
+    dec(count);
   end;
 end;
 
@@ -336,7 +318,6 @@ begin
       fuzzpos := 0;
 
     dest := @dest[SCREENWIDTH];
-
   end;
 end;
 
@@ -437,8 +418,8 @@ var
   yfrac: fixed_t;
   dest: PByte;
   count: integer;
-  i: integer;
   spot: integer;
+  b: byte;
 begin
   xfrac := ds_xfrac;
   yfrac := ds_yfrac;
@@ -448,7 +429,34 @@ begin
   // We do not check for zero spans here?
   count := ds_x2 - ds_x1;
 
-  for i := 0 to count do
+  if (detailshift = 1) and (count > 0) then
+  begin
+    xfrac := xfrac + ds_xstep div 2;
+    yfrac := yfrac + ds_ystep div 2;
+    ds_xstep := ds_xstep * 2;
+    ds_ystep := ds_ystep * 2;
+    while count > 0 do
+    begin
+      spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
+      b := ds_colormap[ds_source[spot]];
+      dest^ := b;
+      inc(dest);
+      dest^ := b;
+      inc(dest);
+
+      // Next step in u,v.
+      xfrac := xfrac + ds_xstep;
+      yfrac := yfrac + ds_ystep;
+
+      dec(count, 2);
+    end;
+    ds_xstep := ds_xstep div 2;
+    ds_ystep := ds_ystep div 2;
+    xfrac := xfrac - ds_xstep div 2;
+    yfrac := yfrac - ds_ystep div 2;
+  end;
+
+  while count >= 0 do
   begin
     // Current texture index in u,v.
     spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
@@ -462,50 +470,8 @@ begin
     // Next step in u,v.
     xfrac := xfrac + ds_xstep;
     yfrac := yfrac + ds_ystep;
-  end;
-end;
 
-//
-// Again..
-//
-procedure R_DrawSpanLow;
-var
-  xfrac: fixed_t;
-  yfrac: fixed_t;
-  dest: PByte;
-  bdest: byte;
-  ds_xstep2: fixed_t;
-  ds_ystep2: fixed_t;
-  count: integer;
-  i: integer;
-  spot: integer;
-begin
-  xfrac := ds_xfrac;
-  yfrac := ds_yfrac;
-
-
-  dest := @((ylookup[ds_y]^)[columnofs[ds_x1]]);
-
-  // Blocky mode, multiply by 3 (!!).
-  ds_xstep2 := ds_xstep * 3;
-  ds_ystep2 := ds_ystep * 3;
-
-  count := (ds_x2 - ds_x1) div 3;
-  for i := 0 to count do
-  begin
-    spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
-    // Lowres/blocky mode does it twice,
-    //  while scale is adjusted appropriately.
-    bdest := ds_colormap[ds_source[spot]];
-    dest^ := bdest;
-    inc(dest);
-    dest^ := bdest;
-    inc(dest);
-    dest^ := bdest;
-    inc(dest);
-
-    xfrac := xfrac + ds_xstep2;
-    yfrac := yfrac + ds_ystep2;
+    dec(count);
   end;
 end;
 
