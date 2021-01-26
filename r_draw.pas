@@ -67,9 +67,6 @@ procedure R_InitTranslationTables;
 // Rendering function.
 procedure R_FillBackScreen;
 
-// If the view size is not full screen, draws a border around it.
-procedure R_DrawViewBorder;
-
 var
 //
 // R_DrawColumn
@@ -614,47 +611,6 @@ begin
   //  a 32bit CPU, as GNU GCC/Linux libc did
   //  at one point.
   memcpy(Pointer(integer(screens[SCN_FG]) + ofs), Pointer(integer(screens[SCN_BG]) + ofs), count);
-end;
-
-//
-// R_DrawViewBorder
-// Draws the border around the view
-//  for different size windows?
-//
-procedure R_DrawViewBorder;
-var
-  top: integer;
-  bottom: integer;
-  side: integer;
-  ofs: integer;
-  i: integer;
-begin
-  if scaledviewwidth = SCREENWIDTH then
-    exit;
-
-  top := (SCREENHEIGHT - V_PreserveY(ST_HEIGHT) - viewheight) div 2;
-  bottom := SCREENHEIGHT - V_PreserveY(ST_HEIGHT) - top - viewheight;
-  side := (SCREENWIDTH - scaledviewwidth) div 2;
-
-  // copy top and one line of left side
-  R_VideoErase(0, top * SCREENWIDTH + side);
-
-  // copy one line of right side and bottom
-  if odd(bottom) then
-    ofs := (viewheight + bottom - 1) * SCREENWIDTH - side
-  else
-    ofs := (viewheight + bottom) * SCREENWIDTH - side;
-  R_VideoErase(ofs, bottom * SCREENWIDTH + side);
-
-  // copy sides using wraparound
-  ofs := top * SCREENWIDTH + SCREENWIDTH - side;
-  side := _SHL(side, 1);
-
-  for i := 1 to viewheight - 1 do
-  begin
-    R_VideoErase(ofs, side);
-    ofs := ofs + SCREENWIDTH;
-  end;
 end;
 
 end.
