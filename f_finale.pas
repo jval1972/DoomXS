@@ -651,8 +651,6 @@ begin
   else
     dstscr := _FG;
 
-  V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT, false);
-
   scrolled := 320 - (finalecount - 230) div 2;
   if scrolled > 320 then
     scrolled := 320

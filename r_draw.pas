@@ -689,8 +689,6 @@ begin
     R_VideoErase(ofs, side);
     ofs := ofs + SCREENWIDTH;
   end;
-
-  V_MarkRect(0, 0, 320, 200 - ST_HEIGHT, true);
 end;
 
 end.

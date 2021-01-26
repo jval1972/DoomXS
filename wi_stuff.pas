@@ -401,7 +401,6 @@ var
 procedure WI_SlamBackground;
 begin
   memcpy(screens[_FG], screens[1], SCREENWIDTH * SCREENHEIGHT);
-  V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT, false);
 end;
 
 // The ticker is used to detect keys

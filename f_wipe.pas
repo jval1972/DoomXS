@@ -267,16 +267,13 @@ begin
   if not go then
   begin
     go := true;
-  // wipe_scr = (byte *) Z_Malloc(width*height, PU_STATIC, 0); // DEBUG
     wipe_scr := screens[_FG];
 
     WIPES(wipeno * 3)
   end;
 
   // do a piece of wipe-in
-  V_MarkRect(0, 0, width, height, false);
   rc := WIPES(wipeno * 3 + 1);
-    //  V_DrawBlock(x, y, 0, width, height, wipe_scr); // DEBUG
 
   // final stuff
   if rc <> 0 then

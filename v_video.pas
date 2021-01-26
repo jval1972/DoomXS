@@ -80,8 +80,6 @@ procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src:
 // Reads a linear block of pixels into the view buffer.
 procedure V_GetBlock(x, y: integer; scrn: integer; width, height: integer; dest: PByteArray);
 
-procedure V_MarkRect(x, y: integer; width, height: integer; preserve: boolean);
-
 function V_PreserveX(x: integer): integer;
 
 function V_PreserveY(y: integer): integer;
@@ -93,9 +91,6 @@ function V_PreserveH(y: integer; h: integer): integer;
 function V_NeedsPreserve: boolean; overload;
 
 function V_NeedsPreserve(preserve: boolean): boolean; overload;
-
-var
-  dirtybox: array[0..3] of integer;
 
 const
 // Now where did these came from?
@@ -250,22 +245,6 @@ begin
 end;
 
 //
-// V_MarkRect
-//
-procedure V_MarkRect(x, y: integer; width, height: integer; preserve: boolean);
-begin
-  if V_NeedsPreserve(preserve) then
-  begin
-    width := V_PreserveW(x, width);
-    height := V_PreserveH(y, height);
-    x := V_PreserveX(x);
-    y := V_PreserveY(y);
-  end;
-  M_AddToBox(@dirtybox, x, y);
-  M_AddToBox(@dirtybox, x + width - 1, y + height - 1);
-end;
-
-//
 // V_CopyRect
 //
 procedure V_CopyRect(
@@ -300,8 +279,6 @@ begin
 
     desty := V_PreserveY(desty);
 
-    V_MarkRect(destx, desty, destw, desth, false);
-
     fracy := srcy * FRACUNIT;
     fracxstep := FRACUNIT * width div destw;
     fracystep := FRACUNIT * height div desth;
@@ -323,8 +300,6 @@ begin
   end
   else
   begin
-    V_MarkRect(destx, desty, width, height, false);
-
     src := PByteArray(integer(screens[srcscrn]) + SCREENWIDTH * srcy + srcx);
     dest := PByteArray(integer(screens[destscrn]) + SCREENWIDTH * desty + destx);
 
@@ -368,8 +343,6 @@ begin
   begin
     y := y - patch.topoffset;
     x := x - patch.leftoffset;
-    if scrn = _FG then
-      V_MarkRect(x, y, patch.width, patch.height, false);
 
     col := 0;
 
@@ -416,9 +389,6 @@ begin
 
     x := V_PreserveX(x);
     y := V_PreserveY(y);
-
-    if scrn = _FG then
-      V_MarkRect(x, y, pw, ph, false);
 
     fracx := 0;
     fracxstep := FRACUNIT * patch.width div pw;
@@ -492,8 +462,6 @@ begin
   begin
     y := y - patch.topoffset;
     x := x - patch.leftoffset;
-    if scrn = _FG then
-      V_MarkRect(x, y, patch.width, patch.height, false);
 
     col := 0;
 
@@ -539,9 +507,6 @@ begin
 
     x := V_PreserveX(x);
     y := V_PreserveY(y);
-
-    if scrn = _FG then
-      V_MarkRect(x, y, pw, ph, false);
 
     fracx := 0;
     fracxstep := FRACUNIT * patch.width div pw;
@@ -595,8 +560,6 @@ procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src:
 var
   dest: PByteArray;
 begin
-  V_MarkRect(x, y, width, height, false);
-
   dest := PByteArray(integer(screens[scrn]) + y * SCREENWIDTH + x);
 
   while height <> 0 do

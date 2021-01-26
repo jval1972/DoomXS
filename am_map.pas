@@ -1340,8 +1340,6 @@ begin
   AM_drawCrosshair(XHAIRCOLORS);
 
   AM_drawMarks;
-
-  V_MarkRect(f_x, f_y, f_w, f_h, False);
 end;
 
 procedure AM_Init;

@@ -229,7 +229,7 @@ begin
           AM_Drawer;
         if wipe or ((viewheight <> SCREENHEIGHT) and fullscreen) then
           redrawsbar := True;
-        if inhelpscreensstate and (not inhelpscreens) then
+        if inhelpscreensstate and not inhelpscreens then
           redrawsbar := True; // just put away the help screen
         ST_Drawer(viewheight = SCREENHEIGHT, redrawsbar);
       end;
@@ -243,7 +243,7 @@ begin
   end;
 
   // draw the view directly
-  if (gamestate = GS_LEVEL) and (not automapactive) and (gametic <> 0) then
+  if (gamestate = GS_LEVEL) and not automapactive and (gametic <> 0) then
     R_RenderPlayerView(@players[displayplayer]);
 
   if (gamestate = GS_LEVEL) and (gametic <> 0) then
@@ -261,7 +261,7 @@ begin
   end;
 
   // see if the border needs to be updated to the screen
-  if (gamestate = GS_LEVEL) and (not automapactive) and
+  if (gamestate = GS_LEVEL) and not automapactive and
     (scaledviewwidth <> SCREENWIDTH) then
   begin
     if menuactive or menuactivestate or (not viewactivestate) then
