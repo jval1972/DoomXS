@@ -923,7 +923,7 @@ begin
     exit;
 
   if (actor.target = nil) or (actor.target.health <= 0) or
-    (not P_CheckSight(actor, actor.target)) then
+    not P_CheckSight(actor, actor.target) then
     P_SetMobjState(actor, statenum_t(actor.info.seestate));
 end;
 
@@ -936,7 +936,7 @@ begin
     exit;
 
   if (actor.target = nil) or (actor.target.health <= 0) or
-    (not P_CheckSight(actor, actor.target)) then
+    not P_CheckSight(actor, actor.target) then
     P_SetMobjState(actor, statenum_t(actor.info.seestate));
 end;
 

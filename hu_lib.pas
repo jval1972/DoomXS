@@ -267,7 +267,7 @@ begin
   // Only erases when NOT in automap and the screen is reduced,
   // and the text must either need updating or refreshing
   // (because of a recent change back from the automap)
-  if (not automapactive) and (viewwindowx <> 0) and (l.needsupdate <> 0) then
+  if not automapactive and (viewwindowx <> 0) and (l.needsupdate <> 0) then
   begin
     lh := l.f[0].height + 1;
     y := l.y;
@@ -363,7 +363,7 @@ var
 begin
   for i := 0 to s.h - 1 do
   begin
-    if (s.laston) and (not s._on^) then
+    if s.laston and not s._on^ then
       s.l[i].needsupdate := 4;
     HUlib_eraseTextLine(@s.l[i]);
   end;
@@ -438,7 +438,7 @@ end;
 
 procedure HUlib_eraseIText(it: Phu_itext_t);
 begin
-  if it.laston and (not it._on^) then
+  if it.laston and not it._on^ then
     it.l.needsupdate := 4;
   HUlib_eraseTextLine(@it.l);
   it.laston := it._on^;

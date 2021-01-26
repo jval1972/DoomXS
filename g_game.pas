@@ -761,7 +761,7 @@ begin
         players[consoleplayer]._message := msg;
       end;
 
-      if netgame and (not netdemo) and ((gametic mod ticdup) = 0) then
+      if netgame and not netdemo and (gametic mod ticdup = 0) then
       begin
         if (gametic > BACKUPTICS) and
            (consistancy[i][buf] <> cmd.consistancy) then
@@ -780,7 +780,7 @@ begin
   begin
     if playeringame[i] then
     begin
-      if (players[i].cmd.buttons and BT_SPECIAL) <> 0 then
+      if players[i].cmd.buttons and BT_SPECIAL <> 0 then
       begin
         case players[i].cmd.buttons and BT_SPECIALMASK of
           BTS_PAUSE:
@@ -863,7 +863,7 @@ begin
 
   memset(@p.powers, 0, SizeOf(p.powers));
   memset(@p.cards, 0, SizeOf(p.cards));
-  p.mo.flags := p.mo.flags and (not MF_SHADOW); // cancel invisibility
+  p.mo.flags := p.mo.flags and not MF_SHADOW; // cancel invisibility
   p.extralight := 0;    // cancel gun flashes
   p.fixedcolormap := 0; // cancel ir gogles
   p.damagecount := 0;   // no palette changes
