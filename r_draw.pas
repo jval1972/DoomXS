@@ -570,7 +570,7 @@ begin
   src := W_CacheLumpName(name, PU_CACHE);
   dest := screens[SCN_TMP];
 
-  for y := 0 to 200 - ST_HEIGHT - 1 do
+  for y := 0 to 200 - ST_HEIGHT do
   begin
     for x := 0 to 320 div 64 - 1 do
     begin
@@ -634,7 +634,7 @@ begin
   V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + tviewheight, SCN_TMP,
     W_CacheLumpName('brdr_br', PU_CACHE), false);
 
-  V_CopyRect(0, 0, SCN_TMP, 320, 200, 0, 0, 1, true);
+  V_CopyRect(0, 0, SCN_TMP, 320, 200, 0, 0, SCN_BG, true);
 end;
 
 //
@@ -647,7 +647,7 @@ begin
   //  is not optiomal, e.g. byte by byte on
   //  a 32bit CPU, as GNU GCC/Linux libc did
   //  at one point.
-  memcpy(Pointer(integer(screens[SCN_FG]) + ofs), Pointer(integer(screens[1]) + ofs), count);
+  memcpy(Pointer(integer(screens[SCN_FG]) + ofs), Pointer(integer(screens[SCN_BG]) + ofs), count);
 end;
 
 //

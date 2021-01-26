@@ -45,6 +45,7 @@ const
 // Background and foreground screen numbers
 //
   SCN_FG = 0;
+  SCN_BG = 1;
   SCN_WIPE_START = 2;
   SCN_WIPE_END = 3;
   SCN_SCRF = 4; // Finale Screen Buffer 320x200

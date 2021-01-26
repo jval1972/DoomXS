@@ -398,7 +398,7 @@ var
 // UNUSED static unsigned char *background=0;
 procedure WI_SlamBackground;
 begin
-  memcpy(screens[SCN_FG], screens[1], SCREENWIDTH * SCREENHEIGHT);
+  memcpy(screens[SCN_FG], screens[SCN_BG], SCREENWIDTH * SCREENHEIGHT);
 end;
 
 // The ticker is used to detect keys
