@@ -28,11 +28,11 @@ unit f_wipe;
 
 interface
 
-function wipe_StartScreen(x, y, width, height: integer): integer;
+procedure wipe_StartScreen;
 
-function wipe_EndScreen(x, y, width, height: integer): integer;
+procedure wipe_EndScreen;
 
-function wipe_ScreenWipe(wipeno, x, y, width, height, ticks: integer): boolean;
+function wipe_Ticker(ticks: integer): boolean;
 
 type
   wipe_t = (
@@ -58,14 +58,10 @@ uses
 //                       SCREEN WIPE PACKAGE
 //
 
-// when zero, stop the wipe
-var
-  go: boolean = false;
 
 var
   wipe_scr_start: PByteArray;
   wipe_scr_end: PByteArray;
-  wipe_scr: PByteArray;
 
 procedure wipe_shittyColMajorXform(_array: PByteArray; width, height: integer);
 var
@@ -83,78 +79,30 @@ begin
   Z_Free(dest);
 end;
 
-function wipe_initColorXForm(width, height, ticks: integer): integer;
-begin
-  memcpy(wipe_scr, wipe_scr_start, width * height);
-  result := 0;
-end;
-
-function wipe_doColorXForm(width, height, ticks: integer): integer;
-var
-  changed: boolean;
-  w: integer;
-  e: integer;
-  newval: integer;
-begin
-  changed := false;
-  w := 0;
-  e := 0;
-
-  while w < width * height do
-  begin
-    if wipe_scr[w] <> wipe_scr_end[e] then
-    begin
-      if wipe_scr[w] > wipe_scr_end[e] then
-      begin
-        newval := wipe_scr[w] - ticks;
-        if newval < wipe_scr_end[e] then
-          wipe_scr[w] := wipe_scr_end[e]
-        else
-          wipe_scr[w] := newval;
-      end
-      else if wipe_scr[w] < wipe_scr_end[e] then
-      begin
-        newval := wipe_scr[w] + ticks;
-        if newval > wipe_scr_end[e] then
-          wipe_scr[w] := wipe_scr_end[e]
-        else
-          wipe_scr[w] := newval;
-      end;
-      changed := true;
-    end;
-    inc(w);
-    inc(e);
-  end;
-
-  result := intval(not changed);
-end;
-
-function wipe_exitColorXForm(width, height, ticks: integer): integer;
-begin
-  result := 0;
-end;
-
 var
   yy: Pfixed_tArray;
   vy: fixed_t;
 
-function wipe_initMelt(width, height, ticks: integer): integer;
+procedure wipe_initMelt;
 var
   i, r: integer;
+  SHEIGHTS: array[0..SCREENWIDTH - 1] of integer;
+  RANDOMS: array[0..319] of byte;
 begin
+  for i := 0 to SCREENWIDTH - 1 do
+    SHEIGHTS[i] := trunc(i * 320 / SCREENWIDTH);
+  for i := 0 to 319 do
+    RANDOMS[i] := M_Random;
+
   // copy start screen to main screen
-  memcpy(wipe_scr, wipe_scr_start, width * height);
-
-  wipe_shittyColMajorXform(wipe_scr_start, width, height);
-  wipe_shittyColMajorXform(wipe_scr_end, width, height);
-
+  memcpy(screens[SCN_FG], wipe_scr_start, SCREENWIDTH * SCREENHEIGHT);
   // setup initial column positions
   // (y<0 => not ready to scroll yet)
-  yy := Z_Malloc(width * SizeOf(integer), PU_STATIC, nil);
+  yy := Z_Malloc(SCREENWIDTH * SizeOf(integer), PU_STATIC, nil);
   yy[0] := -(M_Random mod 16);
-  for i := 1 to width - 1 do
+  for i := 1 to SCREENWIDTH - 1 do
   begin
-    r := (M_Random mod 3) - 1;
+    r := (RANDOMS[SHEIGHTS[i]] mod 3) - 1;
     yy[i] := yy[i - 1] + r;
     if yy[i] > 0 then
       yy[i] := 0
@@ -162,15 +110,17 @@ begin
       yy[i] := -15;
   end;
 
-  // VJ change wipe timing
+// JVAL change wipe timing
   vy := FRACUNIT * SCREENWIDTH div 200;
-  for i := 0 to width - 1 do
+  for i := 0 to SCREENWIDTH - 1 do
     yy[i] := yy[i] * vy;
 
-  result := 0;
+  for i := 1 to SCREENWIDTH - 1 do
+    if SHEIGHTS[i - 1] = SHEIGHTS[i] then
+      yy[i] := yy[i - 1];
 end;
 
-function wipe_doMelt(width, height, ticks: integer): integer;
+function wipe_doMelt(ticks: integer): integer;
 var
   i: integer;
   j: integer;
@@ -183,38 +133,38 @@ begin
 
   while ticks > 0 do
   begin
-    for i := 0 to width - 1 do
+    for i := 0 to SCREENWIDTH - 1 do
     begin
       if yy[i] < 0 then
       begin
         yy[i] := yy[i] + vy;
         result := 0;
       end
-      else if yy[i] < height * FRACUNIT then
+      else if yy[i] < SCREENHEIGHT * FRACUNIT then
       begin
         if yy[i] <= 15 * vy then
           dy := yy[i] + vy
         else
           dy := 8 * vy;
-        if (yy[i] + dy) div FRACUNIT >= height then
-          dy := height * FRACUNIT - yy[i];
-        s := PByteArray(integer(wipe_scr_end) + i * height + yy[i] div FRACUNIT);
-        d := PByteArray(integer(wipe_scr) + yy[i] div FRACUNIT * width + i);
+        if (yy[i] + dy) div FRACUNIT >= SCREENHEIGHT then
+          dy := SCREENHEIGHT * FRACUNIT - yy[i];
+        s := PByteArray(integer(wipe_scr_end) + i * SCREENHEIGHT + yy[i] div FRACUNIT);
+        d := PByteArray(integer(screens[SCN_FG]) + yy[i] div FRACUNIT * SCREENWIDTH + i);
         idx := 0;
         for j := 0 to dy div FRACUNIT do //- 1 do
         begin
           d[idx] := s[j];
-          idx := idx + width;
+          idx := idx + SCREENWIDTH;
         end;
         yy[i] := yy[i] + dy;
-        s := PByteArray(integer(wipe_scr_start) + i * height);
-        d := PByteArray(integer(wipe_scr) + yy[i] div FRACUNIT * width + i);
+        s := PByteArray(integer(wipe_scr_start) + i * SCREENHEIGHT);
+        d := PByteArray(integer(screens[SCN_FG]) + yy[i] div FRACUNIT * SCREENWIDTH + i);
 
         idx := 0;
-        for j := 0 to height - yy[i] div FRACUNIT - 1 do
+        for j := 0 to SCREENHEIGHT - yy[i] div FRACUNIT - 1 do
         begin
           d[idx] := s[j];
-          idx := idx + width;
+          idx := idx + SCREENWIDTH;
         end;
         result := 0;
       end;
@@ -223,67 +173,45 @@ begin
   end;
 end;
 
-function wipe_exitMelt(width, height, ticks: integer): integer;
+procedure wipe_exitMelt;
 begin
   Z_Free(yy);
-  result := 0;
 end;
 
-function wipe_StartScreen(x, y, width, height: integer): integer;
+procedure wipe_StartScreen;
 begin
   wipe_scr_start := screens[SCN_WIPE_START];
   I_ReadScreen(wipe_scr_start);
-  result := 0;
 end;
 
-function wipe_EndScreen(x, y, width, height: integer): integer;
+procedure wipe_EndScreen;
 begin
   wipe_scr_end := screens[SCN_WIPE_END];
   I_ReadScreen(wipe_scr_end);
-  V_DrawBlock(x, y, 0, width, height, wipe_scr_start); // restore start scr.
-  result := 0;
 end;
 
-function wipe_ScreenWipe(wipeno, x, y, width, height, ticks: integer): boolean;
 var
-  rc: integer;
+  wiping: boolean = false;
 
-  function WIPES(index: integer): integer;
-  begin
-    case index of
-      0: result := wipe_initColorXForm(width, height, ticks);
-      1: result := wipe_doColorXForm(width, height, ticks);
-      2: result := wipe_exitColorXForm(width, height, ticks);
-      3: result := wipe_initMelt(width, height, ticks);
-      4: result := wipe_doMelt(width, height, ticks);
-      5: result := wipe_exitMelt(width, height, ticks);
-    else
-      result := 0; // Ouch
-    end;
-  end;
-
+// when zero, stop the wipe
+function wipe_Ticker(ticks: integer): boolean;
 begin
   // initial stuff
-  if not go then
+  if not wiping then
   begin
-    go := true;
-    wipe_scr := screens[SCN_FG];
-
-    WIPES(wipeno * 3)
+    wiping := true;
+    wipe_initMelt;
   end;
 
   // do a piece of wipe-in
-  rc := WIPES(wipeno * 3 + 1);
-
-  // final stuff
-  if rc <> 0 then
+  if wipe_doMelt(ticks) <> 0 then
   begin
-    go := false;
-    WIPES(wipeno * 3 + 2);
+    // final stuff
+    wiping := false;
+    wipe_exitMelt;
   end;
 
-  result := not go;
+  result := not wiping;
 end;
 
 end.
-

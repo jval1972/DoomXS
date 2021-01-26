@@ -211,7 +211,7 @@ begin
   if Ord(gamestate) <> wipegamestate then
   begin
     wipe := True;
-    wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
+    wipe_StartScreen;
   end
   else
     wipe := False;
@@ -302,7 +302,7 @@ begin
   end;
 
   // wipe update
-  wipe_EndScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
+  wipe_EndScreen;
 
   wipestart := I_GetTime - 1;
 
@@ -310,9 +310,9 @@ begin
     repeat
       nowtime := I_GetTime;
       tics := nowtime - wipestart;
-    until (tics <> 0);
+    until tics <> 0;
     wipestart := nowtime;
-    done := wipe_ScreenWipe(Ord(wipe_Melt), 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
+    done := wipe_Ticker(tics);
     M_Drawer;         // menu is drawn even on top of wipes
     I_FinishUpdate;   // page flip or blit buffer
   until done;
