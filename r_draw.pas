@@ -261,7 +261,7 @@ begin
   begin
     // Re-map color indices from wall texture column
     //  using a lighting/special effects LUT.
-    dest^ := dc_source[(frac div FRACUNIT) and 127]; // VJ removed colormap, sky is full bright
+    dest^ := dc_source[(frac div FRACUNIT) and 127]; // JVAL removed colormap, sky is full bright
 
     inc(dest, SCREENWIDTH);
     frac := frac + fracstep;
@@ -547,93 +547,6 @@ end;
 //  for variable screen sizes
 // Also draws a beveled edge.
 //
-procedure R_FillBackScreen320x200;
-var
-  src: PByteArray;
-  dest: PByteArray;
-  x: integer;
-  y: integer;
-  patch: Ppatch_t;
-  name: string;
-begin
-  if scaledviewwidth = SCREENWIDTH then
-  begin
-    if SCREENHEIGHT <> 200 then
-    begin
-      dest := @screens[0][viewheight * SCREENWIDTH];
-      ZeroMemory(dest, SCREENWIDTH * (V_PreserveY(200 - ST_HEIGHT) - viewheight));
-    end;
-    exit;
-  end;
-
-  if gamemode = commercial then
-    name := 'GRNROCK'   // DOOM II border patch.
-  else
-    name := 'FLOOR7_2'; // DOOM border patch.
-
-  src := W_CacheLumpName(name, PU_CACHE);
-  dest := screens[1];
-
-  for y := 0 to SCREENHEIGHT - V_PreserveY(ST_HEIGHT) - 1 do
-  begin
-    for x := 0 to SCREENWIDTH div 64 - 1 do
-    begin
-      memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
-      incp(pointer(dest), 64);
-    end;
-    if (SCREENWIDTH and 63) <> 0 then
-    begin
-      memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), SCREENWIDTH and 63);
-      incp(pointer(dest), (SCREENWIDTH and 63));
-    end;
-  end;
-
-  patch := W_CacheLumpName('brdr_t', PU_CACHE);
-  x := 0;
-  while x < scaledviewwidth do
-  begin
-    V_DrawPatch(viewwindowx + x, viewwindowy - 8, 1, patch, false);
-    x := x + 8;
-  end;
-
-  patch := W_CacheLumpName('brdr_b', PU_CACHE);
-  x := 0;
-  while x < scaledviewwidth do
-  begin
-    V_DrawPatch(viewwindowx + x, viewwindowy + viewheight, 1, patch, false);
-    x := x + 8;
-  end;
-
-  patch := W_CacheLumpName('brdr_l', PU_CACHE);
-  y := 0;
-  while y < viewheight do
-  begin
-    V_DrawPatch(viewwindowx - 8, viewwindowy + y, 1, patch, false);
-    y := y + 8;
-  end;
-
-  patch := W_CacheLumpName('brdr_r', PU_CACHE);
-  y := 0;
-  while y < viewheight do
-  begin
-    V_DrawPatch (viewwindowx + scaledviewwidth, viewwindowy + y, 1, patch, false);
-    y := y + 8;
-  end;
-
-  // Draw beveled edge.
-  V_DrawPatch(viewwindowx - 8, viewwindowy - 8, 1,
-    W_CacheLumpName('brdr_tl', PU_CACHE), false);
-
-  V_DrawPatch(viewwindowx + scaledviewwidth, viewwindowy - 8, 1,
-    W_CacheLumpName('brdr_tr', PU_CACHE), false);
-
-  V_DrawPatch(viewwindowx - 8, viewwindowy + viewheight, 1,
-    W_CacheLumpName('brdr_bl', PU_CACHE), false);
-
-  V_DrawPatch(viewwindowx + scaledviewwidth, viewwindowy + viewheight, 1,
-    W_CacheLumpName('brdr_br', PU_CACHE), false);
-end;
-
 procedure R_FillBackScreen;
 var
   src: PByteArray;
@@ -647,12 +560,6 @@ var
   pviewwindowy: integer;
   pviewheight: integer;
 begin
-  if (SCREENWIDTH = 320) and (SCREENHEIGHT = 200) then
-  begin
-    R_FillBackScreen320x200;
-    exit;
-  end;
-
   if scaledviewwidth = SCREENWIDTH then
     exit;
 

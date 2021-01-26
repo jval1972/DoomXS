@@ -673,10 +673,7 @@ begin
   begin
     colfunc := R_DrawColumn;
 
-    if SCREENHEIGHT = 200 then
-      skycolfunc := R_DrawColumn
-    else
-      skycolfunc := R_DrawSkyColumn;
+    skycolfunc := R_DrawSkyColumn;
 
     basecolfunc := R_DrawColumn;
 
@@ -688,10 +685,7 @@ begin
   begin
     colfunc := R_DrawColumnLow;
 
-    if SCREENHEIGHT = 200 then
-      skycolfunc := R_DrawColumn
-    else
-      skycolfunc := R_DrawSkyColumn;
+    skycolfunc := R_DrawSkyColumn;
 
     basecolfunc := R_DrawColumn;
 
