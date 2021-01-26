@@ -182,7 +182,6 @@ var
   menuactivestate: boolean = False;
   inhelpscreensstate: boolean = False;
   oldgamestate: integer = -1;
-  borderdrawcount: integer;
 
 procedure D_Display;
 var
@@ -204,7 +203,6 @@ begin
   begin
     R_ExecuteSetViewSize;
     oldgamestate := -1; // force background redraw
-    borderdrawcount := 3;
   end;
 
   // save the current screen if about to wipe
@@ -218,6 +216,17 @@ begin
 
   if (gamestate = GS_LEVEL) and (gametic <> 0) then
     HU_Erase;
+
+  if (gamestate = GS_LEVEL) and (oldgamestate <> Ord(GS_LEVEL)) then
+  begin
+    viewactivestate := False; // view was not active
+    R_FillBackScreen;         // draw the pattern into the back screen
+  end;
+
+  // see if the border needs to be updated to the screen
+  if (gamestate = GS_LEVEL) and not automapactive and
+    (scaledviewwidth <> SCREENWIDTH) then
+    V_CopyRect(0, 0, SCN_BG, SCREENWIDTH, SCREENHEIGHT, 0, 0, SCN_FG, false);
 
   // do buffered drawing
   case gamestate of
@@ -252,26 +261,6 @@ begin
   // clean up border stuff
   if (Ord(gamestate) <> oldgamestate) and (gamestate <> GS_LEVEL) then
     I_SetPalette(W_CacheLumpName('PLAYPAL', PU_CACHE));
-
-  // see if the border needs to be initially drawn
-  if (gamestate = GS_LEVEL) and (oldgamestate <> Ord(GS_LEVEL)) then
-  begin
-    viewactivestate := False; // view was not active
-    R_FillBackScreen;         // draw the pattern into the back screen
-  end;
-
-  // see if the border needs to be updated to the screen
-  if (gamestate = GS_LEVEL) and not automapactive and
-    (scaledviewwidth <> SCREENWIDTH) then
-  begin
-    if menuactive or menuactivestate or not viewactivestate then
-      borderdrawcount := 3;
-    if borderdrawcount > 0 then
-    begin
-      R_DrawViewBorder; // erase old menu stuff
-      Dec(borderdrawcount);
-    end;
-  end;
 
   menuactivestate := menuactive;
   viewactivestate := viewactive;
