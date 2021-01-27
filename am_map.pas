@@ -1267,7 +1267,7 @@ begin
     Inc(their_color);
     p := @players[i];
 
-    if (deathmatch <> 0) and (not singledemo) and (p <> plr) then
+    if (deathmatch <> 0) and not singledemo and (p <> plr) then
       continue;
 
     if not playeringame[i] then
