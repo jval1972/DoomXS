@@ -1227,7 +1227,7 @@ begin
   gameaction := ga_nothing;
 
   len := M_ReadFile(savename, pointer(savebuffer));
-  save_p := PByteArray(integer(savebuffer) + SAVESTRINGSIZE);
+  save_p := @savebuffer[SAVESTRINGSIZE];
 
   // skip the description field
   vcheck := '';
