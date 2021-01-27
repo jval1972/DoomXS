@@ -519,6 +519,7 @@ begin
 
   levelstarttic := gametic;        // for time calculation
   if wipegamestate = Ord(GS_LEVEL) then
+    wipegamestate := -1;  // force a wipe
 
   gamestate := GS_LEVEL;
 
@@ -950,6 +951,7 @@ begin
 
   // spawn a teleport fog
   ss := R_PointInSubsector(x, y);
+  an := _SHRW(ANG45 * (mthing.angle div 45), ANGLETOFINESHIFT);
 
   mo := P_SpawnMobj(x + 20 * finecosine[an], y + 20 * finesine[an],
           ss.sector.floorheight, MT_TFOG);
@@ -1335,23 +1337,31 @@ begin
 
   sprintf(name2, 'version %d', [VERSION]);
   memcpy(save_p, @name2[1], VERSIONSIZE);
+  save_p := @save_p[VERSIONSIZE];
 
   save_p[0] := Ord(gameskill);
+  save_p := @save_p[1];
 
   save_p[0] := gameepisode;
+  save_p := @save_p[1];
 
   save_p[0] := gamemap;
+  save_p := @save_p[1];
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
     save_p[0] := intval(playeringame[i]);
+  save_p := @save_p[1];
   end;
 
   save_p[0] := _SHR(leveltime, 16);
+  save_p := @save_p[1];
 
   save_p[0] := _SHR(leveltime, 8);
+  save_p := @save_p[1];
 
   save_p[0] := leveltime;
+  save_p := @save_p[1];
 
   P_ArchivePlayers;
   P_ArchiveWorld;
@@ -1359,6 +1369,7 @@ begin
   P_ArchiveSpecials;
 
   save_p[0] := $1d; // consistancy marker
+  save_p := @save_p[1];
 
   len := integer(save_p) - integer(savebuffer);
   if len > SAVEGAMESIZE then
