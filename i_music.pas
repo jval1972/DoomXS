@@ -28,7 +28,6 @@ unit i_music;
 
 interface
 
-
 //  MUSIC I/O
 
 procedure I_InitMusic;
@@ -343,9 +342,7 @@ begin
   end;
 end;
 
-
 // MUSIC API.
-
 procedure I_InitMus;
 var
   rc: MMRESULT;
@@ -407,10 +404,7 @@ begin
   I_InitMus;
 end;
 
-
-
 // I_StopMusic
-
 procedure I_StopMusicMus(song: Psonginfo_t);
 var
   i: integer;
@@ -470,9 +464,7 @@ begin
   end;
 end;
 
-
 // I_ShutdownMusic
-
 procedure I_ShutdownMusic;
 begin
   I_StopMus;
@@ -480,9 +472,7 @@ begin
   fdelete(MidiFileName);
 end;
 
-
 // I_PlaySong
-
 procedure I_PlaySong(handle: integer; looping: boolean);
 begin
   if (handle = 0) or (hMidiStream = 0) then
@@ -491,9 +481,7 @@ begin
   CurrentSong := Psonginfo_t(handle);
 end;
 
-
 // I_PauseSong
-
 procedure I_PauseSongMus(handle: integer);
 var
   rc: MMRESULT;
@@ -514,9 +502,7 @@ begin
   end;
 end;
 
-
 // I_ResumeSong
-
 procedure I_ResumeSongMus(handle: integer);
 var
   rc: MMRESULT;
@@ -637,9 +623,7 @@ begin
   result := CurrentSong <> nil;
 end;
 
-
 // I_SetMusicVolume
-
 procedure I_SetMusicVolumeMus(volume: integer);
 var
   rc: MMRESULT;
