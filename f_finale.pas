@@ -262,19 +262,11 @@ begin
   dstscr := SCN_SCRF;
 
   for y := 0 to 200 - 1 do
-  begin
     for x := 0 to (320 div 64) - 1 do
     begin
       memcpy(@screens[dstscr, dest], @src[_SHL(y and 63, 6)], 64);
       dest := dest + 64;
     end;
-
-    if (320 and 63) <> 0 then
-    begin
-      memcpy(@screens[dstscr, dest], @src[_SHL(y and 63, 6)], 320 and 63);
-      dest := dest + (320 and 63);
-    end;
-  end;
 
   // draw some of the text onto the screen
   cx := 10;

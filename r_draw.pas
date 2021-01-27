@@ -540,11 +540,6 @@ begin
       memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
       dest := @dest[64];
     end;
-    if 320 and 63 <> 0 then
-    begin
-      memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 320 and 63);
-      dest := @dest[64];
-    end;
   end;
 
   tviewwindowx := viewwindowx * 320 div SCREENWIDTH + 1;
