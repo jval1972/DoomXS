@@ -120,6 +120,9 @@ var
   displayplayer: integer; // view being displayed
   gametic: integer;
 
+  // https://www.doomworld.com/forum/topic/95719-a_tracer-and-gametic/?do=findComment&comment=1788516
+  demostarttic: integer; // JVAL: Thanks fabian :)
+
   totalkills, totalitems, totalsecret: integer; // for intermission
 
   wminfo: wbstartstruct_t; // parms for world map / intermission
@@ -210,7 +213,6 @@ procedure G_WriteDemoTiccmd (cmd: Pticcmd_t); forward;
 
 procedure G_DoReborn(playernum: integer); forward;
 
-procedure G_DoLoadLevel; forward;
 procedure G_DoNewGame; forward;
 procedure G_DoPlayDemo; forward;
 procedure G_DoCompleted; forward;
@@ -510,20 +512,13 @@ begin
   // DOOM determines the sky texture to be used
   // depending on the current episode, and the game version.
   if (gamemode = commercial) or
-     (Ord(gamemode) = Ord(pack_tnt)) or
-     (Ord(gamemode) = Ord(pack_plut)) then
   begin
-    skytexture := R_TextureNumForName('SKY3');
     if gamemap < 12 then
       skytexture := R_TextureNumForName('SKY1')
     else if gamemap < 21 then
-      skytexture := R_TextureNumForName('SKY2');
-  end;
 
   levelstarttic := gametic;        // for time calculation
-
   if wipegamestate = Ord(GS_LEVEL) then
-    wipegamestate := -1;             // force a wipe
 
   gamestate := GS_LEVEL;
 
@@ -955,7 +950,6 @@ begin
 
   // spawn a teleport fog
   ss := R_PointInSubsector(x, y);
-  an := _SHR((ANG45 * (mthing.angle div 45)), ANGLETOFINESHIFT);
 
   mo := P_SpawnMobj(x + 20 * finecosine[an], y + 20 * finesine[an],
           ss.sector.floorheight, MT_TFOG);
@@ -1341,31 +1335,23 @@ begin
 
   sprintf(name2, 'version %d', [VERSION]);
   memcpy(save_p, @name2[1], VERSIONSIZE);
-  save_p := PByteArray(integer(save_p) + VERSIONSIZE);
 
   save_p[0] := Ord(gameskill);
-  save_p := PByteArray(integer(save_p) + 1);
 
   save_p[0] := gameepisode;
-  save_p := PByteArray(integer(save_p) + 1);
 
   save_p[0] := gamemap;
-  save_p := PByteArray(integer(save_p) + 1);
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
     save_p[0] := intval(playeringame[i]);
-    save_p := PByteArray(integer(save_p) + 1);
   end;
 
   save_p[0] := _SHR(leveltime, 16);
-  save_p := PByteArray(integer(save_p) + 1);
 
   save_p[0] := _SHR(leveltime, 8);
-  save_p := PByteArray(integer(save_p) + 1);
 
   save_p[0] := leveltime;
-  save_p := PByteArray(integer(save_p) + 1);
 
   P_ArchivePlayers;
   P_ArchiveWorld;
@@ -1373,7 +1359,6 @@ begin
   P_ArchiveSpecials;
 
   save_p[0] := $1d; // consistancy marker
-  save_p := PByteArray(integer(save_p) + 1);
 
   len := integer(save_p) - integer(savebuffer);
   if len > SAVEGAMESIZE then
@@ -1505,7 +1490,6 @@ begin
   gameskill := skill;
 
   viewactive := true;
-
   // set the sky map for the episode
   if gamemode = commercial then
   begin
@@ -1517,6 +1501,7 @@ begin
   end
   else
     skytexture := R_TextureNumForName('SKY' + Chr(Ord('1') + episode - 1));
+  demostarttic := 0;
 
   G_DoLoadLevel;
 end;
