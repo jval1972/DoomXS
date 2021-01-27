@@ -128,7 +128,7 @@ var
 
   bodyqueslot: integer;
 
-  precache: boolean; // if true, load all graphics at start
+  precache: boolean = true; // if true, load all graphics at start
 
   respawnmonsters: boolean;
 
@@ -151,9 +151,9 @@ procedure G_PlayerReborn(player: integer);
 procedure G_BuildTiccmd(cmd: Pticcmd_t);
 
 var
-  forwardmove: array[0..1] of fixed_t;
-  sidemove: array[0..1] of fixed_t;
-  angleturn: array[0..2] of fixed_t;
+  forwardmove: array[0..1] of fixed_t = ($19, $32);
+  sidemove: array[0..1] of fixed_t = ($18, $28);
+  angleturn: array[0..2] of fixed_t = (640, 1280, 320);
 
 implementation
 
@@ -1048,10 +1048,18 @@ end;
 
 var
 // DOOM Par Times
-  pars: array[0..3, 0..9] of integer;
+  pars: array[0..3, 0..9] of integer = (
+    (30, 75, 120, 90, 165, 180, 180, 30, 165, 0),
+    (90, 90, 90, 120, 90, 360, 240, 30, 170, 0),
+    (90, 45, 90, 150, 90, 90, 165, 30, 135, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+  );
 
 // DOOM II Par Times
-  cpars: array[0..31] of integer;
+  cpars: array[0..31] of integer = (
+    30, 90, 120, 120, 90, 150, 120, 120, 270, 90, 210, 150, 150, 150, 210, 150,
+    420, 150, 210, 150, 240, 150, 180, 150, 150, 300, 330, 420, 300, 180, 120, 30
+  );
 
 //
 // G_DoCompleted
@@ -1778,88 +1786,8 @@ begin
 end;
 
 initialization
-
-  forwardmove[0] := $19;
-  forwardmove[1] := $32;
-  sidemove[0] := $18;
-  sidemove[1] := $28;
-  angleturn[0] := 640;
-  angleturn[1] := 1280;
-  angleturn[2] := 320;
-
   mousebuttons := @mousearray[0];
   joybuttons := @joyarray[0];
-
-
-  ZeroMemory(@pars, SizeOf(pars));
-
-  pars[1, 1] := 30;
-  pars[1, 2] := 75;
-  pars[1, 3] := 120;
-  pars[1, 4] := 90;
-  pars[1, 5] := 165;
-  pars[1, 6] := 180;
-  pars[1, 7] := 180;
-  pars[1, 8] := 30;
-  pars[1, 9] := 165;
-
-  pars[2, 1] := 90;
-  pars[2, 2] := 90;
-  pars[2, 3] := 90;
-  pars[2, 4] := 120;
-  pars[2, 5] := 90;
-  pars[2, 6] := 360;
-  pars[2, 7] := 240;
-  pars[2, 8] := 30;
-  pars[2, 9] := 170;
-
-  pars[3, 1] := 90;
-  pars[3, 2] := 45;
-  pars[3, 3] := 90;
-  pars[3, 4] := 150;
-  pars[3, 5] := 90;
-  pars[3, 6] := 90;
-  pars[3, 7] := 165;
-  pars[3, 8] := 30;
-  pars[3, 9] := 135;
-
-
-  ZeroMemory(@cpars, SizeOf(cpars));
-
-  cpars[0] := 30;
-  cpars[1] := 90;
-  cpars[2] := 120;
-  cpars[3] := 120;
-  cpars[4] := 90;
-  cpars[5] := 150;
-  cpars[6] := 120;
-  cpars[7] := 120;
-  cpars[8] := 270;
-  cpars[9] := 90;
-  cpars[10] := 210;
-  cpars[11] := 150;
-  cpars[12] := 150;
-  cpars[13] := 150;
-  cpars[14] := 210;
-  cpars[15] := 150;
-  cpars[16] := 420;
-  cpars[17] := 150;
-  cpars[18] := 210;
-  cpars[19] := 150;
-  cpars[20] := 240;
-  cpars[21] := 150;
-  cpars[22] := 180;
-  cpars[23] := 150;
-  cpars[24] := 150;
-  cpars[25] := 300;
-  cpars[26] := 330;
-  cpars[27] := 420;
-  cpars[28] := 300;
-  cpars[29] := 180;
-  cpars[30] := 120;
-  cpars[31] := 30;
-
-  precache := true;
 
 end.
 
