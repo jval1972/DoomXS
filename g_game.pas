@@ -512,10 +512,18 @@ begin
   // DOOM determines the sky texture to be used
   // depending on the current episode, and the game version.
   if (gamemode = commercial) or
+     (gamemission = pack_tnt) or
+     (gamemission = pack_plut) then
   begin
     if gamemap < 12 then
       skytexture := R_TextureNumForName('SKY1')
     else if gamemap < 21 then
+      skytexture := R_TextureNumForName('SKY2')
+    else
+      skytexture := R_TextureNumForName('SKY3');
+  end
+  else
+    skytexture := R_TextureNumForName('SKY' + Chr(Ord('0') + gameepisode));
 
   levelstarttic := gametic;        // for time calculation
   if wipegamestate = Ord(GS_LEVEL) then
@@ -1501,17 +1509,6 @@ begin
   gameskill := skill;
 
   viewactive := true;
-  // set the sky map for the episode
-  if gamemode = commercial then
-  begin
-    skytexture := R_TextureNumForName ('SKY3');
-    if gamemap < 12 then
-      skytexture := R_TextureNumForName('SKY1')
-    else if gamemap < 21 then
-      skytexture := R_TextureNumForName ('SKY2');
-  end
-  else
-    skytexture := R_TextureNumForName('SKY' + Chr(Ord('1') + episode - 1));
   demostarttic := 0;
 
   G_DoLoadLevel;
