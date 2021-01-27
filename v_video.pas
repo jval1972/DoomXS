@@ -403,7 +403,6 @@ begin
         while count > 0 do
         begin
           dest^ := source^;
-          //dest := PByte(integer(dest) + SCREENWIDTH);
           inc(dest, SCREENWIDTH);
           fracy := fracy + fracystep;
           if fracy div FRACUNIT > lasty then
