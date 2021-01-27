@@ -46,9 +46,7 @@ function I_GetTime: integer;
 { Time consuming syncronous operations }
 { are performed here (joystick reading). }
 { Can call D_PostEvent. }
-
 procedure I_StartFrame;
-
 
 { Called by D_DoomLoop, }
 { called before processing each tic in a frame. }
@@ -121,9 +119,7 @@ begin
   end;
 end;
 
-
 // I_StartFrame
-
 procedure I_StartFrame;
 begin
   I_ProcessWindows;
@@ -131,9 +127,7 @@ begin
   I_ProcessInput;
 end;
 
-
 // I_StartTic
-
 procedure I_StartTic;
 begin
   //  if not InBackground then   // VJ ?
@@ -152,7 +146,7 @@ end;
 // I_GetTime
 // returns time in 1/70th second tics
 var
-  basetime: int64;
+  basetime: int64 = 0;
   Freq: int64;
 
 function I_GetTime: integer;
@@ -183,9 +177,7 @@ begin
   I_InitInput;
 end;
 
-
 // I_Quit
-
 procedure I_Quit;
 begin
   //  finished := true;
@@ -271,8 +263,6 @@ begin
 end;
 
 initialization
-  basetime := 0;
-
   if not QueryPerformanceFrequency(Freq) then
     Freq := 1000;
 
