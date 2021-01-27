@@ -423,7 +423,7 @@ begin
     dy := temp;
   end;
 
-  angle := _SHRW(tantoangle[_SHRW(FixedDiv(dy, dx), DBITS)] + ANG90, ANGLETOFINESHIFT); // VJ, does it work ???
+  angle := (tantoangle[FixedDiv(dy, dx) shr DBITS] + ANG90) shr ANGLETOFINESHIFT;
 
   // use as cosine
   result := FixedDiv(dx, finesine[angle]);
@@ -469,8 +469,8 @@ begin
   angleb := ANG90 + (visangle - rw_normalangle);
 
   // both sines are always positive
-  sinea := finesine[_SHRW(anglea, ANGLETOFINESHIFT)];
-  sineb := finesine[_SHRW(angleb, ANGLETOFINESHIFT)];
+  sinea := finesine[anglea shr ANGLETOFINESHIFT];
+  sineb := finesine[angleb shr ANGLETOFINESHIFT];
   num := FixedMul(projection, sineb);
   den := FixedMul(rw_distance, sinea);
 
@@ -698,7 +698,7 @@ begin
 
   for i := 0 to viewwidth - 1 do
   begin
-    cosadj := abs(finecosine[_SHRW(xtoviewangle[i], ANGLETOFINESHIFT)]);
+    cosadj := abs(finecosine[xtoviewangle[i] shr ANGLETOFINESHIFT]);
     distscale[i] := FixedDiv(FRACUNIT, cosadj);
   end;
 
@@ -792,8 +792,8 @@ begin
 
   viewz := player.viewz;
 
-  viewsin := finesine[_SHRW(viewangle, ANGLETOFINESHIFT)];
-  viewcos := finecosine[_SHRW(viewangle, ANGLETOFINESHIFT)];
+  viewsin := finesine[viewangle shr ANGLETOFINESHIFT];
+  viewcos := finecosine[viewangle shr ANGLETOFINESHIFT];
 
   sscount := 0;
 

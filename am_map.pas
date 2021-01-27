@@ -1189,11 +1189,11 @@ procedure AM_rotate(x: Pfixed_t; y: Pfixed_t; a: angle_t);
 var
   tmpx: fixed_t;
 begin
-  tmpx := FixedMul(x^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]) -
-    FixedMul(y^, finesine[_SHRW(a, ANGLETOFINESHIFT)]);
+  tmpx := FixedMul(x^, finecosine[a shr ANGLETOFINESHIFT]) -
+    FixedMul(y^, finesine[a shr ANGLETOFINESHIFT]);
 
-  y^ := FixedMul(x^, finesine[_SHRW(a, ANGLETOFINESHIFT)]) +
-    FixedMul(y^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]);
+  y^ := FixedMul(x^, finesine[a shr ANGLETOFINESHIFT]) +
+    FixedMul(y^, finecosine[a shr ANGLETOFINESHIFT]);
 
   x^ := tmpx;
 end;

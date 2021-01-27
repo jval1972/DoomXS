@@ -165,8 +165,6 @@ function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
 
 function _SHR(const x: integer; const bits: integer): integer;
 
-function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
-
 function StringVal(const Str: PChar): string;
 
 procedure ZeroMemory(const P: Pointer; Count: integer);
@@ -478,11 +476,6 @@ function _SHR(const x: integer; const bits: integer): integer; assembler;
 asm
   mov ecx, edx
   sar eax, cl
-end;
-
-function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
-begin
-  Result := x shr bits;
 end;
 
 function StringVal(const Str: PChar): string;

@@ -132,7 +132,7 @@ begin
   ds_ystep := FixedMul(distance, baseyscale);
 
   length := FixedMul(distance, distscale[x1]);
-  angle := _SHRW(viewangle + xtoviewangle[x1], ANGLETOFINESHIFT);
+  angle := (viewangle + xtoviewangle[x1]) shr ANGLETOFINESHIFT;
   ds_xfrac := viewx + FixedMul(finecosine[angle], length);
   ds_yfrac := -viewy - FixedMul(finesine[angle], length);
 
@@ -176,7 +176,7 @@ begin
   lastopening := 0;
 
   // left to right mapping
-  angle := _SHRW(viewangle - ANG90, ANGLETOFINESHIFT);
+  angle := (viewangle - ANG90) shr ANGLETOFINESHIFT;
 
   // scale will be unit scale at SCREENWIDTH/2 distance
   basexscale := FixedDiv(finecosine[angle], centerxfrac);

@@ -888,7 +888,7 @@ begin
     an := an + _SHLW(P_Random - P_Random, 20);
 
   th.angle := an;
-  an := _SHRW(an, ANGLETOFINESHIFT);
+  an := an shr ANGLETOFINESHIFT;
   th.momx := FixedMul(th.info.speed, finecosine[an]);
   th.momy := FixedMul(th.info.speed, finesine[an]);
 
@@ -923,12 +923,12 @@ begin
 
   if linetarget = nil then
   begin
-    an := an + _SHLW(1, 26);
+    an := an + $4000000;
     slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
 
     if linetarget = nil then
     begin
-      an := an - _SHLW(2, 26);
+      an := an - $8000000;
       slope := P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
     end;
 
@@ -951,8 +951,9 @@ begin
   th.target := source;
 
   th.angle := an;
-  th.momx := FixedMul(th.info.speed, finecosine[_SHRW(an, ANGLETOFINESHIFT)]);
-  th.momy := FixedMul(th.info.speed, finesine[_SHRW(an, ANGLETOFINESHIFT)]);
+  an := an shr ANGLETOFINESHIFT;
+  th.momx := FixedMul(th.info.speed, finecosine[an]);
+  th.momy := FixedMul(th.info.speed, finesine[an]);
   th.momz := FixedMul(th.info.speed, slope);
 
   P_CheckMissileSpawn(th);

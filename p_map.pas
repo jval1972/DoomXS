@@ -685,8 +685,8 @@ begin
   if deltaangle > ANG180 then
     deltaangle := deltaangle + ANG180;
 
-  lineangle := _SHRW(lineangle, ANGLETOFINESHIFT);
-  deltaangle := _SHRW(deltaangle, ANGLETOFINESHIFT);
+  lineangle := lineangle shr ANGLETOFINESHIFT;
+  deltaangle := deltaangle shr ANGLETOFINESHIFT;
 
   movelen := P_AproxDistance(tmxmove, tmymove);
   newlen := FixedMul(movelen, finecosine[deltaangle]);
@@ -1134,7 +1134,7 @@ var
   x2: fixed_t;
   y2: fixed_t;
 begin
-  angle := _SHRW(angle, ANGLETOFINESHIFT);
+  angle := angle shr ANGLETOFINESHIFT;
   shootthing := t1;
 
   x2 := t1.x + _SHR(distance, FRACBITS) * finecosine[angle];
@@ -1165,7 +1165,7 @@ var
   x2: fixed_t;
   y2: fixed_t;
 begin
-  angle := _SHRW(angle, ANGLETOFINESHIFT);
+  angle := angle shr ANGLETOFINESHIFT;
   shootthing := t1;
   la_damage := damage;
   x2 := t1.x + _SHR(distance, FRACBITS) * finecosine[angle];
@@ -1224,7 +1224,7 @@ var
 begin
   usething := player.mo;
 
-  angle := _SHRW(player.mo.angle, ANGLETOFINESHIFT);
+  angle := player.mo.angle shr ANGLETOFINESHIFT;
 
   x1 := player.mo.x;
   y1 := player.mo.y;

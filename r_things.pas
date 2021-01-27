@@ -539,7 +539,7 @@ begin
   begin
     // choose a different rotation based on player view
     ang := R_PointToAngle(thing.x, thing.y);
-    rot := _SHRW(ang - thing.angle + LongWord(ANG45 div 2) * 9, 29);
+    rot := (ang - thing.angle + LongWord(ANG45 div 2) * 9) shr 29;
     lump := sprframe.lump[rot];
     flip := sprframe.flip[rot];
   end

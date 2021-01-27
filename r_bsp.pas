@@ -309,8 +309,8 @@ begin
 
   // The seg is in the view range,
   // but not necessarily visible.
-  angle1 := _SHRW(angle1 + ANG90, ANGLETOFINESHIFT);
-  angle2 := _SHRW(angle2 + ANG90, ANGLETOFINESHIFT);
+  angle1 := (angle1 + ANG90) shr ANGLETOFINESHIFT;
+  angle2 := (angle2 + ANG90) shr ANGLETOFINESHIFT;
   x1 := viewangletox[angle1];
   x2 := viewangletox[angle2];
 
@@ -488,8 +488,8 @@ begin
   // Find the first clippost
   //  that touches the source post
   //  (adjacent pixels are touching).
-  angle1 := _SHRW(angle1 + ANG90, ANGLETOFINESHIFT);
-  angle2 := _SHRW(angle2 + ANG90, ANGLETOFINESHIFT);
+  angle1 := (angle1 + ANG90) shr ANGLETOFINESHIFT;
+  angle2 := (angle2 + ANG90) shr ANGLETOFINESHIFT;
   sx1 := viewangletox[angle1];
   sx2 := viewangletox[angle2];
 

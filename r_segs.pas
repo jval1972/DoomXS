@@ -274,7 +274,7 @@ begin
     if segtextured then
     begin
       // calculate texture offset
-      angle := _SHRW(rw_centerangle + xtoviewangle[rw_x], ANGLETOFINESHIFT);
+      angle := (rw_centerangle + xtoviewangle[rw_x]) shr ANGLETOFINESHIFT;
       texturecolumn := rw_offset - FixedMul(finetangent[angle], rw_distance);
       texturecolumn := texturecolumn div FRACUNIT;
       // calculate lighting
@@ -408,7 +408,7 @@ begin
 
   distangle := ANG90 - offsetangle;
   hyp := R_PointToDist(curline.v1.x, curline.v1.y);
-  sineval := finesine[_SHRW(distangle, ANGLETOFINESHIFT)];
+  sineval := finesine[distangle shr ANGLETOFINESHIFT];
   rw_distance := FixedMul(hyp, sineval);
 
 
@@ -619,7 +619,7 @@ begin
     if offsetangle > ANG90 then
       offsetangle := ANG90;
 
-    sineval := finesine[_SHRW(offsetangle, ANGLETOFINESHIFT)];
+    sineval := finesine[offsetangle shr ANGLETOFINESHIFT];
     rw_offset := FixedMul(hyp, sineval);
 
     if rw_normalangle - rw_angle1 < ANG180 then

@@ -1103,7 +1103,7 @@ begin
     end;
   end;
 
-  exact := _SHRW(actor.angle, ANGLETOFINESHIFT);
+  exact := actor.angle shr ANGLETOFINESHIFT;
   actor.momx := FixedMul(actor.info.speed, finecosine[exact]);
   actor.momy := FixedMul(actor.info.speed, finesine[exact]);
 
@@ -1280,7 +1280,7 @@ begin
   if not P_CheckSight(actor.target, dest) then
     exit;
 
-  an := _SHRW(dest.angle, ANGLETOFINESHIFT);
+  an := dest.angle shr ANGLETOFINESHIFT;
 
   P_UnsetThingPosition(actor);
   actor.x := dest.x + FixedMul(24 * FRACUNIT, finecosine[an]);
@@ -1338,7 +1338,7 @@ begin
   P_DamageMobj(actor.target, actor, actor, 20);
   actor.target.momz := 1000 * FRACUNIT div actor.target.info.mass;
 
-  an := _SHRW(actor.angle, ANGLETOFINESHIFT);
+  an := actor.angle shr ANGLETOFINESHIFT;
 
   fire := actor.tracer;
 
@@ -1376,7 +1376,7 @@ begin
 
   mo := P_SpawnMissile(actor, actor.target, MT_FATSHOT);
   mo.angle := mo.angle + FATSPREAD;
-  an := _SHRW(mo.angle, ANGLETOFINESHIFT);
+  an := mo.angle shr ANGLETOFINESHIFT;
   mo.momx := FixedMul(mo.info.speed, finecosine[an]);
   mo.momy := FixedMul(mo.info.speed, finesine[an]);
 end;
@@ -1393,7 +1393,7 @@ begin
 
   mo := P_SpawnMissile(actor, actor.target, MT_FATSHOT);
   mo.angle := mo.angle - FATSPREAD * 2;
-  an := _SHRW(mo.angle, ANGLETOFINESHIFT);
+  an := mo.angle shr ANGLETOFINESHIFT;
   mo.momx := FixedMul(mo.info.speed, finecosine[an]);
   mo.momy := FixedMul(mo.info.speed, finesine[an]);
 end;
@@ -1407,13 +1407,13 @@ begin
 
   mo := P_SpawnMissile(actor, actor.target, MT_FATSHOT);
   mo.angle := mo.angle - FATSPREAD div 2;
-  an := _SHRW(mo.angle, ANGLETOFINESHIFT);
+  an := mo.angle shr ANGLETOFINESHIFT;
   mo.momx := FixedMul(mo.info.speed, finecosine[an]);
   mo.momy := FixedMul(mo.info.speed, finesine[an]);
 
   mo := P_SpawnMissile(actor, actor.target, MT_FATSHOT);
   mo.angle := mo.angle + FATSPREAD div 2;
-  an := _SHRW(mo.angle, ANGLETOFINESHIFT);
+  an := mo.angle shr ANGLETOFINESHIFT;
   mo.momx := FixedMul(mo.info.speed, finecosine[an]);
   mo.momy := FixedMul(mo.info.speed, finesine[an]);
 end;
@@ -1439,7 +1439,7 @@ begin
 
   S_StartSound(actor, actor.info.attacksound);
   A_FaceTarget(actor);
-  an := _SHRW(actor.angle, ANGLETOFINESHIFT);
+  an := actor.angle shr ANGLETOFINESHIFT;
   actor.momx := FixedMul(SKULLSPEED, finecosine[an]);
   actor.momy := FixedMul(SKULLSPEED, finesine[an]);
   dist := P_AproxDistance(dest.x - actor.x, dest.y - actor.y);
@@ -1481,7 +1481,7 @@ begin
     exit;
 
   // okay, there's playe for another one
-  an := _SHRW(angle, ANGLETOFINESHIFT);
+  an := angle shr ANGLETOFINESHIFT;
 
   prestep := 4 * FRACUNIT + 3 * (actor.info.radius +
     mobjinfo[Ord(MT_SKULL)].radius) div 2;

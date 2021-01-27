@@ -819,7 +819,7 @@ begin
       thrust := thrust * 4;
     end;
 
-    ang := _SHRW(ang, ANGLETOFINESHIFT);
+    ang := ang shr ANGLETOFINESHIFT;
     target.momx := target.momx + FixedMul(thrust, finecosine[ang]);
     target.momy := target.momy + FixedMul(thrust, finesine[ang]);
   end;
