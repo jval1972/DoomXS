@@ -221,7 +221,7 @@ begin
   fprintf(stderr, #13#10);
 
   // Shutdown. Here might be other errors.
-  if G_IsDemoRecording then
+  if demorecording then
     G_CheckDemoStatus;
 
   soutproc := outproc;

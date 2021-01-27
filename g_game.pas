@@ -76,8 +76,6 @@ function G_Responder(ev: Pevent_t): boolean;
 
 procedure G_ScreenShot;
 
-function G_IsDemoRecording: boolean;
-
 var
   sendpause: boolean;        // send a pause event next tic
   paused: boolean;
@@ -1777,11 +1775,6 @@ begin
   end;
 
   result := false;
-end;
-
-function G_IsDemoRecording: boolean;
-begin
-  result := demorecording;
 end;
 
 initialization
