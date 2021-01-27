@@ -609,9 +609,9 @@ begin
     end;
 
     if M_CheckParmCDROM then
-      MidiFileName := 'c:\doomdata\doom32.mid'
+      MidiFileName := 'c:\doomdata\doomXS.mid'
     else
-      MidiFileName := 'doom32.mid';
+      MidiFileName := 'doomXS.mid';
 
     Assign(f, MidiFileName);
     {$I-}
