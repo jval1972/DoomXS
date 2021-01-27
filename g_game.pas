@@ -835,24 +835,6 @@ end;
 // also see P_SpawnPlayer in P_Things
 //
 
-{
-//
-// G_InitPlayer
-// Called at the start.
-// Called by the game initialization functions.
-//
-procedure G_InitPlayer(player: integer);
-var
-  p: Pplayer_t;
-begin
-  // set up the saved info
-  p := @players[player];
-
-  // clear everything else to defaults
-  G_PlayerReborn(player);
-end;
-}
-
 //
 // G_PlayerFinishLevel
 // Can when a player completes a level.
