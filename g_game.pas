@@ -572,7 +572,7 @@ begin
       inc(displayplayer);
       if displayplayer = MAXPLAYERS then
         displayplayer := 0;
-    until not ((not playeringame[displayplayer]) and (displayplayer <> consoleplayer));
+    until not (not playeringame[displayplayer] and (displayplayer <> consoleplayer));
     result := true;
     exit;
   end;
@@ -646,9 +646,9 @@ begin
       begin
         if usemouse <> 0 then
         begin
-          mousebuttons[0] := (ev.data1 and 1) <> 0;
-          mousebuttons[1] := (ev.data1 and 2) <> 0;
-          mousebuttons[2] := (ev.data1 and 4) <> 0;
+          mousebuttons[0] := ev.data1 and 1 <> 0;
+          mousebuttons[1] := ev.data1 and 2 <> 0;
+          mousebuttons[2] := ev.data1 and 4 <> 0;
           mousex := ev.data2 * (mouseSensitivity + 5) div 10;
           mousey := ev.data3 * (mouseSensitivity + 5) div 10;
         end
@@ -670,7 +670,7 @@ begin
           bmask := 1;
           for i := 0 to NUMJOYBUTTONS - 1 do
           begin
-            joybuttons[i] := (ev.data1 and bmask) <> 0;
+            joybuttons[i] := ev.data1 and bmask <> 0;
             bmask := bmask * 2;
           end;
           joyxmove := ev.data2;
@@ -701,7 +701,7 @@ var
   buf: integer;
   cmd: Pticcmd_t;
   msg: string;
-begin    
+begin
   // do player reborns if needed
   for i := 0 to MAXPLAYERS - 1 do
     if playeringame[i] and (players[i].playerstate = PST_REBORN) then
@@ -723,7 +723,7 @@ begin
         G_DoPlayDemo;
       ga_completed:
         G_DoCompleted;
-      ga_victory: 
+      ga_victory:
         F_StartFinale;
       ga_worlddone:
         G_DoWorldDone;
@@ -745,7 +745,7 @@ begin
     begin
       cmd := @players[i].cmd;
 
-      memcpy (cmd, @netcmds[i][buf], SizeOf(ticcmd_t));
+      memcpy(cmd, @netcmds[i][buf], SizeOf(ticcmd_t));
 
       if demoplayback then
         G_ReadDemoTiccmd(cmd);
@@ -872,8 +872,8 @@ end;
 
 //
 // G_PlayerReborn
-// Called after a player dies 
-// almost everything is cleared and initialized 
+// Called after a player dies
+// almost everything is cleared and initialized
 //
 procedure G_PlayerReborn(player: integer);
 var
@@ -914,8 +914,8 @@ end;
 //
 // G_CheckSpot
 // Returns false if the player cannot be respawned
-// at the given mapthing_t spot  
-// because something is occupying it 
+// at the given mapthing_t spot
+// because something is occupying it
 //
 function G_CheckSpot(playernum: integer; mthing: Pmapthing_t): boolean;
 var
@@ -969,23 +969,23 @@ begin
 end;
 
 //
-// G_DeathMatchSpawnPlayer 
-// Spawns a player at one of the random death match spots 
-// called at level load and each death 
+// G_DeathMatchSpawnPlayer
+// Spawns a player at one of the random death match spots
+// called at level load and each death
 //
 procedure G_DeathMatchSpawnPlayer(playernum: integer);
 var
   i, j: integer;
   selections: integer;
 begin
-  selections := deathmatch_p; // VJ - deathmatchstarts;
+  selections := deathmatch_p; // JVAL - deathmatchstarts;
   if selections < 4 then
     I_Error('G_DeathMatchSpawnPlayer(): Only %d deathmatch spots, 4 required', [selections]);
 
   for j := 0 to 19 do
   begin
     i := P_Random mod selections;
-    if G_CheckSpot (playernum, @deathmatchstarts[i]) then
+    if G_CheckSpot(playernum, @deathmatchstarts[i]) then
     begin
       deathmatchstarts[i]._type := playernum + 1;
       P_SpawnPlayer(@deathmatchstarts[i]);
@@ -998,7 +998,7 @@ begin
 end;
 
 //
-// G_DoReborn 
+// G_DoReborn
 //
 procedure G_DoReborn(playernum: integer);
 var
@@ -1034,14 +1034,14 @@ begin
       begin
         playerstarts[i]._type := playernum + 1; // fake as other player
         P_SpawnPlayer(@playerstarts[i]);
-        playerstarts[i]._type := i + 1; // restore 
+        playerstarts[i]._type := i + 1; // restore
         exit;
       end;
       // he's going to be inside something.  Too bad.
     end;
     P_SpawnPlayer(@playerstarts[playernum]);
   end;
-end; 
+end;
 
 procedure G_ScreenShot;
 begin
@@ -1243,27 +1243,27 @@ begin
   sprintf(vcheck, 'version %d', [VERSION]);
 
   if len < Length(vcheck) then
-    exit; // bad version // by VJ extra checking
+    exit; // bad version
 
   for i := 0 to Length(vcheck) - 1 do
-    if save_p[i] <> ord(vcheck[i + 1]) then
+    if save_p[i] <> Ord(vcheck[i + 1]) then
       exit; // bad version
 
-  save_p := PByteArray(integer(save_p) + VERSIONSIZE);
+  save_p := @save_p[VERSIONSIZE];
 
   gameskill := skill_t(save_p[0]);
-  save_p := PByteArray(integer(save_p) + 1);
+  save_p := @save_p[1];
 
   gameepisode := save_p[0];
-  save_p := PByteArray(integer(save_p) + 1);
+  save_p := @save_p[1];
 
   gamemap := save_p[0];
-  save_p := PByteArray(integer(save_p) + 1);
+  save_p := @save_p[1];
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
     playeringame[i] := save_p[0] <> 0;
-    save_p := PByteArray(integer(save_p) + 1);
+    save_p := @save_p[1];
   end;
 
   // load a base level
@@ -1271,13 +1271,13 @@ begin
 
   // get the times
   a := save_p[0];
-  save_p := PByteArray(integer(save_p) + 1);
+  save_p := @save_p[1];
 
   b := save_p[0];
-  save_p := PByteArray(integer(save_p) + 1);
+  save_p := @save_p[1];
 
   c := save_p[0];
-  save_p := PByteArray(integer(save_p) + 1);
+  save_p := @save_p[1];
 
   leveltime := _SHL(a, 16) + _SHL(b, 8) + c;
 
@@ -1317,7 +1317,7 @@ var
   name: string;
   name2: string;
   description: string;
-  length: integer;
+  len: integer;
   i: integer;
 begin
   if M_CheckParmCDROM then
@@ -1370,10 +1370,10 @@ begin
   save_p[0] := $1d; // consistancy marker
   save_p := PByteArray(integer(save_p) + 1);
 
-  length := integer(save_p) - integer(savebuffer);
-  if length > SAVEGAMESIZE then
+  len := integer(save_p) - integer(savebuffer);
+  if len > SAVEGAMESIZE then
     I_Error('G_DoSaveGame(): Savegame buffer overrun');
-  M_WriteFile(name, savebuffer, length);
+  M_WriteFile(name, savebuffer, len);
   gameaction := ga_nothing;
   savedescription := '';
 
@@ -1381,12 +1381,12 @@ begin
 
   // draw the pattern into the back screen
   R_FillBackScreen;
-end; 
+end;
 
 //
 // G_InitNew
 // Can be called by the startup code or the menu task,
-// consoleplayer, displayplayer, playeringame[] should be set. 
+// consoleplayer, displayplayer, playeringame[] should be set.
 //
 var
   d_skill: skill_t;
@@ -1402,19 +1402,20 @@ begin
 end;
 
 procedure G_DoNewGame;
+var
+  i: integer;
 begin
   demoplayback := false;
   netdemo := false;
   netgame := false;
   deathmatch := 0;
-  playeringame[1] := false;
-  playeringame[2] := false;
-  playeringame[3] := false;
+  for i := 1 to MAXPLAYERS - 1 do
+    playeringame[i] := false;
   respawnparm := false;
   fastparm := false;
   nomonsters := false;
   consoleplayer := 0;
-  G_InitNew (d_skill, d_episode, d_map);
+  G_InitNew(d_skill, d_episode, d_map);
   gameaction := ga_nothing;
 end;
 
@@ -1453,8 +1454,6 @@ begin
     if episode > 3 then
       episode := 3;
   end;
-
-
 
   if map < 1 then
     map := 1;
@@ -1512,15 +1511,7 @@ begin
       skytexture := R_TextureNumForName ('SKY2');
   end
   else
-  begin
     skytexture := R_TextureNumForName('SKY' + Chr(Ord('1') + episode - 1));
-{    case episode of
-      1: skytexture := R_TextureNumForName('SKY1');
-      2: skytexture := R_TextureNumForName('SKY2');
-      3: skytexture := R_TextureNumForName('SKY3');
-      4: skytexture := R_TextureNumForName('SKY4'); // Special Edition sky
-    end;}
-  end;
 
   G_DoLoadLevel;
 end;
@@ -1540,16 +1531,16 @@ begin
     exit;
   end;
   cmd.forwardmove := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   cmd.sidemove := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   cmd.angleturn := _SHL(demo_p[0], 8);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   cmd.buttons := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 end;
 
 procedure G_WriteDemoTiccmd(cmd: Pticcmd_t);
@@ -1558,16 +1549,16 @@ begin
     G_CheckDemoStatus;
 
   demo_p[0] := Ord(cmd.forwardmove);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := Ord(cmd.sidemove);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := _SHR((cmd.angleturn + 128), 8);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := cmd.buttons;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p := PByteArray(integer(demo_p) - 4);
 
@@ -1610,36 +1601,36 @@ begin
   demo_p := demobuffer;
 
   demo_p[0] := VERSION;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := Ord(gameskill);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := gameepisode;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := gamemap;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := deathmatch;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := intval(respawnparm);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := intval(fastparm);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := intval(nomonsters);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   demo_p[0] := consoleplayer;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
     demo_p[0] := intval(playeringame[i]);
-    demo_p := PByteArray(integer(demo_p) + 1);
+    demo_p := @demo_p[1];
   end;
 end;
 
@@ -1671,36 +1662,36 @@ begin
     gameaction := ga_nothing;
     exit;
   end;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   skill := skill_t(demo_p[0]);
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   episode := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   map := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   deathmatch := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   respawnparm := demo_p[0] <> 0;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   fastparm := demo_p[0] <> 0;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   nomonsters := demo_p[0] <> 0;
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   consoleplayer := demo_p[0];
-  demo_p := PByteArray(integer(demo_p) + 1);
+  demo_p := @demo_p[1];
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
     playeringame[i] := demo_p[0] <> 0;
-    demo_p := PByteArray(integer(demo_p) + 1);
+    demo_p := @demo_p[1];
   end;
 
   if playeringame[1] then
@@ -1745,6 +1736,7 @@ end;
 function G_CheckDemoStatus: boolean;
 var
   endtime: integer;
+  i: integer;
 begin
   if timingdemo then
   begin
@@ -1762,9 +1754,8 @@ begin
     netdemo := false;
     netgame := false;
     deathmatch := 0;
-    playeringame[1] := false;
-    playeringame[2] := false;
-    playeringame[3] := false;
+    for i := 1 to MAXPLAYERS - 1 do
+      playeringame[i] := false;
     respawnparm := false;
     fastparm := false;
     nomonsters := false;
@@ -1777,7 +1768,7 @@ begin
   if demorecording then
   begin
     demo_p[0] := DEMOMARKER;
-    demo_p := PByteArray(integer(demo_p) + 1);
+    demo_p := @demo_p[1];
 
     M_WriteFile(demoname, demobuffer, POperation(demo_p, demobuffer, '-', SizeOf(byte)));
     Z_Free(demobuffer);
