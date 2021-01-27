@@ -323,7 +323,6 @@ begin
   V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
-
 //
 // Final DOOM 2 animation
 // Casting by id Software.
@@ -410,32 +409,32 @@ begin
 
     // sound hacks....
     case statenum_t(st) of
-      S_PLAY_ATK1:  sfx := Ord(sfx_dshtgn);
-      S_POSS_ATK2:  sfx := Ord(sfx_pistol);
-      S_SPOS_ATK2:  sfx := Ord(sfx_shotgn);
-      S_VILE_ATK2:  sfx := Ord(sfx_vilatk);
-      S_SKEL_FIST2:  sfx := Ord(sfx_skeswg);
-      S_SKEL_FIST4:  sfx := Ord(sfx_skepch);
-      S_SKEL_MISS2:  sfx := Ord(sfx_skeatk);
+      S_PLAY_ATK1: sfx := Ord(sfx_dshtgn);
+      S_POSS_ATK2: sfx := Ord(sfx_pistol);
+      S_SPOS_ATK2: sfx := Ord(sfx_shotgn);
+      S_VILE_ATK2: sfx := Ord(sfx_vilatk);
+      S_SKEL_FIST2: sfx := Ord(sfx_skeswg);
+      S_SKEL_FIST4: sfx := Ord(sfx_skepch);
+      S_SKEL_MISS2: sfx := Ord(sfx_skeatk);
       S_FATT_ATK8,
       S_FATT_ATK5,
-      S_FATT_ATK2:  sfx := Ord(sfx_firsht);
+      S_FATT_ATK2: sfx := Ord(sfx_firsht);
       S_CPOS_ATK2,
       S_CPOS_ATK3,
-      S_CPOS_ATK4:  sfx := Ord(sfx_shotgn);
-      S_TROO_ATK3:  sfx := Ord(sfx_claw);
-      S_SARG_ATK2:  sfx := Ord(sfx_sgtatk);
+      S_CPOS_ATK4: sfx := Ord(sfx_shotgn);
+      S_TROO_ATK3: sfx := Ord(sfx_claw);
+      S_SARG_ATK2: sfx := Ord(sfx_sgtatk);
       S_BOSS_ATK2,
       S_BOS2_ATK2,
-      S_HEAD_ATK2:  sfx := Ord(sfx_firsht);
-      S_SKULL_ATK2:  sfx := Ord(sfx_sklatk);
+      S_HEAD_ATK2: sfx := Ord(sfx_firsht);
+      S_SKULL_ATK2: sfx := Ord(sfx_sklatk);
       S_SPID_ATK2,
-      S_SPID_ATK3:  sfx := Ord(sfx_shotgn);
-      S_BSPI_ATK2:  sfx := Ord(sfx_plasma);
+      S_SPID_ATK3: sfx := Ord(sfx_shotgn);
+      S_BSPI_ATK2: sfx := Ord(sfx_plasma);
       S_CYBER_ATK2,
       S_CYBER_ATK4,
-      S_CYBER_ATK6:  sfx := Ord(sfx_rlaunc);
-      S_PAIN_ATK3:  sfx := Ord(sfx_sklatk);
+      S_CYBER_ATK6: sfx := Ord(sfx_rlaunc);
+      S_PAIN_ATK3: sfx := Ord(sfx_sklatk);
     else
       sfx := 0;
     end;
@@ -579,10 +578,6 @@ begin
   flip := boolean(sprframe.flip[0]);
 
   patch := W_CacheLumpNum(lump + firstspritelump, PU_CACHE);
-{  if flip then
-    V_DrawPatchFlipped(SCREENWIDTH div 2, SCREENHEIGHT - 30, 0, patch)
-  else
-    V_DrawPatch(SCREENWIDTH div 2, SCREENHEIGHT - 30, 0, patch);}
   if flip then
     V_DrawPatchFlipped(160, 170, 0, patch, true)
   else
@@ -625,7 +620,7 @@ end;
 // F_BunnyScroll
 //
 var
-  laststage: integer;
+  laststage: integer = 0;
 
 procedure F_BunnyScroll;
 var
@@ -783,8 +778,6 @@ initialization
 
   castorder[17].name := '';
   castorder[17]._type := mobjtype_t(0);
-
-  laststage := 0;
 
 end.
 
