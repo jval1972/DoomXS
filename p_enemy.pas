@@ -784,8 +784,8 @@ begin
   // do not attack twice in a row
   if actor.flags and MF_JUSTATTACKED <> 0 then
   begin
-    actor.flags := actor.flags and (not MF_JUSTATTACKED);
-    if (gameskill <> sk_nightmare) and (not fastparm) then
+    actor.flags := actor.flags and not MF_JUSTATTACKED;
+    if (gameskill <> sk_nightmare) and not fastparm then
       P_NewChaseDir(actor);
     exit;
   end;
@@ -840,7 +840,7 @@ begin
   if actor.target = nil then
     exit;
 
-  actor.flags := actor.flags and (not MF_AMBUSH);
+  actor.flags := actor.flags and not MF_AMBUSH;
 
   actor.angle :=
     R_PointToAngle2(actor.x, actor.y, actor.target.x, actor.target.y);
@@ -1070,8 +1070,7 @@ begin
   // spawn a puff of smoke behind the rocket
   P_SpawnPuff(actor.x, actor.y, actor.z);
 
-  th := P_SpawnMobj(actor.x - actor.momx, actor.y -
-    actor.momy, actor.z, MT_SMOKE);
+  th := P_SpawnMobj(actor.x - actor.momx, actor.y - actor.momy, actor.z, MT_SMOKE);
 
   th.momz := FRACUNIT;
   th.tics := th.tics - P_Random and 3;
@@ -1564,7 +1563,6 @@ end;
 
 
 // A_Explode
-
 procedure A_Explode(thingy: Pmobj_t);
 begin
   P_RadiusAttack(thingy, thingy.target, 128);
