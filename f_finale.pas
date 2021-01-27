@@ -254,17 +254,15 @@ var
   len: integer;
   cx: integer;
   cy: integer;
-  dstscr: integer;
 begin
   // erase the entire screen to a tiled background
   src := W_CacheLumpName(finaleflat, PU_CACHE);
   dest := 0;
-  dstscr := SCN_SCRF;
 
   for y := 0 to 200 - 1 do
     for x := 0 to (320 div 64) - 1 do
     begin
-      memcpy(@screens[dstscr, dest], @src[_SHL(y and 63, 6)], 64);
+      memcpy(@screens[SCN_SCRF, dest], @src[_SHL(y and 63, 6)], 64);
       dest := dest + 64;
     end;
 
@@ -308,7 +306,7 @@ begin
     w := hu_font[c1].width;
     if cx + w > 320 then
       break;
-    V_DrawPatch(cx, cy, dstscr, hu_font[c1], false);
+    V_DrawPatch(cx, cy, SCN_SCRF, hu_font[c1], false);
     cx := cx + w;
     dec(count);
   end;
@@ -622,12 +620,9 @@ var
   p2: Ppatch_t;
   name: string;
   stage: integer;
-  dstscr: integer;
 begin
   p1 := W_CacheLumpName('PFUB2', PU_LEVEL);
   p2 := W_CacheLumpName('PFUB1', PU_LEVEL);
-
-  dstscr := SCN_SCRF;
 
   scrolled := 320 - (finalecount - 230) div 2;
   if scrolled > 320 then
@@ -638,9 +633,9 @@ begin
   for x := 0 to 320 - 1 do
   begin
     if x + scrolled < 320 then
-      F_DrawPatchCol(dstscr, x, p1, x + scrolled)
+      F_DrawPatchCol(SCN_SCRF, x, p1, x + scrolled)
     else
-      F_DrawPatchCol(dstscr, x, p2, x + scrolled - 320);
+      F_DrawPatchCol(SCN_SCRF, x, p2, x + scrolled - 320);
   end;
 
   if finalecount >= 1130 then
@@ -649,7 +644,7 @@ begin
     begin
       V_DrawPatch((320 - 13 * 8) div 2,
                   (200 - 8 * 8) div 2,
-                   dstscr, W_CacheLumpName('END0', PU_CACHE), false);
+                   SCN_SCRF, W_CacheLumpName('END0', PU_CACHE), false);
       laststage := 0;
     end
     else
@@ -666,7 +661,7 @@ begin
       sprintf(name,'END%d', [stage]);
       V_DrawPatch((320 - 13 * 8) div 2,
                   (200 - 8 * 8) div 2,
-                   dstscr, W_CacheLumpName(name, PU_CACHE), false);
+                   SCN_SCRF, W_CacheLumpName(name, PU_CACHE), false);
     end;
   end;
 
