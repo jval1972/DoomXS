@@ -384,7 +384,6 @@ begin
       //  or (SHADOW) R_DrawFuzzColumn.
       colfunc;
     end;
-    //column := (column_t *)(  (byte *)column + column->length + 4);
     incp(pointer(column), column.length + 4);
   end;
 
@@ -465,7 +464,7 @@ begin
   end;
 
   dc_iscale := vis.xiscale;
-  dc_texturemid := vis.texturemid;// * 200 div SCREENHEIGHT;
+  dc_texturemid := vis.texturemid;
   frac := vis.startfrac;
   fracstep := vis.xiscale;
   spryscale := vis.scale;
