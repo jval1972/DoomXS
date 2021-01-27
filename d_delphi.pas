@@ -143,6 +143,30 @@ type
     function Size: longint;
   end;
 
+type
+  strlistitem_t = string[255];
+  strlist_t = array[0..$FFF] of strlistitem_t;
+  Pstrlist_t = ^strlist_t;
+
+  TStrList = class
+  private
+    flist: Pstrlist_t;
+    fcount: integer;
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    procedure Clear;
+    procedure Add(const s: string);
+    procedure AppendText(const s: string);
+    procedure LoadFromFile(const fname: string);
+    procedure SaveToFile(const fname: string);
+    function IndexOf(const s: string): integer;
+    function Strings(const i: integer): string;
+    function Names(const i: integer): string;
+    function Values(const i: integer): string;
+    property Count: integer read fcount;
+  end;
+
 procedure fprintf(var f: file; const str: string); overload;
 
 procedure fprintf(var f: file; const Fmt: string; const Args: array of const); overload;
@@ -383,6 +407,142 @@ end;
 function TFile.Size: longint;
 begin
   Result := FileSize(f);
+end;
+
+constructor TStrList.Create;
+begin
+  flist := nil;
+  fcount := 0;
+end;
+
+destructor TStrList.Destroy;
+begin
+  Clear;
+  Inherited;
+end;
+
+procedure TStrList.Clear;
+begin
+  if flist <> nil then
+    FreeMem(flist);
+  fcount := 0;
+end;
+
+procedure TStrList.Add(const s: string);
+begin
+  ReAllocMem(flist, (fcount + 1) * SizeOf(strlistitem_t));
+  flist[fcount] := s;
+  inc(fcount);
+end;
+
+procedure TStrList.AppendText(const s: string);
+var
+  s1: string;
+  i: integer;
+begin
+  s1 := '';
+  for i := 1 to Length(s) do
+  begin
+    if s[i] = #10 then
+    begin
+      Add(s1);
+      s1 := '';
+    end
+    else if s[i] <> #13 then
+      s1 := s1 + s[i];
+  end;
+  if s1 <> '' then
+    Add(s1);
+end;
+
+procedure TStrList.LoadFromFile(const fname: string);
+var
+  t: textfile;
+  s: string;
+begin
+  assignfile(t, fname);
+  reset(t);
+  while not EOF(t) do
+  begin
+    readln(t, s);
+    Add(s);
+  end;
+  closefile(t);
+end;
+
+procedure TStrList.SaveToFile(const fname: string);
+var
+  t: textfile;
+  i: integer;
+begin
+  assignfile(t, fname);
+  rewrite(t);
+  for i := 0 to fcount - 1 do
+    writeln(t, flist[i]);
+  closefile(t);
+end;
+
+function TStrList.IndexOf(const s: string): integer;
+var
+  i: integer;
+begin
+  for i := 0 to fcount - 1 do
+    if flist[i] = s then
+    begin
+      Result := i;
+      Exit;
+    end;
+  Result := -1;
+end;
+
+function TStrList.Strings(const i: integer): string;
+begin
+  if i >= 0 then
+    if i < fcount then
+    begin
+      Result := flist[i];
+      Exit;
+    end;
+  Result := '';
+end;
+
+function TStrList.Names(const i: integer): string;
+var
+  p: integer;
+begin
+  if i >= 0 then
+    if i < fcount then
+    begin
+      Result := flist[i];
+      p := Pos('=', Result);
+      if p > 0 then
+        SetLength(Result, p - 1);
+      Exit;
+    end;
+  Result := '';
+end;
+
+function TStrList.Values(const i: integer): string;
+var
+  s: string;
+  p: integer;
+begin
+  Result := '';
+  if i >= 0 then
+    if i < fcount then
+    begin
+      s := flist[i];
+      p := Pos('=', s);
+      if p > 0 then
+      begin
+        inc(p);
+        while p <= Length(s) do
+        begin
+          Result := Result + s[p];
+          inc(p);
+        end;
+      end;
+    end;
 end;
 
 function getenv(const env: string): string;

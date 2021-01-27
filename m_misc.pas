@@ -41,7 +41,6 @@ procedure M_SaveDefaults;
 implementation
 
 uses
-  Classes,
   d_delphi,
   doomtype,
   doomdef,
@@ -283,9 +282,9 @@ var
 procedure M_SaveDefaults;
 var
   i: integer;
-  s: TStringList;
+  s: TStrList;
 begin
-  s := TStringList.Create;
+  s := TStrList.Create;
   try
     for i := 0 to NUMDEFAULTS - 1 do
       if defaults[i]._type = tInteger then
@@ -305,8 +304,8 @@ var
   i: integer;
   j: integer;
   idx: integer;
-  s: TStringList;
-  n: string;
+  s: TStrList;
+  n, v: string;
 begin
   // set everything to base values
   for i := 0 to NUMDEFAULTS - 1 do
@@ -325,7 +324,7 @@ begin
   else
     defaultfile := basedefault;
 
-  s := TStringList.Create;
+  s := TStrList.Create;
   try
     // read the file in, overriding any set defaults
     if fexists(defaultfile) then // VJ
@@ -334,7 +333,7 @@ begin
     for i := 0 to s.Count - 1 do
     begin
       idx := -1;
-      n := s.Names[i];
+      n := s.Names(i);
       for j := 0 to NUMDEFAULTS - 1 do
         if defaults[j].name = n then
         begin
@@ -344,10 +343,14 @@ begin
 
       if idx > -1 then
       begin
+        v := s.Values(i);
         if defaults[idx]._type = tInteger then
-          PInteger(defaults[idx].location)^ := atoi(s.Values[n])
+        begin
+          if v <> '' then
+            PInteger(defaults[idx].location)^ := atoi(v)
+        end
         else if defaults[idx]._type = tString then
-          PString(defaults[idx].location)^ := s.Values[n];
+          PString(defaults[idx].location)^ := v;
       end;
     end;
 

@@ -90,7 +90,6 @@ implementation
 
 uses
   d_delphi,
-  Classes,
   doomstat,
   dstrings,
   d_englsh,
@@ -622,9 +621,9 @@ var
   myargv1: string;
   infile: string;
   _file: string;
-  s: TStringList;
+  s: TStrList;
 begin
-  s := TStringList.Create;
+  s := TStrList.Create;
   try
     s.Add(myargv[0]);
 
@@ -658,7 +657,7 @@ begin
           else
             infile := infile + _file[i];
 
-        s.Text := s.Text + infile;
+        s.AppendText(infile);
       end
       else
         s.Add(myargv[i]);
@@ -666,9 +665,9 @@ begin
 
     index := 0;
     for i := 0 to s.Count - 1 do
-      if s.Strings[i] <> '' then
+      if s.Strings(i) <> '' then
       begin
-        myargv[index] := s.Strings[i];
+        myargv[index] := s.Strings(i);
         Inc(index);
         if index = MAXARGS then
           break;
