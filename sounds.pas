@@ -31,37 +31,27 @@ interface
 //
 // SoundFX struct.
 //
-
 type
   Psfxinfo_t = ^sfxinfo_t;
-
   sfxinfo_t = packed record
     // up to 6-character name
     name: string;
-
     // Sfx singularity (only one at a time)
     singularity: boolean;
-
     // Sfx priority
     priority: integer;
-
     // referenced sound if a link
     link: Psfxinfo_t;
-
     // pitch if a link
     pitch: integer;
-
     // volume if a link
     volume: integer;
-
     // sound data
     data: pointer;
-
     // this is checked every second to see if sound
     // can be thrown out (if 0, then decrement, if -1,
     // then throw out, if > 0, then it is in use)
     usefulness: integer;
-
     // lump number of sfx
     lumpnum: integer;
   end;
@@ -72,13 +62,10 @@ type
   musicinfo_t = record
     // up to 6-character name
     name: string;
-
     // lump number of music
     lumpnum: integer;
-
     // music data
     data: pointer;
-
     // music handle once registered
     handle: integer;
   end;
@@ -160,11 +147,9 @@ type
     NUMMUSIC
   );
 
-
 //
 // Identifiers for all sfx in game.
 //
-
   sfxenum_t = (
     sfx_None,
     sfx_pistol,
@@ -463,7 +448,6 @@ var
     (name: 'skeatk'; singularity: false; priority:  70; link: nil; pitch: -1; volume: -1; data: nil; usefulness: 0; lumpnum: 0),
     (name: 'radio';  singularity: false; priority:  60; link: nil; pitch: -1; volume: -1; data: nil; usefulness: 0; lumpnum: 0)
   );
-
 
 implementation
 
