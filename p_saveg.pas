@@ -28,7 +28,8 @@ unit p_saveg;
 
 interface
 
-uses d_delphi;
+uses
+  d_delphi;
 
 // Persistent storage/archiving.
 // These are the load / save game routines.
@@ -79,16 +80,7 @@ uses
   r_defs,
   z_memory;
 
-// Pads save_p to a 4-byte boundary
-//  so that the load/save works on SGI&Gecko.
-procedure PADSAVEP;
-begin
-  save_p := PByteArray(integer(save_p) + ((4 - (integer(save_p) and 3) and 3)));
-end;
-
-
 // P_ArchivePlayers
-
 procedure P_ArchivePlayers;
 var
   i: integer;
@@ -100,11 +92,9 @@ begin
     if not playeringame[i] then
       continue;
 
-    PADSAVEP;
-
     dest := Pplayer_t(save_p);
     memcpy(dest, @players[i], SizeOf(player_t));
-    save_p := PByteArray(integer(save_p) + SizeOf(player_t));
+    save_p := @save_p[SizeOf(player_t)];
     for j := 0 to Ord(NUMPSPRITES) - 1 do
       if dest.psprites[j].state <> nil then
         dest.psprites[j].state :=
@@ -113,9 +103,7 @@ begin
   end;
 end;
 
-
 // P_UnArchivePlayers
-
 procedure P_UnArchivePlayers;
 var
   i: integer;
@@ -126,10 +114,8 @@ begin
     if not playeringame[i] then
       continue;
 
-    PADSAVEP;
-
     memcpy(@players[i], save_p, SizeOf(player_t));
-    incp(pointer(save_p), SizeOf(player_t));
+    save_p := @save_p[SizeOf(player_t)];
 
     // will be set when unarc thinker
     players[i].mo := nil;
@@ -142,9 +128,7 @@ begin
   end;
 end;
 
-
 // P_ArchiveWorld
-
 procedure P_ArchiveWorld;
 var
   i: integer;
@@ -162,19 +146,19 @@ begin
   begin
     sec := Psector_t(@sectors[i]);
     put[0] := sec.floorheight div FRACUNIT;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := sec.ceilingheight div FRACUNIT;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := sec.floorpic;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := sec.ceilingpic;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := sec.lightlevel;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := sec.special; // needed?
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := sec.tag;  // needed?
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     Inc(i);
   end;
 
@@ -184,11 +168,11 @@ begin
   begin
     li := Pline_t(@lines[i]);
     put[0] := li.flags;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := li.special;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     put[0] := li.tag;
-    incp(pointer(put), SizeOf(smallint));
+    put := @put[1];
     for j := 0 to 1 do
     begin
       if li.sidenum[j] = -1 then
@@ -197,16 +181,15 @@ begin
       si := @sides[li.sidenum[j]];
 
       put[0] := si.textureoffset div FRACUNIT;
-      incp(pointer(put), SizeOf(smallint));
+      put := @put[1];
       put[0] := si.rowoffset div FRACUNIT;
-      ;
-      incp(pointer(put), SizeOf(smallint));
+      put := @put[1];
       put[0] := si.toptexture;
-      incp(pointer(put), SizeOf(smallint));
+      put := @put[1];
       put[0] := si.bottomtexture;
-      incp(pointer(put), SizeOf(smallint));
+      put := @put[1];
       put[0] := si.midtexture;
-      incp(pointer(put), SizeOf(smallint));
+      put := @put[1];
     end;
     Inc(i);
   end;
@@ -214,9 +197,7 @@ begin
   save_p := PByteArray(put);
 end;
 
-
 // P_UnArchiveWorld
-
 procedure P_UnArchiveWorld;
 var
   i: integer;
@@ -234,19 +215,19 @@ begin
   begin
     sec := Psector_t(@sectors[i]);
     sec.floorheight := get[0] * FRACUNIT;
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.ceilingheight := get[0] * FRACUNIT;
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.floorpic := get[0];
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.ceilingpic := get[0];
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.lightlevel := get[0];
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.special := get[0]; // needed?
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.tag := get[0]; // needed?
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     sec.specialdata := nil;
     sec.soundtarget := nil;
     Inc(i);
@@ -258,26 +239,26 @@ begin
   begin
     li := Pline_t(@lines[i]);
     li.flags := get[0];
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     li.special := get[0];
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     li.tag := get[0];
-    incp(pointer(get), SizeOf(smallint));
+    get := @get[1];
     for j := 0 to 1 do
     begin
       if li.sidenum[j] = -1 then
         continue;
       si := @sides[li.sidenum[j]];
       si.textureoffset := get[0] * FRACUNIT;
-      incp(pointer(get), SizeOf(smallint));
+      get := @get[1];
       si.rowoffset := get[0] * FRACUNIT;
-      incp(pointer(get), SizeOf(smallint));
+      get := @get[1];
       si.toptexture := get[0];
-      incp(pointer(get), SizeOf(smallint));
+      get := @get[1];
       si.bottomtexture := get[0];
-      incp(pointer(get), SizeOf(smallint));
+      get := @get[1];
       si.midtexture := get[0];
-      incp(pointer(get), SizeOf(smallint));
+      get := @get[1];
     end;
     Inc(i);
   end;
@@ -288,9 +269,7 @@ end;
 type
   thinkerclass_t = (tc_end, tc_mobj);
 
-
 // P_ArchiveThinkers
-
 procedure P_ArchiveThinkers;
 var
   th: Pthinker_t;
@@ -303,11 +282,10 @@ begin
     if @th._function.acp1 = @P_MobjThinker then
     begin
       save_p[0] := Ord(tc_mobj);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       mobj := Pmobj_t(save_p);
-      memcpy(mobj, th, SizeOf(mobj^));
-      incp(pointer(save_p), SizeOf(mobj^));
+      memcpy(mobj, th, SizeOf(mobj_t));
+      save_p := @save_p[SizeOf(mobj_t)];
       mobj.state := Pstate_t(pOperation(mobj.state, @states[0], '-',
         SizeOf(mobj.state^)));
 
@@ -315,18 +293,15 @@ begin
         mobj.player := Pplayer_t(pOperation(mobj.player, @players[0],
           '-', SizeOf(players[0])) + 1);
     end;
-    // I_Error ("P_ArchiveThinkers: Unknown thinker function");
     th := th.next;
   end;
 
   // add a terminating marker
   save_p[0] := Ord(tc_end);
-  incp(pointer(save_p));
+  save_p := @save_p[1];
 end;
 
-
 // P_UnArchiveThinkers
-
 procedure P_UnArchiveThinkers;
 var
   tclass: byte;
@@ -353,17 +328,16 @@ begin
   while True do
   begin
     tclass := save_p[0];
-    incp(pointer(save_p));
+    save_p := @save_p[1];
     case tclass of
       Ord(tc_end):
         exit; // end of list
 
       Ord(tc_mobj):
       begin
-        PADSAVEP;
-        mobj := Z_Malloc(SizeOf(mobj^), PU_LEVEL, nil);
-        memcpy(mobj, save_p, SizeOf(mobj^));
-        incp(pointer(save_p), SizeOf(mobj^));
+        mobj := Z_Malloc(SizeOf(mobj_t), PU_LEVEL, nil);
+        memcpy(mobj, save_p, SizeOf(mobj_t));
+        save_p := @save_p[SizeOf(mobj_t)];
         mobj.state := @states[integer(mobj.state)];
         mobj.target := nil;
         if mobj.player <> nil then
@@ -385,9 +359,7 @@ begin
   end;
 end;
 
-
 // P_ArchiveSpecials
-
 type
   specials_e = (
     tc_ceiling,
@@ -397,14 +369,11 @@ type
     tc_flash,
     tc_strobe,
     tc_glow,
+    tc_fireflicker, // JVAL correct T_FireFlicker savegame bug
     tc_endspecials
-    );
-
-
-
+  );
 
 // Things to handle:
-
 // T_MoveCeiling, (ceiling_t: sector_t * swizzle), - active list
 // T_VerticalDoor, (vldoor_t: sector_t * swizzle),
 // T_MoveFloor, (floormove_t: sector_t * swizzle),
@@ -412,7 +381,6 @@ type
 // T_StrobeFlash, (strobe_t: sector_t *),
 // T_Glow, (glow_t: sector_t *),
 // T_PlatRaise, (plat_t: sector_t *), - active list
-
 procedure P_ArchiveSpecials;
 var
   th: Pthinker_t;
@@ -424,6 +392,7 @@ var
   flash: Plightflash_t;
   strobe: Pstrobe_t;
   glow: Pglow_t;
+  flicker: Pfireflicker_t;
   i: integer;
 begin
   // save off the current thinkers
@@ -445,11 +414,10 @@ begin
       if i < MAXCEILINGS then
       begin
         save_p[0] := Ord(tc_ceiling);
-        incp(pointer(save_p));
-        PADSAVEP;
+        save_p := @save_p[1];
         ceiling := Pceiling_t(save_p);
-        memcpy(ceiling, th, SizeOf(ceiling^));
-        incp(pointer(save_p), SizeOf(ceiling^));
+        memcpy(ceiling, th, SizeOf(ceiling_t));
+        save_p := @save_p[SizeOf(ceiling_t)];
         ceiling.sector := Psector_t(pOperation(ceiling.sector, @sectors[0],
           '-', SizeOf(sectors[0])));
       end;
@@ -459,103 +427,107 @@ begin
     if @th._function.acp1 = @T_MoveCeiling then
     begin
       save_p[0] := Ord(tc_ceiling);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       ceiling := Pceiling_t(save_p);
-      memcpy(ceiling, th, SizeOf(ceiling^));
-      incp(pointer(save_p), SizeOf(ceiling^));
+      memcpy(ceiling, th, SizeOf(ceiling_t));
+      save_p := @save_p[SizeOf(ceiling_t)];
       ceiling.sector := Psector_t(pOperation(ceiling.sector, @sectors[0],
-        '-', SizeOf(sectors[0])));
+        '-', SizeOf(sector_t)));
       continue;
     end;
 
     if @th._function.acp1 = @T_VerticalDoor then
     begin
       save_p[0] := Ord(tc_door);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       door := Pvldoor_t(save_p);
-      memcpy(door, th, SizeOf(door^));
-      incp(pointer(save_p), SizeOf(door^));
+      memcpy(door, th, SizeOf(vldoor_t));
+      save_p := @save_p[SizeOf(vldoor_t)];
       door.sector := Psector_t(pOperation(door.sector, @sectors[0],
-        '-', SizeOf(door.sector^)));
+        '-', SizeOf(sector_t)));
       continue;
     end;
 
     if @th._function.acp1 = @T_MoveFloor then
     begin
       save_p[0] := Ord(tc_floor);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       floor := Pfloormove_t(save_p);
-      memcpy(floor, th, SizeOf(floor^));
-      incp(pointer(save_p), SizeOf(floor^));
+      memcpy(floor, th, SizeOf(floormove_t));
+      save_p := @save_p[SizeOf(floormove_t)];
       floor.sector := Psector_t(pOperation(floor.sector, @sectors[0],
-        '-', SizeOf(floor.sector^)));
+        '-', SizeOf(sector_t)));
       continue;
     end;
 
     if @th._function.acp1 = @T_PlatRaise then
     begin
       save_p[0] := Ord(tc_plat);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       plat := Pplat_t(save_p);
-      memcpy(plat, th, SizeOf(plat^));
-      incp(pointer(save_p), SizeOf(plat^));
+      memcpy(plat, th, SizeOf(plat_t));
+      save_p := @save_p[SizeOf(plat_t)];
       plat.sector := Psector_t(pOperation(plat.sector, @sectors[0],
-        '-', SizeOf(plat.sector^)));
+        '-', SizeOf(sector_t)));
       continue;
     end;
 
     if @th._function.acp1 = @T_LightFlash then
     begin
       save_p[0] := Ord(tc_flash);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       flash := Plightflash_t(save_p);
-      memcpy(flash, th, SizeOf(flash^));
-      incp(pointer(save_p), SizeOf(flash^));
+      memcpy(flash, th, SizeOf(lightflash_t));
+      save_p := @save_p[SizeOf(lightflash_t)];
       flash.sector := Psector_t(pOperation(flash.sector, @sectors[0],
-        '-', SizeOf(flash.sector^)));
+        '-', SizeOf(sector_t)));
       continue;
     end;
 
     if @th._function.acp1 = @T_StrobeFlash then
     begin
       save_p[0] := Ord(tc_strobe);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       strobe := Pstrobe_t(save_p);
-      memcpy(strobe, th, SizeOf(strobe^));
-      incp(pointer(save_p), SizeOf(strobe^));
+      memcpy(strobe, th, SizeOf(strobe_t));
+      save_p := @save_p[SizeOf(strobe_t)];
       strobe.sector := Psector_t(POperation(strobe.sector, @sectors[0],
-        '-', SizeOf(strobe.sector^)));
+        '-', SizeOf(sector_t)));
       continue;
     end;
 
     if @th._function.acp1 = @T_Glow then
     begin
       save_p[0] := Ord(tc_glow);
-      incp(pointer(save_p));
-      PADSAVEP;
+      save_p := @save_p[1];
       glow := Pglow_t(save_p);
-      memcpy(glow, th, SizeOf(glow^));
-      incp(pointer(save_p), SizeOf(glow^));
+      memcpy(glow, th, SizeOf(glow_t));
+      save_p := @save_p[SizeOf(glow_t)];
       glow.sector := Psector_t(pOperation(glow.sector, @sectors[0],
-        '-', SizeOf(glow.sector^)));
+        '-', SizeOf(sector_t)));
       continue;
     end;
+
+    if @th._function.acp1 = @T_FireFlicker then
+    begin
+      save_p[0] := Ord(tc_fireflicker);
+      save_p := @save_p[1];
+      flicker := Pfireflicker_t(save_p);
+      memcpy(flicker, th, SizeOf(fireflicker_t));
+      save_p := @save_p[SizeOf(fireflicker_t)];
+      flicker.sector := Psector_t(pOperation(flicker.sector, @sectors[0],
+        '-', SizeOf(sector_t)));
+      continue;
+    end;
+
   end;
 
   // add a terminating marker
   save_p[0] := Ord(tc_endspecials);
-  incp(pointer(save_p));
+  save_p := @save_p[1];
 end;
 
-
 // P_UnArchiveSpecials
-
 procedure P_UnArchiveSpecials;
 var
   tclass: byte;
@@ -566,22 +538,22 @@ var
   flash: Plightflash_t;
   strobe: Pstrobe_t;
   glow: Pglow_t;
+  flicker: Pfireflicker_t;
 begin
   // read in saved thinkers
   while True do
   begin
     tclass := save_p[0];
-    incp(pointer(save_p));
+    save_p := @save_p[1];
     case tclass of
       Ord(tc_endspecials):
         exit; // end of list
 
       Ord(tc_ceiling):
       begin
-        PADSAVEP;
-        ceiling := Z_Malloc(SizeOf(ceiling^), PU_LEVEL, nil);
-        memcpy(ceiling, save_p, SizeOf(ceiling^));
-        incp(pointer(save_p), SizeOf(ceiling^));
+        ceiling := Z_Malloc(SizeOf(ceiling_t), PU_LEVEL, nil);
+        memcpy(ceiling, save_p, SizeOf(ceiling_t));
+        save_p := @save_p[SizeOf(ceiling_t)];
         ceiling.sector := @sectors[integer(ceiling.sector)];
         ceiling.sector.specialdata := ceiling;
 
@@ -594,10 +566,9 @@ begin
 
       Ord(tc_door):
       begin
-        PADSAVEP;
-        door := Z_Malloc(SizeOf(door^), PU_LEVEL, nil);
-        memcpy(door, save_p, SizeOf(door^));
-        incp(pointer(save_p), SizeOf(door^));
+        door := Z_Malloc(SizeOf(vldoor_t), PU_LEVEL, nil);
+        memcpy(door, save_p, SizeOf(vldoor_t));
+        save_p := @save_p[SizeOf(vldoor_t)];
         door.sector := @sectors[integer(door.sector)];
         door.sector.specialdata := door;
         @door.thinker._function.acp1 := @T_VerticalDoor;
@@ -606,10 +577,9 @@ begin
 
       Ord(tc_floor):
       begin
-        PADSAVEP;
-        floor := Z_Malloc(SizeOf(floor^), PU_LEVEL, nil);
-        memcpy(floor, save_p, SizeOf(floor^));
-        incp(pointer(save_p), SizeOf(floor^));
+        floor := Z_Malloc(SizeOf(floormove_t), PU_LEVEL, nil);
+        memcpy(floor, save_p, SizeOf(floormove_t));
+        save_p := @save_p[SizeOf(floormove_t)];
         floor.sector := @sectors[integer(floor.sector)];
         floor.sector.specialdata := floor;
         @floor.thinker._function.acp1 := @T_MoveFloor;
@@ -618,10 +588,9 @@ begin
 
       Ord(tc_plat):
       begin
-        PADSAVEP;
-        plat := Z_Malloc(SizeOf(plat^), PU_LEVEL, nil);
-        memcpy(plat, save_p, SizeOf(plat^));
-        incp(pointer(save_p), SizeOf(plat^));
+        plat := Z_Malloc(SizeOf(plat_t), PU_LEVEL, nil);
+        memcpy(plat, save_p, SizeOf(plat_t));
+        save_p := @save_p[SizeOf(plat_t)];
         plat.sector := @sectors[integer(plat.sector)];
         plat.sector.specialdata := plat;
 
@@ -634,10 +603,9 @@ begin
 
       Ord(tc_flash):
       begin
-        PADSAVEP;
-        flash := Z_Malloc(Sizeof(flash^), PU_LEVEL, nil);
-        memcpy(flash, save_p, SizeOf(flash^));
-        incp(pointer(save_p), SizeOf(flash^));
+        flash := Z_Malloc(Sizeof(lightflash_t), PU_LEVEL, nil);
+        memcpy(flash, save_p, SizeOf(lightflash_t));
+        save_p := @save_p[SizeOf(lightflash_t)];
         flash.sector := @sectors[integer(flash.sector)];
         @flash.thinker._function.acp1 := @T_LightFlash;
         P_AddThinker(@flash.thinker);
@@ -645,10 +613,9 @@ begin
 
       Ord(tc_strobe):
       begin
-        PADSAVEP;
-        strobe := Z_Malloc(SizeOf(strobe^), PU_LEVEL, nil);
-        memcpy(strobe, save_p, SizeOf(strobe^));
-        incp(pointer(save_p), SizeOf(strobe^));
+        strobe := Z_Malloc(SizeOf(strobe_t), PU_LEVEL, nil);
+        memcpy(strobe, save_p, SizeOf(strobe_t));
+        save_p := @save_p[SizeOf(strobe_t)];
         strobe.sector := @sectors[integer(strobe.sector)];
         @strobe.thinker._function.acp1 := @T_StrobeFlash;
         P_AddThinker(@strobe.thinker);
@@ -656,13 +623,22 @@ begin
 
       Ord(tc_glow):
       begin
-        PADSAVEP;
-        glow := Z_Malloc(SizeOf(glow^), PU_LEVEL, nil);
-        memcpy(glow, save_p, SizeOf(glow^));
-        incp(pointer(save_p), SizeOf(glow^));
+        glow := Z_Malloc(SizeOf(glow_t), PU_LEVEL, nil);
+        memcpy(glow, save_p, SizeOf(glow_t));
+        save_p := @save_p[SizeOf(glow_t)];
         glow.sector := @sectors[integer(glow.sector)];
         @glow.thinker._function.acp1 := @T_Glow;
         P_AddThinker(@glow.thinker);
+      end;
+
+      Ord(tc_fireflicker):
+      begin
+        flicker := Z_Malloc(SizeOf(fireflicker_t), PU_LEVEL, nil);
+        memcpy(flicker, save_p, SizeOf(fireflicker_t));
+        save_p := @save_p[SizeOf(fireflicker_t)];
+        @flicker.thinker._function.acp1 := @T_FireFlicker;
+        flicker.sector := @sectors[integer(flicker.sector)];
+        P_AddThinker(@flicker.thinker);
       end;
 
       else
