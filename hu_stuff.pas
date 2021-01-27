@@ -153,7 +153,6 @@ const
 
 function HU_TITLEY: integer;
 begin
-//  result := SCREENHEIGHT - ST_HEIGHT - 1 - hu_font[0].height;
   result := (200 - ST_HEIGHT) * SCREENHEIGHT div 200 - 1 - hu_font[0].height;
 end;
 
@@ -340,23 +339,10 @@ begin
     @hu_font,
     Ord(HU_FONTSTART));
 
-  case gamemode of
-    shareware,
-    registered,
-    retail:  s := HU_TITLE;
-
-{ FIXME
-      case pack_plut:
-  s = HU_TITLEP;
-  break;
-      case pack_tnt:
-  s = HU_TITLET;
-  break;
-}
-
+  if gamemode in [shareware, registered, retail] then
+    s := HU_TITLE
   else
     s := HU_TITLE2;
-  end;
 
   for i := 1 to Length(s) do
     HUlib_addCharToTextLine(@w_title, s[i]);
