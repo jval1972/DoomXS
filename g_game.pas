@@ -501,6 +501,7 @@ end;
 procedure G_DoLoadLevel;
 var
   i: integer;
+  ep: integer;
 begin
   // Set the sky map.
   // First thing, we have a dummy sky texture name,
@@ -516,14 +517,16 @@ begin
      (gamemission = pack_plut) then
   begin
     if gamemap < 12 then
-      skytexture := R_TextureNumForName('SKY1')
+      ep := 1
     else if gamemap < 21 then
-      skytexture := R_TextureNumForName('SKY2')
+      ep := 2
     else
-      skytexture := R_TextureNumForName('SKY3');
+      ep := 3;
   end
   else
-    skytexture := R_TextureNumForName('SKY' + Chr(Ord('0') + gameepisode));
+    ep := gameepisode;
+
+  skytexture := R_TextureNumForName('SKY' + Chr(Ord('0') + ep));
 
   levelstarttic := gametic;        // for time calculation
   if wipegamestate = Ord(GS_LEVEL) then
@@ -874,7 +877,7 @@ begin
   secretcount := players[player].secretcount;
 
   p := @players[player];
-  memset(p, 0, SizeOf(p^));
+  memset(p, 0, SizeOf(player_t));
 
   memcpy(@players[player].frags, @frags, SizeOf(players[player].frags));
   players[player].killcount := killcount;
@@ -1310,15 +1313,16 @@ var
   description: string;
   len: integer;
   i: integer;
+  fmt: string;
 begin
+  fmt := SAVEGAMENAME + '%d.dsg';
   if M_CheckParmCDROM then
-    sprintf(name, 'c:\doomdata\' + SAVEGAMENAME + '%d.dsg', [savegameslot])
-  else
-    sprintf(name, SAVEGAMENAME + '%d.dsg', [savegameslot]);
+    fmt := 'c:\doomdata\' + fmt;
+  sprintf(name, fmt, [savegameslot]);
   description := savedescription;
 
   save_p := PByteArray(integer(screens[1]) + $4000);
-  savebuffer := PByteArray(integer(screens[1]) + $4000);
+  savebuffer := save_p;
 
   memcpy(save_p, @description[1], SAVESTRINGSIZE);
 
@@ -1422,7 +1426,6 @@ begin
 
   if skill > sk_nightmare then
     skill := sk_nightmare;
-
 
   // This was quite messy with SPECIAL and commented parts.
   // Supposedly hacks to make the latest edition work.
