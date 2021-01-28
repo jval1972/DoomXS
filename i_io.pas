@@ -39,8 +39,6 @@ procedure I_InitializeIO;
 
 procedure I_ShutdownIO;
 
-procedure I_IOMessageBox(const s: string);
-
 procedure I_IOErrorMessageBox(const s: string);
 
 procedure I_IOprintf(const s: string);
@@ -52,11 +50,6 @@ uses
   g_game,
   i_main,
   m_argv;
-
-procedure I_IOMessageBox(const s: string);
-begin
-  MessageBox(hMainWnd, PChar(s), AppTitle, MB_OK);
-end;
 
 procedure I_IOErrorMessageBox(const s: string);
 begin
