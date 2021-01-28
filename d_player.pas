@@ -76,15 +76,15 @@ type
   { }
   player_t = record
     mo : Pmobj_t;
-    playerstate : playerstate_t;
-    cmd : ticcmd_t;
+    playerstate: playerstate_t;
+    cmd: ticcmd_t;
 
     // Determine POV,
     //  including viewpoint bobbing during movement.
     // Focal origin above r.z
-    viewz : fixed_t;
+    viewz: fixed_t;
     // Base height above floor for viewz.
-    viewheight : fixed_t;
+    viewheight: fixed_t;
     // Bob/squat speed.
     deltaviewheight: fixed_t;
     // bounded/scaled total momentum.
@@ -92,10 +92,10 @@ type
 
     // This is only used between levels,
     // mo->health is used during levels.
-    health : integer;
-    armorpoints : integer;
+    health: integer;
+    armorpoints: integer;
     // Armor type is 0-2.
-    armortype : integer;
+    armortype: integer;
 
     // Power ups. invinc and invis are tic counters.
     powers: array[0..Ord(NUMPOWERS) - 1] of integer;
@@ -107,59 +107,55 @@ type
     readyweapon: weapontype_t;
 
     // Is wp_nochange if not changing.
-    pendingweapon : weapontype_t;
+    pendingweapon: weapontype_t;
 
     weaponowned: array[0..Ord(NUMWEAPONS) - 1] of LongBool;
     ammo: array[0..Ord(NUMAMMO) - 1] of integer;
     maxammo: array[0..Ord(NUMAMMO) - 1] of integer;
 
     // True if button down last tic.
-    attackdown : boolean;
-    usedown : boolean;
+    attackdown: boolean;
+    usedown: boolean;
 
     // Bit flags, for cheats and debug.
     // See cheat_t, above.
-    cheats : integer;
+    cheats: integer;
 
     // Refired shots are less accurate.
-    refire : integer;
+    refire: integer;
 
     // For intermission stats.
-    killcount : integer;
-    itemcount : integer;
-    secretcount : integer;
+    killcount: integer;
+    itemcount: integer;
+    secretcount: integer;
 
     // Hint messages.
-    _message : string[255];
+    _message: string[255];
 
     // For screen flashing (red or bright).
-    damagecount : integer;
-    bonuscount : integer;
+    damagecount: integer;
+    bonuscount: integer;
 
     // Who did damage (NULL for floors/ceilings).
-    attacker : Pmobj_t;
+    attacker: Pmobj_t;
 
     // So gun flashes light up areas.
-    extralight : integer;
+    extralight: integer;
 
     // Current PLAYPAL, ???
     //  can be set to REDCOLORMAP for pain, etc.
-    fixedcolormap : integer;
+    fixedcolormap: integer;
 
     // Player skin colorshift,
     //  0-3 for which color to draw player.
-    colormap : integer;
+    colormap: integer;
 
     // Overlay view sprites (gun, etc).
-    psprites : array[0..Ord(NUMPSPRITES) - 1] of pspdef_t;
+    psprites: array[0..Ord(NUMPSPRITES) - 1] of pspdef_t;
 
     // True if secret level has been done.
-    didsecret : boolean;
+    didsecret: boolean;
   end;
-
-  player_s = player_t;
-
-  Pplayer_s = ^player_s;
   Pplayer_t = ^player_t;
 
   { }
@@ -212,6 +208,4 @@ var
 
 implementation
 
-
 end.
-
