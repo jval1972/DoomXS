@@ -199,11 +199,7 @@ begin
   else if x >= 320 then
     result := SCREENWIDTH
   else
-  begin
     result := preserveX[x];
-    if result - preserveX[x - 1] > 1 then
-      result := preserveX[x - 1] + 1;
-  end;
 end;
 
 // preserve y coordinates
@@ -214,11 +210,7 @@ begin
   else if y >= 200 then
     result := SCREENHEIGHT
   else
-  begin
     result := preserveY[y];
-    if result - preserveY[y - 1] > 1 then
-      result := preserveY[y - 1] + 1;
-  end;
 end;
 
 // preserve width coordinates
