@@ -92,13 +92,7 @@ function itoa(i: integer): string;
 
 function atoi(const s: string): integer;
 
-function atof(const s: string): single;
-
-function memcpy(dst: pointer; const src: pointer; len: integer): pointer; overload;
-
-function memcpy(dst: pointer; const src: string; len: integer): pointer; overload;
-
-function memmove(dst: pointer; const src: pointer; len: integer): pointer;
+function memcpy(dst: pointer; const src: pointer; len: integer): pointer;
 
 function memset(buf: pointer; c: integer; len: integer): pointer;
 
@@ -253,53 +247,7 @@ begin
   Result := StrToIntDef(s, 0);
 end;
 
-function StrToFloatDef(const s: string; def: single): single;
-var
-  code: integer;
-begin
-  val(s, Result, code);
-  if code <> 0 then
-    Result := def;
-end;
-
-function atof(const s: string): single;
-var
-  s2: string;
-  i: integer;
-begin
-  s2 := s;
-  for i := 1 to length(s2) do
-  begin
-    if s2[i] in ['.', ','] then
-      s2[i] := SysUtils.DecimalSeparator;
-  end;
-  Result := StrToFloatDef(s2, 0.0);
-end;
-
 function memcpy(dst: pointer; const src: pointer; len: integer): pointer;
-begin
-  move(src^, dst^, len);
-  Result := dst;
-end;
-
-function memcpy(dst: pointer; const src: string; len: integer): pointer;
-var
-  i: integer;
-begin
-  if len >= Length(src) then
-  begin
-    for i := 1 to Length(src) do
-      PByteArray(dst)[i] := Ord(src[i]);
-    for i := Length(src) + 1 to len do
-      PByteArray(dst)[i] := 0;
-  end
-  else
-    for i := 1 to len do
-      PByteArray(dst)[i] := Ord(src[i]);
-  Result := dst;
-end;
-
-function memmove(dst: pointer; const src: pointer; len: integer): pointer;
 begin
   move(src^, dst^, len);
   Result := dst;
