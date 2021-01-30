@@ -439,7 +439,7 @@ begin
     exit;
   end
   else
-    actor.flags := actor.flags and (not MF_INFLOAT);
+    actor.flags := actor.flags and not MF_INFLOAT;
 
   if actor.flags and MF_FLOAT = 0 then
     actor.z := actor.floorz;
