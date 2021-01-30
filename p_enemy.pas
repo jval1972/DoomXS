@@ -694,7 +694,7 @@ begin
   actor.threshold := 0; // any shot will wake up
   targ := Psubsector_t(actor.subsector).sector.soundtarget;
   seeyou := False;
-  if (targ <> nil) and ((targ.flags and MF_SHOOTABLE) <> 0) then
+  if (targ <> nil) and (targ.flags and MF_SHOOTABLE <> 0) then
   begin
     actor.target := targ;
 
