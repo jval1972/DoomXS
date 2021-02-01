@@ -75,10 +75,8 @@ begin
   thinkercap.next := @thinkercap;
 end;
 
-
 // P_AddThinker
 // Adds a new thinker at the end of the list.
-
 procedure P_AddThinker(thinker: Pthinker_t);
 begin
   thinkercap.prev.next := thinker;
@@ -87,28 +85,22 @@ begin
   thinkercap.prev := thinker;
 end;
 
-
 // P_RemoveThinker
 // Deallocation is lazy -- it will not actually be freed
 // until its thinking turn comes up.
-
 procedure P_RemoveThinker(thinker: Pthinker_t);
 begin
   // FIXME: NOP.
   thinker._function.acv := nil;
 end;
 
-
 // P_AllocateThinker
 // Allocates memory and adds a new thinker at the end of the list.
-
 procedure P_AllocateThinker(thinker: Pthinker_t);
 begin
 end;
 
-
 // P_RunThinkers
-
 procedure P_RunThinkers;
 var
   currentthinker: Pthinker_t;
@@ -135,9 +127,7 @@ begin
   end;
 end;
 
-
 // P_Ticker
-
 procedure P_Ticker;
 var
   i: integer;
@@ -147,10 +137,9 @@ begin
     exit;
 
   // pause if in menu and at least one tic has been run
-  if (not netgame) and menuactive and (not demoplayback) and
+  if not netgame and menuactive and not demoplayback and
     (players[consoleplayer].viewz <> 1) then
     exit;
-
 
   for i := 0 to MAXPLAYERS - 1 do
     if playeringame[i] then

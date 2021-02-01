@@ -250,7 +250,7 @@ begin
   if mo.z > mo.floorz then
     exit; // no friction when airborne
 
-  if (mo.flags and MF_CORPSE) <> 0 then
+  if mo.flags and MF_CORPSE <> 0 then
   begin
     // do not stop sliding
     //  if halfway off a step with some momentum
@@ -379,9 +379,7 @@ begin
   end;
 end;
 
-
 // P_NightmareRespawn
-
 procedure P_NightmareRespawn(mobj: Pmobj_t);
 var
   x: fixed_t;

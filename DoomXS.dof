@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=-devparm
+RunParams=-playdemo demo4
 HostApplication=
 Launcher=
 UseLauncher=0
