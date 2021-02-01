@@ -689,7 +689,7 @@ var
   item: mobjtype_t;
   mo: Pmobj_t;
 begin
-  target.flags := target.flags and (not (MF_SHOOTABLE or MF_FLOAT or MF_SKULLFLY));
+  target.flags := target.flags and not (MF_SHOOTABLE or MF_FLOAT or MF_SKULLFLY);
 
   if target._type <> MT_SKULL then
     target.flags := target.flags and not MF_NOGRAVITY;

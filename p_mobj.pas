@@ -139,7 +139,7 @@ begin
   if mo.tics < 1 then
     mo.tics := 1;
 
-  mo.flags := mo.flags and (not MF_MISSILE);
+  mo.flags := mo.flags and not MF_MISSILE;
 
   if mo.info.deathsound <> 0 then
     S_StartSound(mo, mo.info.deathsound);
@@ -165,7 +165,7 @@ begin
     if (mo.flags and MF_SKULLFLY) <> 0 then
     begin
       // the skull slammed into something
-      mo.flags := mo.flags and (not MF_SKULLFLY);
+      mo.flags := mo.flags and not MF_SKULLFLY;
       mo.momx := 0;
       mo.momy := 0;
       mo.momz := 0;

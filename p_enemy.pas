@@ -207,7 +207,7 @@ const
 procedure A_Fall(actor: Pmobj_t);
 begin
   // actor is on ground, it can be walked over
-  actor.flags := actor.flags and (not MF_SOLID);
+  actor.flags := actor.flags and not MF_SOLID;
 
   // So change this if corpse objects
   // are meant to be obstacles.
@@ -316,7 +316,7 @@ begin
   begin
     // the target just hit the enemy,
     // so fight back!
-    actor.flags := actor.flags and (not MF_JUSTHIT);
+    actor.flags := actor.flags and not MF_JUSTHIT;
     Result := True;
     exit;
   end;
@@ -804,7 +804,7 @@ begin
   // check for missile attack
   if actor.info.missilestate <> 0 then
   begin
-    if (gameskill < sk_nightmare) and (not fastparm) and (actor.movecount <> 0) then
+    if (gameskill < sk_nightmare) and not fastparm and (actor.movecount <> 0) then
       nomissile := True
     else if not P_CheckMissileRange(actor) then
       nomissile := True;
@@ -817,16 +817,13 @@ begin
   end;
 
   // possibly choose another target
-  if netgame and (actor.threshold = 0) and
-    (not P_CheckSight(actor, actor.target)) then
-  begin
+  if netgame and (actor.threshold = 0) and not P_CheckSight(actor, actor.target) then
     if P_LookForPlayers(actor, True) then
       exit;  // got a new target
-  end;
 
   // chase towards player
   actor.movecount := actor.movecount - 1;
-  if (actor.movecount < 0) or (not P_Move(actor)) then
+  if (actor.movecount < 0) or not P_Move(actor) then
     P_NewChaseDir(actor);
 
   // make active sound

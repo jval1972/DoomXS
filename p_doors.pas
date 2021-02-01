@@ -202,8 +202,7 @@ begin
     99,  // Blue Lock
     133:
     begin
-      if (not p.cards[Ord(it_bluecard)]) and
-        (not p.cards[Ord(it_blueskull)]) then
+      if not p.cards[Ord(it_bluecard)] and not p.cards[Ord(it_blueskull)] then
       begin
         p._message := PD_BLUEO;
         S_StartSound(nil, Ord(sfx_oof));
@@ -215,8 +214,7 @@ begin
     134, // Red Lock
     135:
     begin
-      if (not p.cards[Ord(it_redcard)]) and
-        (not p.cards[Ord(it_redskull)]) then
+      if not p.cards[Ord(it_redcard)] and not p.cards[Ord(it_redskull)] then
       begin
         p._message := PD_REDO;
         S_StartSound(nil, Ord(sfx_oof));
@@ -228,8 +226,7 @@ begin
     136,  // Yellow Lock
     137:
     begin
-      if (not p.cards[Ord(it_yellowcard)]) and
-        (not p.cards[Ord(it_yellowskull)]) then
+      if not p.cards[Ord(it_yellowcard)] and not p.cards[Ord(it_yellowskull)] then
       begin
         p._message := PD_YELLOWO;
         S_StartSound(nil, Ord(sfx_oof));
@@ -345,8 +342,7 @@ begin
       if player = nil then
         exit;
 
-      if (not player.cards[Ord(it_bluecard)]) and
-        (not player.cards[Ord(it_blueskull)]) then
+      if not player.cards[Ord(it_bluecard)] and not player.cards[Ord(it_blueskull)] then
       begin
         player._message := PD_BLUEK;
         S_StartSound(nil, Ord(sfx_oof));
@@ -359,8 +355,7 @@ begin
       if player = nil then
         exit;
 
-      if (not player.cards[Ord(it_yellowcard)]) and
-        (not player.cards[Ord(it_yellowskull)]) then
+      if not player.cards[Ord(it_yellowcard)] and not player.cards[Ord(it_yellowskull)] then
       begin
         player._message := PD_YELLOWK;
         S_StartSound(nil, Ord(sfx_oof));
@@ -373,8 +368,7 @@ begin
       if player = nil then
         exit;
 
-      if (not player.cards[Ord(it_redcard)]) and
-        (not player.cards[Ord(it_redskull)]) then
+      if not player.cards[Ord(it_redcard)] and not player.cards[Ord(it_redskull)] then
       begin
         player._message := PD_REDK;
         S_StartSound(nil, Ord(sfx_oof));

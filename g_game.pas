@@ -583,7 +583,7 @@ begin
   end;
 
   // any other key pops up menu if in demos
-  if (gameaction = ga_nothing) and (not singledemo) and
+  if (gameaction = ga_nothing) and not singledemo and
      (demoplayback or (gamestate = GS_DEMOSCREEN)) then
   begin
     if (ev._type = ev_keydown) or
@@ -592,9 +592,9 @@ begin
     begin
       M_StartControlPanel;
       result := true;
-      exit;
-    end;
-    result := false;
+    end
+    else
+      result := false;
     exit;
   end;
 

@@ -168,7 +168,7 @@ var
 begin
   if realsize <= fnumitems then
   begin
-    realsize := (realsize * 4 div 3 + 64) and (not 7);
+    realsize := (realsize * 4 div 3 + 64) and not 7;
     ReAllocMem(fitems, realsize * SizeOf(Pmemmanageritem_t));
     for i := fnumitems + 1 to realsize - 1 do
       fitems[i] := nil;
