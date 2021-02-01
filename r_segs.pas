@@ -39,9 +39,9 @@ procedure R_RenderMaskedSegRange(ds: Pdrawseg_t; x1, x2: integer);
 procedure R_StoreWallRange(start: integer; stop: integer);
 
 var
-  maskedtexturecol: PSmallIntArray; // VJ : declared in r_defs
+  maskedtexturecol: PSmallIntArray;
 // angle to line origin
-  rw_angle1: angle_t; // VJ was integer
+  rw_angle1: angle_t;
 
 var
 // True if any of the segs textures might be visible.
@@ -55,7 +55,6 @@ var
   toptexture: integer;
   bottomtexture: integer;
   midtexture: integer;
-
 
 //
 // regular wall
@@ -88,9 +87,7 @@ var
   bottomfrac: fixed_t;
   bottomstep: fixed_t;
 
-
   walllights: Plighttable_tPArray;
-
 
 implementation
 
@@ -138,11 +135,11 @@ begin
     inc(lightnum);
 
   if lightnum < 0 then
-    walllights := @scalelight[0, 0] // VJ ??? maybe @scalelight[0] ????
+    walllights := @scalelight[0, 0]
   else if lightnum >= LIGHTLEVELS then
-    walllights := @scalelight[LIGHTLEVELS - 1, 0] // VJ ???
+    walllights := @scalelight[LIGHTLEVELS - 1, 0]
   else
-    walllights := @scalelight[lightnum]; // VJ ???
+    walllights := @scalelight[lightnum];
 
   maskedtexturecol := ds.maskedtexturecol;
 
@@ -205,10 +202,8 @@ end;
 
 //
 // R_RenderSegLoop
-// Draws zero, one, or two textures (and possibly a masked
-//  texture) for walls.
-// Can draw or mark the starting pixel of floor and ceiling
-//  textures.
+// Draws zero, one, or two textures (and possibly a masked texture) for walls.
+// Can draw or mark the starting pixel of floor and ceiling textures.
 // CALLED: CORE LOOPING ROUTINE.
 //
 const
@@ -411,7 +406,6 @@ begin
   sineval := finesine[distangle shr ANGLETOFINESHIFT];
   rw_distance := FixedMul(hyp, sineval);
 
-
   rw_x := start;
   drawsegs[ds_p].x1 := rw_x;
   drawsegs[ds_p].x2 := stop;
@@ -486,7 +480,6 @@ begin
     begin
       drawsegs[ds_p].silhouette := SIL_BOTTOM;
       drawsegs[ds_p].bsilheight := MAXINT;
-      // ds_p->sprbottomclip = negonearray;
     end;
 
     if frontsector.ceilingheight < backsector.ceilingheight then
@@ -498,7 +491,6 @@ begin
     begin
       drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
       drawsegs[ds_p].tsilheight := MININT;
-      // ds_p->sprtopclip = screenheightarray;
     end;
 
     if backsector.ceilingheight <= frontsector.floorheight then
@@ -525,40 +517,23 @@ begin
       worldtop := worldhigh;
     end;
 
-
-    if (worldlow <> worldbottom) or
-       (backsector.floorpic <> frontsector.floorpic) or
-       (backsector.lightlevel <> frontsector.lightlevel) then
-    begin
-      markfloor := true;
-    end
-    else
-    begin
-      // same plane on both sides
-      markfloor := false;
-    end;
-
-
-    if (worldhigh <> worldtop) or
-       (backsector.ceilingpic <> frontsector.ceilingpic) or
-       (backsector.lightlevel <> frontsector.lightlevel) then
-    begin
-      markceiling := true;
-    end
-    else
-    begin
-      // same plane on both sides
-      markceiling := false;
-    end;
-
     if (backsector.ceilingheight <= frontsector.floorheight) or
        (backsector.floorheight >= frontsector.ceilingheight) then
     begin
       // closed door
       markceiling := true;
       markfloor := true;
-    end;
+    end
+    else
+    begin
+      markfloor := (worldlow <> worldbottom) or
+                   (backsector.floorpic <> frontsector.floorpic) or
+                   (backsector.lightlevel <> frontsector.lightlevel);
 
+      markceiling := (worldhigh <> worldtop) or
+                     (backsector.ceilingpic <> frontsector.ceilingpic) or
+                     (backsector.lightlevel <> frontsector.lightlevel);
+    end;
 
     if worldhigh < worldtop then
     begin
@@ -642,7 +617,7 @@ begin
         inc(lightnum);
 
       if lightnum < 0 then
-        walllights := @scalelight[0, 0] // VJ ???
+        walllights := @scalelight[0, 0]
       else if lightnum >= LIGHTLEVELS then
         walllights := @scalelight[LIGHTLEVELS - 1, 0]
       else
@@ -667,7 +642,6 @@ begin
     // below view plane
     markceiling := false;
   end;
-
 
   // calculate incremental stepping values for texture edges
   worldtop := _SHR(worldtop, 4);
@@ -705,7 +679,6 @@ begin
     floorplane := R_CheckPlane(floorplane, rw_x, rw_stopx - 1);
 
   R_RenderSegLoop;
-
 
   // save sprite clipping info
   if ((drawsegs[ds_p].silhouette and SIL_TOP <> 0) or maskedtexture) and
