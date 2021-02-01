@@ -346,27 +346,21 @@ begin
   if player.bonuscount > 0 then
     player.bonuscount := player.bonuscount - 1;
 
-
+  player.fixedcolormap := 0;
   // Handling colormaps.
   if player.powers[Ord(pw_invulnerability)] > 0 then
   begin
     if (player.powers[Ord(pw_invulnerability)] > 4 * 32) or
       (player.powers[Ord(pw_invulnerability)] and 8 <> 0) then
-      player.fixedcolormap := INVERSECOLORMAP
-    else
-      player.fixedcolormap := 0;
+      player.fixedcolormap := INVERSECOLORMAP;
   end
   else if player.powers[Ord(pw_infrared)] > 0 then
   begin
     if (player.powers[Ord(pw_infrared)] > 4 * 32) or
       (player.powers[Ord(pw_infrared)] and 8 <> 0) then
       // almost full bright
-      player.fixedcolormap := 1
-    else
-      player.fixedcolormap := 0;
-  end
-  else
-    player.fixedcolormap := 0;
+      player.fixedcolormap := 1;
+  end;
 end;
 
 end.
