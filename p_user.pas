@@ -360,7 +360,6 @@ begin
   begin
     if (player.powers[Ord(pw_infrared)] > 4 * 32) or
       (player.powers[Ord(pw_infrared)] and 8 <> 0) then
-
       // almost full bright
       player.fixedcolormap := 1
     else
