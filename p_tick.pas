@@ -94,12 +94,6 @@ begin
   thinker._function.acv := nil;
 end;
 
-// P_AllocateThinker
-// Allocates memory and adds a new thinker at the end of the list.
-procedure P_AllocateThinker(thinker: Pthinker_t);
-begin
-end;
-
 // P_RunThinkers
 procedure P_RunThinkers;
 var
