@@ -872,8 +872,8 @@ end;
 var
   shootthing: Pmobj_t;
 
-  // height if not aiming up or down
-  // ???: use slope for monsters?
+// Height if not aiming up or down
+// ???: use slope for monsters?
   shootz: fixed_t;
 
   la_damage: integer;
@@ -1292,7 +1292,7 @@ begin
 end;
 
 // P_RadiusAttack
-// source is the creature that caused the explosion at spot.
+// Source is the creature that caused the explosion at spot.
 procedure P_RadiusAttack(spot: Pmobj_t; source: Pmobj_t; damage: integer);
 var
   x: integer;
