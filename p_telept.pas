@@ -43,6 +43,7 @@ implementation
 uses
   d_delphi,
   doomdef,
+  doomstat,
   d_think,
   d_player,
   info_h,
@@ -125,7 +126,8 @@ begin
           exit;
         end;
 
-        thing.z := thing.floorz;  //fixme: not needed?
+        if not (gamemission in [pack_tnt, pack_plut]) then
+          thing.z := thing.floorz;  //fixme: not needed?
         if thing.player <> nil then
           Pplayer_t(thing.player).viewz := thing.z + Pplayer_t(thing.player).viewheight;
 
