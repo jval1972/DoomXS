@@ -92,7 +92,6 @@ uses
 
 // P_SetMobjState
 // Returns true if the mobj is still present.
-
 function P_SetMobjState(mobj: Pmobj_t; state: statenum_t): boolean;
 var
   st: Pstate_t;
@@ -100,7 +99,7 @@ begin
   repeat
     if state = S_NULL then
     begin
-      mobj.state := nil; // VJ was mobj.state := @S_NULL;
+      mobj.state := @states[Ord(S_NULL)];
       P_RemoveMobj(mobj);
       Result := False;
       exit;
@@ -118,14 +117,12 @@ begin
       st.action.acp1(mobj);
 
     state := st.nextstate;
-  until (mobj.tics <> 0);
+  until mobj.tics <> 0;
 
   Result := True;
 end;
 
-
 // P_ExplodeMissile
-
 procedure P_ExplodeMissile(mo: Pmobj_t);
 begin
   mo.momx := 0;
@@ -162,7 +159,7 @@ var
 begin
   if (mo.momx = 0) and (mo.momy = 0) then
   begin
-    if (mo.flags and MF_SKULLFLY) <> 0 then
+    if mo.flags and MF_SKULLFLY <> 0 then
     begin
       // the skull slammed into something
       mo.flags := mo.flags and not MF_SKULLFLY;
@@ -283,9 +280,7 @@ begin
   end;
 end;
 
-
 // P_ZMovement
-
 procedure P_ZMovement(mo: Pmobj_t);
 var
   dist: fixed_t;
@@ -311,7 +306,7 @@ begin
     begin
       dist := P_AproxDistance(mo.x - mo.target.x, mo.y - mo.target.y);
 
-      delta := (mo.target.z + (_SHR(mo.height, 1))) - mo.z; // VJ is it right ???
+      delta := (mo.target.z + _SHR(mo.height, 1)) - mo.z;
 
       if (delta < 0) and (dist < -(delta * 3)) then
         mo.z := mo.z - FLOATSPEED
