@@ -283,13 +283,13 @@ var
   pl: Pmobj_t;
   dist: fixed_t;
 begin
-  if actor.target = nil then
+  pl := actor.target;
+  if pl = nil then
   begin
-    Result := False;
+    result := false;
     exit;
   end;
 
-  pl := actor.target;
   dist := P_AproxDistance(pl.x - actor.x, pl.y - actor.y);
 
   if dist >= MELEERANGE - 20 * FRACUNIT + pl.info.radius then
@@ -681,7 +681,6 @@ begin
 end;
 
 // ACTION ROUTINES
-
 
 // A_Look
 // Stay in state until a player is sighted.
