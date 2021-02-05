@@ -926,6 +926,15 @@ begin
     if W_CheckNumForName('e4m1') >= 0 then
       gamemode := retail;
 
+  if gamemode in [shareware, registered, retail] then
+    gamemission := doom
+  else if W_CheckNumForName('REDOPEN') >= 0 then
+    gamemission := pack_tnt
+  else if W_CheckNumForName('CAMO1') >= 0 then
+    gamemission := pack_plut
+  else if W_CheckNumForName('MAP01') >= 0 then
+    gamemission := doom2;
+
   // Check for -file in shareware
   if modifiedgame then
   begin
