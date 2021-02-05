@@ -37,9 +37,7 @@ procedure I_InitSound;
 // ... shut down and relase at program termination.
 procedure I_ShutdownSound;
 
-
 //  SFX I/O
-
 
 // Initialize channels?
 procedure I_SetChannels;
@@ -65,7 +63,6 @@ function I_SoundIsPlaying(handle: integer): boolean;
 //  and pitch of a sound channel.
 procedure I_UpdateSoundParams(handle: integer; vol: integer; sep: integer;
   pitch: integer);
-
 
 implementation
 
@@ -105,8 +102,17 @@ var
 
   // The actual lengths of all sound effects.
   SoundLengths: array[0..Ord(NUMSFX) - 1] of integer;
-  HighSound: boolean = False;
+  SoundFreq: array[0..Ord(NUMSFX) - 1] of word;
+  SoundSamples: array[0..Ord(NUMSFX) - 1] of byte;
 
+type
+  soundheader_t = record
+    filler1: word;
+    freq: word;
+  end;
+  Psoundheader_t = ^soundheader_t;
+
+var
 // The sound in channel handles,
 //  determined on registration,
 //  might be used to unregister/stop/modify,
@@ -129,24 +135,24 @@ function I_GetSfxLumpNum(sfxinfo: Psfxinfo_t): integer;
 var
   namebuf: string;
 begin
-  sprintf(namebuf, 'ds%s', [sfxinfo.Name]);
+  sprintf(namebuf, 'ds%s', [sfxinfo.name]);
   Result := W_GetNumForName(namebuf);
 end;
 
 // This function loads the sound data from the WAD lump,
 //  for single sound.
-
 procedure CacheSFX(sfxid: integer);
 var
   name: string;
   sfx: Psfxinfo_t;
+  lump: integer;
 begin
   sfx := @S_sfx[sfxid];
   if sfx.data <> nil then
     exit;
   // Get the sound data from the WAD, allocate lump
   //  in zone memory.
-  sprintf(Name, 'ds%s', [sfx.Name]);
+  sprintf(name, 'ds%s', [sfx.name]);
 
   // Now, there is a severe problem with the
   //  sound handling, in it is not (yet/anymore)
@@ -158,14 +164,26 @@ begin
   // I do not do runtime patches to that
   //  variable. Instead, we will use a
   //  default sound for replacement.
-  if W_CheckNumForName(Name) = -1 then
+  lump := W_CheckNumForName(name);
+  if lump = -1 then
     sfx.lumpnum := W_GetNumForName('dspistol')
   else
-    sfx.lumpnum := W_GetNumForName(Name);
+    sfx.lumpnum := lump;
 
   SoundLengths[sfxid] := W_LumpLength(sfx.lumpnum);
 
-  sfx.Data := W_CacheLumpNum(sfx.lumpnum, PU_STATIC);
+  sfx.data := W_CacheLumpNum(sfx.lumpnum, PU_STATIC);
+
+  SoundFreq[sfxid] := Psoundheader_t(sfx.data).freq;
+  SoundSamples[sfxid] := 8;
+
+end;
+
+procedure SetSfxFormat(const sfxid: integer);
+begin
+  SampleFormat.nSamplesPerSec := SoundFreq[sfxid];
+  SampleFormat.nAvgBytesPerSec := SoundFreq[sfxid];
+  SampleFormat.wBitsPerSample := SoundSamples[sfxid];
 end;
 
 //
@@ -243,7 +261,41 @@ const
 
   vulumetransshift = 8;
 
-function I_RestartChannel(channel: integer; volume: integer): integer;
+function I_SepToDSPan(const sep: integer): integer;
+begin
+  result := DSBPAN_CENTER +
+    (DSBPAN_RIGHT - DSBPAN_LEFT) * (sep * sep - 128 * 128) div
+      (4 * 128 * 128);
+end;
+
+function I_VolToDSVol(const vol: integer): integer;
+begin
+  result := DSBVOLUME_MIN +
+    _SHR((DSBVOLUME_MAX - DSBVOLUME_MIN) * (vulumetrans[vol] + 1), vulumetransshift);
+end;
+
+procedure I_UpdateSoundParams(handle: integer; vol: integer; sep: integer;
+  pitch: integer);
+var
+  channel: integer;
+  dsb: LPDIRECTSOUNDBUFFER;
+begin
+  if pDS = nil then
+    exit;
+
+  for channel := 0 to NUM_CHANNELS - 1 do
+  begin
+    if I_ChannelPlaying(channel) and (channelhandles[channel]=handle) then
+    begin
+      dsb := ChannelBuffers[channel];
+      dsb.SetPan(I_SepToDSPan(sep));
+      dsb.SetVolume(I_VolToDSVol(vol));
+      exit;
+    end;
+  end;
+end;
+
+function I_RestartChannel(channel: integer; vol: integer; sep: integer): integer;
 var
   dsb: LPDIRECTSOUNDBUFFER;
 begin
@@ -261,13 +313,13 @@ begin
 
   dsb.Stop;
   dsb.SetCurrentPosition(0);
-  dsb.SetVolume(DSBVOLUME_MIN + _SHR((DSBVOLUME_MAX - DSBVOLUME_MIN) * (vulumetrans[volume] + 1), vulumetransshift));
+  dsb.SetPan(I_SepToDSPan(sep));
+  dsb.SetVolume(I_VolToDSVol(vol));
   dsb.Play(0, 0, 0);
   channelhandles[channel] := HandleCount;
   Result := HandleCount;
   Inc(HandleCount);
 end;
-
 
 // Starting a sound means adding it
 //  to the current list of active sounds
@@ -279,7 +331,6 @@ end;
 //  priority, it is ignored.
 // Pitching (that is, increased speed of playback)
 //  is set, but currently not used by mixing.
-
 function I_StartSound(id: integer; vol: integer; sep: integer;
   pitch: integer; priority: integer): integer;
 var
@@ -317,7 +368,7 @@ begin
     begin
       if (channelids[channel] = id) and not I_ChannelPlaying(channel) then
       begin
-        Result := I_RestartChannel(channel, vol);
+        Result := I_RestartChannel(channel, vol, sep);
         exit;
       end;
       if HandleCount - channelhandles[channel] > oldhandle then
@@ -335,6 +386,7 @@ begin
   else
     channel := oldchannel;
   CacheSFX(id);
+  SetSfxFormat(id);
   ZeroMemory(@dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := Sizeof(DSBUFFERDESC);
   dsbd.dwFlags := DSBCAPS_CTRLVOLUME or DSBCAPS_CTRLFREQUENCY or
@@ -350,14 +402,14 @@ begin
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Lock()');
 
-  memcpy(p, pointer(integer(S_sfx[id].Data) + 8), s);
+  memcpy(p, pointer(integer(S_sfx[id].data) + 8), s);
   hres := dsb.Unlock(p, s, p2, s2);
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Unlock()');
 
   ChannelBuffers[channel] := dsb;
   channelids[channel] := id;
-  Result := I_RestartChannel(channel, vol);
+  Result := I_RestartChannel(channel, vol, sep);
 end;
 
 procedure I_StopSound(handle: integer);
@@ -396,22 +448,6 @@ begin
     end;
   end;
   Result := False;
-end;
-
-
-// to mix the sounds into buffers, called every frame
-
-procedure I_ProcessSound;
-begin
-end;
-
-procedure I_UpdateSoundParams(handle: integer; vol: integer; sep: integer;
-  pitch: integer);
-begin
-  // I fail too see that this is used.
-  // Would be using the handle to identify
-  //  on which channel the sound might be active,
-  //  and resetting the channel parameters.
 end;
 
 procedure I_ShutdownSound;
@@ -455,20 +491,11 @@ begin
 
   SampleFormat.wFormatTag := WAVE_FORMAT_PCM;
   SampleFormat.nChannels := 1;
-  SampleFormat.nSamplesPerSec := 11025;
   SampleFormat.cbSize := 0;
-  if HighSound then
-  begin
-    SampleFormat.nBlockAlign := 2;
-    SampleFormat.nAvgBytesPerSec := 22050;
-    SampleFormat.wBitsPerSample := 16;
-  end
-  else
-  begin
-    SampleFormat.nBlockAlign := 1;
-    SampleFormat.nAvgBytesPerSec := 11025;
-    SampleFormat.wBitsPerSample := 8;
-  end;
+  SampleFormat.nBlockAlign := 1;
+  SampleFormat.nSamplesPerSec := 11025;
+  SampleFormat.nAvgBytesPerSec := 11025;
+  SampleFormat.wBitsPerSample := 8;
 
   ZeroMemory(@dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := SizeOf(DSBUFFERDESC);
@@ -495,15 +522,7 @@ begin
     ChannelBuffers[i] := nil;
 
   for i := 0 to Ord(NUMSFX) - 1 do
-    S_sfx[i].Data := nil;
-
-  SampleFormat.wFormatTag := WAVE_FORMAT_PCM;
-  SampleFormat.nChannels := 1;
-  SampleFormat.nSamplesPerSec := 11025;
-  SampleFormat.nBlockAlign := 1;
-  SampleFormat.nAvgBytesPerSec := 11025;
-  SampleFormat.wBitsPerSample := 8;
-  SampleFormat.cbSize := 0;
+    S_sfx[i].data := nil;
 end;
 
 initialization
