@@ -141,12 +141,6 @@ const
   S_PITCH_PERTURB = 1;
   S_STEREO_SWING = 96 * $10000;
 
-// percent attenuation from front to back
-  S_IFRACVOL = 30;
-
-  NA = 0;
-  S_NUMCHANNELS = 2;
-
 type
   channel_t = record
     // sound information (if null, channel avail.)
@@ -623,7 +617,7 @@ begin
   angle := angle shr ANGLETOFINESHIFT;
 
   // stereo separation
-  sep^ := 128 - (FixedMul(S_STEREO_SWING, finesine[angle]) div FRACUNIT);
+  sep^ := NORM_SEP - (FixedMul(S_STEREO_SWING, finesine[angle]) div FRACUNIT);
 
   // volume calculation
   if approx_dist < S_CLOSE_DIST then
