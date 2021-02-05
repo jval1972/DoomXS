@@ -311,7 +311,7 @@ var
   solid: boolean;
   damage: integer;
 begin
-  if (thing.flags and (MF_SOLID or MF_SPECIAL or MF_SHOOTABLE)) = 0 then
+  if thing.flags and (MF_SOLID or MF_SPECIAL or MF_SHOOTABLE) = 0 then
   begin
     Result := True;
     exit;
@@ -388,7 +388,7 @@ begin
     if thing.flags and MF_SHOOTABLE = 0 then
     begin
       // didn't do any damage
-      result := (thing.flags and MF_SOLID) = 0;
+      result := thing.flags and MF_SOLID = 0;
       exit;
     end;
 
@@ -404,7 +404,7 @@ begin
   // check for special pickup
   if thing.flags and MF_SPECIAL <> 0 then
   begin
-    solid := (thing.flags and MF_SOLID) <> 0;
+    solid := thing.flags and MF_SOLID <> 0;
     if tmflags and MF_PICKUP <> 0 then
     begin
       // can remove thing
@@ -413,7 +413,7 @@ begin
     Result := not solid;
   end
   else
-    result := (thing.flags and MF_SOLID) = 0;
+    result := thing.flags and MF_SOLID = 0;
 end;
 
 // MOVEMENT CLIPPING
