@@ -338,7 +338,7 @@ begin
     player.powers[Ord(pw_infrared)] := player.powers[Ord(pw_infrared)] - 1;
 
   if player.powers[Ord(pw_ironfeet)] > 0 then
-    player.powers[Ord(pw_infrared)] := player.powers[Ord(pw_infrared)] - 1;
+    player.powers[Ord(pw_ironfeet)] := player.powers[Ord(pw_ironfeet)] - 1;
 
   if player.damagecount > 0 then
     player.damagecount := player.damagecount - 1;
