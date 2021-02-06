@@ -595,7 +595,7 @@ begin
         plat.sector := @sectors[integer(plat.sector)];
         plat.sector.specialdata := plat;
 
-        if Assigned(plat.thinker._function.acp1) then  // VJ ??? from serialization
+        if Assigned(plat.thinker._function.acp1) then
           @plat.thinker._function.acp1 := @T_PlatRaise;
 
         P_AddThinker(@plat.thinker);
