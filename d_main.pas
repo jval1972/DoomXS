@@ -91,7 +91,6 @@ implementation
 uses
   d_delphi,
   doomstat,
-  dstrings,
   d_englsh,
   sounds,
   z_memory,

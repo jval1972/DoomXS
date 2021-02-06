@@ -101,7 +101,6 @@ uses
 // State.
   doomstat,
 // Data.
-  dstrings,
   d_englsh,
   sounds,
 // for mapnames

@@ -193,7 +193,6 @@ uses
   w_wad,
   s_sound,
 // Data.
-  dstrings,
   d_englsh,
   sounds,
 // SKY handling - still the wrong place.

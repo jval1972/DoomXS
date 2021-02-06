@@ -43,7 +43,6 @@ uses
   doomdef in 'doomdef.pas',
   doomstat in 'doomstat.pas',
   doomtype in 'doomtype.pas',
-  dstrings in 'dstrings.pas',
   f_finale in 'f_finale.pas',
   f_wipe in 'f_wipe.pas',
   g_game in 'g_game.pas',

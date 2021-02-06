@@ -80,7 +80,6 @@ uses
   d_delphi,
   doomdef,
   am_map,
-  dstrings,
   d_englsh,
   d_main,
   d_player,

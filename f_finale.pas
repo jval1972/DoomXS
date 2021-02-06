@@ -63,7 +63,6 @@ uses
   w_wad,
   s_sound,
 // Data.
-  dstrings,
   d_englsh,
   sounds,
   doomdef,

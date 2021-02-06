@@ -44,7 +44,6 @@ uses
   d_delphi,
   doomtype,
   doomdef,
-  dstrings,
   d_englsh,
   d_main,
   d_player,

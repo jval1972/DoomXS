@@ -42,7 +42,6 @@ uses
   m_cheat,
   i_system,
   v_video,
-  dstrings,
   m_fixed;
 
 const
