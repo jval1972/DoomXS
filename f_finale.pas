@@ -571,7 +571,7 @@ begin
     else
     begin
       w := hu_font[c1].width;
-      V_DrawPatch(cx, 180, 0, hu_font[c1], true);
+      V_DrawPatch(cx, 180, SCN_SCRF, hu_font[c1], false);
       cx := cx + w;
     end;
   end;
