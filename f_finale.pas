@@ -143,32 +143,62 @@ begin
           6:
             begin
               finaleflat := 'SLIME16';
-              finaletext := C1TEXT;
+              case gamemission of
+                pack_tnt: finaletext := T1TEXT;
+                pack_plut: finaletext := P1TEXT;
+              else
+                finaletext := C1TEXT;
+              end;
             end;
          11:
             begin
               finaleflat := 'RROCK14';
-              finaletext := c2text;
+              case gamemission of
+                pack_tnt: finaletext := T2TEXT;
+                pack_plut: finaletext := P2TEXT;
+              else
+                finaletext := C2TEXT;
+              end;
             end;
          20:
             begin
               finaleflat := 'RROCK07';
-              finaletext := C3TEXT;
+              case gamemission of
+                pack_tnt: finaletext := T3TEXT;
+                pack_plut: finaletext := P3TEXT;
+              else
+                finaletext := C3TEXT;
+              end;
             end;
          30:
             begin
               finaleflat := 'RROCK17';
-              finaletext := C4TEXT;
+              case gamemission of
+                pack_tnt: finaletext := T4TEXT;
+                pack_plut: finaletext := P4TEXT;
+              else
+                finaletext := C4TEXT;
+              end;
             end;
          15:
             begin
               finaleflat := 'RROCK13';
-              finaletext := C5TEXT;
+              case gamemission of
+                pack_tnt: finaletext := T5TEXT;
+                pack_plut: finaletext := P5TEXT;
+              else
+                finaletext := C5TEXT;
+              end;
             end;
          31:
             begin
               finaleflat := 'RROCK19';
-              finaletext := C6TEXT;
+              case gamemission of
+                pack_tnt: finaletext := T6TEXT;
+                pack_plut: finaletext := P6TEXT;
+              else
+                finaletext := C6TEXT;
+              end;
             end;
         else
         // Ouch.
@@ -344,6 +374,8 @@ var
 //
 procedure F_StartCast;
 begin
+  if finalestage = 2 then
+    exit;
   wipegamestate := -1;    // force a screen wipe
   castnum := 0;
   caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
@@ -565,7 +597,7 @@ begin
   sprdef := @sprites[Ord(caststate.sprite)];
   sprframe := @sprdef.spriteframes[caststate.frame and FF_FRAMEMASK];
   lump := sprframe.lump[0];
-  flip := boolean(sprframe.flip[0]);
+  flip := sprframe.flip[0];
 
   patch := W_CacheLumpNum(lump + firstspritelump, PU_CACHE);
   if flip then
