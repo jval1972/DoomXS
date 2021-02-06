@@ -1468,7 +1468,6 @@ end;
 
 // SPECIAL SPAWNING
 
-
 // P_SpawnSpecials
 // After the map has been loaded, scan for specials
 //  that spawn thinkers
