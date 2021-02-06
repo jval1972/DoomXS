@@ -28,18 +28,11 @@ unit doomtype;
 
 interface
 
-type
-  bool = boolean;
-
 const
-  MAXCHAR = char($7f);
   MAXSHORT = smallint($7fff);
-  MAXINT = longint($7fffffff);
-  MAXLONG = longint($7fffffff);
-  MINCHAR = char($80);
   MINSHORT = smallint($8000);
+  MAXINT = longint($7fffffff);
   MININT = longint($80000000);
-  MINLONG = longint($80000000);
 
 implementation
 
