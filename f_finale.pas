@@ -589,7 +589,7 @@ var
   patch: Ppatch_t;
 begin
   // erase the entire screen to a background
-  V_DrawPatch(0, 0, 0, W_CacheLumpName('BOSSBACK', PU_CACHE), true);
+  V_DrawPatch(0, 0, SCN_SCRF, W_CacheLumpName('BOSSBACK', PU_CACHE), false);
 
   F_CastPrint(castorder[castnum].name);
 
@@ -601,9 +601,10 @@ begin
 
   patch := W_CacheLumpNum(lump + firstspritelump, PU_CACHE);
   if flip then
-    V_DrawPatchFlipped(160, 170, 0, patch, true)
+    V_DrawPatchFlipped(160, 170, SCN_SCRF, patch, false)
   else
-    V_DrawPatch(160, 170, 0, patch, true);
+    V_DrawPatch(160, 170, SCN_SCRF, patch, false);
+  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
 //

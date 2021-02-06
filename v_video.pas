@@ -425,10 +425,10 @@ var
   count: integer;
   col: integer;
   column: Pcolumn_t;
-  desttop: PByteArray;
+  desttop: PByte;
   dest: PByte;
   source: PByte;
-  w: integer;
+  w, w1: integer;
   pw: integer;
   ph: integer;
   fracx: fixed_t;
@@ -446,7 +446,7 @@ begin
     col := 0;
 
     swidth := V_GetScreenWidth(scrn);
-    desttop := PByteArray(integer(screens[scrn]) + y * swidth + x);
+    desttop := PByte(integer(screens[scrn]) + y * swidth + x);
 
     w := patch.width;
 
@@ -493,13 +493,18 @@ begin
     fracystep := FRACUNIT * patch.height div ph;
 
     col := 0;
-    desttop := PByteArray(integer(screens[scrn]) + y * SCREENWIDTH + x);
+    desttop := PByte(integer(screens[scrn]) + y * SCREENWIDTH + x);
 
     w := patch.width;
 
     while col < pw do
     begin
-      column := Pcolumn_t(integer(patch) + patch.columnofs[w - 1 - (fracx div FRACUNIT)]);
+      w1 := w - 1 - (fracx div FRACUNIT);
+      if w1 >= w then
+        w1 := w - 1
+      else if w1 < 0 then
+        w := 0;
+      column := Pcolumn_t(integer(patch) + patch.columnofs[w1]);
 
     // step through the posts in a column
       while column.topdelta <> $ff do
