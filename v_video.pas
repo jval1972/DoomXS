@@ -77,9 +77,6 @@ procedure V_CopyRect(
 procedure V_DrawPatch(x, y: integer; scrn: integer; patch: Ppatch_t; preserve: boolean);
 procedure V_DrawPatchFlipped(x, y: integer; scrn: integer; patch: Ppatch_t; preserve: boolean);
 
-// Draw a linear block of pixels into the view buffer.
-procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src: PByteArray);
-
 function V_PreserveX(x: integer): integer;
 
 function V_PreserveY(y: integer): integer;
@@ -531,25 +528,6 @@ begin
 
       fracx := fracx + fracxstep;
     end;
-  end;
-end;
-
-//
-// V_DrawBlock
-// Draw a linear block of pixels into the view buffer.
-//
-procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src: PByteArray);
-var
-  dest: PByteArray;
-begin
-  dest := PByteArray(integer(screens[scrn]) + y * SCREENWIDTH + x);
-
-  while height <> 0 do
-  begin
-    memcpy(dest, src, width);
-    src := PByteArray(integer(src) + width);
-    dest := PByteArray(integer(dest) + SCREENWIDTH);
-    dec(height);
   end;
 end;
 
