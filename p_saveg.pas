@@ -340,6 +340,7 @@ begin
         save_p := @save_p[SizeOf(mobj_t)];
         mobj.state := @states[integer(mobj.state)];
         mobj.target := nil;
+        mobj.tracer := nil;
         if mobj.player <> nil then
         begin
           mobj.player := @players[integer(mobj.player) - 1];
