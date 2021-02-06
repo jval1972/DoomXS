@@ -155,7 +155,7 @@ type
 
     // For movement checking.
     radius: fixed_t;
-    Height: fixed_t;
+    height: fixed_t;
 
     // Momentums, used to update position.
     momx: fixed_t;
