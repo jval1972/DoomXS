@@ -319,7 +319,7 @@ procedure P_SpawnGlowingLight(sector: Psector_t);
 var
   g: Pglow_t;
 begin
-  g := Z_Malloc(SizeOf(g^), PU_LEVSPEC, nil);
+  g := Z_Malloc(SizeOf(glow_t), PU_LEVSPEC, nil);
 
   P_AddThinker(@g.thinker);
 
