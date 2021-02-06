@@ -80,9 +80,6 @@ procedure V_DrawPatchFlipped(x, y: integer; scrn: integer; patch: Ppatch_t; pres
 // Draw a linear block of pixels into the view buffer.
 procedure V_DrawBlock(x, y: integer; scrn: integer; width, height: integer; src: PByteArray);
 
-// Reads a linear block of pixels into the view buffer.
-procedure V_GetBlock(x, y: integer; scrn: integer; width, height: integer; dest: PByteArray);
-
 function V_PreserveX(x: integer): integer;
 
 function V_PreserveY(y: integer): integer;
@@ -552,25 +549,6 @@ begin
     memcpy(dest, src, width);
     src := PByteArray(integer(src) + width);
     dest := PByteArray(integer(dest) + SCREENWIDTH);
-    dec(height);
-  end;
-end;
-
-//
-// V_GetBlock
-// Gets a linear block of pixels from the view buffer.
-//
-procedure V_GetBlock(x, y: integer; scrn: integer; width, height: integer; dest: PByteArray);
-var
-  src: PByteArray;
-begin
-  src := PByteArray(integer(screens[scrn]) + y * SCREENWIDTH + x);
-
-  while height <> 0 do
-  begin
-    memcpy(dest, src, width);
-    src := PByteArray(integer(src) + SCREENWIDTH);
-    dest := PByteArray(integer(dest) + width);
     dec(height);
   end;
 end;
