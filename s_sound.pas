@@ -499,10 +499,8 @@ end;
 procedure S_ChangeMusic(musicnum: integer; looping: boolean);
 var
   music: Pmusicinfo_t;
-  namebuf: char8_t;
 begin
-  if (musicnum <= Ord(mus_None)) or
-     (musicnum >= Ord(NUMMUSIC)) then
+  if (musicnum <= Ord(mus_None)) or (musicnum >= Ord(NUMMUSIC)) then
     I_Error('S_ChangeMusic(): Bad music number %d', [musicnum]);
 
   music := @S_music[musicnum];
@@ -515,10 +513,7 @@ begin
 
   // get lumpnum if neccessary
   if music.lumpnum = 0 then
-  begin
-    namebuf := stringtochar8('d_' + music.name);
-    music.lumpnum := W_GetNumForName(namebuf);
-  end;
+    music.lumpnum := W_GetNumForName('d_' + music.name);
 
   // load & register it
   music.data := W_CacheLumpNum(music.lumpnum, PU_MUSIC);
