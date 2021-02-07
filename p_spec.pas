@@ -1398,7 +1398,7 @@ begin
           bottom:
             sides[buttonlist[i].line.sidenum[0]].bottomtexture := buttonlist[i].btexture;
         end;
-        S_StartSound(Pmobj_t(@buttonlist[i].soundorg), Ord(sfx_swtchn));
+        S_StartSound(@buttonlist[i].soundorg, Ord(sfx_swtchn));
         memset(@buttonlist[i], 0, SizeOf(button_t));
       end;
 

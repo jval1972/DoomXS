@@ -207,7 +207,7 @@ begin
     floor.crush, 0, floor.direction);
 
   if leveltime and 7 = 0 then
-    S_StartSound(Pmobj_t(@floor.sector.soundorg), Ord(sfx_stnmov));
+    S_StartSound(@floor.sector.soundorg, Ord(sfx_stnmov));
 
   if res = pastdest then
   begin
@@ -232,7 +232,7 @@ begin
 
     P_RemoveThinker(@floor.thinker);
 
-    S_StartSound(Pmobj_t(@floor.sector.soundorg), Ord(sfx_pstop));
+    S_StartSound(@floor.sector.soundorg, Ord(sfx_pstop));
   end;
 end;
 

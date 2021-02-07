@@ -122,8 +122,7 @@ begin
       if leveltime and 7 = 0 then
       begin
         if ceiling._type <> silentCrushAndRaise then
-          S_StartSound(Pmobj_t(@ceiling.sector.soundorg),
-            Ord(sfx_stnmov));
+          S_StartSound(@ceiling.sector.soundorg, Ord(sfx_stnmov));
       end;
 
       if res = pastdest then
@@ -133,7 +132,7 @@ begin
             P_RemoveActiveCeiling(ceiling);
           silentCrushAndRaise:
           begin
-            S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_pstop));
+            S_StartSound(@ceiling.sector.soundorg, Ord(sfx_pstop));
             ceiling.direction := -1;
           end;
           fastCrushAndRaise,
@@ -151,7 +150,7 @@ begin
       if leveltime and 7 = 0 then
       begin
         if ceiling._type <> silentCrushAndRaise then
-          S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_stnmov));
+          S_StartSound(@ceiling.sector.soundorg, Ord(sfx_stnmov));
       end;
 
       if res = pastdest then
@@ -159,7 +158,7 @@ begin
         case ceiling._type of
           silentCrushAndRaise:
           begin
-            S_StartSound(Pmobj_t(@ceiling.sector.soundorg), Ord(sfx_pstop));
+            S_StartSound(@ceiling.sector.soundorg, Ord(sfx_pstop));
             ceiling.speed := CEILSPEED;
             ceiling.direction := 1;
           end;
