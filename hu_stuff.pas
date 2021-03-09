@@ -494,12 +494,12 @@ begin
 
   if ev.data1 = KEY_RSHIFT then
   begin
-    shiftdown := Ord(ev_keydown) <> 0;
+    shiftdown := ev._type = ev_keydown;
     exit;
   end
   else if ev.data1 = KEY_RALT then
   begin
-    altdown := Ord(ev_keydown) <> 0;
+    altdown := ev._type = ev_keydown;
     exit;
   end;
 
@@ -567,7 +567,6 @@ begin
       c := Chr(Ord(c) - Ord('0'));
       if c > Chr(9) then
         exit;
-      // fprintf(stderr, "got here\n");
       macromessage := chat_macros[Ord(c)];
 
       // kill last message with a '\n'
