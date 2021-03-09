@@ -142,9 +142,7 @@ begin
     S_StartSound(mo, mo.info.deathsound);
 end;
 
-
 // P_XYMovement
-
 const
   STOPSPEED = $1000;
   FRICTION = $e800;
@@ -428,9 +426,7 @@ begin
   P_RemoveMobj(mobj);
 end;
 
-
 // P_MobjThinker
-
 procedure P_MobjThinker(mobj: Pmobj_t);
 begin
   // momentum movement
@@ -487,9 +483,7 @@ begin
   end;
 end;
 
-
 // P_SpawnMobj
-
 function P_SpawnMobj(x, y, z: fixed_t; _type: mobjtype_t): Pmobj_t;
 var
   mobj: Pmobj_t;
@@ -541,9 +535,7 @@ begin
   Result := mobj;
 end;
 
-
 // P_RemoveMobj
-
 var
   itemrespawnque: array[0..ITEMQUESIZE - 1] of mapthing_t;
   itemrespawntime: array[0..ITEMQUESIZE - 1] of integer;
@@ -573,9 +565,7 @@ begin
   P_RemoveThinker(Pthinker_t(mobj));
 end;
 
-
 // P_RespawnSpecials
-
 procedure P_RespawnSpecials;
 var
   x: fixed_t;
@@ -790,14 +780,9 @@ begin
     mobj.flags := mobj.flags or MF_AMBUSH;
 end;
 
-
 // GAME SPAWN FUNCTIONS
 
-
-
-
 // P_SpawnPuff
-
 procedure P_SpawnPuff(x, y, z: fixed_t);
 var
   th: Pmobj_t;
@@ -818,7 +803,6 @@ end;
 
 
 // P_SpawnBlood
-
 procedure P_SpawnBlood(x, y, z: fixed_t; damage: integer);
 var
   th: Pmobj_t;
@@ -841,7 +825,6 @@ end;
 // P_CheckMissileSpawn
 // Moves the missile forward a bit
 //  and possibly explodes it right there.
-
 procedure P_CheckMissileSpawn(th: Pmobj_t);
 begin
   th.tics := th.tics - (P_Random and 3);
@@ -860,8 +843,6 @@ end;
 
 
 // P_SpawnMissile
-
-
 function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
 var
   th: Pmobj_t;
@@ -900,7 +881,6 @@ end;
 
 // P_SpawnPlayerMissile
 // Tries to aim at a nearby monster
-
 procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
 var
   th: Pmobj_t;
