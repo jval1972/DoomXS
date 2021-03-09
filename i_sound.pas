@@ -222,7 +222,7 @@ begin
     if ChannelBuffers[channel] <> nil then
     begin
       ChannelBuffers[channel].Stop;
-      ChannelBuffers[channel]._Release;
+      I_ClearInterface(IInterface(ChannelBuffers[channel]));
     end;
   end;
 end;
@@ -435,10 +435,10 @@ begin
   end;
 
   if pDSBPrimary <> nil then
-    pDSBPrimary._Release;
+    I_ClearInterface(IInterface(pDSBPrimary));
 
   if pDS <> nil then
-    pDS._Release;
+    I_ClearInterface(IInterface(pDS));
 end;
 
 procedure I_InitSound;

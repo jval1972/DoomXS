@@ -119,9 +119,9 @@ begin
   begin
     if g_pDDSPrimary <> nil then
     begin
-      g_pDDSPrimary._Release;
+      I_ClearInterface(IInterface(g_pDDSPrimary));
     end;
-    g_pDD._Release;
+    I_ClearInterface(IInterface(g_pDD));
   end;
   I_EnableAltTab;
 end;

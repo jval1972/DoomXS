@@ -314,6 +314,8 @@ begin
   begin
     // frame syncronous IO operations
     I_StartFrame;
+    if I_GameFinished then
+      Break;
 
     // process one or more tics
     if singletics then
@@ -331,8 +333,6 @@ begin
     else
       TryRunTics; // will run at least one tic
 
-    if I_GameFinished then
-      break;
     S_UpdateSounds(players[consoleplayer].mo);// move positional sounds
 
     // Update display, next frame, with current state.

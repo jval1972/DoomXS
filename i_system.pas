@@ -39,6 +39,7 @@ procedure I_Init;
 { returns current time in tics. }
 function I_GetTime: integer;
 
+procedure I_ClearInterface(var Dest: IInterface);
 
 { Called by D_DoomLoop, }
 { called before processing any tics in a frame }
@@ -165,6 +166,17 @@ begin
   Result := round(((_time - basetime) / Freq) * TICRATE);
 end;
 
+procedure I_ClearInterface(var Dest: IInterface);
+var
+  P: Pointer;
+begin
+  if Dest <> nil then
+  begin
+    P := Pointer(Dest);
+    Pointer(Dest) := nil;
+    IInterface(P)._Release;
+  end;
+end;
 
 // I_Init
 procedure I_Init;
@@ -188,11 +200,11 @@ procedure I_Destroy;
 begin
   finished := True;
   D_QuitNetGame;
-  //I_ShutdownSound;
+  I_ShutdownSound;
   I_ShutdownMusic;
   I_ShutDownInput;
   M_SaveDefaults;
-  //I_ShutdownGraphics;
+  I_ShutdownGraphics;
   I_ShutdownIO;
   Halt(0);
 end;
