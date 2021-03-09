@@ -132,7 +132,7 @@ begin
   Result := 0;
   case Msg of
     MM_MCINOTIFY:
-      if (wParam = MCI_NOTIFY_SUCCESSFUL) then
+      if wParam = MCI_NOTIFY_SUCCESSFUL then
       begin
         StopPlaying;
         playMIDIFile(Window, MidiFileName);
