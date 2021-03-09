@@ -230,7 +230,7 @@ begin
         mo.momy := 0;
       end;
     end;
-  until not ((xmove <> 0) or (ymove <> 0));
+  until (xmove = 0) and (ymove = 0);
 
   // slow down
   if (player <> nil) and ((player.cheats and CF_NOMOMENTUM) <> 0) then
