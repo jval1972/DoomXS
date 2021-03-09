@@ -199,16 +199,6 @@ procedure I_SetChannels;
 begin
 end;
 
-procedure I_SetSfxVolume(volume: integer);
-begin
-  // Identical to DOS.
-  // Basically, this should propagate
-  //  the menu/config file setting
-  //  to the state variable used in
-  //  the mixing.
-  snd_SfxVolume := volume;
-end;
-
 function I_ChannelPlaying(channel: integer): boolean;
 var
   status: LongWord;
