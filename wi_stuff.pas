@@ -104,7 +104,6 @@ const
 
   NG_SPACINGX = 64;
 
-
 // DEATHMATCH STUFF
   DM_MATRIXX = 42;
   DM_MATRIXY = 68;
@@ -125,13 +124,11 @@ type
     ANIM_LEVEL
   );
 
-
 type
   point_t = record
     x: integer;
     y: integer;
   end;
-
 
 //
 // Animation.
@@ -140,40 +137,29 @@ type
 type
   wianim_t = record // JVAL: renamed from anim_t -> wianim_t
     _type: animenum_t;
-
     // period in tics between animations
     period: integer;
-
     // number of animation frames
     nanims: integer;
-
     // location of animation
     loc: point_t;
-
     // ALWAYS: n/a,
     // RANDOM: period deviation (<256),
     // LEVEL: level
     data1: integer;
-
     // ALWAYS: n/a,
     // RANDOM: random base period,
     // LEVEL: n/a
     data2: integer;
-
     // actual graphics for frames of animations
     p: array[0..2] of Ppatch_t;
-
     // following must be initialized to zero before use!
-
     // next value of bcnt (used in conjunction with period)
     nexttic: integer;
-
     // last drawn animation frame
     lastdrawn: integer;
-
     // next frame number to animate
     ctr: integer;
-
     // used by RANDOM and LEVEL when animating
     state: integer;
   end;
