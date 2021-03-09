@@ -471,135 +471,148 @@ begin
     end;
 end;
 
+const
+  PATH_SEPARATOR = ';';
+
+function FileInDoomPath(const fn: string): string;
+var
+  doomwaddir: string;
+  doomwadpath: string;
+  paths: TStrList;
+  i: integer;
+  tmp: string;
+begin
+  if fexists(fn) then
+  begin
+    result := fn;
+    exit;
+  end;
+
+  doomwaddir := getenv('DOOMWADDIR');
+  doomwadpath := getenv('DOOMWADPATH');
+
+  paths := TStrList.Create;
+  if doomwaddir <> '' then
+    paths.Add(doomwaddir);
+  if doomwadpath <> '' then
+  begin
+    tmp := '';
+    for i := 1 to length(doomwadpath) do
+    begin
+      if doomwadpath[i] = PATH_SEPARATOR then
+      begin
+        if tmp <> '' then
+        begin
+          paths.Add(tmp);
+          tmp := '';
+        end;
+      end
+      else
+        tmp := tmp + doomwadpath[i];
+    end;
+    if tmp <> '' then
+      paths.Add(tmp);
+  end;
+
+  result := fn;
+  for i := 0 to paths.Count - 1 do
+  begin
+    tmp := paths.Strings(i);
+    if tmp[length(tmp)] <> '\' then
+      tmp := tmp + '\';
+    if fexists(tmp + result) then
+    begin
+      result := tmp + result;
+      paths.free;
+      exit;
+    end;
+  end;
+  result := fn;
+  paths.free;
+end;
+
 // IdentifyVersion
 // Checks availability of IWAD files by name,
 // to determine whether registered/commercial features
 // should be executed (notably loading PWAD's).
 procedure IdentifyVersion;
 var
-  doom1wad: string;
-  doomwad: string;
-  doomuwad: string;
-  doom2wad: string;
-
-  doom2fwad: string;
-  plutoniawad: string;
-  tntwad: string;
-  doomwaddir: string;
+  iwad: string;
+  p: integer;
 begin
-  doomwaddir := getenv('DOOMWADDIR');
-  if doomwaddir = '' then
-    doomwaddir := '.';
-
-  // Commercial.
-  sprintf(doom2wad, '%s\doom2.wad', [doomwaddir]);
-
-  // Retail.
-  sprintf(doomuwad, '%s\doomu.wad', [doomwaddir]);
-
-  // Registered.
-  sprintf(doomwad, '%s\doom.wad', [doomwaddir]);
-
-  // Shareware.
-  sprintf(doom1wad, '%s\doom1.wad', [doomwaddir]);
-
-  // plutonia pack
-  sprintf(plutoniawad, '%s\plutonia.wad', [doomwaddir]);
-
-  // tnt pack
-  sprintf(tntwad, '%s\tnt.wad', [doomwaddir]);
-
-
-  // French stuff.
-  sprintf(doom2fwad, '%s\doom2f.wad', [doomwaddir]);
-
-  if M_CheckParm('-shdev') > 0 then
-  begin
-    gamemode := shareware;
-    devparm := True;
-    D_AddFile(DEVDATA + 'doom1.wad');
-    D_AddFile(DEVMAPS + 'data_se/texture1.lmp');
-    D_AddFile(DEVMAPS + 'data_se/pnames.lmp');
-    basedefault := DEVDATA + 'default.cfg';
-    exit;
-  end;
-
-  if M_CheckParm('-regdev') > 0 then
-  begin
-    gamemode := registered;
-    devparm := True;
-    D_AddFile(DEVDATA + 'doom.wad');
-    D_AddFile(DEVMAPS + 'data_se/texture1.lmp');
-    D_AddFile(DEVMAPS + 'data_se/texture2.lmp');
-    D_AddFile(DEVMAPS + 'data_se/pnames.lmp');
-    basedefault := DEVDATA + 'default.cfg';
-    exit;
-  end;
-
-  if M_CheckParm('-comdev') > 0 then
-  begin
-    gamemode := commercial;
-    devparm := True;
-    D_AddFile(DEVDATA + 'doom2.wad');
-
-    D_AddFile(DEVMAPS + 'cdata/texture1.lmp');
-    D_AddFile(DEVMAPS + 'cdata/pnames.lmp');
-    basedefault := DEVDATA + 'default.cfg';
-    exit;
-  end;
-
   basedefault := 'default.cfg';
 
-  if fexists(doom2fwad) then
+  p := M_CheckParm('-iwad');
+  if (p > 0) and (p < myargc - 1) then
+  begin
+    inc(p);
+    iwad := FileInDoomPath(myargv[p]);
+    if fexists(iwad) then
+    begin
+      printf(' External main wad in use: %s'#13#10, [iwad]);
+      gamemode := indetermined;
+      D_AddFile(iwad);
+      exit;
+    end;
+  end;
+
+  iwad := FileInDoomPath('doom2f.wad');
+  if fexists(iwad) then
   begin
     gamemode := commercial;
     // C'est ridicule!
     // Let's handle languages in config files, okay?
     language := french;
     printf('French version' + #13#10);
-    D_AddFile(doom2fwad);
+    D_AddFile(iwad);
     exit;
   end;
 
-  if fexists(doom2wad) then
+  iwad := FileInDoomPath('doom2.wad');
+  if fexists(iwad) then
   begin
     gamemode := commercial;
-    D_AddFile(doom2wad);
+    D_AddFile(iwad);
     exit;
   end;
 
-  if fexists(plutoniawad) then
+  iwad := FileInDoomPath('plutonia.wad');
+  if fexists(iwad) then
   begin
     gamemode := commercial;
-    D_AddFile(plutoniawad);
+    D_AddFile(iwad);
     exit;
   end;
 
-  if fexists(tntwad) then
+  iwad := FileInDoomPath('tnt.wad');
+  if fexists(iwad) then
   begin
     gamemode := commercial;
-    D_AddFile(tntwad);
+    D_AddFile(iwad);
     exit;
   end;
 
-  if fexists(doomuwad) then
+  iwad := FileInDoomPath('doomu.wad');
+  if fexists(iwad) then
   begin
     gamemode := retail;
-    D_AddFile(doomuwad);
+    D_AddFile(iwad);
     exit;
   end;
 
-  if fexists(doomwad) then
+  iwad := FileInDoomPath('doom.wad');
+  if fexists(iwad) then
   begin
     gamemode := registered;
-    D_AddFile(doomwad);
+    D_AddFile(iwad);
     exit;
   end;
 
-  if fexists(doom1wad) then
+  iwad := FileInDoomPath('doom1.wad');
+  if fexists(iwad) then
   begin
     gamemode := shareware;
-    D_AddFile(doom1wad);
+    D_AddFile(iwad);
     exit;
   end;
 
@@ -877,19 +890,6 @@ begin
   if (p <> 0) and (p <= myargc - 1) and (deathmatch <> 0) then
     printf('Austin Virtual Gaming: Levels will end after 20 minutes' + #13#10);
 
-  p := M_CheckParm('-warp');
-  if (p <> 0) and (p < myargc - 1) then
-  begin
-    if gamemode = commercial then
-      startmap := atoi(myargv[p + 1])
-    else
-    begin
-      startepisode := Ord(myargv[p + 1][1]) - Ord('0');
-      startmap := Ord(myargv[p + 2][1]) - Ord('0');
-    end;
-    autostart := True;
-  end;
-
   p := M_CheckParm('-fullscreen');
   if (p <> 0) and (p <= myargc - 1) then
     fullscreen := True;
@@ -920,6 +920,31 @@ begin
 
   printf('W_Init: Init WADfiles.'#13#10);
   W_InitMultipleFiles(@wadfiles);
+
+  if gamemode = indetermined then
+  begin
+    if W_CheckNumForName('e4m1') >= 0 then
+      gamemode := retail
+    else if W_CheckNumForName('e3m1') >= 0 then
+      gamemode := registered
+    else if W_CheckNumForName('e1m1') >= 0 then
+      gamemode := shareware
+    else if W_CheckNumForName('map01') >= 0 then
+      gamemode := commercial;
+  end;
+
+  p := M_CheckParm('-warp');
+  if (p <> 0) and (p < myargc - 1) then
+  begin
+    if gamemode = commercial then
+      startmap := atoi(myargv[p + 1])
+    else
+    begin
+      startepisode := Ord(myargv[p + 1][1]) - Ord('0');
+      startmap := Ord(myargv[p + 2][1]) - Ord('0');
+    end;
+    autostart := True;
+  end;
 
   if gamemode = registered then
     if W_CheckNumForName('e4m1') >= 0 then
