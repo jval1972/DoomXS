@@ -380,11 +380,14 @@ var
   c: char;
 begin
   // tick down message counter if message is up
-  if message_counter = 1 then
+  if message_counter <> 0 then
   begin
-    message_counter := 0;
-    message_on := false;
-    message_nottobefuckedwith := false;
+    dec(message_counter);
+    if message_counter = 0 then
+    begin
+      message_on := false;
+      message_nottobefuckedwith := false;
+    end;
   end;
 
   if (showMessages <> 0) or message_dontfuckwithme then
