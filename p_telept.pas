@@ -68,6 +68,7 @@ var
   oldx: fixed_t;
   oldy: fixed_t;
   oldz: fixed_t;
+  plyr: Pplayer_t;
 begin
   // don't teleport missiles
   if thing.flags and MF_MISSILE <> 0 then
@@ -128,8 +129,9 @@ begin
 
         if not (gamemission in [pack_tnt, pack_plut]) then
           thing.z := thing.floorz;  //fixme: not needed?
-        if thing.player <> nil then
-          Pplayer_t(thing.player).viewz := thing.z + Pplayer_t(thing.player).viewheight;
+        plyr := thing.player;
+        if plyr <> nil then
+          plyr.viewz := thing.z + plyr.viewheight;
 
         // spawn teleport fog at source and destination
         fog := P_SpawnMobj(oldx, oldy, oldz, MT_TFOG);
@@ -142,7 +144,7 @@ begin
         S_StartSound(fog, Ord(sfx_telept));
 
         // don't move for a bit
-        if thing.player <> nil then
+        if plyr <> nil then
           thing.reactiontime := 18;
 
         thing.angle := m.angle;

@@ -283,14 +283,14 @@ procedure P_ZMovement(mo: Pmobj_t);
 var
   dist: fixed_t;
   delta: fixed_t;
+  plyr: Pplayer_t;
 begin
   // check for smooth step up
-  if (mo.player <> nil) and (mo.z < mo.floorz) then
+  plyr := mo.player;
+  if (plyr <> nil) and (mo.z < mo.floorz) then
   begin
-    Pplayer_t(mo.player).viewheight :=
-      Pplayer_t(mo.player).viewheight - (mo.floorz - mo.z);
-    Pplayer_t(mo.player).deltaviewheight :=
-      _SHR((PVIEWHEIGHT - Pplayer_t(mo.player).viewheight), 3);
+    plyr.viewheight := plyr.viewheight - (mo.floorz - mo.z);
+    plyr.deltaviewheight := _SHR((PVIEWHEIGHT - plyr.viewheight), 3);
   end;
 
   // adjust height
@@ -329,13 +329,13 @@ begin
 
     if mo.momz < 0 then
     begin
-      if (mo.player <> nil) and (mo.momz < -GRAVITY * 8) then
+      if (plyr <> nil) and (mo.momz < -GRAVITY * 8) then
       begin
         // Squat down.
         // Decrease viewheight for a moment
         // after hitting the ground (hard),
         // and utter appropriate sound.
-        Pplayer_t(mo.player).deltaviewheight := _SHR(mo.momz, 3);
+        plyr.deltaviewheight := _SHR(mo.momz, 3);
         S_StartSound(mo, Ord(sfx_oof));
       end;
       mo.momz := 0;
