@@ -225,7 +225,7 @@ const
 
     (name: 'snd_channels';
      location: @numChannels;
-     defaultivalue: 3;
+     defaultivalue: 8;
      _type: tInteger),
 
     (name: 'usegamma';
