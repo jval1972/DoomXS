@@ -241,7 +241,7 @@ begin
       // If everything fails.
       player.pendingweapon := wp_fist;
 
-  until not (player.pendingweapon = wp_nochange);
+  until player.pendingweapon <> wp_nochange;
 
   // Now set appropriate weapon overlay.
   P_SetPsprite(player, Ord(ps_weapon),

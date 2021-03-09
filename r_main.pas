@@ -657,7 +657,7 @@ begin
     if setblocks = 10 then
       viewheight := V_PreserveY(200 - ST_HEIGHT)
     else
-      viewheight := (setblocks * V_PreserveY(200 - ST_HEIGHT) div 10) and (not 7);
+      viewheight := (setblocks * V_PreserveY(200 - ST_HEIGHT) div 10) and not 7;
   end;
 
   detailshift := setdetail;
@@ -682,7 +682,6 @@ begin
   // psprite scales
   pspritescale := FRACUNIT * viewwidth div 320;
   pspriteiscale := FRACUNIT * 320 div viewwidth;
-
 
   // thing clipping
   for i := 0 to viewwidth - 1 do
