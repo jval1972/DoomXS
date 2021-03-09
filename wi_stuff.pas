@@ -281,7 +281,6 @@ const
 var
   anims: array[0..NUMEPISODES - 1] of Pwianim_tArray;
 
-
 //
 // GENERAL DATA
 //
@@ -327,7 +326,6 @@ var
 
 // # of commercial levels
   NUMCMAPS: integer = 0;
-
 
 //
 // GRAPHICS
@@ -395,7 +393,6 @@ var
 //
 
 // slam background
-// UNUSED static unsigned char *background=0;
 procedure WI_SlamBackground;
 begin
   memcpy(screens[SCN_FG], screens[SCN_BG], SCREENWIDTH * SCREENHEIGHT);
