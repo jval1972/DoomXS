@@ -188,9 +188,6 @@ var
 begin
   printf('S_Init: default sfx volume %d' + #13#10, [sfxVolume]);
 
-  // Whatever these did with DMX, these are rather dummies now.
-  I_SetChannels;
-
   S_SetSfxVolume(sfxVolume);
   // No music with Linux - another dummy.
   S_SetMusicVolume(musicVolume);

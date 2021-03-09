@@ -39,9 +39,6 @@ procedure I_ShutdownSound;
 
 //  SFX I/O
 
-// Initialize channels?
-procedure I_SetChannels;
-
 // Get raw data lump index for sound descriptor.
 function I_GetSfxLumpNum(sfxinfo: Psfxinfo_t): integer;
 
@@ -184,19 +181,6 @@ begin
   SampleFormat.nSamplesPerSec := SoundFreq[sfxid];
   SampleFormat.nAvgBytesPerSec := SoundFreq[sfxid];
   SampleFormat.wBitsPerSample := SoundSamples[sfxid];
-end;
-
-//
-// SFX API
-// Note: this was called by S_Init.
-// However, whatever they did in the
-// old DPMS based DOS version, this
-// were simply dummies in the Linux
-// version.
-// See soundserver initdata().
-//
-procedure I_SetChannels;
-begin
 end;
 
 function I_ChannelPlaying(channel: integer): boolean;
