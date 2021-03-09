@@ -220,9 +220,7 @@ procedure I_Error(const error: string; const Args: array of const);
 var
   soutproc: TOutProc;
 begin
-  fprintf(stderr, 'I_Error: ');
-  fprintf(stderr, error, Args);
-  fprintf(stderr, #13#10);
+  fprintf(stderr, 'I_Error: ' + error + #13#10, Args);
 
   // Shutdown. Here might be other errors.
   if demorecording then
