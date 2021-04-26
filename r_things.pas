@@ -50,6 +50,7 @@ procedure R_DrawMasked;
 
 var
   pspritescale: fixed_t;
+  pspriteyscale: fixed_t;
   pspriteiscale: fixed_t;
 
 var
@@ -418,7 +419,7 @@ begin
       ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
-  dc_iscale := abs(vis.xiscale);
+  dc_iscale := abs(FixedDiv(FRACUNIT, vis.scale));
   dc_texturemid := vis.texturemid;
   frac := vis.startfrac;
   spryscale := vis.scale;
@@ -567,7 +568,7 @@ begin
   // store information in a vissprite
   vis := R_NewVisSprite;
   vis.mobjflags := thing.flags;
-  vis.scale := xscale;
+  vis.scale := FixedDiv(projectiony, tz);
   vis.gx := thing.x;
   vis.gy := thing.y;
   vis.gz := thing.z;
@@ -702,7 +703,7 @@ begin
   vis.texturemid := (BASEYCENTER * FRACUNIT) + FRACUNIT div 2 - (psp.sy - spritetopoffset[lump]);
   vis.x1 := decide(x1 < 0, 0, x1);
   vis.x2 := decide(x2 >= viewwidth, viewwidth - 1, x2);
-  vis.scale := pspritescale;
+  vis.scale := pspriteyscale;
 
   if flip then
   begin

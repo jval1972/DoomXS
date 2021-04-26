@@ -126,10 +126,12 @@ var
   distance: fixed_t;
   length: fixed_t;
   index: LongWord;
+  slope: Double;
 begin
+  slope := (planeheight / abs(centery - y)) * planerelativeaspect;
   distance := FixedMul(planeheight, yslope[y]);
-  ds_xstep := FixedMul(distance, basexscale);
-  ds_ystep := FixedMul(distance, baseyscale);
+  ds_xstep := Round(viewsin * slope / FRACUNIT);
+  ds_ystep := Round(viewcos * slope / FRACUNIT);
 
   length := FixedMul(distance, distscale[x1]);
   angle := (viewangle + xtoviewangle[x1]) shr ANGLETOFINESHIFT;

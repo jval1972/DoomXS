@@ -114,7 +114,11 @@ var
   viewcos: fixed_t;
   viewsin: fixed_t;
 
+  planerelativeaspect: Double;
+
   projection: fixed_t;
+  projectiony: fixed_t; // JVAL: 20210426 - For correct aspect
+  relative_aspect: Double;
 
   centerx: integer;
   centery: integer;
@@ -164,6 +168,7 @@ uses
   d_net,
   m_bbox,
   m_menu,
+  i_video,
   p_setup,
   r_draw,
   r_bsp,
@@ -471,7 +476,7 @@ begin
   // both sines are always positive
   sinea := finesine[anglea shr ANGLETOFINESHIFT];
   sineb := finesine[angleb shr ANGLETOFINESHIFT];
-  num := FixedMul(projection, sineb);
+  num := FixedMul(projectiony, sineb);
   den := FixedMul(rw_distance, sinea);
 
   if den > _SHR(num, 16) then
@@ -527,6 +532,7 @@ var
   x: integer;
   t: integer;
   focallength: fixed_t;
+  fov: fixed_t;
   an: angle_t;
 begin
   // Use tangent table to generate viewangletox:
@@ -535,7 +541,12 @@ begin
   //
   // Calc focallength
   //  so FIELDOFVIEW angles covers SCREENWIDTH.
-  focallength := FixedDiv(centerxfrac, finetangent[FINEANGLES div 4 + FIELDOFVIEW div 2]);
+  // JVAL: Widescreen support
+  if relative_aspect = 1.0 then
+    fov := ANG90 shr ANGLETOFINESHIFT
+  else
+    fov := Round(arctan(relative_aspect) * FINEANGLES / D_PI);
+  focallength := FixedDiv(centerxfrac, finetangent[FINEANGLES div 4 + fov div 2]);
 
   for i := 0 to FINEANGLES div 2 - 1 do
   begin
@@ -667,7 +678,9 @@ begin
   centerx := viewwidth div 2;
   centerxfrac := centerx * FRACUNIT;
   centeryfrac := centery * FRACUNIT;
-  projection := centerxfrac;
+  relative_aspect := I_NativeWidth / I_NativeHeight * 0.75;
+  projection := Round(centerx / relative_aspect * FRACUNIT);
+  projectiony := Round(((SCREENHEIGHT * centerx * 320) / 200) / SCREENWIDTH * FRACUNIT); // JVAL for correct aspect
 
   colfunc := R_DrawColumn;
   skycolfunc := R_DrawSkyColumn;
@@ -680,8 +693,10 @@ begin
   R_InitTextureMapping;
 
   // psprite scales
-  pspritescale := FRACUNIT * viewwidth div 320;
-  pspriteiscale := FRACUNIT * 320 div viewwidth;
+  // JVAL: Widescreen support
+  pspritescale := Round((centerx / relative_aspect * FRACUNIT) / 160);
+  pspriteyscale := Round((((SCREENHEIGHT * viewwidth) / SCREENWIDTH) * FRACUNIT + FRACUNIT div 2) / 200);
+  pspriteiscale := FixedDiv(FRACUNIT, pspritescale);
 
   // thing clipping
   for i := 0 to viewwidth - 1 do
@@ -692,7 +707,7 @@ begin
   begin
     dy := ((i - viewheight div 2) * FRACUNIT) + FRACUNIT div 2;
     dy := abs(dy);
-    yslope[i] := FixedDiv(viewwidth * FRACUNIT div 2, dy);
+    yslope[i] := FixedDiv(projectiony, dy); // JVAL for correct aspect
   end;
 
   for i := 0 to viewwidth - 1 do
@@ -793,6 +808,9 @@ begin
 
   viewsin := finesine[viewangle shr ANGLETOFINESHIFT];
   viewcos := finecosine[viewangle shr ANGLETOFINESHIFT];
+
+  // JVAL: Widescreen support
+  planerelativeaspect := 320 / 200 * SCREENHEIGHT / SCREENWIDTH * relative_aspect;
 
   sscount := 0;
 
