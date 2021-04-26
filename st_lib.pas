@@ -119,7 +119,6 @@ type
     //  stating whether to update icon
     _on: PBoolean;
 
-
     p: Ppatch_t;   // icon
     data: integer; // user data
   end;

@@ -401,8 +401,6 @@ var
 // max ammo widgets
   w_maxammo: array[0..3] of st_number_t;
 
-
-
 // number of frags so far in deathmatch
   st_fragscount: integer;
 
