@@ -892,14 +892,20 @@ begin
 end;
 
 procedure M_QuitDOOM(choice: integer);
+var
+  endmsg: Pendmsg_t;
 begin
   // We pick index 0 which is language sensitive,
   //  or one at random, between 1 and maximum number.
+  if gamemode = commercial then
+    endmsg := @doom2_endmsg
+  else
+    endmsg := @doom1_endmsg;
   if language <> english then
     sprintf(endstring, '%s' + #13#10#13#10 + DOSY, [endmsg[0]])
   else
     sprintf(endstring, '%s' + #13#10#13#10 + DOSY,
-      [endmsg[(gametic mod (NUM_QUITMESSAGES - 2)) + 1]]);
+      [endmsg[gametic mod NUM_QUITMESSAGES]]);
 
   M_StartMessage(endstring, @M_QuitResponse, True);
 end;
