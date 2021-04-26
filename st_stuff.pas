@@ -28,14 +28,17 @@ unit st_stuff;
 
 interface
 
-uses doomtype, doomdef, d_event;
+uses
+  doomtype,
+  doomdef,
+  d_event;
 
 // Size of statusbar.
 // Now sensitive for scaling.
 const
   ST_HEIGHT = 32;
-  ST_WIDTH = 320; //SCREENWIDTH;
-  ST_Y = 200 - ST_HEIGHT; //SCREENHEIGHT - ST_HEIGHT;
+  ST_WIDTH = 320;
+  ST_Y = 200 - ST_HEIGHT;
 
 
 //
@@ -419,7 +422,7 @@ var
   keyboxes: array[0..2] of integer;
 
 // a random number per tick
-  st_randomnumber: integer;  
+  st_randomnumber: integer;
 
 
 const
@@ -789,6 +792,7 @@ var
 procedure ST_updateFaceWidget;
 var
   i: integer;
+  to_right: boolean;
   badguyangle: angle_t;
   diffang: angle_t;
   doevilgrin: boolean;
@@ -852,13 +856,13 @@ begin
         begin
           // whether right or left
           diffang := badguyangle - plyr.mo.angle;
-          i := intval(diffang > ANG180);
+          to_right := diffang > ANG180;
         end
         else
         begin
           // whether left or right
           diffang := plyr.mo.angle - badguyangle;
-          i := intval(diffang <= ANG180);
+          to_right := diffang <= ANG180;
         end; // confusing, aint it?
 
 
@@ -870,7 +874,7 @@ begin
           // head-on
           st_faceindex := st_faceindex + ST_RAMPAGEOFFSET;
         end
-        else if i <> 0 then
+        else if to_right then
         begin
           // turn face right
           st_faceindex := st_faceindex + ST_TURNOFFSET;
@@ -903,7 +907,7 @@ begin
       end;
     end;
   end;
-    
+
   if priority < 6 then
   begin
     // rapid firing
@@ -1101,7 +1105,7 @@ end;
 
 procedure ST_Refresh(refresh: boolean);
 begin
-  // draw status bar background to off-screen buff}
+  // draw status bar background to off-screen buff
   ST_RefreshBackground;
   // and refresh all widgets
   ST_DrawWidgets(refresh);
@@ -1116,7 +1120,10 @@ begin
   // Do red-/gold-shifts from damage/items
   ST_doPaletteStuff;
 
-  ST_Refresh(st_firsttime);
+  if st_firsttime then
+    ST_Refresh(true)
+  else
+    ST_DrawWidgets(true);
 end;
 
 procedure ST_loadGraphics;
@@ -1130,25 +1137,25 @@ begin
   for i := 0 to 9 do
   begin
     sprintf(namebuf, 'STTNUM%d', [i]);
-    tallnum[i] := Ppatch_t(W_CacheLumpName(namebuf, PU_STATIC));
+    tallnum[i] := W_CacheLumpName(namebuf, PU_STATIC);
 
     sprintf(namebuf, 'STYSNUM%d', [i]);
-    shortnum[i] := Ppatch_t(W_CacheLumpName(namebuf, PU_STATIC));
+    shortnum[i] := W_CacheLumpName(namebuf, PU_STATIC);
   end;
 
   // Load percent key.
   //Note: why not load STMINUS here, too?
-  tallpercent := Ppatch_t(W_CacheLumpName('STTPRCNT', PU_STATIC));
+  tallpercent := W_CacheLumpName('STTPRCNT', PU_STATIC);
 
   // key cards
   for i := 0 to Ord(NUMCARDS) - 1 do
   begin
     sprintf(namebuf, 'STKEYS%d', [i]);
-    keys[i] := Ppatch_t(W_CacheLumpName(namebuf, PU_STATIC));
+    keys[i] := W_CacheLumpName(namebuf, PU_STATIC);
   end;
 
   // arms background
-  armsbg := Ppatch_t(W_CacheLumpName('STARMS', PU_STATIC));
+  armsbg := W_CacheLumpName('STARMS', PU_STATIC);
 
   // arms ownership widgets
   for i := 0 to 5 do
@@ -1156,7 +1163,7 @@ begin
     sprintf(namebuf, 'STGNUM%d', [i + 2]);
 
     // gray #
-    arms[i][0] := Ppatch_t(W_CacheLumpName(namebuf, PU_STATIC));
+    arms[i][0] := W_CacheLumpName(namebuf, PU_STATIC);
 
     // yellow #
     arms[i][1] := shortnum[i + 2];
@@ -1164,10 +1171,10 @@ begin
 
   // face backgrounds for different color players
   sprintf(namebuf, 'STFB%d', [consoleplayer]);
-  faceback := Ppatch_t(W_CacheLumpName(namebuf, PU_STATIC));
+  faceback := W_CacheLumpName(namebuf, PU_STATIC);
 
   // status bar background bits
-  sbar := Ppatch_t(W_CacheLumpName('STBAR', PU_STATIC));
+  sbar := W_CacheLumpName('STBAR', PU_STATIC);
 
   // face states
   facenum := 0;
@@ -1421,7 +1428,7 @@ begin
   if st_stopped then
     exit;
 
-  I_SetPalette(W_CacheLumpNum (lu_palette, PU_CACHE));
+  I_SetPalette(W_CacheLumpNum(lu_palette, PU_CACHE));
 
   st_stopped := true;
 end;
