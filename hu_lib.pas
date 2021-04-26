@@ -99,9 +99,6 @@ type
 // Widget creation, access, and update routines
 //
 
-// initializes heads-up widget library
-procedure HUlib_init;
-
 //
 // textline code
 //
@@ -150,14 +147,8 @@ procedure HUlib_initIText(it: Phu_itext_t; x: integer; y: integer; font: Ppatch_
 // enforces left margin
 procedure HUlib_delCharFromIText(it: Phu_itext_t);
 
-// enforces left margin
-procedure HUlib_eraseLineFromIText(it: Phu_itext_t);
-
 // resets line and left margin
 procedure HUlib_resetIText(it: Phu_itext_t);
-
-// left of left-margin
-procedure HUlib_addPrefixToIText(it: Phu_itext_t; str: string);
 
 // whether eaten
 function HUlib_keyInIText(it: Phu_itext_t; ch: byte): boolean;
@@ -172,11 +163,7 @@ implementation
 uses
   v_video,
   r_draw,
-  am_map {automapactive};
-
-procedure HUlib_init;
-begin
-end;
+  am_map;
 
 procedure HUlib_clearTextLine(t: Phu_textline_t);
 begin
@@ -386,26 +373,11 @@ begin
     HUlib_delCharFromTextLine(@it.l);
 end;
 
-procedure HUlib_eraseLineFromIText(it: Phu_itext_t);
-begin
-  while it.lm <> it.l.len do
-    HUlib_delCharFromTextLine(@it.l);
-end;
-
 // Resets left margin as well
 procedure HUlib_resetIText(it: Phu_itext_t);
 begin
   it.lm := 0;
   HUlib_clearTextLine(@it.l);
-end;
-
-procedure HUlib_addPrefixToIText(it: Phu_itext_t; str: string);
-var
-  i: integer;
-begin
-  for i := 1 to Length(str) do
-    HUlib_addCharToTextLine(@it.l, str[i]);
-  it.lm := it.l.len;
 end;
 
 // wrapper function for handling general keyed input.
