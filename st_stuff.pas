@@ -304,9 +304,6 @@ var
 // ST_Start() has just been called
   st_firsttime: boolean;
 
-// used to execute ST_Init() only once
-  veryfirsttime: integer;
-
 // lump number for PLAYPAL
   lu_palette: integer;
 
@@ -1457,7 +1454,6 @@ end;
 
 procedure ST_Init;
 begin
-  veryfirsttime := 0;
   ST_loadData;
   screens[SCN_ST] := Z_Malloc(ST_WIDTH * ST_HEIGHT, PU_STATIC, nil);
 end;
@@ -1465,7 +1461,6 @@ end;
 
 initialization
 ////////////////////////////////////////////////////////////////////////////////
-  veryfirsttime := 1;
   st_msgcounter := 0;
   st_oldhealth := -1;
   st_facecount := 0;
