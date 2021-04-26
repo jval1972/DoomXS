@@ -303,7 +303,7 @@ begin
   begin
     buffer := 'STCFN' + IntToStrZfill(3, j);
     inc(j);
-    hu_font[i] := Ppatch_t(W_CacheLumpName(buffer, PU_STATIC));
+    hu_font[i] := W_CacheLumpName(buffer, PU_STATIC);
   end;
 end;
 
