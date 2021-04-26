@@ -124,7 +124,7 @@ procedure R_MapPlane(y: integer; x1: integer; x2: integer);
 var
   angle: angle_t;
   distance: fixed_t;
-  length: fixed_t;
+  len: fixed_t;
   index: LongWord;
   slope: Double;
 begin
@@ -133,10 +133,10 @@ begin
   ds_xstep := Round(viewsin * slope / FRACUNIT);
   ds_ystep := Round(viewcos * slope / FRACUNIT);
 
-  length := FixedMul(distance, distscale[x1]);
+  len := FixedMul(distance, distscale[x1]);
   angle := (viewangle + xtoviewangle[x1]) shr ANGLETOFINESHIFT;
-  ds_xfrac := viewx + FixedMul(finecosine[angle], length);
-  ds_yfrac := -viewy - FixedMul(finesine[angle], length);
+  ds_xfrac := viewx + FixedMul(finecosine[angle], len);
+  ds_yfrac := -viewy - FixedMul(finesine[angle], len);
 
   if fixedcolormap <> nil then
     ds_colormap := fixedcolormap
