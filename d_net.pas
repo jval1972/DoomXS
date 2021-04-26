@@ -513,7 +513,6 @@ begin
   gameticdiv := gametic div ticdup;
   for i := 0 to newtics - 1 do
   begin
-    I_StartTic;
     D_ProcessEvents;
 
     if I_GameFinished then
@@ -573,11 +572,9 @@ begin
   while I_GetTime < stoptic do
   begin
     I_WaitVBL(1);
-    I_StartTic;
     I_ProcessWindows;
   end;
 
-  I_StartTic;
   repeat
     ev := @events[eventtail];
     if (ev._type = ev_keydown) and (ev.data1 = KEY_ESCAPE) then

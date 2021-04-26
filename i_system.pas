@@ -49,12 +49,6 @@ procedure I_ClearInterface(var Dest: IInterface);
 { Can call D_PostEvent. }
 procedure I_StartFrame;
 
-{ Called by D_DoomLoop, }
-{ called before processing each tic in a frame. }
-{ Quick syncronous operations are performed here. }
-{ Can call D_PostEvent. }
-procedure I_StartTic;
-
 { Asynchronous interrupt functions should maintain private queues }
 { that are read by the synchronous functions }
 { to be converted into events. }
@@ -126,13 +120,6 @@ begin
   I_ProcessWindows;
   I_ProcessMusic;
   I_ProcessInput;
-end;
-
-// I_StartTic
-procedure I_StartTic;
-begin
-  //  if not InBackground then   // VJ ?
-  //    I_ProcessInput;          // VJ ?
 end;
 
 var

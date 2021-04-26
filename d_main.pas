@@ -320,7 +320,6 @@ begin
     // process one or more tics
     if singletics then
     begin
-      I_StartTic;
       D_ProcessEvents;
       G_BuildTiccmd(@netcmds[consoleplayer][maketic mod BACKUPTICS]);
       if advancedemo then
