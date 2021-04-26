@@ -204,7 +204,7 @@ uses
   tables;
 
 const
-  SAVEGAMESIZE = $2C000;
+  SAVEGAMESIZE = 3 * SCREENWIDTH * SCREENHEIGHT;
   SAVESTRINGSIZE = 24;
 
 procedure G_ReadDemoTiccmd(cmd: Pticcmd_t); forward;
