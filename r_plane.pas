@@ -241,16 +241,15 @@ begin
 
   lastvisplane := R_NewVisPlane;
 
-  visplanes[check].height := height;
-  visplanes[check].picnum := picnum;
-  visplanes[check].lightlevel := lightlevel;
-  visplanes[check].minx := SCREENWIDTH;
-  visplanes[check].maxx := -1;
+  result := @visplanes[check];
+  result.height := height;
+  result.picnum := picnum;
+  result.lightlevel := lightlevel;
+  result.minx := SCREENWIDTH;
+  result.maxx := -1;
 
   for i := 0 to SCREENWIDTH - 1 do
-    visplanes[check].top[i] := VISEND;
-
-  result := @visplanes[check];
+    result.top[i] := VISEND;
 end;
 
 //
