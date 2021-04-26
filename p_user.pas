@@ -283,17 +283,17 @@ begin
     //  (read: not in the middle of an attack).
     newweapon := weapontype_t(_SHR(cmd.buttons and BT_WEAPONMASK, BT_WEAPONSHIFT));
 
-    if (newweapon = wp_fist) and player.weaponowned[Ord(wp_chainsaw)] and
+    if (newweapon = wp_fist) and (player.weaponowned[Ord(wp_chainsaw)] > 0) and
       (not ((player.readyweapon = wp_chainsaw) and
       (player.powers[Ord(pw_strength)] <> 0))) then
       newweapon := wp_chainsaw;
 
     if (gamemode = commercial) and (newweapon = wp_shotgun) and
-      player.weaponowned[Ord(wp_supershotgun)] and
+      (player.weaponowned[Ord(wp_supershotgun)] > 0) and
       (player.readyweapon <> wp_supershotgun) then
       newweapon := wp_supershotgun;
 
-    if player.weaponowned[Ord(newweapon)] and
+    if (player.weaponowned[Ord(newweapon)] > 0) and
       (newweapon <> player.readyweapon) then
       // Do not go to plasma or BFG in shareware,
       //  even if cheated.

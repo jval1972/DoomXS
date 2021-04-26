@@ -132,7 +132,7 @@ begin
     begin
       if player.readyweapon = wp_fist then
       begin
-        if player.weaponowned[Ord(wp_chaingun)] then
+        if player.weaponowned[Ord(wp_chaingun)] > 0 then
           player.pendingweapon := wp_chaingun
         else
           player.pendingweapon := wp_pistol;
@@ -143,7 +143,7 @@ begin
       if (player.readyweapon = wp_fist) or (player.readyweapon =
         wp_pistol) then
       begin
-        if player.weaponowned[Ord(wp_shotgun)] then
+        if player.weaponowned[Ord(wp_shotgun)] > 0 then
           player.pendingweapon := wp_shotgun;
       end;
     end;
@@ -152,7 +152,7 @@ begin
       if (player.readyweapon = wp_fist) or (player.readyweapon =
         wp_pistol) then
       begin
-        if player.weaponowned[Ord(wp_plasma)] then
+        if player.weaponowned[Ord(wp_plasma)] > 0 then
           player.pendingweapon := wp_plasma;
       end;
     end;
@@ -160,7 +160,7 @@ begin
     begin
       if player.readyweapon = wp_fist then
       begin
-        if player.weaponowned[Ord(wp_missile)] then
+        if player.weaponowned[Ord(wp_missile)] > 0 then
           player.pendingweapon := wp_missile;
       end;
     end;
@@ -182,14 +182,14 @@ begin
   if netgame and (deathmatch <> 2) and not dropped then
   begin
     // leave placed weapons forever on net games
-    if player.weaponowned[Ord(weapon)] then
+    if player.weaponowned[Ord(weapon)] > 0 then
     begin
       Result := False;
       exit;
     end;
 
     player.bonuscount := player.bonuscount + BONUSADD;
-    player.weaponowned[Ord(weapon)] := True;
+    player.weaponowned[Ord(weapon)] := 1;
 
     if deathmatch <> 0 then
       P_GiveAmmo(player, weaponinfo[Ord(weapon)].ammo, 5)
@@ -215,12 +215,12 @@ begin
   else
     gaveammo := False;
 
-  if player.weaponowned[Ord(weapon)] then
+  if player.weaponowned[Ord(weapon)] > 0 then
     gaveweapon := False
   else
   begin
     gaveweapon := True;
-    player.weaponowned[Ord(weapon)] := True;
+    player.weaponowned[Ord(weapon)] := 1;
     player.pendingweapon := weapon;
   end;
 

@@ -889,8 +889,8 @@ begin
   p.health := MAXHEALTH;
   p.readyweapon := wp_pistol;
   p.pendingweapon := wp_pistol;
-  p.weaponowned[Ord(wp_fist)] := True;
-  p.weaponowned[Ord(wp_pistol)] := True;
+  p.weaponowned[Ord(wp_fist)] := 1;
+  p.weaponowned[Ord(wp_pistol)] := 1;
   p.ammo[Ord(am_clip)] := 50;
 
   for i := 0 to Ord(NUMAMMO) - 1 do
