@@ -458,13 +458,10 @@ const
     Chr($ff)
   );
 
-//
   cheat_commercial_noclip_seq: array[0..6] of char = (
     Chr($b2), Chr($26), Chr($e2), Chr($36), Chr($b2),
     Chr($2a), Chr($ff)  // idclip
   );
-
-
 
   cheat_powerup_seq0: array[0..9] of char = (
     Chr($b2), Chr($26), Chr($62), Chr($a6), Chr($32),
@@ -527,19 +524,6 @@ var
   cheat_choppers: cheatseq_t;
   cheat_clev: cheatseq_t;
   cheat_mypos: cheatseq_t;
-
-
-// Should be set to patch width
-//  for tall numbers later on
-function ST_TALLNUMWIDTH: integer;
-begin
-  result := tallnum[0].width;
-end;
-
-function ST_MAPWIDTH: integer;
-begin
-  result := Length(mapnames[(gameepisode - 1) * 9 + (gamemap - 1)]);
-end;
 
 //
 // STATUS BAR CODE
