@@ -52,6 +52,7 @@ var
   pspritescale: fixed_t;
   pspriteyscale: fixed_t;
   pspriteiscale: fixed_t;
+  pspriteiscalep: fixed_t;
 
 var
   mfloorclip: PSmallIntArray;
@@ -464,7 +465,7 @@ begin
       ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
-  dc_iscale := vis.xiscale;
+  dc_iscale := FixedDiv(FRACUNIT, vis.scale); //vis.xiscale;
   dc_texturemid := vis.texturemid;
   frac := vis.startfrac;
   fracstep := vis.xiscale;
@@ -707,12 +708,12 @@ begin
 
   if flip then
   begin
-    vis.xiscale := -pspriteiscale;
+    vis.xiscale := -pspriteiscalep;
     vis.startfrac := spritewidth[lump] - 1;
   end
   else
   begin
-    vis.xiscale := pspriteiscale;
+    vis.xiscale := pspriteiscalep;
     vis.startfrac := 0;
   end;
 
