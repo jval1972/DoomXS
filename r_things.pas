@@ -52,7 +52,6 @@ var
   pspritescale: fixed_t;
   pspriteyscale: fixed_t;
   pspriteiscale: fixed_t;
-  pspriteiscalep: fixed_t;
 
 var
   mfloorclip: PSmallIntArray;
@@ -708,12 +707,12 @@ begin
 
   if flip then
   begin
-    vis.xiscale := -pspriteiscalep;
+    vis.xiscale := -pspriteiscale;
     vis.startfrac := spritewidth[lump] - 1;
   end
   else
   begin
-    vis.xiscale := pspriteiscalep;
+    vis.xiscale := pspriteiscale;
     vis.startfrac := 0;
   end;
 

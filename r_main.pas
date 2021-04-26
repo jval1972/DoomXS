@@ -697,7 +697,6 @@ begin
   pspritescale := Round((centerx / relative_aspect * FRACUNIT) / 160);
   pspriteyscale := Round((((SCREENHEIGHT * viewwidth) / SCREENWIDTH) * FRACUNIT + FRACUNIT div 2) / 200);
   pspriteiscale := FixedDiv(FRACUNIT, pspritescale);
-  pspriteiscalep := FixedDiv(FRACUNIT, pspritescale);
 
   // thing clipping
   for i := 0 to viewwidth - 1 do
