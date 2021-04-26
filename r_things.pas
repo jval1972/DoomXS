@@ -36,7 +36,7 @@ uses
   r_defs;
 
 const
-  MAXVISSPRITES = 128;
+  MAXVISSPRITES = 256; // JVAL was = 128
 
 procedure R_DrawMaskedColumn(column: Pcolumn_t);
 
