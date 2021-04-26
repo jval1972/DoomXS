@@ -60,7 +60,7 @@ var
   ceilingplane: Pvisplane_t;
 
 const
-  MAXOPENINGS = SCREENWIDTH * 64;
+  MAXOPENINGS = SCREENWIDTH * SCREENHEIGHT; //https://www.doomworld.com/vb/source-ports/85967-reasonable-static-limit-for-maxopenings/
 
 var
   openings: packed array[0..MAXOPENINGS - 1] of smallint;
