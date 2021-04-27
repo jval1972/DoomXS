@@ -56,28 +56,22 @@ type
     // left-justified position of scrolling text window
     x: integer;
     y: integer;
-
     f: Ppatch_tPArray; // font
     sc: integer; // start character
     l: array[0..(HU_MAXLINELENGTH + 1) - 1] of char; // line of text
     len: integer; // current line length
-
-    // whether this line needs to be udpated
-    needsupdate: integer;
+    needsupdate: integer; // whether this line needs to be udpated
   end;
   Phu_textline_t = ^hu_textline_t;
 
 // Scrolling Text window widget
 //  (child of Text Line widget)
-
   hu_stext_t = record
     l: array[0..HU_MAXLINES - 1] of hu_textline_t; // text lines to draw
-    h: integer; // height in lines
-    cl: integer; // current line number
-
-    // pointer to boolean stating whether to update window
-    _on: Pboolean;
-    laston: boolean; // last value of *._on.
+    h: integer;       // height in lines
+    cl: integer;      // current line number
+    _on: Pboolean;    // pointer to boolean stating whether to update window
+    laston: boolean;  // last value of *._on.
   end;
   Phu_stext_t = ^hu_stext_t;
 
@@ -85,13 +79,9 @@ type
 //  (child of Text Line widget)
   hu_itext_t = record
     l: hu_textline_t; // text line to input on
-
-    // left margin past which I am not to delete characters
-    lm: integer;
-
-    // pointer to boolean stating whether to update window
-    _on: Pboolean;
-    laston: boolean; // last value of *->on;
+    lm: integer;      // left margin past which I am not to delete characters
+    _on: Pboolean;    // pointer to boolean stating whether to update window
+    laston: boolean;  // last value of *->on;
   end;
   Phu_itext_t = ^hu_itext_t;
 
@@ -242,9 +232,6 @@ begin
 end;
 
 // sorta called by HU_Erase and just better darn get things straight
-var
-  lastautomapactive: boolean = true;
-
 procedure HUlib_eraseTextLine(l: Phu_textline_t);
 var
   lh: integer;
@@ -275,7 +262,6 @@ begin
     end;
   end;
 
-  lastautomapactive := automapactive;
   if l.needsupdate > 0 then
     l.needsupdate := l.needsupdate - 1;
 end;
