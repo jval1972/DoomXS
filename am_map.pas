@@ -706,28 +706,28 @@ begin
         followplayer := not followplayer;
         f_oldloc.x := MAXINT;
         if followplayer then
-          plr._message := AMSTR_FOLLOWON
+          plr.msg := AMSTR_FOLLOWON
         else
-          plr._message := AMSTR_FOLLOWOFF;
+          plr.msg := AMSTR_FOLLOWOFF;
       end;
       Ord(AM_GRIDKEY):
       begin
         grid := not grid;
         if grid then
-          plr._message := AMSTR_GRIDON
+          plr.msg := AMSTR_GRIDON
         else
-          plr._message := AMSTR_GRIDOFF;
+          plr.msg := AMSTR_GRIDOFF;
       end;
       Ord(AM_MARKKEY):
       begin
         sprintf(msg, '%s %d', [AMSTR_MARKEDSPOT, markpointnum]);
-        plr._message := msg;
+        plr.msg := msg;
         AM_addMark;
       end;
       Ord(AM_CLEARMARKKEY):
       begin
         AM_clearMarks;
-        plr._message := AMSTR_MARKSCLEARED;
+        plr.msg := AMSTR_MARKSCLEARED;
       end
       else
       begin

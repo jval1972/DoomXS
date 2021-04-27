@@ -400,11 +400,11 @@ begin
   if (showMessages <> 0) or message_dontfuckwithme then
   begin
     // display message if necessary
-    if ((plr._message <> '') and not message_nottobefuckedwith) or
-       ((plr._message <> '') and message_dontfuckwithme) then
+    if ((plr.msg <> '') and not message_nottobefuckedwith) or
+       ((plr.msg <> '') and message_dontfuckwithme) then
     begin
-      HUlib_addMessageToSText(@w_message, '', plr._message);
-      plr._message := '';
+      HUlib_addMessageToSText(@w_message, '', plr.msg);
+      plr.msg := '';
       message_on := true;
       message_counter := HU_MSGTIMEOUT;
       message_nottobefuckedwith := message_dontfuckwithme;
@@ -466,7 +466,7 @@ var
 procedure HU_queueChatChar(c: char);
 begin
   if ((head + 1) and (QUEUESIZE - 1)) = tail then
-    plr._message := HUSTR_MSGU
+    plr.msg := HUSTR_MSGU
   else
   begin
     chatchars[head] := c;
@@ -553,15 +553,15 @@ begin
           begin
             inc(num_nobrainers);
             if num_nobrainers < 3 then
-              plr._message := HUSTR_TALKTOSELF1
+              plr.msg := HUSTR_TALKTOSELF1
             else if num_nobrainers < 6 then
-              plr._message := HUSTR_TALKTOSELF2
+              plr.msg := HUSTR_TALKTOSELF2
             else if num_nobrainers < 9 then
-              plr._message := HUSTR_TALKTOSELF3
+              plr.msg := HUSTR_TALKTOSELF3
             else if num_nobrainers < 32 then
-              plr._message := HUSTR_TALKTOSELF4
+              plr.msg := HUSTR_TALKTOSELF4
             else
-              plr._message := HUSTR_TALKTOSELF5;
+              plr.msg := HUSTR_TALKTOSELF5;
           end
         end;
       end;
@@ -589,7 +589,7 @@ begin
       // leave chat mode and notify that it was sent
       chat_on := false;
       lastmessage := chat_macros[Ord(c)];
-      plr._message := lastmessage;
+      plr.msg := lastmessage;
       result := true;
     end
     else
@@ -607,7 +607,7 @@ begin
         if w_chat.l.len <> 0 then
         begin
           lastmessage := w_chat.l.l;
-          plr._message := lastmessage;
+          plr.msg := lastmessage;
         end
       end
       else if Ord(c) = KEY_ESCAPE then

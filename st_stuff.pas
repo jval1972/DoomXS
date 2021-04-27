@@ -600,10 +600,10 @@ begin
             plyr.mo.health := 100;
 
           plyr.health := 100;
-          plyr._message := STSTR_DQDON;
+          plyr.msg := STSTR_DQDON;
         end
         else
-          plyr._message := STSTR_DQDOFF;
+          plyr.msg := STSTR_DQDOFF;
       end
       // 'fa' cheat for killer fucking arsenal
       else if cht_CheckCheat(@cheat_ammonokey, Chr(ev.data1)) then
@@ -617,7 +617,7 @@ begin
         for i := 0 to Ord(NUMAMMO) - 1 do
           plyr.ammo[i] := plyr.maxammo[i];
 
-        plyr._message := STSTR_FAADDED;
+        plyr.msg := STSTR_FAADDED;
       end
       // 'kfa' cheat for key full ammo
       else if cht_CheckCheat(@cheat_ammo, Chr(ev.data1)) then
@@ -634,12 +634,12 @@ begin
         for i := 0 to Ord(NUMCARDS) - 1 do
           plyr.cards[i] := true;
 
-        plyr._message := STSTR_KFAADDED;
+        plyr.msg := STSTR_KFAADDED;
       end
       // 'mus' cheat for changing music
       else if cht_CheckCheat(@cheat_mus, Chr(ev.data1)) then
       begin
-        plyr._message := STSTR_MUS;
+        plyr.msg := STSTR_MUS;
         cht_GetParam(@cheat_mus, buf);
 
         if gamemode = commercial then
@@ -647,7 +647,7 @@ begin
           musnum := Ord(mus_runnin) + (Ord(buf[1]) - Ord('0')) * 10 + Ord(buf[2]) - Ord('0') - 1;
 
           if (Ord(buf[1]) - Ord('0')) * 10 + Ord(buf[2]) - Ord('0') > 35 then
-            plyr._message := STSTR_NOMUS
+            plyr.msg := STSTR_NOMUS
           else
             S_ChangeMusic(musnum, true);
         end
@@ -656,7 +656,7 @@ begin
           musnum := Ord(mus_e1m1) + (Ord(buf[1]) - Ord('1')) * 9 + Ord(buf[2]) - Ord('1');
 
           if (Ord(buf[1]) - Ord('1')) * 9 + Ord(buf[2]) - Ord('1') > 31 then
-            plyr._message := STSTR_NOMUS
+            plyr.msg := STSTR_NOMUS
           else
             S_ChangeMusic(musnum, true);
         end;
@@ -669,9 +669,9 @@ begin
         plyr.cheats := plyr.cheats xor CF_NOCLIP;
 
         if plyr.cheats and CF_NOCLIP <> 0 then
-          plyr._message := STSTR_NCON
+          plyr.msg := STSTR_NCON
         else
-          plyr._message := STSTR_NCOFF;
+          plyr.msg := STSTR_NCOFF;
       end;
       // 'behold?' power-up cheats
       for i := 0 to 5 do
@@ -685,21 +685,21 @@ begin
           else
             plyr.powers[i] := 0;
 
-          plyr._message := STSTR_BEHOLDX;
+          plyr.msg := STSTR_BEHOLDX;
         end;
       end;
 
       // 'behold' power-up menu
       if cht_CheckCheat(@cheat_powerup[6], Chr(ev.data1)) then
       begin
-        plyr._message := STSTR_BEHOLD;
+        plyr.msg := STSTR_BEHOLD;
       end
       // 'choppers' invulnerability & chainsaw
       else if cht_CheckCheat(@cheat_choppers, Chr(ev.data1)) then
       begin
         plyr.weaponowned[Ord(wp_chainsaw)] := 1;
         plyr.powers[Ord(pw_invulnerability)] := 1;
-        plyr._message := STSTR_CHOPPERS;
+        plyr.msg := STSTR_CHOPPERS;
       end
       // 'mypos' for player position
       else if cht_CheckCheat(@cheat_mypos, Chr(ev.data1)) then
@@ -708,7 +708,7 @@ begin
           plyr.mo.angle div $B60B60,
           plyr.mo.x div FRACUNIT,
           plyr.mo.y div FRACUNIT]);
-        plyr._message := buf;
+        plyr.msg := buf;
       end;
     end;
 
@@ -752,7 +752,7 @@ begin
         exit;
 
       // So be it.
-      plyr._message := STSTR_CLEV;
+      plyr.msg := STSTR_CLEV;
       G_DeferedInitNew(gameskill, epsd, map);
       result := true;
     end;

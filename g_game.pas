@@ -757,7 +757,7 @@ begin
          (((_SHR(gametic, 5)) and 3) = i) then
       begin
         sprintf(msg, '%s is turbo!', [player_names[i]]);
-        players[consoleplayer]._message := msg;
+        players[consoleplayer].msg := msg;
       end;
 
       if netgame and not netdemo and (gametic mod ticdup = 0) then
@@ -1366,7 +1366,7 @@ begin
   gameaction := ga_nothing;
   savedescription := '';
 
-  players[consoleplayer]._message := GGSAVED;
+  players[consoleplayer].msg := GGSAVED;
 
   // draw the pattern into the back screen
   R_FillBackScreen;

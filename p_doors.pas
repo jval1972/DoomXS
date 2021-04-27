@@ -203,7 +203,7 @@ begin
     begin
       if not p.cards[Ord(it_bluecard)] and not p.cards[Ord(it_blueskull)] then
       begin
-        p._message := PD_BLUEO;
+        p.msg := PD_BLUEO;
         S_StartSound(nil, Ord(sfx_oof));
         Result := 0;
         exit;
@@ -215,7 +215,7 @@ begin
     begin
       if not p.cards[Ord(it_redcard)] and not p.cards[Ord(it_redskull)] then
       begin
-        p._message := PD_REDO;
+        p.msg := PD_REDO;
         S_StartSound(nil, Ord(sfx_oof));
         Result := 0;
         exit;
@@ -227,7 +227,7 @@ begin
     begin
       if not p.cards[Ord(it_yellowcard)] and not p.cards[Ord(it_yellowskull)] then
       begin
-        p._message := PD_YELLOWO;
+        p.msg := PD_YELLOWO;
         S_StartSound(nil, Ord(sfx_oof));
         Result := 0;
         exit;
@@ -343,7 +343,7 @@ begin
 
       if not player.cards[Ord(it_bluecard)] and not player.cards[Ord(it_blueskull)] then
       begin
-        player._message := PD_BLUEK;
+        player.msg := PD_BLUEK;
         S_StartSound(nil, Ord(sfx_oof));
         exit;
       end;
@@ -356,7 +356,7 @@ begin
 
       if not player.cards[Ord(it_yellowcard)] and not player.cards[Ord(it_yellowskull)] then
       begin
-        player._message := PD_YELLOWK;
+        player.msg := PD_YELLOWK;
         S_StartSound(nil, Ord(sfx_oof));
         exit;
       end;
@@ -369,7 +369,7 @@ begin
 
       if not player.cards[Ord(it_redcard)] and not player.cards[Ord(it_redskull)] then
       begin
-        player._message := PD_REDK;
+        player.msg := PD_REDK;
         S_StartSound(nil, Ord(sfx_oof));
         exit;
       end;

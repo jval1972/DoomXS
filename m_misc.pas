@@ -488,7 +488,7 @@ begin
   WritePCXfile(lbmname, linear, SCREENWIDTH, SCREENHEIGHT,
     W_CacheLumpName('PLAYPAL', PU_CACHE));
 
-  players[consoleplayer]._message := 'screen shot';
+  players[consoleplayer].msg := 'screen shot';
 end;
 
 end.

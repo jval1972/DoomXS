@@ -130,7 +130,7 @@ type
     secretcount: integer;
 
     // Hint messages.
-    _message: string[255];
+    msg: string[255];
 
     // For screen flashing (red or bright).
     damagecount: integer;

@@ -119,7 +119,7 @@ begin
 
     // will be set when unarc thinker
     players[i].mo := nil;
-    players[i]._message := '';
+    players[i].msg := '';
     players[i].attacker := nil;
 
     for j := 0 to Ord(NUMPSPRITES) - 1 do

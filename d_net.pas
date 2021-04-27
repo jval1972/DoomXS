@@ -408,7 +408,7 @@ begin
       playeringame[netconsole] := False;
       exitmsg := 'Player 1 left the game';
       exitmsg[7] := chr(Ord(exitmsg[7]) + netconsole);
-      players[consoleplayer]._message := exitmsg;
+      players[consoleplayer].msg := exitmsg;
       if demorecording then
         G_CheckDemoStatus;
       continue;

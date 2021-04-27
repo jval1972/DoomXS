@@ -794,9 +794,9 @@ begin
   showMessages := 1 - showMessages;
 
   if showMessages = 0 then
-    players[consoleplayer]._message := MSGOFF
+    players[consoleplayer].msg := MSGOFF
   else
-    players[consoleplayer]._message := MSGON;
+    players[consoleplayer].msg := MSGON;
 
   message_dontfuckwithme := True;
 end;
@@ -927,9 +927,9 @@ begin
   R_SetViewSize(screenblocks, detailLevel);
 
   if detailLevel = 0 then
-    players[consoleplayer]._message := DETAILHI
+    players[consoleplayer].msg := DETAILHI
   else
-    players[consoleplayer]._message := DETAILLO;
+    players[consoleplayer].msg := DETAILLO;
 
 end;
 
@@ -1405,7 +1405,7 @@ begin
         Inc(usegamma);
         if usegamma > 4 then
           usegamma := 0;
-        players[consoleplayer]._message := gammamsg[usegamma];
+        players[consoleplayer].msg := gammamsg[usegamma];
         I_SetPalette(W_CacheLumpName('PLAYPAL', PU_CACHE));
         Result := True;
         exit;

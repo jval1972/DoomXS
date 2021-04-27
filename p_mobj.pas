@@ -661,7 +661,7 @@ begin
   p.mo := mobj;
   p.playerstate := PST_LIVE;
   p.refire := 0;
-  p._message := '';
+  p.msg := '';
   p.damagecount := 0;
   p.bonuscount := 0;
   p.extralight := 0;

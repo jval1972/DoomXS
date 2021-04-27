@@ -355,14 +355,14 @@ begin
     begin
       if not P_GiveArmor(player, 1) then
         exit;
-      player._message := GOTARMOR;
+      player.msg := GOTARMOR;
     end;
 
     SPR_ARM2:
     begin
       if not P_GiveArmor(player, 2) then
         exit;
-      player._message := GOTMEGA;
+      player.msg := GOTMEGA;
     end;
 
     // bonus items
@@ -372,7 +372,7 @@ begin
       if player.health > 200 then
         player.health := 200;
       player.mo.health := player.health;
-      player._message := GOTHTHBONUS;
+      player.msg := GOTHTHBONUS;
     end;
 
     SPR_BON2:
@@ -382,7 +382,7 @@ begin
         player.armorpoints := 200;
       if player.armortype = 0 then
         player.armortype := 1;
-      player._message := GOTARMBONUS;
+      player.msg := GOTARMBONUS;
     end;
 
     SPR_SOUL:
@@ -391,7 +391,7 @@ begin
       if player.health > 200 then
         player.health := 200;
       player.mo.health := player.health;
-      player._message := GOTSUPER;
+      player.msg := GOTSUPER;
       sound := Ord(sfx_getpow);
     end;
 
@@ -402,7 +402,7 @@ begin
       player.health := 200;
       player.mo.health := player.health;
       P_GiveArmor(player, 2);
-      player._message := GOTMSPHERE;
+      player.msg := GOTMSPHERE;
       sound := Ord(sfx_getpow);
     end;
 
@@ -411,7 +411,7 @@ begin
     SPR_BKEY:
     begin
       if not player.cards[Ord(it_bluecard)] then
-        player._message := GOTBLUECARD;
+        player.msg := GOTBLUECARD;
       P_GiveCard(player, it_bluecard);
       if netgame then
         exit;
@@ -420,7 +420,7 @@ begin
     SPR_YKEY:
     begin
       if not player.cards[Ord(it_yellowcard)] then
-        player._message := GOTYELWCARD;
+        player.msg := GOTYELWCARD;
       P_GiveCard(player, it_yellowcard);
       if netgame then
         exit;
@@ -429,7 +429,7 @@ begin
     SPR_RKEY:
     begin
       if not player.cards[Ord(it_redcard)] then
-        player._message := GOTREDCARD;
+        player.msg := GOTREDCARD;
       P_GiveCard(player, it_redcard);
       if netgame then
         exit;
@@ -438,7 +438,7 @@ begin
     SPR_BSKU:
     begin
       if not player.cards[Ord(it_blueskull)] then
-        player._message := GOTBLUESKUL;
+        player.msg := GOTBLUESKUL;
       P_GiveCard(player, it_blueskull);
       if netgame then
         exit;
@@ -447,7 +447,7 @@ begin
     SPR_YSKU:
     begin
       if not player.cards[Ord(it_yellowskull)] then
-        player._message := GOTYELWSKUL;
+        player.msg := GOTYELWSKUL;
       P_GiveCard(player, it_yellowskull);
       if netgame then
         exit;
@@ -456,7 +456,7 @@ begin
     SPR_RSKU:
     begin
       if not player.cards[Ord(it_redskull)] then
-        player._message := GOTREDSKULL;
+        player.msg := GOTREDSKULL;
       P_GiveCard(player, it_redskull);
       if netgame then
         exit;
@@ -467,7 +467,7 @@ begin
     begin
       if not P_GiveBody(player, 10) then
         exit;
-      player._message := GOTSTIM;
+      player.msg := GOTSTIM;
     end;
 
     SPR_MEDI:
@@ -476,9 +476,9 @@ begin
         exit;
 
       if player.health < 25 then
-        player._message := GOTMEDINEED
+        player.msg := GOTMEDINEED
       else
-        player._message := GOTMEDIKIT;
+        player.msg := GOTMEDIKIT;
     end;
 
     // power ups
@@ -486,7 +486,7 @@ begin
     begin
       if not P_GivePower(player, Ord(pw_invulnerability)) then
         exit;
-      player._message := GOTINVUL;
+      player.msg := GOTINVUL;
       sound := Ord(sfx_getpow);
     end;
 
@@ -494,7 +494,7 @@ begin
     begin
       if not P_GivePower(player, Ord(pw_strength)) then
         exit;
-      player._message := GOTBERSERK;
+      player.msg := GOTBERSERK;
       if player.readyweapon <> wp_fist then
         player.pendingweapon := wp_fist;
       sound := Ord(sfx_getpow);
@@ -504,7 +504,7 @@ begin
     begin
       if not P_GivePower(player, Ord(pw_invisibility)) then
         exit;
-      player._message := GOTINVIS;
+      player.msg := GOTINVIS;
       sound := Ord(sfx_getpow);
     end;
 
@@ -512,7 +512,7 @@ begin
     begin
       if not P_GivePower(player, Ord(pw_ironfeet)) then
         exit;
-      player._message := GOTSUIT;
+      player.msg := GOTSUIT;
       sound := Ord(sfx_getpow);
     end;
 
@@ -520,7 +520,7 @@ begin
     begin
       if not P_GivePower(player, Ord(pw_allmap)) then
         exit;
-      player._message := GOTMAP;
+      player.msg := GOTMAP;
       sound := Ord(sfx_getpow);
     end;
 
@@ -528,7 +528,7 @@ begin
     begin
       if not P_GivePower(player, Ord(pw_infrared)) then
         exit;
-      player._message := GOTVISOR;
+      player.msg := GOTVISOR;
       sound := Ord(sfx_getpow);
     end;
 
@@ -545,56 +545,56 @@ begin
         if not P_GiveAmmo(player, am_clip, 1) then
           exit;
       end;
-      player._message := GOTCLIP;
+      player.msg := GOTCLIP;
     end;
 
     SPR_AMMO:
     begin
       if not P_GiveAmmo(player, am_clip, 5) then
         exit;
-      player._message := GOTCLIPBOX;
+      player.msg := GOTCLIPBOX;
     end;
 
     SPR_ROCK:
     begin
       if not P_GiveAmmo(player, am_misl, 1) then
         exit;
-      player._message := GOTROCKET;
+      player.msg := GOTROCKET;
     end;
 
     SPR_BROK:
     begin
       if not P_GiveAmmo(player, am_misl, 5) then
         exit;
-      player._message := GOTROCKBOX;
+      player.msg := GOTROCKBOX;
     end;
 
     SPR_CELL:
     begin
       if not P_GiveAmmo(player, am_cell, 1) then
         exit;
-      player._message := GOTCELL;
+      player.msg := GOTCELL;
     end;
 
     SPR_CELP:
     begin
       if not P_GiveAmmo(player, am_cell, 5) then
         exit;
-      player._message := GOTCELLBOX;
+      player.msg := GOTCELLBOX;
     end;
 
     SPR_SHEL:
     begin
       if not P_GiveAmmo(player, am_shell, 1) then
         exit;
-      player._message := GOTSHELLS;
+      player.msg := GOTSHELLS;
     end;
 
     SPR_SBOX:
     begin
       if not P_GiveAmmo(player, am_shell, 5) then
         exit;
-      player._message := GOTSHELLBOX;
+      player.msg := GOTSHELLBOX;
     end;
 
     SPR_BPAK:
@@ -607,7 +607,7 @@ begin
       end;
       for i := 0 to Ord(NUMAMMO) - 1 do
         P_GiveAmmo(player, ammotype_t(i), 1);
-      player._message := GOTBACKPACK;
+      player.msg := GOTBACKPACK;
     end;
 
     // weapons
@@ -615,7 +615,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_bfg, False) then
         exit;
-      player._message := GOTBFG9000;
+      player.msg := GOTBFG9000;
       sound := Ord(sfx_wpnup);
     end;
 
@@ -624,7 +624,7 @@ begin
       if not P_GiveWeapon(player, wp_chaingun,
         special.flags and MF_DROPPED <> 0) then
         exit;
-      player._message := GOTCHAINGUN;
+      player.msg := GOTCHAINGUN;
       sound := Ord(sfx_wpnup);
     end;
 
@@ -632,7 +632,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_chainsaw, False) then
         exit;
-      player._message := GOTCHAINSAW;
+      player.msg := GOTCHAINSAW;
       sound := Ord(sfx_wpnup);
     end;
 
@@ -640,7 +640,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_missile, False) then
         exit;
-      player._message := GOTLAUNCHER;
+      player.msg := GOTLAUNCHER;
       sound := Ord(sfx_wpnup);
     end;
 
@@ -648,7 +648,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_plasma, False) then
         exit;
-      player._message := GOTPLASMA;
+      player.msg := GOTPLASMA;
       sound := Ord(sfx_wpnup);
     end;
 
@@ -657,7 +657,7 @@ begin
       if not P_GiveWeapon(player, wp_shotgun,
         special.flags and MF_DROPPED <> 0) then
         exit;
-      player._message := GOTSHOTGUN;
+      player.msg := GOTSHOTGUN;
       sound := Ord(sfx_wpnup);
     end;
 
@@ -666,7 +666,7 @@ begin
       if not P_GiveWeapon(player, wp_supershotgun,
         special.flags and MF_DROPPED <> 0) then
         exit;
-      player._message := GOTSHOTGUN2;
+      player.msg := GOTSHOTGUN2;
       sound := Ord(sfx_wpnup);
     end;
 
