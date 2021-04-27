@@ -629,7 +629,7 @@ var
 
 function AM_Responder(ev: Pevent_t): boolean;
 var
-  _message: string;
+  msg: string;
 begin
   Result := False;
 
@@ -720,8 +720,8 @@ begin
       end;
       Ord(AM_MARKKEY):
       begin
-        sprintf(_message, '%s %d', [AMSTR_MARKEDSPOT, markpointnum]);
-        plr._message := _message;
+        sprintf(msg, '%s %d', [AMSTR_MARKEDSPOT, markpointnum]);
+        plr._message := msg;
         AM_addMark;
       end;
       Ord(AM_CLEARMARKKEY):
@@ -803,25 +803,6 @@ begin
     m_y2 := m_y + m_h;
     f_oldloc.x := plr.mo.x;
     f_oldloc.y := plr.mo.y;
-  end;
-end;
-
-const
-  NUMLITELEVELS = 8;
-
-var
-  nexttic: integer = 0;
-  litelevels: array[0..NUMLITELEVELS - 1] of integer = (0, 4, 7, 10, 12, 14, 15, 15);
-  litelevelscnt: integer = 0;
-
-procedure AM_updateLightLev;
-begin
-  // Change light level
-  if amclock > nexttic then
-  begin
-    lightlev := litelevels[litelevelscnt];
-    litelevelscnt := (litelevelscnt + 1) mod NUMLITELEVELS;
-    nexttic := amclock + 6 - (amclock mod 6);
   end;
 end;
 
