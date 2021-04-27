@@ -70,49 +70,6 @@ var
   g_pDDScreen: IDirectDrawSurface7 = nil;   // DirectDraw surface
   screen32: array[0..SCREENWIDTH * SCREENHEIGHT - 1] of LongWord;
 
-var
-  s_alttab_disabled: boolean = False;
-
-procedure I_DisableAltTab;
-var
-  old: boolean;
-begin
-  if s_alttab_disabled then
-    Exit;
-
-  if Win32Platform = VER_PLATFORM_WIN32_NT then
-  begin
-    if isLibrary then
-      RegisterHotKey(0, $C000, MOD_ALT, VK_TAB)
-    else
-      RegisterHotKey(0, 0, MOD_ALT, VK_TAB);
-  end
-  else
-    SystemParametersInfo(SPI_SCREENSAVERRUNNING, 1, @old, 0);
-
-  s_alttab_disabled := True;
-end;
-
-procedure I_EnableAltTab;
-var
-  old: boolean;
-begin
-  if s_alttab_disabled then
-  begin
-    if Win32Platform = VER_PLATFORM_WIN32_NT then
-    begin
-      if isLibrary then
-        UnregisterHotKey(0, $C000)
-      else
-        UnregisterHotKey(0, 0);
-    end
-    else
-      SystemParametersInfo(SPI_SCREENSAVERRUNNING, 0, @old, 0);
-
-    s_alttab_disabled := False;
-  end;
-end;
-
 procedure I_ShutdownGraphics;
 begin
   if g_pDD <> nil then
@@ -123,7 +80,6 @@ begin
     end;
     I_ClearInterface(IInterface(g_pDD));
   end;
-  I_EnableAltTab;
 end;
 
 function I_NativeWidth: integer;
