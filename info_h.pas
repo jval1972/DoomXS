@@ -404,7 +404,6 @@ type
   end;
   Pmobjinfo_t = ^mobjinfo_t;
 
-
 implementation
 
 end.
