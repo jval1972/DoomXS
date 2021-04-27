@@ -341,7 +341,14 @@ begin
   if gamemode in [shareware, registered, retail] then
     s := HU_TITLE
   else
-    s := HU_TITLE2;
+  begin
+    case gamemission of
+      pack_tnt: s := HU_TITLET;
+      pack_plut: s := HU_TITLEP;
+    else
+      s := HU_TITLE2;
+    end;
+  end;
 
   for i := 1 to Length(s) do
     HUlib_addCharToTextLine(@w_title, s[i]);
