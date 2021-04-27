@@ -77,7 +77,6 @@ const
 // Loads of by-pixel layout and placement, offsets etc.
 //
 
-
 //
 // Different between registered DOOM (1994) and
 //  Ultimate DOOM - Final edition (retail, 1995?).
@@ -86,7 +85,6 @@ const
 //  in one episode. So there.
   NUMEPISODES = 4;
   NUMMAPS = 9;
-
 
 // GLOBAL LOCATIONS
   WI_TITLEY = 2;
@@ -719,7 +717,7 @@ begin
   WI_SlamBackground;
 
   // draw animated background
-  WI_DrawAnimatedBack();
+  WI_DrawAnimatedBack;
 
   if gamemode <> commercial then
   begin
