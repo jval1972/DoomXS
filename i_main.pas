@@ -50,8 +50,7 @@ uses
   i_system,
   m_argv;
 
-function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT;
-  stdcall; export;
+function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT; stdcall; export;
 begin
   if not I_GameFinished then
   begin
@@ -95,7 +94,7 @@ begin
 
   ZeroMemory(@WindowClass, SizeOf(WindowClass));
   WindowClass.lpfnWndProc := @WindowProc;
-  WindowClass.hbrBackground := GetStockObject(BLACK_BRUSH);
+  WindowClass.hbrBackground := GetStockObject(DKGRAY_BRUSH);
   WindowClass.lpszClassName := 'DoomXS';
   if HPrevInst = 0 then
   begin
@@ -110,8 +109,7 @@ begin
     0,
     WindowClass.lpszClassName,
     AppTitle,
-    WS_OVERLAPPED
-    ,
+    WS_OVERLAPPED,
     0, 0, 0, 0,
     0,
     0,
@@ -119,9 +117,7 @@ begin
     nil);
 
   SetWindowLong(hMainWnd, GWL_STYLE, 0);
-
-  ShowWindow(hMainWnd, CmdShow);
-  UpdateWindow(hMainWnd);
+  
   D_DoomMain;
 end;
 
