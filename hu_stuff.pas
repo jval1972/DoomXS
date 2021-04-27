@@ -137,14 +137,14 @@ var
   plr: Pplayer_t;
   w_title: hu_textline_t;
   w_chat: hu_itext_t;
-  always_off: boolean;
+  always_off: boolean = false;
   chat_dest: array[0..MAXPLAYERS - 1] of char;
   w_inputbuffer: array[0..MAXPLAYERS - 1] of hu_itext_t;
 
   w_message: hu_stext_t;
   message_counter: integer;
 
-  headsupactive: boolean;
+  headsupactive: boolean = false;
 
 const
   HU_TITLEHEIGHT = 1;
@@ -460,8 +460,8 @@ const
 
 var
   chatchars: array[0..QUEUESIZE - 1] of char;
-  head: integer;
-  tail: integer;
+  head: integer = 0;
+  tail: integer = 0;
 
 procedure HU_queueChatChar(c: char);
 begin
@@ -487,15 +487,14 @@ end;
 
 var
   lastmessage: string;
-  shiftdown: boolean;
-  altdown: boolean;
+  shiftdown: boolean = false;
+  altdown: boolean = false;
   destination_keys: array[0..MAXPLAYERS - 1] of char;
-  num_nobrainers: integer;
+  num_nobrainers: integer = 0;
 
 function HU_Responder(ev: Pevent_t): boolean;
 var
   macromessage: string;
-//  eatkey: boolean; = result
   c: char;
   i: integer;
   numplayers: integer;
@@ -634,8 +633,6 @@ initialization
   player_names[1] := HUSTR_PLRINDIGO;
   player_names[2] := HUSTR_PLRBROWN;
   player_names[3] := HUSTR_PLRRED;
-
-  always_off := false;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -814,20 +811,10 @@ initialization
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  headsupactive := false;
-
-  head := 0;
-  tail := 0;
-
-  shiftdown := false;
-  altdown := false;
-
   destination_keys[0] := HUSTR_KEYGREEN;
   destination_keys[1] := HUSTR_KEYINDIGO;
   destination_keys[2] := HUSTR_KEYBROWN;
   destination_keys[3] := HUSTR_KEYRED;
-
-  num_nobrainers := 0;
 
 end.
 
