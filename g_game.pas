@@ -208,7 +208,7 @@ const
   SAVESTRINGSIZE = 24;
 
 procedure G_ReadDemoTiccmd(cmd: Pticcmd_t); forward;
-procedure G_WriteDemoTiccmd (cmd: Pticcmd_t); forward;
+procedure G_WriteDemoTiccmd(cmd: Pticcmd_t); forward;
 
 procedure G_DoReborn(playernum: integer); forward;
 
@@ -239,11 +239,6 @@ var
 
 const
   TURBOTHRESHOLD = $32;
-
-function MAXPLMOVE: fixed_t;
-begin
-  result := forwardmove[1];
-end;
 
 const
   SLOWTURNTICS = 6;
@@ -467,15 +462,15 @@ begin
   mousex := 0;
   mousey := 0;
 
-  if _forward > MAXPLMOVE then
-    _forward := MAXPLMOVE
-  else if _forward < -MAXPLMOVE then
-    _forward := -MAXPLMOVE;
+  if _forward > forwardmove[1] then
+    _forward := forwardmove[1]
+  else if _forward < -forwardmove[1] then
+    _forward := -forwardmove[1];
 
-  if side > MAXPLMOVE then
-    side := MAXPLMOVE
-  else if side < -MAXPLMOVE then
-    side := -MAXPLMOVE;
+  if side > forwardmove[1] then
+    side := forwardmove[1]
+  else if side < -forwardmove[1] then
+    side := -forwardmove[1];
 
   cmd.forwardmove := cmd.forwardmove + _forward;
   cmd.sidemove := cmd.sidemove + side;
