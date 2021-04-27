@@ -80,7 +80,7 @@ var
 
 var
 // DOOM shareware/registered/retail (Ultimate) names.
-  mapnames: array[0..44] of string;
+  mapnames: array[0..35] of string;
 
 // DOOM 2 map names.
   mapnames2: array[0..31] of string;
@@ -681,16 +681,6 @@ initialization
   mapnames[33] := HUSTR_E4M7;
   mapnames[34] := HUSTR_E4M8;
   mapnames[35] := HUSTR_E4M9;
-
-  mapnames[36] := 'NEWLEVEL';
-  mapnames[37] := mapnames[36];
-  mapnames[38] := mapnames[36];
-  mapnames[39] := mapnames[36];
-  mapnames[40] := mapnames[36];
-  mapnames[41] := mapnames[36];
-  mapnames[42] := mapnames[36];
-  mapnames[43] := mapnames[36];
-  mapnames[44] := mapnames[36];
 
 ////////////////////////////////////////////////////////////////////////////////
 
