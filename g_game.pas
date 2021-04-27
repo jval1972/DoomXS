@@ -35,14 +35,14 @@ uses
   d_player,
   d_ticcmd;
 
-procedure G_DeathMatchSpawnPlayer(playernum:integer);
+procedure G_DeathMatchSpawnPlayer(playernum: integer);
 
-procedure G_InitNew(skill:skill_t; episode:integer; map:integer);
+procedure G_InitNew(skill: skill_t; episode, map: integer);
 
 { Can be called by the startup code or M_Responder. }
 { A normal game starts at map 1, }
 { but a warp test can start elsewhere }
-procedure G_DeferedInitNew(skill:skill_t; episode: integer; map: integer);
+procedure G_DeferedInitNew(skill: skill_t; episode, map: integer);
 
 procedure G_DeferedPlayDemo(const name: string);
 
@@ -1339,7 +1339,7 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
   begin
     save_p[0] := intval(playeringame[i]);
-  save_p := @save_p[1];
+    save_p := @save_p[1];
   end;
 
   save_p[0] := _SHR(leveltime, 16);
@@ -1472,7 +1472,6 @@ begin
     mobjinfo[Ord(MT_HEADSHOT)].speed := 10 * FRACUNIT;
     mobjinfo[Ord(MT_TROOPSHOT)].speed := 10 * FRACUNIT;
   end;
-
 
   // force players to be initialized upon first level load
   for i := 0 to MAXPLAYERS - 1 do
@@ -1687,7 +1686,7 @@ begin
 end;
 
 //
-// G_TimeDemo 
+// G_TimeDemo
 //
 procedure G_TimeDemo(const name: string);
 begin
