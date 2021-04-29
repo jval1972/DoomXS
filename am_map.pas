@@ -207,7 +207,6 @@ var
   f_w: integer;
   f_h: integer;
 
-  lightlev: integer;     // used for funky strobing effect
   fb: PByteArray;       // pseudo-frame buffer
   amclock: integer;
 
@@ -489,7 +488,6 @@ begin
 
   f_oldloc.x := MAXINT;
   amclock := 0;
-  lightlev := 0;
 
   m_paninc.x := 0;
   m_paninc.y := 0;
@@ -1122,7 +1120,7 @@ begin
         continue;
       if lines[i].backsector = nil then
       begin
-        AM_drawMline(@l, WALLCOLORS + lightlev);
+        AM_drawMline(@l, WALLCOLORS);
       end
       else
       begin
@@ -1133,22 +1131,22 @@ begin
         else if lines[i].flags and ML_SECRET <> 0 then // secret door
         begin
           if cheating <> 0 then
-            AM_drawMline(@l, SECRETWALLCOLORS + lightlev)
+            AM_drawMline(@l, SECRETWALLCOLORS)
           else
-            AM_drawMline(@l, WALLCOLORS + lightlev);
+            AM_drawMline(@l, WALLCOLORS);
         end
         else if lines[i].backsector.floorheight <> lines[i].frontsector.floorheight then
         begin
-          AM_drawMline(@l, FDWALLCOLORS + lightlev); // floor level change
+          AM_drawMline(@l, FDWALLCOLORS); // floor level change
         end
         else if lines[i].backsector.ceilingheight <>
           lines[i].frontsector.ceilingheight then
         begin
-          AM_drawMline(@l, CDWALLCOLORS + lightlev); // ceiling level change
+          AM_drawMline(@l, CDWALLCOLORS); // ceiling level change
         end
         else if cheating <> 0 then
         begin
-          AM_drawMline(@l, TSWALLCOLORS + lightlev);
+          AM_drawMline(@l, TSWALLCOLORS);
         end;
       end;
     end
@@ -1276,7 +1274,7 @@ begin
     begin
       AM_drawLineCharacter
       (@thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
-        16 * FRACUNIT, t.angle, colors + lightlev, t.x, t.y);
+        16 * FRACUNIT, t.angle, colors, t.x, t.y);
       t := t.snext;
     end;
   end;
