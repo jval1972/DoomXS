@@ -540,7 +540,6 @@ end;
 
 procedure S_StopChannel(cnum: integer);
 var
-  i: integer;
   c: Pchannel_t;
 begin
   c := @channels[cnum];
@@ -549,18 +548,7 @@ begin
   begin
     // stop the sound playing
     if I_SoundIsPlaying(c.handle) then
-    begin
       I_StopSound(c.handle);
-    end;
-
-    // check to see
-    //  if other channels are playing the sound
-    for i := 0 to numChannels - 1 do
-    begin
-      if (cnum <> i) and
-         (c.sfxinfo = channels[i].sfxinfo) then
-        break;
-    end;
 
     // degrade usefulness of sound data
     c.sfxinfo.usefulness := c.sfxinfo.usefulness - 1;
