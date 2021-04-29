@@ -76,7 +76,6 @@ type
     GetChatState
   );
 
-
 implementation
 
 uses
@@ -166,7 +165,6 @@ const
   ST_RAMPAGEDELAY = 2 * TICRATE;
 
   ST_MUCHPAIN = 20;
-
 
 // Location and size of statistics,
 //  justified according to widget type.
@@ -295,133 +293,50 @@ const
  // Height, in lines.
   ST_OUTHEIGHT = 1;
 
-
   ST_MAPTITLEY = 0;
   ST_MAPHEIGHT = 1;
 
 var
-
-// main player in game
-  plyr: Pplayer_t;
-
-// ST_Start() has just been called
-  st_firsttime: boolean;
-
-// lump number for PLAYPAL
-  lu_palette: integer;
-
-// used for timing
-  st_clock: LongWord;
-
-// used for making messages go away
-  st_msgcounter: integer;
-
-// used when in chat
-  st_chatstate: st_chatstateenum_t;
-
-// whether in automap or first-person
-  st_gamestate: st_stateenum_t;
-
-// whether left-side main status bar is active
-  st_statusbaron: boolean;
-
-// whether status bar chat is active
-  st_chat: boolean;
-
-// value of st_chat before message popped up
-  st_oldchat: boolean;
-
-// whether chat window has the cursor on
-  st_cursoron: boolean;
-
-// !deathmatch
-  st_notdeathmatch: boolean;
-
-// !deathmatch && st_statusbaron
-  st_armson: boolean;
-
-// !deathmatch
-  st_fragson: boolean;
-
-// main bar left
-  sbar: Ppatch_t;
-
-// 0-9, tall numbers
-  tallnum: array[0..9] of Ppatch_t;
-
-// tall % sign
-  tallpercent: Ppatch_t;
-
-// 0-9, short, yellow (,different!) numbers
-  shortnum: array[0..9] of Ppatch_t;
-
-// 3 key-cards, 3 skulls
-  keys: array[0..Ord(NUMCARDS) - 1] of Ppatch_t;
-
-// face status patches
-  faces: array[0..ST_NUMFACES - 1] of Ppatch_t;
-
-// face background
-  faceback: Ppatch_t;
-
- // main bar right
-  armsbg: Ppatch_t;
-
-// weapon ownership patches
-  arms: array[0..5, 0..1] of Ppatch_t;
-
-// ready-weapon widget
-  w_ready: st_number_t;
-
- // in deathmatch only, summary of frags stats
-  w_frags: st_number_t;
-
-// health widget
-  w_health: st_percent_t;
-
-// arms background
-  w_armsbg: st_binicon_t;
-
-
-// weapon ownership widgets
-  w_arms: array[0..5] of st_multicon_t;
-
-// face status widget
-  w_faces: st_multicon_t;
-
-// keycard widgets
-  w_keyboxes: array[0..2] of st_multicon_t;
-
-// armor widget
-  w_armor: st_percent_t;
-
-// ammo widgets
-  w_ammo: array[0..3] of st_number_t;
-
-// max ammo widgets
-  w_maxammo: array[0..3] of st_number_t;
-
-// number of frags so far in deathmatch
-  st_fragscount: integer;
-
-// used to use appopriately pained face
-  st_oldhealth: integer;
-
-// used for evil grin
-  oldweaponsowned: array[0..Ord(NUMWEAPONS) - 1] of integer;
-
- // count until face changes
-  st_facecount: integer;
-
-// current face index, used by w_faces
-  st_faceindex: integer;
-
-// holds key-type for each key box on bar
-  keyboxes: array[0..2] of integer;
-
-// a random number per tick
-  st_randomnumber: integer;
-
+  plyr: Pplayer_t;  // main player in game
+  st_firsttime: boolean;  // ST_Start() has just been called
+  lu_palette: integer;  // lump number for PLAYPAL
+  st_clock: LongWord; // used for timing
+  st_msgcounter: integer = 0; // used for making messages go away
+  st_chatstate: st_chatstateenum_t; // used when in chat
+  st_gamestate: st_stateenum_t; // whether in automap or first-person
+  st_statusbaron: boolean;  // whether left-side main status bar is active
+  st_chat: boolean; // whether status bar chat is active
+  st_oldchat: boolean;  // value of st_chat before message popped up
+  st_cursoron: boolean; // whether chat window has the cursor on
+  st_notdeathmatch: boolean;  // !deathmatch
+  st_armson: boolean; // !deathmatch && st_statusbaron
+  st_fragson: boolean;  // !deathmatch
+  sbar: Ppatch_t; // main bar left
+  tallnum: array[0..9] of Ppatch_t; // 0-9, tall numbers
+  tallpercent: Ppatch_t;  // tall % sign
+  shortnum: array[0..9] of Ppatch_t;  // 0-9, short, yellow (,different!) numbers
+  keys: array[0..Ord(NUMCARDS) - 1] of Ppatch_t;  // 3 key-cards, 3 skulls
+  faces: array[0..ST_NUMFACES - 1] of Ppatch_t; // face status patches
+  faceback: Ppatch_t; // face background
+  armsbg: Ppatch_t;  // main bar right
+  arms: array[0..5, 0..1] of Ppatch_t;  // weapon ownership patches
+  w_ready: st_number_t; // ready-weapon widget
+  w_frags: st_number_t; // in deathmatch only, summary of frags stats
+  w_health: st_percent_t; // health widget
+  w_armsbg: st_binicon_t; // arms background
+  w_arms: array[0..5] of st_multicon_t; // weapon ownership widgets
+  w_faces: st_multicon_t; // face status widget
+  w_keyboxes: array[0..2] of st_multicon_t; // keycard widgets
+  w_armor: st_percent_t;  // armor widget
+  w_ammo: array[0..3] of st_number_t; // ammo widgets
+  w_maxammo: array[0..3] of st_number_t;  // max ammo widgets
+  st_fragscount: integer; // number of frags so far in deathmatch
+  st_oldhealth: integer = -1;  // used to use appopriately pained face
+  oldweaponsowned: array[0..Ord(NUMWEAPONS) - 1] of integer;  // used for evil grin
+  st_facecount: integer = 0;  // count until face changes
+  st_faceindex: integer = 0;  // current face index, used by w_faces
+  keyboxes: array[0..2] of integer; // holds key-type for each key box on bar
+  st_randomnumber: integer; // a random number per tick
 
 const
 // Massive bunches of cheat shit
@@ -519,16 +434,13 @@ var
   cheat_ammonokey: cheatseq_t;
   cheat_noclip: cheatseq_t;
   cheat_commercial_noclip: cheatseq_t;
-
   cheat_powerup: array[0..6] of cheatseq_t;
-
   cheat_choppers: cheatseq_t;
   cheat_clev: cheatseq_t;
   cheat_mypos: cheatseq_t;
 
-//
 // STATUS BAR CODE
-//
+
 procedure ST_RefreshBackground;
 begin
   if st_statusbaron then
@@ -760,8 +672,8 @@ begin
 end;
 
 var
-  lastcalc: integer;
-  oldhealth: integer;
+  lastcalc: integer = 0;
+  oldhealth: integer = 0;
 
 function ST_calcPainOffset: integer;
 var
@@ -784,8 +696,8 @@ end;
 //  dead > evil grin > turned head > straight ahead
 //
 var
-  lastattackdown: integer;
-  priority: integer;
+  lastattackdown: integer = -1;
+  priority: integer = 0;
 
 procedure ST_updateFaceWidget;
 var
@@ -868,20 +780,11 @@ begin
         st_faceindex := ST_calcPainOffset;
 
         if diffang < ANG45 then
-        begin
-          // head-on
-          st_faceindex := st_faceindex + ST_RAMPAGEOFFSET;
-        end
+          st_faceindex := st_faceindex + ST_RAMPAGEOFFSET // head-on
         else if to_right then
-        begin
-          // turn face right
-          st_faceindex := st_faceindex + ST_TURNOFFSET;
-        end
+          st_faceindex := st_faceindex + ST_TURNOFFSET  // turn face right
         else
-        begin
-          // turn face left
-          st_faceindex := st_faceindex + ST_TURNOFFSET + 1;
-        end;
+          st_faceindex := st_faceindex + ST_TURNOFFSET + 1; // turn face left
       end;
     end;
   end;
@@ -954,7 +857,7 @@ begin
 end;
 
 var
-  largeammo: integer; // means "n/a"
+  largeammo: integer = 1994; // means "n/a"
 
 procedure ST_updateWidgets;
 var
@@ -1015,7 +918,7 @@ begin
 end;
 
 var
-  st_palette: integer;
+  st_palette: integer = 0;
 
 procedure ST_doPaletteStuff;
 var
@@ -1419,7 +1322,7 @@ begin
 end;
 
 var
-  st_stopped: boolean;
+  st_stopped: boolean = true;
 
 procedure ST_Stop;
 begin
@@ -1447,14 +1350,7 @@ begin
   screens[SCN_ST] := Z_Malloc(ST_WIDTH * ST_HEIGHT, PU_STATIC, nil);
 end;
 
-
 initialization
-////////////////////////////////////////////////////////////////////////////////
-  st_msgcounter := 0;
-  st_oldhealth := -1;
-  st_facecount := 0;
-  st_faceindex := 0;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Now what?
   cheat_mus.sequence := get_cheatseq_string(cheat_mus_seq);
@@ -1491,22 +1387,5 @@ initialization
   cheat_clev.p := get_cheatseq_string(0);
   cheat_mypos.sequence := get_cheatseq_string(cheat_mypos_seq);
   cheat_mypos.p := get_cheatseq_string(0);
-
-////////////////////////////////////////////////////////////////////////////////
-  lastcalc := 0;
-  oldhealth := -1;
-
-////////////////////////////////////////////////////////////////////////////////
-  lastattackdown := -1;
-  priority := 0;
-
-////////////////////////////////////////////////////////////////////////////////
-  largeammo := 1994; // means "n/a"
-
-////////////////////////////////////////////////////////////////////////////////
-  st_palette := 0;
-
-////////////////////////////////////////////////////////////////////////////////
-  st_stopped := true;
 
 end.
