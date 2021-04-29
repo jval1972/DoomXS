@@ -258,6 +258,13 @@ begin
         floorplane.top[rw_x] := top;
         floorplane.bottom[rw_x] := bottom;
       end;
+      // SoM: this should be set here to prevent overdraw
+      if top > viewheight then
+        top := viewheight
+      else if top < -1 then
+        top := -1
+      else
+        floorclip[rw_x] := top;
     end;
 
     // texturecolumn and lighting are independent of wall tiers
