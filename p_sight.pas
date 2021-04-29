@@ -50,9 +50,7 @@ uses
   r_defs,
   r_main;
 
-
 // P_CheckSight
-
 var
   sightzstart: fixed_t; // eye z of looker
 
