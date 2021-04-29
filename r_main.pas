@@ -76,7 +76,6 @@ function R_PointInSubsector(x: fixed_t; y: fixed_t): Psubsector_t;
 
 procedure R_AddPointToBox(const x: integer; const y: integer; box: Pfixed_tArray);
 
-
 //
 // REFRESH - the actual rendering functions.
 //
@@ -182,11 +181,6 @@ uses
 const
 // Fineangles in the SCREENWIDTH wide window.
   FIELDOFVIEW = 2048;
-
-var
-
-// just for profiling purposes
-  framecount: integer;
 
 //
 // R_AddPointToBox
@@ -756,8 +750,6 @@ begin
   printf(#13#10 + 'R_InitSkyMap');
   R_InitTranslationTables;
   printf(#13#10 + 'R_InitTranslationsTables');
-
-  framecount := 0;
 end;
 
 //
@@ -827,7 +819,6 @@ begin
   else
     fixedcolormap := nil;
 
-  inc(framecount);
   inc(validcount);
 end;
 
