@@ -108,7 +108,6 @@ begin
     num := num * 2
   end;
 
-
   oldammo := player.ammo[Ord(ammo)];
   player.ammo[Ord(ammo)] := player.ammo[Ord(ammo)] + num;
 
@@ -140,8 +139,7 @@ begin
     end;
     am_shell:
     begin
-      if (player.readyweapon = wp_fist) or (player.readyweapon =
-        wp_pistol) then
+      if (player.readyweapon = wp_fist) or (player.readyweapon = wp_pistol) then
       begin
         if player.weaponowned[Ord(wp_shotgun)] > 0 then
           player.pendingweapon := wp_shotgun;
@@ -149,8 +147,7 @@ begin
     end;
     am_cell:
     begin
-      if (player.readyweapon = wp_fist) or (player.readyweapon =
-        wp_pistol) then
+      if (player.readyweapon = wp_fist) or (player.readyweapon = wp_pistol) then
       begin
         if player.weaponowned[Ord(wp_plasma)] > 0 then
           player.pendingweapon := wp_plasma;
@@ -731,12 +728,7 @@ begin
     P_DropWeapon(target.player);
 
     if (target.player = @players[consoleplayer]) and automapactive then
-    begin
-      // don't die in auto map,
-      // switch view prior to dying
-      AM_Stop;
-    end;
-
+      AM_Stop;  // don't die in auto map, switch view prior to dying
   end;
 
   if (target.health < -target.info.spawnhealth) and (target.info.xdeathstate <> 0) then
