@@ -1032,7 +1032,7 @@ begin
     while True do
     begin
       PUTDOT(x, y, color);
-      if (y = fl.b.y) then
+      if y = fl.b.y then
         exit;
       if d >= 0 then
       begin
@@ -1065,7 +1065,7 @@ var
 begin
   // Figure out start of vertical gridlines
   start := m_x;
-  if ((start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT)) <> 0 then
+  if (start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT) <> 0 then
     start := start + (MAPBLOCKUNITS * FRACUNIT) -
       ((start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT));
   _end := m_x + m_w;
@@ -1084,7 +1084,7 @@ begin
 
   // Figure out start of horizontal gridlines
   start := m_y;
-  if ((start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT)) <> 0 then
+  if (start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT) <> 0 then
     start := start + (MAPBLOCKUNITS * FRACUNIT) -
       ((start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT));
   _end := m_y + m_h;
@@ -1116,9 +1116,9 @@ begin
     l.a.y := lines[i].v1.y;
     l.b.x := lines[i].v2.x;
     l.b.y := lines[i].v2.y;
-    if (cheating <> 0) or ((lines[i].flags and ML_MAPPED) <> 0) then
+    if (cheating <> 0) or (lines[i].flags and ML_MAPPED <> 0) then
     begin
-      if ((lines[i].flags and LINE_NEVERSEE) <> 0) and (cheating = 0) then
+      if (lines[i].flags and LINE_NEVERSEE <> 0) and (cheating = 0) then
         continue;
       if lines[i].backsector = nil then
       begin
@@ -1130,7 +1130,7 @@ begin
         begin // teleporters
           AM_drawMline(@l, WALLCOLORS + WALLRANGE div 2);
         end
-        else if (lines[i].flags and ML_SECRET) <> 0 then // secret door
+        else if lines[i].flags and ML_SECRET <> 0 then // secret door
         begin
           if cheating <> 0 then
             AM_drawMline(@l, SECRETWALLCOLORS + lightlev)
@@ -1154,7 +1154,7 @@ begin
     end
     else if plr.powers[Ord(pw_allmap)] <> 0 then
     begin
-      if (lines[i].flags and LINE_NEVERSEE) = 0 then
+      if lines[i].flags and LINE_NEVERSEE = 0 then
         AM_drawMline(@l, GRAYS + 3);
     end;
   end;

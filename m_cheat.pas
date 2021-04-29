@@ -110,14 +110,14 @@ begin
       cheat_xlate_table[i] := Chr(SCRAMBLE(i));
   end;
 
-  if (cht.p = '') then
+  if cht.p = '' then
     cht.p := cht.sequence; // initialize if first time
 
-  if length(cht.p) = 0 then
+  if Length(cht.p) = 0 then
     cht.p := key
-  else if (cht.p[1] = #0) then
+  else if cht.p[1] = #0 then
     cht.p[1] := key
-  else if (length(cht.p) > 1) and (cht.p[2] = #0) then
+  else if (Length(cht.p) > 1) and (cht.p[2] = #0) then
   begin
     cht.p[2] := key;
     Result := True;
@@ -127,7 +127,7 @@ begin
   else
     cht.p := cht.sequence;
 
-  if length(cht.p) > 0 then
+  if Length(cht.p) > 0 then
   begin
     if cht.p[1] = #1 then
       Delete(cht.p, 1, 1)

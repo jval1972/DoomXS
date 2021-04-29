@@ -61,7 +61,7 @@ begin
       end;
       WM_SYSCOMMAND:
       begin
-        if (wParam = SC_SCREENSAVE) then
+        if wParam = SC_SCREENSAVE then
         begin
           Result := 0;
           exit;

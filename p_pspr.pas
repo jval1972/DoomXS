@@ -229,7 +229,7 @@ begin
       player.pendingweapon := wp_shotgun
     else if player.ammo[Ord(am_clip)] <> 0 then
       player.pendingweapon := wp_pistol
-    else if (player.weaponowned[Ord(wp_chainsaw)] > 0) then
+    else if player.weaponowned[Ord(wp_chainsaw)] > 0 then
       player.pendingweapon := wp_chainsaw
     else if (player.weaponowned[Ord(wp_missile)] > 0) and
       (player.ammo[Ord(am_misl)] <> 0) then
@@ -419,7 +419,7 @@ var
 begin
   damage := (P_Random mod 10 + 1) * 2;
 
-  if (player.powers[Ord(pw_strength)] <> 0) then
+  if player.powers[Ord(pw_strength)] <> 0 then
     damage := damage * 10;
 
   angle := player.mo.angle;

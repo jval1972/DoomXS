@@ -155,7 +155,7 @@ var
   xmove: fixed_t;
   ymove: fixed_t;
 begin
-  if (mo.momx = 0) and (mo.momy = 0) then
+  if mo.momx or mo.momy = 0 then
   begin
     if mo.flags and MF_SKULLFLY <> 0 then
     begin

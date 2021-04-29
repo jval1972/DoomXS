@@ -276,7 +276,7 @@ begin
 
   if debugfile <> nil then
   begin
-    if (netbuffer.checksum and NCMD_RETRANSMIT) <> 0 then
+    if netbuffer.checksum and NCMD_RETRANSMIT <> 0 then
       realretrans := ExpandTics(netbuffer.retransmitfrom)
     else
       realretrans := -1;
@@ -349,11 +349,11 @@ begin
 
   if debugfile <> nil then
   begin
-    if (netbuffer.checksum and NCMD_SETUP) <> 0 then
+    if netbuffer.checksum and NCMD_SETUP <> 0 then
       fprintf(debugfile, 'setup packet' + #13#10)
     else
     begin
-      if (netbuffer.checksum and NCMD_RETRANSMIT) <> 0 then
+      if netbuffer.checksum and NCMD_RETRANSMIT <> 0 then
         realretrans := ExpandTics(netbuffer.retransmitfrom)
       else
         realretrans := -1;
@@ -388,7 +388,7 @@ var
 begin
   while HGetPacket do
   begin
-    if (netbuffer.checksum and NCMD_SETUP) <> 0 then
+    if netbuffer.checksum and NCMD_SETUP <> 0 then
       continue;    // extra setup packet
 
     netconsole := netbuffer.player and not PL_DRONE;
@@ -400,7 +400,7 @@ begin
     realend := realstart + netbuffer.numtics;
 
     // check for exiting the game
-    if (netbuffer.checksum and NCMD_EXIT) <> 0 then
+    if netbuffer.checksum and NCMD_EXIT <> 0 then
     begin
       if not nodeingame[netnode] then
         continue;
@@ -415,14 +415,14 @@ begin
     end;
 
     // check for a remote game kill
-    if (netbuffer.checksum and NCMD_KILL) <> 0 then
+    if netbuffer.checksum and NCMD_KILL <> 0 then
       I_Error('GetPackets(): Killed by network driver');
 
     nodeforplayer[netconsole] := netnode;
 
     // check for retransmit request
     if (resendcount[netnode] <= 0) and
-      ((netbuffer.checksum and NCMD_RETRANSMIT) <> 0) then
+      (netbuffer.checksum and NCMD_RETRANSMIT <> 0) then
     begin
       resendto[netnode] := ExpandTics(netbuffer.retransmitfrom);
       if debugfile <> nil then
@@ -602,7 +602,7 @@ begin
       CheckAbort;
       if not HGetPacket then
         continue;
-      if (netbuffer.checksum and NCMD_SETUP) <> 0 then
+      if netbuffer.checksum and NCMD_SETUP <> 0 then
       begin
         if netbuffer.player <> VERSION then
           I_Error('D_ArbitrateNetStart(): Different DOOM versions cannot play a net game!');
@@ -791,7 +791,7 @@ begin
       end;
       frameskip[frameon and 3] := (oldnettics > nettics[nodeforplayer[i]]);
       oldnettics := nettics[0];
-      if (frameskip[0] and frameskip[1] and frameskip[2] and frameskip[3]) then
+      if frameskip[0] and frameskip[1] and frameskip[2] and frameskip[3] then
       begin
         skiptics := 1;
       end;

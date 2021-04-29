@@ -494,7 +494,7 @@ begin
   M_ClearMenus;
 
   // PICK QUICKSAVE SLOT YET?
-  if (quickSaveSlot = -2) then
+  if quickSaveSlot = -2 then
     quickSaveSlot := slot;
 end;
 
@@ -1097,8 +1097,7 @@ begin
     end;
 
     w := hu_font[c].width;
-    //    if (cx + w) > SCREENWIDTH then
-    if (cx + w) > 320 then
+    if cx + w > 320 then
       break;
     V_DrawPatch(cx, cy, SCN_FG, hu_font[c], True);
     cx := cx + w;

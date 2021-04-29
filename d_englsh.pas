@@ -78,7 +78,6 @@ const
   GAMMALVL2 = 'Gamma correction level 2';
   GAMMALVL3 = 'Gamma correction level 3';
   GAMMALVL4 = 'Gamma correction level 4';
-  EMPTYSTRING = 'empty slot';
 
   { }
   {  P_inter.C }
