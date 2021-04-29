@@ -112,7 +112,6 @@ type
   sector_tArray = packed array[0..$FFFF] of sector_t;
   Psector_tArray = ^sector_tArray;
 
-
   // The SideDef.
   side_t = packed record
     // add this to the calculated texture column
@@ -131,9 +130,7 @@ type
   side_tArray = packed array[0..$FFFF] of side_t;
   Pside_tArray = ^side_tArray;
 
-
   // Move clipping aid for LineDefs.
-
   slopetype_t = (
     ST_HORIZONTAL,
     ST_VERTICAL,
@@ -227,7 +224,6 @@ type
   column_t = post_t;
   Pcolumn_t = ^column_t;
 
-
   // OTHER TYPES
 
   // This could be wider for >8 bit display.
@@ -235,11 +231,7 @@ type
   //  precalculating 24bpp lightmap/colormap LUT.
   //  from darkening PLAYPAL to all black.
   // Could even us emore than 32 levels.
-{$IFDEF TRUECOLOR}
-  lighttable_t = integer; //byte;
-{$ELSE}
   lighttable_t = byte;
-{$ENDIF}
   Plighttable_t = ^lighttable_t;
   lighttable_tArray = packed array[0..$FFFF] of lighttable_t;
   Plighttable_tArray = ^lighttable_tArray;
@@ -355,11 +347,8 @@ type
   spriteframe_tArray = packed array[0..$FFFF] of spriteframe_t;
   Pspriteframe_tArray = ^spriteframe_tArray;
 
-
-
   // A sprite definition:
   //  a number of animation frames.
-
   spritedef_t = packed record
     numframes: integer;
     spriteframes: Pspriteframe_tArray;
@@ -376,9 +365,7 @@ type
   visindex_tArray = packed array[-1..$FFFF] of visindex_t;
   Pvisindex_tArray = ^visindex_tArray;
 
-
   // Now what is a visplane, anyway?
-
   visplane_t = packed record
     height: fixed_t;
     picnum: integer;
