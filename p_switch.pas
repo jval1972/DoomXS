@@ -137,7 +137,6 @@ var
   index: integer;
   episode: integer;
 begin
-
   if (gamemode = registered) or (gamemode = retail) then
     episode := 2
   else if gamemode = commercial then
