@@ -71,13 +71,10 @@ uses
   v_video;
 
 const
-//
 // Data needed to add patches to full screen intermission pics.
 // Patches are statistics messages, and animations.
 // Loads of by-pixel layout and placement, offsets etc.
-//
 
-//
 // Different between registered DOOM (1994) and
 //  Ultimate DOOM - Final edition (retail, 1995?).
 // This is supposedly ignored for commercial
@@ -128,10 +125,8 @@ type
     y: integer;
   end;
 
-//
 // Animation.
 // There is another anim_t used in p_spec.
-//
 type
   wianim_t = record // JVAL: renamed from anim_t -> wianim_t
     _type: animenum_t;
@@ -164,7 +159,6 @@ type
   Pwianim_t = ^wianim_t;
   wianim_tArray = packed array[0..$FFFF] of wianim_t;
   Pwianim_tArray = ^wianim_tArray;
-
 
 var
   lnodes: array[0..NUMEPISODES - 1, 0..NUMMAPS - 1] of point_t = (
@@ -220,11 +214,9 @@ var
     )
   );
 
-//
 // Animation locations for episode 0 (1).
 // Using patches saves a lot of space,
 //  as they replace 320x200 full screen frames.
-//
   epsd0animinfo: array[0..9] of wianim_t = (
     (_type: ANIM_ALWAYS; period: TICRATE div 3; nanims: 3; loc: (x: 224; y: 104)),
     (_type: ANIM_ALWAYS; period: TICRATE div 3; nanims: 3; loc: (x: 184; y: 160)),
@@ -265,9 +257,7 @@ const
 var
   anims: array[0..NUMEPISODES - 1] of Pwianim_tArray;
 
-//
 // GENERAL DATA
-//
 
 //
 // Locally used stuff.
@@ -275,7 +265,6 @@ var
 const
 // in seconds
   SHOWNEXTLOCDELAY = 4;
-
 
 var
 // used to accelerate or skip a stage
@@ -311,9 +300,7 @@ var
 // # of commercial levels
   NUMCMAPS: integer = 0;
 
-//
 // GRAPHICS
-//
 
 // background (map of levels).
   bg: Ppatch_t = nil;
@@ -372,9 +359,7 @@ var
  // Name graphics of each level (centered)
   lnames: Ppatch_tPArray;
 
-//
 // CODE
-//
 
 // slam background
 procedure WI_SlamBackground;
@@ -556,13 +541,10 @@ begin
   end;
 end;
 
-//
 // Draws a number.
 // If digits > 0, then use that many digits minimum,
 //  otherwise only use as many as necessary.
 // Returns new x position.
-//
-
 function WI_DrawNum(x, y: integer; n: integer; digits: integer): integer;
 var
   fontwidth: integer;
@@ -629,10 +611,8 @@ begin
   WI_DrawNum(x, y, p, -1);
 end;
 
-//
 // Display level completion time and par,
 //  or "sucks" message if overflow.
-//
 procedure WI_DrawTime(x, y: integer; t: integer);
 var
   _div: integer;
@@ -660,19 +640,14 @@ begin
     V_DrawPatch(x - sucks.width, y, SCN_FG, sucks, true);
 end;
 
-procedure WI_UnloadData; forward;
-
-procedure WI_End;
-begin
-  WI_UnloadData;
-end;
-
 procedure WI_InitNoState;
 begin
   state := NoState;
   acceleratestage := 0;
   cnt := 10;
 end;
+
+procedure WI_UnloadData; forward;
 
 procedure WI_UpdateNoState;
 begin
@@ -681,7 +656,7 @@ begin
   dec(cnt);
   if cnt = 0 then
   begin
-    WI_End;
+    WI_UnloadData;
     G_WorldDone;
   end;
 end;
@@ -1334,8 +1309,7 @@ end;
 
 procedure WI_DrawStats;
 var
-  // line height
-  lh: integer;
+  lh: integer;  // line height
 begin
   lh := (3 * num[0].height) div 2;
 
@@ -1429,12 +1403,12 @@ begin
 
     ShowNextLoc:
       begin
-        WI_UpdateShowNextLoc();
+        WI_UpdateShowNextLoc;
       end;
 
     NoState:
       begin
-        WI_UpdateNoState();
+        WI_UpdateNoState;
       end;
   end;
 end;
