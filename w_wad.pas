@@ -31,9 +31,7 @@ interface
 uses
   d_delphi;
 
-//
 // TYPES
-//
 type
   char8_t = array[0..7] of char;
 
@@ -54,9 +52,7 @@ type
   Tfilelump_tArray = packed array[0..$FFFF] of filelump_t;
   Pfilelump_tArray = ^Tfilelump_tArray;
 
-//
 // WADFILE I/O related stuff.
-//
   lumpinfo_t = record
     handle: TFile;
     position: integer;
@@ -109,14 +105,11 @@ const
                 (Ord('A') shl 16) or
                 (Ord('D') shl 24));
 
-//
 // GLOBALS
-//
 
 // Location of each lump on disk.
 var
   numlumps: integer;
-
   lumpcache: PPointerArray;
 
 function char8tostring(src: char8_t): string;
@@ -197,9 +190,7 @@ begin
   dest := stringtochar8(dst);
 end;
 
-//
 // LUMP BASED ROUTINES.
-//
 
 //
 // W_AddFile
@@ -278,16 +269,12 @@ begin
       if header.identification <> PWAD then
         I_Error('W_AddFile(): Wad file %s doesn''t have IWAD or PWAD id' + #13#10, [filename]);
 
-      // ???modifiedgame = true;
-//    header.numlumps := header.numlumps;
-//    header.infotableofs = header.infotableofs;
     len := header.numlumps * SizeOf(filelump_t);
     GetMem(fileinfo, len);
     handle.Seek(header.infotableofs, sFromBeginning);
     handle.Read(fileinfo^, len);
     numlumps := numlumps + header.numlumps;
   end;
-
 
   // Fill in lumpinfo
   ReAllocMem(lumpinfo, numlumps * SizeOf(lumpinfo_t));
@@ -320,11 +307,9 @@ begin
     handle.Free;
 end;
 
-//
 // W_Reload
 // Flushes any of the reloadable lumps in memory
 //  and reloads the directory.
-//
 procedure W_Reload;
 var
   header: wadinfo_t;
@@ -332,7 +317,7 @@ var
   lump_p: Plumpinfo_t;
   i: integer;
   handle: TFile;
-  length: integer;
+  len: integer;
   fileinfo: Pfilelump_tArray;
 begin
   if reloadname = '' then
@@ -350,11 +335,10 @@ begin
 
   handle.Read(header, SizeOf(header));
   lumpcount := header.numlumps;
-//  header.infotableofs := LONG(header.infotableofs); // VJ unused
-  length := lumpcount * SizeOf(filelump_t);
-  GetMem(fileinfo, length);
+  len := lumpcount * SizeOf(filelump_t);
+  GetMem(fileinfo, len);
   handle.Seek(header.infotableofs, sFromBeginning);
-  handle.Read(fileinfo^, length);
+  handle.Read(fileinfo^, len);
 
   // Fill in lumpinfo
 
@@ -371,7 +355,6 @@ begin
   handle.Free;
 end;
 
-//
 // W_InitMultipleFiles
 // Pass a null terminated list of files to use.
 // All files are optional, but at least one file
@@ -383,7 +366,6 @@ end;
 // Lump names can appear multiple times.
 // The name searcher looks backwards, so a later file
 //  does override all earlier ones.
-//
 procedure W_InitMultipleFiles(filenames: PStringArray);
 var
   size: integer;
@@ -415,10 +397,8 @@ begin
   memset(lumpcache, 0, size);
 end;
 
-//
 // W_InitFile
 // Just initialize from a single file.
-//
 procedure W_InitFile(const filename: string);
 var
   names: array[0..1] of string;
@@ -428,18 +408,14 @@ begin
   W_InitMultipleFiles(@names);
 end;
 
-//
 // W_NumLumps
-//
 function W_NumLumps: integer;
 begin
   result := numlumps;
 end;
 
-//
 // W_CheckNumForName
 // Returns -1 if name not found.
-//
 type
   name8_t = record
     case integer of
@@ -484,10 +460,8 @@ begin
   result := -1;
 end;
 
-//
 // W_GetNumForName
 // Calls W_CheckNumForName, but bombs out if not found.
-//
 function W_GetNumForName(const name: string): integer;
 begin
   result := W_CheckNumForName(name);
@@ -495,10 +469,8 @@ begin
     I_Error('W_GetNumForName(): %s not found!', [name]);
 end;
 
-//
 // W_LumpLength
 // Returns the buffer size needed to load the given lump.
-//
 function W_LumpLength(lump: integer): integer;
 begin
   if lump >= numlumps then
@@ -507,11 +479,9 @@ begin
   result := lumpinfo[lump].size;
 end;
 
-//
 // W_ReadLump
 // Loads the lump into the given buffer,
 //  which must be >= W_LumpLength().
-//
 procedure W_ReadLump(lump: integer; dest: pointer);
 var
   c: integer;
@@ -547,12 +517,9 @@ begin
 
   if l.handle = nil then
     handle.Free;
-
 end;
 
-//
 // W_CacheLumpNum
-//
 function W_CacheLumpNum(lump: integer; tag: integer): pointer;
 begin
   if lump >= numlumps then
@@ -577,9 +544,7 @@ begin
   result := lumpcache[lump];
 end;
 
-//
 // W_CacheLumpName
-//
 function W_CacheLumpName(const name: string; tag: integer): pointer;
 begin
   result := W_CacheLumpNum(W_GetNumForName(name), tag);
