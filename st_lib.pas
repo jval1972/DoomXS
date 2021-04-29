@@ -39,42 +39,33 @@ type
 //
 
 // Number widget
-
   st_number_t = record
     // upper right-hand corner
     //  of the number (right-justified)
     x: integer;
     y: integer;
 
-    // max # of digits in number
-    width: integer;
+    width: integer; // max # of digits in number
 
-    // last number value
-    oldnum: integer;
+    oldnum: integer;  // last number value
 
-    // pointer to current value
-    num: PInteger;
+    num: PInteger;  // pointer to current value
 
     // pointer to boolean stating
     //  whether to update number
     _on: PBoolean;
 
-    // list of patches for 0-9
-    p: Ppatch_tPArray;
+    p: Ppatch_tPArray;  // list of patches for 0-9
 
-    // user data
-    data: integer;
+    data: integer;  // user data
   end;
   Pst_number_t = ^st_number_t;
 
 // Percent widget ("child" of number widget,
 //  or, more precisely, contains a number widget.)
   st_percent_t = record
-    // number information
-    n: st_number_t;
-
-    // percent sign graphic
-    p: Ppatch_t;
+    n: st_number_t; // number information
+    p: Ppatch_t;  // percent sign graphic
   end;
   Pst_percent_t = ^st_percent_t;
 
@@ -84,36 +75,29 @@ type
     x: integer;
     y: integer;
 
-    // last icon number
-    oldinum: integer;
+    oldinum: integer; // last icon number
 
-    // pointer to current icon
-    inum: PInteger;
+    inum: PInteger; // pointer to current icon
 
     // pointer to boolean stating
     //  whether to update icon
     _on: PBoolean;
 
-    // list of icons
-    p: Ppatch_tPArray;
+    p: Ppatch_tPArray;  // list of icons
 
-    // user data
-    data: integer;
+    data: integer;  // user data
   end;
   Pst_multicon_t = ^st_multicon_t;
 
 // Binary Icon widget
-
   st_binicon_t = record
     // center-justified location of icon
     x: integer;
     y: integer;
 
-    // last icon value
-    oldval: boolean;
+    oldval: boolean;  // last icon value
 
-    // pointer to current icon status
-    val: PBoolean;
+    val: PBoolean;  // pointer to current icon status
 
     // pointer to boolean
     //  stating whether to update icon
@@ -131,7 +115,6 @@ type
 // Initializes widget library.
 // More precisely, initialize STMINUS,
 //  everything else is done somewhere else.
-//
 procedure STlib_init;
 
 // Number widget routines
@@ -169,10 +152,8 @@ uses
   st_stuff,
   am_map;  // automapactive
 
-//
 // Hack display negative frags.
 //  Loads and store the stminus lump.
-//
 var
   sttminus: Ppatch_t;
 
@@ -193,11 +174,9 @@ begin
   n.p := pl;
 end;
 
-//
 // A fairly efficient way to draw a number
 //  based on differences from the old number.
 // Note: worth the trouble?
-//
 procedure STlib_drawNum(n: Pst_number_t; refresh: boolean);
 var
   numdigits: integer;
