@@ -105,6 +105,9 @@ type
     thinglist: Pmobj_t;
     // thinker_t for reversable actions
     specialdata: pointer;
+    // [kb] For R_WiggleFix
+    cachedheight: integer;
+    scaleindex: integer;
     linecount: integer;
     lines: Pline_tPArray;  // [linecount] size
   end;

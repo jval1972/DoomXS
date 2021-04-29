@@ -202,9 +202,110 @@ end;
 // Can draw or mark the starting pixel of floor and ceiling textures.
 // CALLED: CORE LOOPING ROUTINE.
 //
-const
-  HEIGHTBITS = 12;
-  HEIGHTUNIT = 1 shl HEIGHTBITS;
+var
+  HEIGHTBITS: integer = 12;
+  HEIGHTUNIT: integer = 1 shl 12;
+
+//
+// R_FixWiggle()
+// Dynamic wall/texture rescaler, AKA "WiggleHack II"
+//  by Kurt "kb1" Baumgardner ("kb")
+//
+//  [kb] When the rendered view is positioned, such that the viewer is
+//   looking almost parallel down a wall, the result of the scale
+//   calculation in R_ScaleFromGlobalAngle becomes very large. And, the
+//   taller the wall, the larger that value becomes. If these large
+//   values were used as-is, subsequent calculations would overflow
+//   and crash the program.
+//
+//  Therefore, vanilla Doom clamps this scale calculation, preventing it
+//   from becoming larger than 0x400000 (64*FRACUNIT). This number was
+//   chosen carefully, to allow reasonably-tight angles, with reasonably
+//   tall sectors to be rendered, within the limits of the fixed-point
+//   math system being used. When the scale gets clamped, Doom cannot
+//   properly render the wall, causing an undesirable wall-bending
+//   effect that I call "floor wiggle".
+//
+//  Modern source ports offer higher video resolutions, which worsens
+//   the issue. And, Doom is simply not adjusted for the taller walls
+//   found in many PWADs.
+//
+//  WiggleHack II attempts to correct these issues, by dynamically
+//   adjusting the fixed-point math, and the maximum scale clamp,
+//   on a wall-by-wall basis. This has 2 effects:
+//
+//  1. Floor wiggle is greatly reduced and/or eliminated.
+//  2. Overflow is not longer possible, even in levels with maximum
+//     height sectors.
+//
+//  It is not perfect across all situations. Some floor wiggle can be
+//   seen, and some texture strips may be slight misaligned in extreme
+//   cases. These effects cannot be corrected without increasing the
+//   precision of various renderer variables, and, possibly, suffering
+//   a performance penalty.
+//
+
+var
+  lastheight: integer = 0;
+
+type
+  wiggle_t = record
+    clamp: integer;
+    heightbits: integer;
+  end;
+
+var
+  scale_values: array[0..8] of wiggle_t = (
+    (clamp: 2048 * FRACUNIT; heightbits: 12),
+    (clamp: 1024 * FRACUNIT; heightbits: 12),
+    (clamp: 1024 * FRACUNIT; heightbits: 11),
+    (clamp:  512 * FRACUNIT; heightbits: 11),
+    (clamp:  512 * FRACUNIT; heightbits: 10),
+    (clamp:  256 * FRACUNIT; heightbits: 10),
+    (clamp:  256 * FRACUNIT; heightbits:  9),
+    (clamp:  128 * FRACUNIT; heightbits:  9),
+    (clamp:   64 * FRACUNIT; heightbits:  9)
+  );
+
+procedure R_WiggleFix(sec: Psector_t);
+var
+  height: integer;
+begin
+  height := (sec.ceilingheight - sec.floorheight) div FRACUNIT;
+
+  // disallow negative heights, force cache initialization
+  if height < 1 then
+    height := 1;
+
+  // early out?
+  if height <> lastheight then
+  begin
+    lastheight := height;
+
+    // initialize, or handle moving sector
+    if height <> sec.cachedheight then
+    begin
+      frontsector.cachedheight := height;
+      frontsector.scaleindex := 0;
+      height := height shr  7;
+      // calculate adjustment
+      while true do
+      begin
+        height := height shr 1;
+        if height <> 0 then
+          inc(frontsector.scaleindex)
+        else
+          break;
+      end;
+    end;
+
+    // fine-tune renderer for this wall
+    MAX_RWSCALE := scale_values[frontsector.scaleindex].clamp;
+    HEIGHTBITS := scale_values[frontsector.scaleindex].heightbits;
+    HEIGHTUNIT := 1 shl HEIGHTBITS;
+  end;
+end;
+
 
 procedure R_RenderSegLoop;
 var
@@ -426,6 +527,8 @@ begin
   //  and decide if floor / ceiling marks are needed
   worldtop := frontsector.ceilingheight - viewz;
   worldbottom := frontsector.floorheight - viewz;
+
+  R_WiggleFix(frontsector);
 
   midtexture := 0;
   toptexture := 0;

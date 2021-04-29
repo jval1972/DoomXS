@@ -160,6 +160,9 @@ var
 
   setsizeneeded: boolean;
 
+var
+  MAX_RWSCALE: integer = 64 * FRACUNIT ;
+
 implementation
 
 uses
@@ -477,8 +480,8 @@ begin
   begin
     result := FixedDiv(num, den);
 
-    if result > 64 * FRACUNIT then
-      result := 64 * FRACUNIT
+    if result > MAX_RWSCALE then
+      result := MAX_RWSCALE
     else if result < 256 then
       result := 256
   end

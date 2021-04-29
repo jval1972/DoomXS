@@ -249,6 +249,9 @@ begin
     ss.special := ms.special;
     ss.tag := ms.tag;
     ss.thinglist := nil;
+    // [kb] For R_WiggleFix
+    ss.cachedheight := 0;
+    ss.scaleindex := 0;
     Inc(ms);
   end;
 
