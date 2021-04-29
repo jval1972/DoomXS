@@ -57,21 +57,16 @@ procedure R_DrawSpan;
 
 procedure R_InitBuffer(width, height: integer);
 
-
 // Initialize color translation tables,
 //  for player rendering etc.
 procedure R_InitTranslationTables;
-
-
 
 // Rendering function.
 procedure R_FillBackScreen;
 
 var
-//
 // R_DrawColumn
 // Source is the top of the column to scale.
-//
   dc_colormap: Plighttable_tArray;
   dc_iscale: fixed_t;
   dc_texturemid: fixed_t;
@@ -246,13 +241,10 @@ begin
   end;
 end;
 
-//
 // Spectre/Invisibility.
-//
 const
   FUZZTABLE = 50;
   FUZZOFF = SCREENWIDTH;
-
 
   fuzzoffset: array[0..FUZZTABLE - 1] of integer = (
     FUZZOFF,-FUZZOFF, FUZZOFF,-FUZZOFF, FUZZOFF, FUZZOFF,-FUZZOFF,
@@ -267,14 +259,12 @@ const
 var
   fuzzpos: integer = 0;
 
-//
 // Framebuffer postprocessing.
 // Creates a fuzzy image by copying pixels
 //  from adjacent ones to left and right.
 // Used with an all black colormap, this
 //  could create the SHADOW effect,
 //  i.e. spectres and invisible players.
-//
 procedure R_DrawFuzzColumn;
 var
   count: integer;
@@ -318,7 +308,6 @@ begin
   end;
 end;
 
-//
 // R_DrawTranslatedColumn
 // Used to draw player sprites
 //  with the green colorramp mapped to others.
@@ -326,8 +315,6 @@ end;
 //  tables, e.g. the lighter colored version
 //  of the BaronOfHell, the HellKnight, uses
 //  identical sprites, kinda brightened up.
-//
-
 procedure R_DrawTranslatedColumn;
 var
   count: integer;
@@ -472,13 +459,11 @@ begin
   end;
 end;
 
-//
 // R_InitBuffer
 // Creats lookup tables that avoid
 //  multiplies and other hazzles
 //  for getting the framebuffer address
 //  of a pixel to draw.
-//
 procedure R_InitBuffer(width, height: integer);
 var
   i: integer;
@@ -503,12 +488,10 @@ begin
     ylookup[i] := PByteArray(integer(screens[SCN_FG]) + (i + viewwindowy) * SCREENWIDTH);
 end;
 
-//
 // R_FillBackScreen
 // Fills the back screen with a pattern
 //  for variable screen sizes
 // Also draws a beveled edge.
-//
 procedure R_FillBackScreen;
 var
   src: PByteArray;
