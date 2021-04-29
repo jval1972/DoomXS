@@ -121,11 +121,9 @@ type
   end;
   Pmappatch_t = ^mappatch_t;
 
-//
 // Texture definition.
 // A DOOM wall texture is a list of patches
 // which are to be combined in a predefined order.
-//
   maptexture_t = packed record
     name: char8_t;
     masked: integer;
@@ -168,15 +166,11 @@ type
   texture_tPArray = array[0..$FFFF] of Ptexture_t;
   Ptexture_tPArray = ^texture_tPArray;
 
-
 var
   numspritelumps: integer;
-
   numtextures: integer;
   textures: Ptexture_tPArray;
-
   texturewidthmask: PIntegerArray;
-
   texturecolumnlump: PSmallIntPArray;
   texturecolumnofs: PWordPArray;
   texturecomposite: PBytePArray;
@@ -192,8 +186,6 @@ var
 //  but any columns with multiple patches
 //  will have new column_ts generated.
 //
-
-
 
 //
 // R_DrawColumnInCache
@@ -230,12 +222,10 @@ begin
   end;
 end;
 
-//
 // R_GenerateComposite
 // Using the texture definition,
 //  the composite texture is created from the patches,
 //  and each column is cached.
-//
 procedure R_GenerateComposite(texnum: integer);
 var
   block: PByteArray;
@@ -293,9 +283,7 @@ begin
   Z_ChangeTag(block, PU_CACHE);
 end;
 
-//
 // R_GenerateLookup
-//
 procedure R_GenerateLookup(texnum: integer);
 var
   texture: Ptexture_t;
@@ -374,9 +362,7 @@ begin
   FreeMem(patchcount);
 end;
 
-//
 // R_GetColumn
-//
 function R_GetColumn(tex: integer; col: integer): PByteArray;
 var
   lump: integer;
@@ -398,11 +384,9 @@ begin
   result := PByteArray(integer(texturecomposite[tex]) + ofs);
 end;
 
-//
 // R_InitTextures
 // Initializes the texture list
 //  with the textures from the world map.
-//
 procedure R_InitTextures;
 var
   mtexture: Pmaptexture_t;
@@ -475,7 +459,6 @@ begin
 
   for i := 0 to numtextures - 1 do
   begin
-
     if i = numtextures1 then
     begin
       // Start looking in second texture file.
@@ -543,9 +526,7 @@ begin
     texturetranslation[i] := i;
 end;
 
-//
 // R_InitFlats
-//
 procedure R_InitFlats;
 var
   i: integer;
@@ -561,12 +542,10 @@ begin
     flattranslation[i] := i;
 end;
 
-//
 // R_InitSpriteLumps
 // Finds the width and hoffset of all sprites in the wad,
 //  so the sprite does not need to be cached completely
 //  just for having the header info ready during rendering.
-//
 procedure R_InitSpriteLumps;
 var
   i: integer;
@@ -590,9 +569,7 @@ begin
   end;
 end;
 
-//
 // R_InitColormaps
-//
 procedure R_InitColormaps;
 var
   lump: integer;
@@ -607,12 +584,10 @@ begin
   W_ReadLump(lump, colormaps);
 end;
 
-//
 // R_InitData
 // Locates all the lumps
 //  that will be used by all views
 // Must be called after W_Init.
-//
 procedure R_InitData;
 begin
   R_InitTextures;
@@ -625,10 +600,8 @@ begin
   printf(#13#10 + 'InitColormaps');
 end;
 
-//
 // R_FlatNumForName
 // Retrieval, get a flat number for a flat name.
-//
 function R_FlatNumForName(const name: string): integer;
 var
   i: integer;
@@ -641,11 +614,9 @@ begin
   result := i - firstflat;
 end;
 
-//
 // R_CheckTextureNumForName
 // Check whether texture is available.
 // Filter out NoTexture indicator.
-//
 function R_CheckTextureNumForName(const name: string): integer;
 var
   i: integer;
@@ -669,11 +640,9 @@ begin
   result := -1;
 end;
 
-//
 // R_TextureNumForName
 // Calls R_CheckTextureNumForName,
 //  aborts with error message.
-//
 function R_TextureNumForName(const name: string): integer;
 begin
   result := R_CheckTextureNumForName(name);
@@ -682,10 +651,8 @@ begin
     I_Error('R_TextureNumForName(): %s not found', [name]);
 end;
 
-//
 // R_PrecacheLevel
 // Preloads all relevant graphics for the level.
-//
 var
   flatmemory: integer;
   texturememory: integer;
