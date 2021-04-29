@@ -632,9 +632,7 @@ begin
   end;
 end;
 
-
 // Change Sfx & Music volumes
-
 procedure M_DrawSound;
 begin
   V_DrawPatch(60, 38, SCN_FG, W_CacheLumpName('M_SVOL', PU_CACHE), True);
@@ -665,7 +663,7 @@ end;
 procedure M_MusicVol(choice: integer);
 begin
   case choice of
-    0: if snd_MusicVolume <> 0 then
+    0: if snd_MusicVolume > 0 then
         Dec(snd_MusicVolume);
     1: if snd_MusicVolume < 15 then
         Inc(snd_MusicVolume);
@@ -673,17 +671,13 @@ begin
   S_SetMusicVolume(snd_MusicVolume);
 end;
 
-
 // M_DrawMainMenu
-
 procedure M_DrawMainMenu;
 begin
   V_DrawPatch(94, 2, SCN_FG, W_CacheLumpName('M_DOOM', PU_CACHE), True);
 end;
 
-
 // M_NewGame
-
 procedure M_DrawNewGame;
 begin
   V_DrawPatch(96, 14, SCN_FG, W_CacheLumpName('M_NEWG', PU_CACHE), True);
@@ -704,9 +698,7 @@ begin
     M_SetupNextMenu(@EpiDef);
 end;
 
-
 //      M_Episode
-
 var
   epi: integer;
 
@@ -756,9 +748,7 @@ begin
   M_SetupNextMenu(@NewDef);
 end;
 
-
 // M_Options
-
 var
   detailNames: array[0..1] of string;
   msgNames: array[0..1] of string;
@@ -786,9 +776,7 @@ begin
   M_SetupNextMenu(@OptionsDef);
 end;
 
-
 //      Toggle messages on/off
-
 procedure M_ChangeMessages(choice: integer);
 begin
   showMessages := 1 - showMessages;
@@ -831,9 +819,7 @@ begin
   M_StartMessage(SENDGAME, @M_EndGameResponse, True);
 end;
 
-
 // M_ReadThis
-
 procedure M_ReadThis(choice: integer);
 begin
   M_SetupNextMenu(@ReadDef1);
@@ -849,9 +835,7 @@ begin
   M_SetupNextMenu(@MainDef);
 end;
 
-
 // M_QuitDOOM
-
 const
   quitsounds: array[0..7] of integer = (
     Ord(sfx_pldeth),
@@ -874,7 +858,6 @@ const
     Ord(sfx_bspact),
     Ord(sfx_sgtatk)
     );
-
 
 procedure M_QuitResponse(ch: integer);
 begin
@@ -930,7 +913,6 @@ begin
     players[consoleplayer].msg := DETAILHI
   else
     players[consoleplayer].msg := DETAILLO;
-
 end;
 
 procedure M_SizeDisplay(choice: integer);
@@ -1030,9 +1012,7 @@ begin
   end;
 end;
 
-
 //      Find string height from hu_font chars
-
 function M_StringHeight(const _string: string): integer;
 var
   i: integer;
@@ -1046,9 +1026,7 @@ begin
       Result := Result + height;
 end;
 
-
 //      Write a string using the hu_font
-
 procedure M_WriteText(x, y: integer; const _string: string);
 var
   w: integer;
