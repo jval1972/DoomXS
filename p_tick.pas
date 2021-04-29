@@ -33,13 +33,11 @@ uses
   doomstat,
   d_think;
 
-
 // THINKERS
 // All thinkers should be allocated by Z_Malloc
 // so they can be operated on uniformly.
 // The actual structures will vary in size,
 // but the first element must be thinker_t.
-
 
 var
   // Both the head and tail of the thinker list.
