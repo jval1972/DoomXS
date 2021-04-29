@@ -156,7 +156,6 @@ const
 // 1 second, in ticks.
   BUTTONTIME = 35;
 
-
 type
 // P_PLATS
   plat_e = (
@@ -369,7 +368,7 @@ type
   end;
   Panim_t = ^anim_t;
 
-//      source animation definition
+// source animation definition
   animdef_t = record
     istexture: boolean; // if false, it is a flat
     endname: string[8];
@@ -478,7 +477,6 @@ begin
 end;
 
 // UTILITIES
-
 
 // getSide()
 // Will return a side_t*
@@ -621,7 +619,6 @@ begin
       Result := heightlist[i];
 end;
 
-
 // FIND LOWEST CEILING IN THE SURROUNDING SECTORS
 function P_FindLowestCeilingSurrounding(sec: Psector_t): fixed_t;
 var
@@ -662,7 +659,6 @@ begin
   end;
 end;
 
-
 // RETURN NEXT SECTOR # THAT LINE TAG REFERS TO
 function P_FindSectorFromLineTag(line: Pline_t; start: integer): integer;
 var
@@ -702,7 +698,6 @@ end;
 // Events are operations triggered by using, crossing,
 // or shooting special lines, or by timed thinkers.
 
-
 // P_CrossSpecialLine - TRIGGER
 // Called every time a thing origin is about
 //  to cross a line with a non 0 special.
@@ -739,7 +734,6 @@ begin
         exit;
     end;
   end;
-
 
   // Note: could use some const's here.
   case line.special of
@@ -1226,10 +1220,8 @@ begin
   end;
 end;
 
-
 // P_ShootSpecialLine - IMPACT SPECIALS
 // Called when a thing shoots a special line.
-
 procedure P_ShootSpecialLine(thing: Pmobj_t; line: Pline_t);
 begin
   //  Impacts that other things can activate.
@@ -1331,7 +1323,6 @@ end;
 var
   numlinespecials: smallint;
   linespeciallist: array[0..MAXLINEANIMS - 1] of Pline_t;
-
 
 // P_UpdateSpecials
 // Animate planes, scroll walls, etc.
@@ -1588,7 +1579,6 @@ begin
     end;
   end;
 
-
   //  Init other misc stuff
   for i := 0 to MAXCEILINGS - 1 do
     activeceilings[i] := nil;
@@ -1598,9 +1588,6 @@ begin
 
   for i := 0 to MAXBUTTONS - 1 do
     memset(@buttonlist[i], 0, SizeOf(button_t));
-
-  // UNUSED: no horizonal sliders.
-  //  P_InitSlidingDoorFrames();
 end;
 
 end.
