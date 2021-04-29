@@ -229,7 +229,7 @@ procedure M_SetupNextMenu(menudef: Pmenu_t); forward;
 procedure M_DrawThermo(x, y, thermWidth, thermDot: integer); forward;
 procedure M_DrawEmptyCell(menu: Pmenu_t; item: integer); forward;
 procedure M_DrawSelCell(menu: Pmenu_t; item: integer); forward;
-procedure M_WriteText(x, y: integer; const _string: string); forward;
+procedure M_WriteText(x, y: integer; const str: string); forward;
 function M_StringWidth(const _string: string): integer; forward;
 function M_StringHeight(const _string: string): integer; forward;
 procedure M_StartMessage(const _string: string; routine: PmessageRoutine;
@@ -1027,7 +1027,7 @@ begin
 end;
 
 //      Write a string using the hu_font
-procedure M_WriteText(x, y: integer; const _string: string);
+procedure M_WriteText(x, y: integer; const str: string);
 var
   w: integer;
   ch: integer;
@@ -1036,7 +1036,7 @@ var
   cy: integer;
   len: integer;
 begin
-  len := Length(_string);
+  len := Length(str);
   if len = 0 then
     exit;
 
@@ -1049,7 +1049,7 @@ begin
     if ch > len then
       break;
 
-    c := Ord(_string[ch]);
+    c := Ord(str[ch]);
     Inc(ch);
 
     if c = 0 then
