@@ -33,9 +33,7 @@ uses
   p_mobj_h,
   r_defs;
 
-
 // TELEPORTATION
-
 function EV_Teleport(line: Pline_t; side: integer; thing: Pmobj_t): integer;
 
 implementation
@@ -157,7 +155,6 @@ begin
     end;
   end;
   Result := 0;
-
 end;
 
 end.
