@@ -89,7 +89,6 @@ uses
   info,
   doomstat;
 
-
 // P_SetMobjState
 // Returns true if the mobj is still present.
 function P_SetMobjState(mobj: Pmobj_t; state: statenum_t): boolean;
@@ -447,7 +446,6 @@ begin
       exit; // mobj was removed
   end;
 
-
   // cycle through states,
   // calling action functions at transitions
   if mobj.tics <> -1 then
@@ -621,12 +619,10 @@ begin
   iquetail := (iquetail + 1) and (ITEMQUESIZE - 1);
 end;
 
-
 // P_SpawnPlayer
 // Called when a player is spawned on the level.
 // Most of the player structure stays unchanged
 //  between levels.
-
 procedure P_SpawnPlayer(mthing: Pmapthing_t);
 var
   p: Pplayer_t;
@@ -685,11 +681,9 @@ begin
   end;
 end;
 
-
 // P_SpawnMapThing
 // The fields of the mapthing should
 // already be in host byte order.
-
 procedure P_SpawnMapThing(mthing: Pmapthing_t);
 var
   i: integer;
@@ -877,7 +871,6 @@ begin
 
   Result := th;
 end;
-
 
 // P_SpawnPlayerMissile
 // Tries to aim at a nearby monster
