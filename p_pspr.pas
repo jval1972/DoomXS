@@ -37,10 +37,8 @@ uses
   d_player;
 
 const
-
   // Frame flags:
   // handles maximum brightness (torches, muzzle flare, light sources)
-
   FF_FULLBRIGHT = $8000; // flag in thing->frame
   FF_FRAMEMASK = $7fff;
 
@@ -111,9 +109,7 @@ uses
   doomstat,
   sounds;
 
-
-// VJ
-// Adjust weapon bottom and top
+// JVAL: Adjust weapon bottom and top
 const
   WEAPONTOP = 32 * FRACUNIT;
   WEAPONBOTTOM = WEAPONTOP + 96 * FRACUNIT;
@@ -240,7 +236,6 @@ begin
     else
       // If everything fails.
       player.pendingweapon := wp_fist;
-
   until player.pendingweapon <> wp_nochange;
 
   // Now set appropriate weapon overlay.
