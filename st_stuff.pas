@@ -1354,38 +1354,38 @@ initialization
 ////////////////////////////////////////////////////////////////////////////////
 // Now what?
   cheat_mus.sequence := get_cheatseq_string(cheat_mus_seq);
-  cheat_mus.p := get_cheatseq_string(0);
+  cheat_mus.p := '';
   cheat_god.sequence := get_cheatseq_string(cheat_god_seq);
-  cheat_god.p := get_cheatseq_string(0);
+  cheat_god.p := '';
   cheat_ammo.sequence := get_cheatseq_string(cheat_ammo_seq);
-  cheat_ammo.p := get_cheatseq_string(0);
+  cheat_ammo.p := '';
   cheat_ammonokey.sequence := get_cheatseq_string(cheat_ammonokey_seq);
-  cheat_ammonokey.p := get_cheatseq_string(0);
+  cheat_ammonokey.p := '';
   cheat_noclip.sequence := get_cheatseq_string(cheat_noclip_seq);
-  cheat_noclip.p := get_cheatseq_string(0);
+  cheat_noclip.p := '';
   cheat_commercial_noclip.sequence := get_cheatseq_string(cheat_commercial_noclip_seq);
-  cheat_commercial_noclip.p := get_cheatseq_string(0);
+  cheat_commercial_noclip.p := '';
 
   cheat_powerup[0].sequence := get_cheatseq_string(cheat_powerup_seq0);
-  cheat_powerup[0].p := get_cheatseq_string(0);
+  cheat_powerup[0].p := '';
   cheat_powerup[1].sequence := get_cheatseq_string(cheat_powerup_seq1);
-  cheat_powerup[1].p := get_cheatseq_string(0);
+  cheat_powerup[1].p := '';
   cheat_powerup[2].sequence := get_cheatseq_string(cheat_powerup_seq2);
-  cheat_powerup[2].p := get_cheatseq_string(0);
+  cheat_powerup[2].p := '';
   cheat_powerup[3].sequence := get_cheatseq_string(cheat_powerup_seq3);
-  cheat_powerup[3].p := get_cheatseq_string(0);
+  cheat_powerup[3].p := '';
   cheat_powerup[4].sequence := get_cheatseq_string(cheat_powerup_seq4);
-  cheat_powerup[4].p := get_cheatseq_string(0);
+  cheat_powerup[4].p := '';
   cheat_powerup[5].sequence := get_cheatseq_string(cheat_powerup_seq5);
-  cheat_powerup[5].p := get_cheatseq_string(0);
+  cheat_powerup[5].p := '';
   cheat_powerup[6].sequence := get_cheatseq_string(cheat_powerup_seq6);
-  cheat_powerup[6].p := get_cheatseq_string(0);
+  cheat_powerup[6].p := '';
 
   cheat_choppers.sequence := get_cheatseq_string(cheat_choppers_seq);
-  cheat_choppers.p := get_cheatseq_string(0);
+  cheat_choppers.p := '';
   cheat_clev.sequence := get_cheatseq_string(cheat_clev_seq);
-  cheat_clev.p := get_cheatseq_string(0);
+  cheat_clev.p := '';
   cheat_mypos.sequence := get_cheatseq_string(cheat_mypos_seq);
-  cheat_mypos.p := get_cheatseq_string(0);
+  cheat_mypos.p := '';
 
 end.
