@@ -1503,7 +1503,7 @@ begin
 
   ////////////////////////////////////////////////////////////////////////////////
   cheat_amap.sequence := get_cheatseq_string(cheat_amap_seq);
-  cheat_amap.p := get_cheatseq_string(0);
+  cheat_amap.p := '';
 
   ////////////////////////////////////////////////////////////////////////////////
   ZeroMemory(@st_notify_AM_initVariables, SizeOf(st_notify_AM_initVariables));
