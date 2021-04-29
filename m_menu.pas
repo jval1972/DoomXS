@@ -1485,7 +1485,7 @@ procedure M_Drawer;
 var
   i: smallint;
   max: smallint;
-  _string: string;
+  s: string;
   len: integer;
 begin
   inhelpscreens := False;
@@ -1496,7 +1496,7 @@ begin
     //    y := (SCREENHEIGHT - M_StringHeight(messageString)) div 2;
     y := (200 - M_StringHeight(messageString)) div 2;
     len := Length(messageString);
-    _string := '';
+    s := '';
     for i := 1 to len do
     begin
       if messageString[i] = #13 then
@@ -1504,19 +1504,19 @@ begin
       else if messageString[i] = #10 then
       begin
         //        x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
-        x := (320 - M_StringWidth(_string)) div 2;
-        M_WriteText(x, y, _string);
-        _string := '';
+        x := (320 - M_StringWidth(s)) div 2;
+        M_WriteText(x, y, s);
+        s := '';
       end
       else
-        _string := _string + messageString[i];
+        s := s + messageString[i];
     end;
-    if _string <> '' then
+    if s <> '' then
     begin
       //      x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
-      x := (320 - M_StringWidth(_string)) div 2;
+      x := (320 - M_StringWidth(s)) div 2;
       y := y + hu_font[0].height;
-      M_WriteText(x, y, _string);
+      M_WriteText(x, y, s);
     end;
     exit;
   end;
