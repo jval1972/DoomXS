@@ -252,11 +252,8 @@ var
 
   plr: Pplayer_t; // the player represented by an arrow
 
-type
-  patch_t10 = packed array[0..9] of Ppatch_t;
-
 var
-  marknums: patch_t10; // numbers used for marking by the automap
+  marknums: packed array[0..9] of Ppatch_t; // numbers used for marking by the automap
 
   markpoints: array[0..AM_NUMMARKPOINTS - 1] of mpoint_t; // where the points are
 
