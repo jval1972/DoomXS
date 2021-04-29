@@ -92,15 +92,11 @@ var
   visplanes: array[0..MAXVISPLANES - 1] of visplane_t;
   lastvisplane: integer;
 
-//
 // spanstart holds the start of a plane span
 // initialized to 0 at start
-//
   spanstart: array[0..SCREENHEIGHT - 1] of integer;
 
-//
 // texture mapping
-//
   planezlight: Plighttable_tPArray;
   planeheight: fixed_t;
 
@@ -158,10 +154,8 @@ begin
   spanfunc;
 end;
 
-//
 // R_ClearPlanes
 // At begining of frame.
-//
 procedure R_ClearPlanes;
 var
   i: integer;
@@ -185,9 +179,7 @@ begin
   baseyscale := -FixedDiv(finesine[angle], centerxfrac);
 end;
 
-//
 // R_NewVisPlane
-//
 function R_NewVisPlane: integer;
 begin
   if lastvisplane = MAXVISPLANES then
@@ -206,9 +198,7 @@ begin
   result := lastvisplane;
 end;
 
-//
 // R_FindPlane
-//
 function R_FindPlane(height: fixed_t; picnum: integer; lightlevel: integer): Pvisplane_t;
 var
   check: integer;
@@ -327,9 +317,7 @@ begin
   result := pl;
 end;
 
-//
 // R_MakeSpans
-//
 procedure R_MakeSpans(x: integer; t1: integer; b1: integer; t2: integer; b2: integer);
 begin
   while (t1 < t2) and (t1 <= b1) do
@@ -359,10 +347,8 @@ begin
   end;
 end;
 
-//
 // R_DrawPlanes
 // At the end of each frame.
-//
 procedure R_DrawPlanes;
 var
   pl: Pvisplane_t;
