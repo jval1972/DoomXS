@@ -40,7 +40,6 @@ const
 
 procedure R_DrawMaskedColumn(column: Pcolumn_t);
 
-
 procedure R_SortVisSprites;
 
 procedure R_AddSprites(sec: Psector_t);
@@ -306,11 +305,8 @@ var
   vissprites: array[0..MAXVISSPRITES - 1] of vissprite_t;
   vissprite_p: integer;
 
-
-//
 // R_InitSprites
 // Called at program start.
-//
 procedure R_InitSprites(namelist: PsprnamesArray_t);
 var
   i: integer;
@@ -321,18 +317,14 @@ begin
   R_InitSpriteDefs(namelist);
 end;
 
-//
 // R_ClearSprites
 // Called at frame start.
-//
 procedure R_ClearSprites;
 begin
   vissprite_p := 0;
 end;
 
-//
 // R_NewVisSprite
-//
 var
   overflowsprite: vissprite_t;
 
@@ -482,11 +474,9 @@ begin
   colfunc := basecolfunc;
 end;
 
-//
 // R_ProjectSprite
 // Generates a vissprite for a thing
 //  if it might be visible.
-//
 procedure R_ProjectSprite(thing: Pmobj_t);
 var
   tr_x: fixed_t;
@@ -595,36 +585,23 @@ begin
 
   // get light level
   if thing.flags and MF_SHADOW <> 0 then
-  begin
-    // shadow draw
-    vis.colormap := nil;
-  end
+    vis.colormap := nil // shadow draw
   else if fixedcolormap <> nil then
-  begin
-    // fixed map
-    vis.colormap := fixedcolormap;
-  end
+    vis.colormap := fixedcolormap // fixed map
   else if thing.frame and FF_FULLBRIGHT <> 0 then
-  begin
-    // full bright
-    vis.colormap := Plighttable_tArray(colormaps);
-  end
+    vis.colormap := Plighttable_tArray(colormaps) // full bright
   else
   begin
     // diminished light
     index := _SHR(xscale, LIGHTSCALESHIFT);
-
     if index >= MAXLIGHTSCALE then
       index := MAXLIGHTSCALE - 1;
-
     vis.colormap := spritelights[index];
   end;
 end;
 
-//
 // R_AddSprites
 // During BSP traversal, this adds sprites by sector.
-//
 procedure R_AddSprites(sec: Psector_t);
 var
   thing: Pmobj_t;
@@ -658,9 +635,7 @@ begin
   end;
 end;
 
-//
 // R_DrawPSprite
-//
 procedure R_DrawPSprite(psp: Ppspdef_t);
 var
   tx: fixed_t;
@@ -723,32 +698,18 @@ begin
 
   if (viewplayer.powers[Ord(pw_invisibility)] > 4 * 32) or
      (viewplayer.powers[Ord(pw_invisibility)] and 8 <> 0) then
-  begin
-    // shadow draw
-    vis.colormap := nil;
-  end
+    vis.colormap := nil // shadow draw
   else if fixedcolormap <> nil then
-  begin
-    // fixed color
-    vis.colormap := fixedcolormap;
-  end
+    vis.colormap := fixedcolormap // fixed color
   else if psp.state.frame and FF_FULLBRIGHT <> 0 then
-  begin
-    // full bright
-    vis.colormap := colormaps;
-  end
+    vis.colormap := colormaps // full bright
   else
-  begin
-    // local light
-    vis.colormap := spritelights[MAXLIGHTSCALE - 1];
-  end;
+    vis.colormap := spritelights[MAXLIGHTSCALE - 1];  // local light
 
   R_DrawPVisSprite(vis);
 end;
 
-//
 // R_DrawPlayerSprites
-//
 procedure R_DrawPlayerSprites;
 var
   i: integer;
@@ -772,15 +733,11 @@ begin
 
   // add all active psprites
   for i := 0 to Ord(NUMPSPRITES) - 1 do
-  begin
     if viewplayer.psprites[i].state <> nil then
       R_DrawPSprite(@viewplayer.psprites[i]);
-  end;
 end;
 
-//
 // R_SortVisSprites
-//
 var
   vsprsortedhead: vissprite_t;
 
@@ -844,10 +801,7 @@ begin
   end;
 end;
 
-//
 // R_DrawSprite
-//
-
 var
   clipbot: packed array[0..SCREENWIDTH - 1] of smallint;
   cliptop: packed array[0..SCREENWIDTH - 1] of smallint;
@@ -879,10 +833,7 @@ begin
     if (ds.x1 > spr.x2) or
        (ds.x2 < spr.x1) or
        ((ds.silhouette = 0) and (ds.maskedtexturecol = nil)) then
-    begin
-      // does not cover sprite
-      continue;
-    end;
+      continue; // does not cover sprite
 
     r1 := decide(ds.x1 < spr.x1, spr.x1, ds.x1);
     r2 := decide(ds.x2 > spr.x2, spr.x2, ds.x2);
@@ -951,7 +902,6 @@ begin
   begin
     if clipbot[x] = -2 then
       clipbot[x] := viewheight;
-
     if cliptop[x] = -2 then
       cliptop[x] := -1;
   end;
@@ -961,9 +911,7 @@ begin
   R_DrawVisSprite(spr, spr.x1, spr.x2);
 end;
 
-//
 // R_DrawMasked
-//
 procedure R_DrawMasked;
 var
   spr: Pvissprite_t;
