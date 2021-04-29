@@ -107,7 +107,6 @@ begin
         end;
       end;
     end;
-
     down:
     begin
       res := T_MovePlane(plat.sector, plat.speed, plat.low, False, 0, -1);
@@ -253,8 +252,6 @@ var
 begin
   for i := 0 to MAXPLATS - 1 do
     if (activeplats[i] <> nil) and (activeplats[i].status <> in_stasis) and
-
-
       (activeplats[i].tag = line.tag) then
     begin
       activeplats[i].oldstatus := activeplats[i].status;
