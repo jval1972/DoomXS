@@ -1493,7 +1493,6 @@ begin
   // Horiz. & Vertically center string and print it.
   if messageToPrint <> 0 then
   begin
-    //    y := (SCREENHEIGHT - M_StringHeight(messageString)) div 2;
     y := (200 - M_StringHeight(messageString)) div 2;
     len := Length(messageString);
     s := '';
@@ -1503,7 +1502,6 @@ begin
         y := y + hu_font[0].height
       else if messageString[i] = #10 then
       begin
-        //        x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
         x := (320 - M_StringWidth(s)) div 2;
         M_WriteText(x, y, s);
         s := '';
@@ -1513,7 +1511,6 @@ begin
     end;
     if s <> '' then
     begin
-      //      x := (SCREENWIDTH - M_StringWidth(_string)) div 2;
       x := (320 - M_StringWidth(s)) div 2;
       y := y + hu_font[0].height;
       M_WriteText(x, y, s);
@@ -1551,8 +1548,6 @@ end;
 procedure M_ClearMenus;
 begin
   menuactive := False;
-  // if (!netgame && usergame && paused)
-  //       sendpause = true;
 end;
 
 // M_SetupNextMenu
