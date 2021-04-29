@@ -1486,7 +1486,7 @@ begin
   i := M_CheckParm('-timer');
   if (i <> 0) and (i < myargc - 1) and (deathmatch <> 0) then
   begin
-    time := atoi(myargv[i + 1]) * 60 * 35;
+    time := atoi(myargv[i + 1]) * 60 * TICRATE;
     levelTimer := True;
     levelTimeCount := time;
   end;
