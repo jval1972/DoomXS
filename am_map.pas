@@ -1055,7 +1055,7 @@ end;
 procedure AM_drawGrid(color: integer);
 var
   x, y: fixed_t;
-  start, _end: fixed_t;
+  start, finish: fixed_t;
   ml: mline_t;
 begin
   // Figure out start of vertical gridlines
@@ -1063,13 +1063,13 @@ begin
   if (start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT) <> 0 then
     start := start + (MAPBLOCKUNITS * FRACUNIT) -
       ((start - bmaporgx) mod (MAPBLOCKUNITS * FRACUNIT));
-  _end := m_x + m_w;
+  finish := m_x + m_w;
 
   // draw vertical gridlines
   ml.a.y := m_y;
   ml.b.y := m_y + m_h;
   x := start;
-  while x < _end do
+  while x < finish do
   begin
     ml.a.x := x;
     ml.b.x := x;
@@ -1082,13 +1082,13 @@ begin
   if (start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT) <> 0 then
     start := start + (MAPBLOCKUNITS * FRACUNIT) -
       ((start - bmaporgy) mod (MAPBLOCKUNITS * FRACUNIT));
-  _end := m_y + m_h;
+  finish := m_y + m_h;
 
   // draw horizontal gridlines
   ml.a.x := m_x;
   ml.b.x := m_x + m_w;
   y := start;
-  while y < _end do
+  while y < finish do
   begin
     ml.a.y := y;
     ml.b.y := y;
