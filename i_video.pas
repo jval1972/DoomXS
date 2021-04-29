@@ -100,12 +100,7 @@ var
   srcrect: TRect;
   destrect: TRect;
   dest: PLongWord;
-{$IFDEF TRUECOLOR}
-  src: PInteger;
-{$ELSE}
   src: PByte;
-{$ENDIF}
-
 begin
   if hMainWnd = 0 then
     exit;
@@ -130,8 +125,16 @@ begin
 
   destrect.Left := 0;
   destrect.Top := 0;
-  destrect.Right := I_NativeWidth;
-  destrect.Bottom := I_NativeHeight;
+  if fullscreen then
+  begin
+    destrect.Right := I_NativeWidth;
+    destrect.Bottom := I_NativeHeight;
+  end
+  else
+  begin
+    destrect.Right := SCREENWIDTH;
+    destrect.Bottom := SCREENHEIGHT;
+  end;
   if g_pDDSPrimary.Blt(@destrect, g_pDDScreen, @srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, nil) = DDERR_SURFACELOST then
     g_pDDSPrimary._Restore;
 end;
