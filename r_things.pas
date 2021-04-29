@@ -400,10 +400,7 @@ begin
   dc_colormap := vis.colormap;
 
   if dc_colormap = nil then
-  begin
-    // NULL colormap = shadow draw
-    colfunc := fuzzcolfunc;
-  end
+    colfunc := fuzzcolfunc // NULL colormap = shadow draw
   else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
     colfunc := R_DrawTranslatedColumn;
@@ -445,10 +442,7 @@ begin
   dc_colormap := vis.colormap;
 
   if dc_colormap = nil then
-  begin
-    // NULL colormap = shadow draw
-    colfunc := fuzzcolfunc;
-  end
+    colfunc := fuzzcolfunc  // NULL colormap = shadow draw
   else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
     colfunc := R_DrawTranslatedColumn;
