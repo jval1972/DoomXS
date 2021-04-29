@@ -367,13 +367,6 @@ begin
   memcpy(screens[SCN_FG], screens[SCN_BG], SCREENWIDTH * SCREENHEIGHT);
 end;
 
-// The ticker is used to detect keys
-//  because of timing issues in netgames.
-function WI_Responder(ev: Pevent_t): boolean;
-begin
-  result := false;
-end;
-
 // Draws "<Levelname> Finished!"
 procedure WI_DrawLF;
 var
