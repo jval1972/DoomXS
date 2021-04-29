@@ -31,10 +31,8 @@ interface
 uses
   r_defs;
 
-// BSP?
 procedure R_ClearClipSegs;
 procedure R_ClearDrawSegs;
-
 
 procedure R_RenderBSPNode(bspnum: integer);
 
@@ -51,7 +49,6 @@ var
   sidedef: Pside_t;
   linedef: Pline_t;
   drawsegs: array[0..MAXDRAWSEGS - 1] of drawseg_t;
-
 
 implementation
 
@@ -73,19 +70,15 @@ uses
   // State.
   doomstat;
 
-
 // R_ClearDrawSegs
-
 procedure R_ClearDrawSegs;
 begin
   ds_p := 0;
 end;
 
-
 // ClipWallSegment
 // Clips the given range of columns
 // and includes it in the new clip list.
-
 type
   cliprange_t = record
     First: integer;
@@ -94,7 +87,6 @@ type
   Pcliprange_t = ^cliprange_t;
 
 const
-  MAXSEGS = 32;
   MAXSEGS = 128;
 
 var
@@ -102,12 +94,10 @@ var
   newend: integer;
   solidsegs: array[0..MAXSEGS - 1] of cliprange_t;
 
-
 // R_ClipSolidWallSegment
 // Does handle solid walls,
 //  e.g. single sided LineDefs (middle texture)
 //  that entirely block the view.
-
 procedure R_ClipSolidWallSegment(First, last: integer);
 var
   next: integer;
@@ -192,13 +182,11 @@ begin
   crunch;
 end;
 
-
 // R_ClipPassWallSegment
 // Clips the given range of columns,
 //  but does not includes it in the clip list.
 // Does handle windows,
 //  e.g. LineDefs with upper and lower texture.
-
 procedure R_ClipPassWallSegment(First, last: integer);
 var
   start: integer;
@@ -239,9 +227,7 @@ begin
   R_StoreWallRange(solidsegs[start].last + 1, last);
 end;
 
-
 // R_ClearClipSegs
-
 procedure R_ClearClipSegs;
 begin
   solidsegs[0].First := -$7fffffff;
@@ -251,11 +237,9 @@ begin
   newend := 2;
 end;
 
-
 // R_AddLine
 // Clips the given segment
 // and adds any visible pieces to the line list.
-
 procedure R_AddLine(line: Pseg_t);
 var
   x1: integer;
@@ -358,12 +342,10 @@ begin
   R_ClipPassWallSegment(x1, x2 - 1);
 end;
 
-
 // R_CheckBBox
 // Checks BSP node/subtree bounding box.
 // Returns true
 //  if some part of the bbox might be visible.
-
 const
   checkcoord: array[0..11, 0..3] of integer = (
     (3, 0, 2, 1),
@@ -485,7 +467,6 @@ begin
     angle2 := -clipangle;
   end;
 
-
   // Find the first clippost
   //  that touches the source post
   //  (adjacent pixels are touching).
@@ -514,12 +495,10 @@ begin
     Result := True;
 end;
 
-
 // R_Subsector
 // Determine floor/ceiling planes.
 // Add sprites of things in sector.
 // Draw one or more line segments.
-
 procedure R_Subsector(num: integer);
 var
   count: integer;
@@ -564,8 +543,6 @@ begin
   end;
 end;
 
-
-
 // RenderBSPNode
 // Renders all subsectors below a given node,
 //  traversing subtree recursively.
@@ -588,7 +565,6 @@ begin
   bsp := @nodes[bspnum];
 
   // Decide which side the view point is on.
-
   if R_PointOnSide(viewx, viewy, bsp) then
     side := 1
   else
