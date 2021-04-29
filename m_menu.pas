@@ -56,9 +56,7 @@ procedure M_Init;
 procedure M_StartControlPanel;
 
 var
-
   // defaulted values
-
   mouseSensitivity: integer;  // has default
 
   // Show messages has default, 0 = off, 1 = on
@@ -144,18 +142,13 @@ var
 
 type
   menuitem_t = record
-    // 0 = no cursor here, 1 = ok, 2 = arrows ok
-    status: smallint;
-
+    status: smallint; // 0 = no cursor here, 1 = ok, 2 = arrows ok
     Name: string[10];
-
     // choice = menu item #.
     // if status = 2,
     //   choice=0:leftarrow,1:rightarrow
     routine: PmessageRoutine;
-
-    // hotkey in menu
-    alphaKey: char;
+    alphaKey: char; // hotkey in menu
   end;
   Pmenuitem_t = ^menuitem_t;
   menuitem_tArray = packed array[0..$FFFF] of menuitem_t;
@@ -230,17 +223,15 @@ procedure M_DrawThermo(x, y, thermWidth, thermDot: integer); forward;
 procedure M_DrawEmptyCell(menu: Pmenu_t; item: integer); forward;
 procedure M_DrawSelCell(menu: Pmenu_t; item: integer); forward;
 procedure M_WriteText(x, y: integer; const str: string); forward;
-function M_StringWidth(const _string: string): integer; forward;
-function M_StringHeight(const _string: string): integer; forward;
-procedure M_StartMessage(const _string: string; routine: PmessageRoutine;
+function M_StringWidth(const str: string): integer; forward;
+function M_StringHeight(const str: string): integer; forward;
+procedure M_StartMessage(const str: string; routine: PmessageRoutine;
   input: boolean); forward;
 procedure M_StopMessage; forward;
 procedure M_ClearMenus; forward;
 
 type
-
   // DOOM MENU
-
   main_e = (
     newgame,
     options,
@@ -256,9 +247,7 @@ var
   MainDef: menu_t;
 
 type
-
   // EPISODE SELECT
-
   episodes_e = (
     ep1,
     ep2,
@@ -272,9 +261,7 @@ var
   EpiDef: menu_t;
 
 type
-
   // NEW GAME
-
   newgame_e = (
     killthings,
     toorough,
@@ -289,9 +276,7 @@ var
   NewDef: menu_t;
 
 type
-
   // OPTIONS MENU
-
   options_e = (
     endgame,
     Messages,
@@ -309,9 +294,7 @@ var
   OptionsDef: menu_t;
 
 type
-
   // Read This! MENU 1 & 2
-
   read_e = (
     rdthsempty1,
     read1_end
@@ -332,9 +315,7 @@ var
   ReadDef2: menu_t;
 
 type
-
   // SOUND VOLUME MENU
-
   sound_e = (
     sfx_vol,
     sfx_empty1,
@@ -348,9 +329,7 @@ var
   SoundDef: menu_t;
 
 type
-
   // LOAD GAME MENU
-
   load_e = (
     load1,
     load2,
@@ -367,10 +346,8 @@ var
   SaveMenu: array[0..5] of menuitem_t;
   SaveDef: menu_t;
 
-
 // M_ReadSaveStrings
 //  read the strings from the savegame files
-
 procedure M_ReadSaveStrings;
 var
   handle: file;
@@ -401,9 +378,7 @@ begin
   end;
 end;
 
-
 // M_LoadGame & Cie.
-
 procedure M_DrawLoad;
 var
   i: integer;
@@ -416,9 +391,7 @@ begin
   end;
 end;
 
-
 // Draw border for the savegame description
-
 procedure M_DrawSaveLoadBorder(x, y: integer);
 var
   i: integer;
@@ -434,9 +407,7 @@ begin
   V_DrawPatch(x, y + 7, SCN_FG, W_CacheLumpName('M_LSRGHT', PU_CACHE), True);
 end;
 
-
 // User wants to load this game
-
 procedure M_LoadSelect(choice: integer);
 var
   Name: string;
@@ -449,9 +420,7 @@ begin
   M_ClearMenus;
 end;
 
-
 // Selected from DOOM menu
-
 procedure M_LoadGame(choice: integer);
 begin
   if netgame then
@@ -464,9 +433,7 @@ begin
   M_ReadSaveStrings;
 end;
 
-
 //  M_SaveGame & Cie.
-
 procedure M_DrawSave;
 var
   i: integer;
@@ -485,9 +452,7 @@ begin
   end;
 end;
 
-
 // M_Responder calls this when user is finished
-
 procedure M_DoSave(slot: integer);
 begin
   G_SaveGame(slot, savegamestrings[slot]);
@@ -498,9 +463,7 @@ begin
     quickSaveSlot := slot;
 end;
 
-
 // User wants to save. Start string input for M_Responder
-
 procedure M_SaveSelect(choice: integer);
 begin
   // we are going to be intercepting all chars
@@ -513,9 +476,7 @@ begin
   saveCharIndex := Length(savegamestrings[choice]);
 end;
 
-
 // Selected from DOOM menu
-
 procedure M_SaveGame(choice: integer);
 begin
   if not usergame then
@@ -531,9 +492,7 @@ begin
   M_ReadSaveStrings;
 end;
 
-
 //      M_QuickSave
-
 var
   tempstring: string;
 
@@ -569,9 +528,7 @@ begin
   M_StartMessage(tempstring, @M_QuickSaveResponse, True);
 end;
 
-
 // M_QuickLoad
-
 procedure M_QuickLoadResponse(ch: integer);
 begin
   if ch = Ord('y') then
@@ -598,10 +555,8 @@ begin
   M_StartMessage(tempstring, @M_QuickLoadResponse, True);
 end;
 
-
 // Read This Menus
 // Had a "quick hack to fix romero bug"
-
 procedure M_DrawReadThis1;
 begin
   inhelpscreens := True;
@@ -615,9 +570,7 @@ begin
   end;
 end;
 
-
 // Read This Menus - optional second page.
-
 procedure M_DrawReadThis2;
 begin
   inhelpscreens := True;
@@ -973,12 +926,11 @@ begin
     W_CacheLumpName('M_CELL2', PU_CACHE), True);
 end;
 
-procedure M_StartMessage(const _string: string; routine: PmessageRoutine;
-  input: boolean);
+procedure M_StartMessage(const str: string; routine: PmessageRoutine; input: boolean);
 begin
   messageLastMenuActive := menuactive;
   messageToPrint := 1;
-  messageString := _string;
+  messageString := str;
   if Assigned(routine) then
     @messageRoutine := @routine
   else
@@ -996,15 +948,15 @@ end;
 
 // Find string width from hu_font chars
 
-function M_StringWidth(const _string: string): integer;
+function M_StringWidth(const str: string): integer;
 var
   i: integer;
   c: integer;
 begin
   Result := 0;
-  for i := 1 to Length(_string) do
+  for i := 1 to Length(str) do
   begin
-    c := Ord(toupper(_string[i])) - Ord(HU_FONTSTART);
+    c := Ord(toupper(str[i])) - Ord(HU_FONTSTART);
     if (c < 0) or (c >= HU_FONTSIZE) then
       Result := Result + 4
     else
@@ -1013,7 +965,7 @@ begin
 end;
 
 //      Find string height from hu_font chars
-function M_StringHeight(const _string: string): integer;
+function M_StringHeight(const str: string): integer;
 var
   i: integer;
   height: integer;
@@ -1021,8 +973,8 @@ begin
   height := hu_font[0].height;
 
   Result := height;
-  for i := 1 to Length(_string) do
-    if _string[i] = #13 then
+  for i := 1 to Length(str) do
+    if str[i] = #13 then
       Result := Result + height;
 end;
 
@@ -1082,13 +1034,9 @@ begin
   end;
 end;
 
-
 // CONTROL PANEL
 
-
-
 // M_Responder
-
 var
   joywait: integer;
   mousewait: integer;
@@ -1515,9 +1463,7 @@ begin
   Result := False;
 end;
 
-
 // M_StartControlPanel
-
 procedure M_StartControlPanel;
 begin
   // intro might call this repeatedly
@@ -1529,11 +1475,9 @@ begin
   itemOn := currentMenu.lastOn; // JDC
 end;
 
-
 // M_Drawer
 // Called after the view has been rendered,
 // but before it has been blitted.
-
 var
   x, y: smallint;
 
@@ -1611,18 +1555,14 @@ begin
   //       sendpause = true;
 end;
 
-
 // M_SetupNextMenu
-
 procedure M_SetupNextMenu(menudef: Pmenu_t);
 begin
   currentMenu := menudef;
   itemOn := currentMenu.lastOn;
 end;
 
-
 // M_Ticker
-
 procedure M_Ticker;
 begin
   Dec(skullAnimCounter);
@@ -1633,9 +1573,7 @@ begin
   end;
 end;
 
-
 // M_Init
-
 procedure M_Init;
 begin
   currentMenu := @MainDef;
@@ -2021,7 +1959,6 @@ begin
   lasty := 0;
   mousex := 0;
   lastx := 0;
-
 end;
 
 end.
