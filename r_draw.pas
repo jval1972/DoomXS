@@ -109,6 +109,8 @@ implementation
 
 uses
   doomdef,
+  m_rnd,
+  p_tick,
   w_wad,
   z_memory,
   i_system,
@@ -139,6 +141,18 @@ var
 //
   translations: array[0..2,0..255] of byte;}
 
+procedure R_ClampDC;
+begin
+  if dc_yl < 0 then
+    dc_yl := 0
+  else if dc_yl >= viewheight then
+    dc_yl := viewheight - 1;
+  if dc_yh < 0 then
+    dc_yh := 0
+  else if dc_yh >= viewheight then
+    dc_yh := viewheight - 1;
+end;
+
 //
 // A column is a vertical slice/span from a wall texture that,
 //  given the DOOM style restrictions on the view orientation,
@@ -154,6 +168,8 @@ var
   fracstep: fixed_t;
   b: byte;
 begin
+  R_ClampDC;
+
   count := dc_yh - dc_yl;
 
   // Zero length, column does not exceed a pixel.
@@ -211,6 +227,8 @@ var
   frac: fixed_t;
   fracstep: fixed_t;
 begin
+  R_ClampDC;
+
   count := dc_yh - dc_yl;
 
   // Zero length, column does not exceed a pixel.
@@ -258,6 +276,7 @@ const
 
 var
   fuzzpos: integer = 0;
+  lastleveltime: integer = -1;
 
 // Framebuffer postprocessing.
 // Creates a fuzzy image by copying pixels
@@ -271,6 +290,14 @@ var
   i: integer;
   dest: PByteArray;
 begin
+  R_ClampDC;
+
+  if lastleveltime <> leveltime then
+  begin
+    fuzzpos := rndtable[leveltime] mod FUZZTABLE;
+    lastleveltime := leveltime;
+  end;
+
   // Adjust borders. Low...
   if dc_yl = 0 then
     dc_yl := 1;
@@ -323,6 +350,8 @@ var
   fracstep: fixed_t;
   i: integer;
 begin
+  R_ClampDC;
+
   count := dc_yh - dc_yl;
   if count < 0 then
     exit;
