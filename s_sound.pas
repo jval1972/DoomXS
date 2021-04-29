@@ -42,14 +42,11 @@ procedure S_Start;
 //  using <sound_id> from sounds.h
 procedure S_StartSound(origin: pointer; sfx_id: integer);
 
-
 // Will start a sound at a given volume.
 procedure S_StartSoundAtVolume(origin_p: pointer; sfx_id: integer; volume: integer);
 
-
 // Stop sound for thing at <origin>
 procedure S_StopSound(origin: pointer);
-
 
 // Start music using <music_id> from sounds.h
 procedure S_StartMusic(music_id: integer);
@@ -65,9 +62,7 @@ procedure S_StopMusic;
 procedure S_PauseSound;
 procedure S_ResumeSound;
 
-//
 // Updates music & sounds
-//
 procedure S_UpdateSounds(listener_p: pointer);
 
 procedure S_SetMusicVolume(volume: integer);
@@ -134,29 +129,18 @@ const
 
 type
   channel_t = record
-    // sound information (if null, channel avail.)
-    sfxinfo: Psfxinfo_t;
-
-    // origin of sound
-    origin: pointer;
-
-    // handle of the sound being played
-    handle: integer;
+    sfxinfo: Psfxinfo_t;  // sound information (if null, channel avail.)
+    origin: pointer;  // origin of sound
+    handle: integer;  // handle of the sound being played
   end;
   Pchannel_t = ^channel_t;
   channel_tArray = packed array[0..$FFFF] of channel_t;
   Pchannel_tArray = ^channel_tArray;
 
-// the set of channels available
 var
-  channels: Pchannel_tArray;
-
-var
-// whether songs are mus_paused
-  mus_paused: boolean;
-
-// music currently being played
-  mus_playing: Pmusicinfo_t = nil;
+  channels: Pchannel_tArray;        // the set of channels available
+  mus_paused: boolean;              // whether songs are mus_paused
+  mus_playing: Pmusicinfo_t = nil;  // music currently being played
 
 // Internals.
 function S_getChannel(origin: pointer; sfxinfo: Psfxinfo_t): integer; forward;
@@ -357,18 +341,14 @@ var
   cnum: integer;
 begin
   for cnum := 0 to numChannels - 1 do
-  begin
     if (channels[cnum].sfxinfo <> nil) and (channels[cnum].origin = origin) then
     begin
       S_StopChannel(cnum);
       break;
     end;
-  end;
 end;
 
-//
 // Stop and resume music, during game PAUSE.
-//
 procedure S_PauseSound;
 begin
   if (mus_playing <> nil) and not mus_paused then
@@ -387,9 +367,7 @@ begin
   end;
 end;
 
-//
 // Updates music & sounds
-//
 procedure S_UpdateSounds(listener_p: pointer);
 var
   audible: boolean;
@@ -467,9 +445,7 @@ begin
   snd_SfxVolume := volume;
 end;
 
-//
 // Starts some music with the music id found in sounds.h.
-//
 procedure S_StartMusic(music_id: integer);
 begin
   S_ChangeMusic(music_id, false);
@@ -539,12 +515,10 @@ begin
   end;
 end;
 
-//
 // Changes volume, stereo-separation, and pitch variables
 //  from the norm of a sound effect to be played.
 // If the sound is not audible, returns a 0.
 // Otherwise, modifies parameters and returns 1.
-//
 function S_AdjustSoundParams(listener: Pmobj_t; source:Pmobj_t;
   vol: Pinteger; sep: Pinteger; pitch: Pinteger): boolean;
 var
@@ -599,10 +573,8 @@ begin
   result := vol^ > 0;
 end;
 
-//
 // S_GetChannel :
 //   If none available, return -1.  Otherwise channel #.
-//
 function S_GetChannel(origin: pointer; sfxinfo: Psfxinfo_t): integer;
 var
   // channel number to use
