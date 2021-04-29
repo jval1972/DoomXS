@@ -68,19 +68,15 @@ var
   numsides: integer;
   sides: Pside_tArray;
 
-
 // MAP related Lookup tables.
 // Store VERTEXES, LINEDEFS, SIDEDEFS, etc.
-
 var
-
   // BLOCKMAP
   // Created from axis aligned bounding box
   // of the map, a rectangular array of
   // blocks of size ...
   // Used to speed up collision detection
   // by spatial subdivision in 2D.
-
   // Blockmap size.
   bmapwidth: integer;
   bmapheight: integer; // size in mapblocks
@@ -89,7 +85,6 @@ var
   blockmaplump: PSmallIntArray;
   // for thing chains
   blocklinks: Pmobj_tPArray;
-
   // REJECT
   // For fast sight rejection.
   // Speeds up enemy AI by skipping detailed
@@ -218,7 +213,7 @@ begin
   ms := Pmapsubsector_t(Data);
   memset(subsectors, 0, numsubsectors * SizeOf(subsector_t));
 
-  for i := 0 to numsubsectors - 1 do //; i++, ss++, ms++)
+  for i := 0 to numsubsectors - 1 do
   begin
     ss := @subsectors[i];
     ss.numlines := ms.numsegs;
@@ -295,9 +290,7 @@ begin
   Z_Free(Data);
 end;
 
-
 // P_LoadThings
-
 procedure P_LoadThings(lump: integer);
 var
   Data: pointer;
@@ -464,7 +457,6 @@ begin
   Z_Free(Data);
 end;
 
-
 // P_LoadBlockMap
 procedure P_LoadBlockMap(lump: integer);
 var
@@ -484,11 +476,9 @@ begin
   memset(blocklinks, 0, count);
 end;
 
-
 // P_GroupLines
 // Builds sector line lists and subsector sector numbers.
 // Finds block bounding boxes for sectors.
-
 procedure P_GroupLines;
 var
   linebuffer: Pline_tPArray; // pointer to an array of pointers Pline_t
