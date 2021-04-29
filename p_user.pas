@@ -59,7 +59,6 @@ const
   // Index of the special effects (INVUL inverse) map.
   INVERSECOLORMAP = 32;
 
-
 // Movement.
 
 const
@@ -69,10 +68,8 @@ const
 var
   onground: boolean;
 
-
 // P_Thrust
 // Moves the given origin along a given angle.
-
 procedure P_Thrust(player: Pplayer_t; angle: angle_t; const move: fixed_t);
 begin
   angle := angle shr ANGLETOFINESHIFT;
@@ -81,10 +78,8 @@ begin
   player.mo.momy := player.mo.momy + FixedMul(move, finesine[angle]);
 end;
 
-
 // P_CalcHeight
 // Calculate the walking / running height adjustment
-
 procedure P_CalcHeight(player: Pplayer_t);
 var
   angle: integer;
@@ -221,14 +216,11 @@ begin
   else if player.damagecount > 0 then
     player.damagecount := player.damagecount - 1;
 
-
   if player.cmd.buttons and BT_USE <> 0 then
     player.playerstate := PST_REBORN;
 end;
 
-
 // P_PlayerThink
-
 procedure P_PlayerThink(player: Pplayer_t);
 var
   cmd: Pticcmd_t;
@@ -249,7 +241,6 @@ begin
     cmd.sidemove := 0;
     player.mo.flags := player.mo.flags and not MF_JUSTATTACKED;
   end;
-
 
   if player.playerstate = PST_DEAD then
   begin
@@ -300,7 +291,6 @@ begin
       if ((newweapon <> wp_plasma) and (newweapon <> wp_bfg)) or
         (gamemode <> shareware) then
         player.pendingweapon := newweapon;
-
   end;
 
   // check for use
