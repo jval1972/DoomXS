@@ -564,10 +564,7 @@ begin
       rw_midtexturemid := vtop - viewz;
     end
     else
-    begin
-      // top of texture at top
-      rw_midtexturemid := worldtop;
-    end;
+      rw_midtexturemid := worldtop; // top of texture at top
     rw_midtexturemid := rw_midtexturemid + sidedef.rowoffset;
 
     drawsegs[ds_p].silhouette := SIL_BOTH;
@@ -625,9 +622,7 @@ begin
     // hack to allow height changes in outdoor areas
     if (frontsector.ceilingpic = skyflatnum) and
        (backsector.ceilingpic = skyflatnum) then
-    begin
       worldtop := worldhigh;
-    end;
 
     if (backsector.ceilingheight <= frontsector.floorheight) or
        (backsector.floorheight >= frontsector.ceilingheight) then
@@ -652,10 +647,7 @@ begin
       // top texture
       toptexture := texturetranslation[sidedef.toptexture];
       if linedef.flags and ML_DONTPEGTOP <> 0 then
-      begin
-        // top of texture at top
-        rw_toptexturemid := worldtop;
-      end
+        rw_toptexturemid := worldtop  // top of texture at top
       else
       begin
         vtop := backsector.ceilingheight + textureheight[sidedef.toptexture];
