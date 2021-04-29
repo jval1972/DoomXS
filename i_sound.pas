@@ -173,7 +173,6 @@ begin
 
   SoundFreq[sfxid] := Psoundheader_t(sfx.data).freq;
   SoundSamples[sfxid] := 8;
-
 end;
 
 procedure SetSfxFormat(const sfxid: integer);
@@ -259,7 +258,7 @@ begin
 
   for channel := 0 to NUM_CHANNELS - 1 do
   begin
-    if I_ChannelPlaying(channel) and (channelhandles[channel]=handle) then
+    if I_ChannelPlaying(channel) and (channelhandles[channel] = handle) then
     begin
       dsb := ChannelBuffers[channel];
       dsb.SetPan(I_SepToDSPan(sep));

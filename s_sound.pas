@@ -28,24 +28,18 @@ unit s_sound;
 
 interface
 
-//
 // Initializes sound stuff, including volume
 // Sets channels, SFX and music volume,
 //  allocates channel buffer, sets S_sfx lookup.
-//
 procedure S_Init(sfxVolume: integer; musicVolume: integer);
 
-//
 // Per level startup code.
 // Kills playing sounds at start of level,
 //  determines music if any, changes music.
-//
 procedure S_Start;
 
-//
 // Start sound for thing at <origin>
 //  using <sound_id> from sounds.h
-//
 procedure S_StartSound(origin: pointer; sfx_id: integer);
 
 
@@ -167,9 +161,7 @@ var
 // music currently being played
   mus_playing: Pmusicinfo_t = nil;
 
-//
 // Internals.
-//
 function S_getChannel(origin: pointer; sfxinfo: Psfxinfo_t): integer; forward;
 
 function S_AdjustSoundParams(listener: Pmobj_t; source:Pmobj_t;
@@ -177,11 +169,9 @@ function S_AdjustSoundParams(listener: Pmobj_t; source:Pmobj_t;
 
 procedure S_StopChannel(cnum: integer); forward;
 
-//
 // Initializes sound stuff, including volume
 // Sets channels, SFX and music volume,
 //  allocates channel buffer, sets S_sfx lookup.
-//
 procedure S_Init(sfxVolume: integer; musicVolume: integer);
 var
   i: integer;
@@ -212,11 +202,9 @@ begin
   end;
 end;
 
-//
 // Per level startup code.
 // Kills playing sounds at start of level,
 //  determines music if any, changes music.
-//
 procedure S_Start;
 var
   cnum: integer;
@@ -315,8 +303,7 @@ begin
     sep := NORM_SEP;
 
   // hacks to vary the sfx pitches
-  if (sfx_id >= Ord(sfx_sawup)) and
-     (sfx_id <= Ord(sfx_sawhit)) then
+  if (sfx_id >= Ord(sfx_sawup)) and (sfx_id <= Ord(sfx_sawhit)) then
   begin
     pitch := pitch + 8 - (M_Random and 15);
 
@@ -345,11 +332,9 @@ begin
   if cnum < 0 then
     exit;
 
-  //
   // This is supposed to handle the loading/caching.
   // For some odd reason, the caching is done nearly
   //  each time the sound is needed?
-  //
 
   // get lumpnum if necessary
   if sfx.lumpnum < 0 then
@@ -579,8 +564,7 @@ begin
   // From _GG1_ p.428. Appox. eucledian distance fast.
   approx_dist := adx + ady - _SHR(decide(adx < ady, adx, ady), 1);
 
-  if (gamemap <> 8) and
-     (approx_dist > S_CLIPPING_DIST) then
+  if (gamemap <> 8) and (approx_dist > S_CLIPPING_DIST) then
   begin
     result := false;
     exit;
