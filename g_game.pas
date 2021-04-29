@@ -301,7 +301,7 @@ var
   bstrafe: boolean;
   speed: integer;
   tspeed: integer;
-  _forward: integer;
+  fwd: integer;
   side: integer;
   base: Pticcmd_t;
 begin
@@ -316,7 +316,7 @@ begin
             ((usejoystick <> 0) and joybuttons[joybstrafe]);
   speed := intval(gamekeydown[key_speed] or joybuttons[joybspeed]);
 
-  _forward := 0;
+  fwd := 0;
   side := 0;
 
   // use two stage accelerative turning
@@ -358,16 +358,16 @@ begin
   end;
 
   if gamekeydown[key_up] then
-    _forward := _forward + forwardmove[speed];
+    fwd := fwd + forwardmove[speed];
 
   if gamekeydown[key_down] then
-    _forward := _forward - forwardmove[speed];
+    fwd := fwd - forwardmove[speed];
 
   if joyymove < 0 then
-    _forward := _forward + forwardmove[speed];
+    fwd := fwd + forwardmove[speed];
 
   if joyymove > 0 then
-    _forward := _forward - forwardmove[speed];
+    fwd := fwd - forwardmove[speed];
 
   if gamekeydown[key_straferight] then
     side := side + sidemove[speed];
@@ -401,7 +401,7 @@ begin
 
   // mouse
   if ((usemouse <> 0) and mousebuttons[mousebforward]) then
-    _forward := _forward + forwardmove[speed];
+    fwd := fwd + forwardmove[speed];
 
   // forward double click
   if (usemouse <> 0) and (mousebuttons[mousebforward] <> (dclickstate <> 0)) and (dclicktime > 1) then
@@ -453,7 +453,7 @@ begin
     end;
   end;
 
-  _forward := _forward + mousey;
+  fwd := fwd + mousey;
   if strafe then
     side := side - mousex * 2
   else
@@ -462,17 +462,17 @@ begin
   mousex := 0;
   mousey := 0;
 
-  if _forward > forwardmove[1] then
-    _forward := forwardmove[1]
-  else if _forward < -forwardmove[1] then
-    _forward := -forwardmove[1];
+  if fwd > forwardmove[1] then
+    fwd := forwardmove[1]
+  else if fwd < -forwardmove[1] then
+    fwd := -forwardmove[1];
 
   if side > forwardmove[1] then
     side := forwardmove[1]
   else if side < -forwardmove[1] then
     side := -forwardmove[1];
 
-  cmd.forwardmove := cmd.forwardmove + _forward;
+  cmd.forwardmove := cmd.forwardmove + fwd;
   cmd.sidemove := cmd.sidemove + side;
 
   // special buttons
@@ -1691,7 +1691,7 @@ end;
 procedure G_TimeDemo(const name: string);
 begin
   nodrawers := M_CheckParm('-nodraw') > 0;
-  noblit := M_CheckParm ('-noblit') > 0;
+  noblit := M_CheckParm('-noblit') > 0;
   timingdemo := true;
   singletics := true;
 

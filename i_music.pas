@@ -330,7 +330,7 @@ begin
     if delta = -1 then
     begin
       delta := 0;
-      while (score[spos] and 128) <> 0 do
+      while score[spos] and 128 <> 0 do
       begin
         delta := _SHL(delta, 7);
         delta := delta + score[spos] and 127;
@@ -365,7 +365,7 @@ begin
 
   // midiStreamOut not supported (should not happen with MIDI MAPPER...)
   // Try to enumurate all midi devices
-  if (midicaps.dwSupport and MIDICAPS_STREAM) = 0 then
+  if midicaps.dwSupport and MIDICAPS_STREAM = 0 then
   begin
     numdev := midiOutGetNumDevs;
     if numdev = 0 then // fatal
@@ -377,7 +377,7 @@ begin
       if rc <> MMSYSERR_NOERROR then
         I_Error('I_InitMusic(): midiOutGetDevCaps failed, return value = %d', [rc]);
 
-      if (midicaps.dwSupport and MIDICAPS_STREAM) <> 0 then
+      if midicaps.dwSupport and MIDICAPS_STREAM <> 0 then
       begin
         MidiDevice := i;
         break;
