@@ -203,7 +203,7 @@ var
   frame: integer;
   rotation: integer;
   start: integer;
-  _end: integer;
+  finish: integer;
   patched: integer;
 begin
   // count the number of sprite names
@@ -218,7 +218,7 @@ begin
   sprites := Z_Malloc(numsprites * SizeOf(spritedef_t), PU_STATIC, nil);
 
   start := firstspritelump - 1;
-  _end := lastspritelump + 1;
+  finish := lastspritelump + 1;
 
   // scan all the lump names for each of the names,
   //  noting the highest frame letter.
@@ -234,7 +234,7 @@ begin
 
     // scan the lumps,
     //  filling in the frames for whatever is found
-    for l := start + 1 to _end - 1 do
+    for l := start + 1 to finish - 1 do
     begin
       if lumpinfo[l].v1 = intname then // VJ
       begin
