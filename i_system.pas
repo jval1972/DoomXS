@@ -76,6 +76,13 @@ procedure I_WaitVBL(const cnt: integer);
 
 function I_SetDPIAwareness: boolean;
 
+type
+  osversion_t = record
+    minor, major, build: integer;
+  end;
+
+function GetWindowsVersion: osversion_t;
+
 implementation
 
 uses
@@ -257,6 +264,23 @@ begin
   if assigned(dpifunc) then
     result := dpifunc;
   FreeLibrary(dllinst);
+end;
+
+function GetWindowsVersion: osversion_t;
+var
+  OSVersionInfo: TOSVersionInfo;
+begin
+  OSVersionInfo.dwOSVersionInfoSize := SizeOf(OSVersionInfo);
+  if GetVersionEx(OSVersionInfo) then
+    with OSVersionInfo do
+    begin
+      result.major := dwMajorVersion;
+      result.minor := dwMinorVersion;
+      if dwPlatformId = VER_PLATFORM_WIN32_WINDOWS then
+        result.build := dwBuildNumber and $FFFF
+      else
+        result.build := dwBuildNumber;
+    end;
 end;
 
 initialization

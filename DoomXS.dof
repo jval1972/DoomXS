@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=-nofullscreen -iwad doom2.wad
+RunParams=-nofullscreen -iwad doom2.wad -nofullscreen
 HostApplication=
 Launcher=
 UseLauncher=0
