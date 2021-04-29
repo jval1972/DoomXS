@@ -78,7 +78,6 @@ const
   // Time interval for item respawning.
   ITEMQUESIZE = 128;
 
-
 type
   divline_t = record
     x: fixed_t;
