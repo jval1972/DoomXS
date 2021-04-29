@@ -219,11 +219,9 @@ end;
 // Most monsters are spawned unaware of all players,
 // but some can be made preaware
 
-
 // Called by P_NoiseAlert.
 // Recursively traverse adjacent sectors,
 // sound blocking lines cut off traversal.
-
 var
   soundtarget: Pmobj_t;
 
@@ -342,7 +340,6 @@ begin
       Result := False; // too far away
       exit;
     end;
-
 
   if actor._type = MT_UNDEAD then
   begin
@@ -1202,10 +1199,8 @@ var
   xh: integer;
   yl: integer;
   yh: integer;
-
   bx: integer;
   by: integer;
-
   info: Pmobjinfo_t;
   temp: Pmobj_t;
 begin
@@ -1413,10 +1408,8 @@ begin
   mo.momy := FixedMul(mo.info.speed, finesine[an]);
 end;
 
-
 // SkullAttack
 // Fly at the player like a missile.
-
 const
   SKULLSPEED = 20 * FRACUNIT;
 
@@ -1556,7 +1549,6 @@ begin
   if actor.info.painsound <> 0 then
     S_StartSound(actor, actor.info.painsound);
 end;
-
 
 // A_Explode
 procedure A_Explode(thingy: Pmobj_t);
