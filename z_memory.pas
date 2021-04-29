@@ -227,9 +227,7 @@ end;
 var
   memmanager: TMemManager;
 
-//
 // Z_Init
-//
 procedure Z_Init;
 begin
   memmanager := TMemManager.Create;
@@ -240,18 +238,14 @@ begin
   memmanager.Free;
 end;
 
-//
 // Z_Free
-//
 procedure Z_Free(ptr: pointer);
 begin
   memmanager.M_Free(ptr);
 end;
 
-//
 // Z_Malloc
 // You can pass a NULL user if the tag is < PU_PURGELEVEL.
-//
 function Z_Malloc(size: integer; tag: integer; user: pointer): pointer;
 begin
   result := memmanager.M_Malloc(size, tag, user);
@@ -262,17 +256,13 @@ begin
   result := memmanager.M_Realloc(ptr, size, tag, user);
 end;
 
-//
 // Z_FreeTags
-//
 procedure Z_FreeTags(lowtag: integer; hightag: integer);
 begin
   memmanager.M_FreeTags(lowtag, hightag);
 end;
 
-//
 // Z_ChangeTag
-//
 procedure Z_ChangeTag(ptr: pointer; tag: integer);
 begin
   memmanager.M_ChangeTag(ptr, tag);
