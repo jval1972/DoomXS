@@ -56,9 +56,7 @@ var
   bottomtexture: integer;
   midtexture: integer;
 
-//
 // regular wall
-//
   rw_x: integer;
   rw_stopx: integer;
   rw_centerangle: angle_t;
@@ -107,9 +105,7 @@ uses
 
 // OPTIMIZE: closed two sided lines as single sided
 
-//
 // R_RenderMaskedSegRange
-//
 procedure R_RenderMaskedSegRange(ds: Pdrawseg_t; x1, x2: integer);
 var
   index: LongWord;
@@ -245,7 +241,6 @@ begin
         ceilingplane.bottom[rw_x] := bottom;
       end;
     end;
-
 
     yh := _SHR(bottomfrac, HEIGHTBITS);
 
@@ -423,9 +418,7 @@ begin
     drawsegs[ds_p].scalestep := rw_scalestep
   end
   else
-  begin
     drawsegs[ds_p].scale2 := drawsegs[ds_p].scale1;
-  end;
 
   // calculate texture boundaries
   //  and decide if floor / ceiling marks are needed
@@ -629,19 +622,12 @@ begin
   //  of the view plane, it is definitely invisible
   //  and doesn't need to be marked.
 
-
   if frontsector.floorheight >= viewz then
-  begin
-    // above view plane
-    markfloor := false;
-  end;
+    markfloor := false; // above view plane
 
   if (frontsector.ceilingheight <= viewz) and
      (frontsector.ceilingpic <> skyflatnum) then
-  begin
-    // below view plane
-    markceiling := false;
-  end;
+    markceiling := false; // below view plane
 
   // calculate incremental stepping values for texture edges
   worldtop := _SHR(worldtop, 4);
