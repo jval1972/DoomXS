@@ -39,11 +39,9 @@ function cht_CheckCheat(cht: Pcheatseq_t; key: char): boolean;
 
 procedure cht_GetParam(cht: Pcheatseq_t; var buffer: string);
 
-function get_cheatseq_string(const A: array of char): string; overload; // VJ
+function get_cheatseq_string(const A: array of char): string; overload;
 
-function get_cheatseq_string(const A: string): string; overload; // VJ
-
-function get_cheatseq_string(const x: integer): string; overload; // VJ
+function get_cheatseq_string(const A: string): string; overload;
 
 implementation
 
@@ -51,7 +49,7 @@ uses
   d_delphi,
   i_system;
 
-function get_cheatseq_string(const A: array of char): string; // VJ
+function get_cheatseq_string(const A: array of char): string;
 var
   i: integer;
 begin
@@ -63,7 +61,7 @@ begin
   until A[i] = Chr($FF);
 end;
 
-function get_cheatseq_string(const A: string): string;  // VJ
+function get_cheatseq_string(const A: string): string;
 var
   i: integer;
 begin
@@ -73,13 +71,6 @@ begin
     Result := Result + A[i];
     Inc(i);
   until A[i] = Chr($FF);
-end;
-
-function get_cheatseq_string(const x: integer): string; // VJ
-begin
-  Result := '';
-  if x <> 0 then
-    I_Error('get_cheatseq_string(): invalid parameter: %d', [x]);
 end;
 
 function SCRAMBLE(a: integer): integer;
@@ -93,10 +84,8 @@ var
   firsttime: boolean = True;
   cheat_xlate_table: array[0..255] of char;
 
-
 // Called in st_stuff module, which handles the input.
 // Returns a 1 if the cheat was successful, 0 if failed.
-
 function cht_CheckCheat(cht: Pcheatseq_t; key: char): boolean;
 var
   i: integer;
