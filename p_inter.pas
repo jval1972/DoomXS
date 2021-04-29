@@ -333,6 +333,7 @@ var
   i: integer;
   delta: fixed_t;
   sound: integer;
+  oldhealth: integer;
 begin
   delta := special.z - toucher.z;
 
@@ -472,10 +473,11 @@ begin
 
     SPR_MEDI:
     begin
+      oldhealth := player.health; // JVAL: Fixed the medikid message bug
       if not P_GiveBody(player, 25) then
         exit;
 
-      if player.health < 25 then
+      if oldhealth < 25 then
         player.msg := GOTMEDINEED
       else
         player.msg := GOTMEDIKIT;
