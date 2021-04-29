@@ -95,6 +95,7 @@ type
 
 const
   MAXSEGS = 32;
+  MAXSEGS = 128;
 
 var
   // newend is one past the last valid seg
