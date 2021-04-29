@@ -110,9 +110,6 @@ uses
 
 // Purpose?
 const
-  snd_prefixen: array[0..11] of char =
-    ('P', 'P', 'A', 'S', 'S', 'S', 'M', 'M', 'M', 'S', 'S', 'S' );
-
   S_MAX_VOLUME = 127;
 
 // when to clip out sounds
