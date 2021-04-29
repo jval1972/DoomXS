@@ -471,9 +471,7 @@ begin
   Result := True;
 end;
 
-
 // INTERCEPT ROUTINES
-
 var
   intercepts: array[0..MAXINTERCEPTS - 1] of intercept_t;
   intercept_p: integer;
@@ -776,7 +774,6 @@ begin
 
   // go through the sorted list
   Result := P_TraverseIntercepts(trav, FRACUNIT);
-
 end;
 
 end.
