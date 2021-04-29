@@ -153,7 +153,6 @@ end;
 
 // STROBE LIGHT FLASHING
 
-
 // T_StrobeFlash
 procedure T_StrobeFlash(flash: Pstrobe_t);
 begin
