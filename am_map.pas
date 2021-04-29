@@ -908,7 +908,7 @@ begin
     exit;
   end;
 
-  while (outcode1 or outcode2) <> 0 do
+  while outcode1 or outcode2 <> 0 do
   begin
     // may be partially inside box
     // find an outside point
