@@ -657,7 +657,7 @@ end;
 procedure I_ProcessMusic;
 var
   header: Pmidiheader_t;
-  length: integer;
+  len: integer;
   i: integer;
   rc: MMRESULT;
 begin
@@ -681,17 +681,17 @@ begin
             #13#10, [rc]);
       end;
       header.lpData := @CurrentSong.midievents[CurrentSong.nextevent];
-      length := CurrentSong.numevents - CurrentSong.nextevent;
-      if length > MAX_MIDI_EVENTS then
+      len := CurrentSong.numevents - CurrentSong.nextevent;
+      if len > MAX_MIDI_EVENTS then
       begin
-        length := MAX_MIDI_EVENTS;
+        len := MAX_MIDI_EVENTS;
         CurrentSong.nextevent := CurrentSong.nextevent + MAX_MIDI_EVENTS;
       end
       else
         CurrentSong.nextevent := 0;
-      length := length * SizeOf(MidiEvent_t);
-      header.dwBufferLength := length;
-      header.dwBytesRecorded := length;
+      len := len * SizeOf(MidiEvent_t);
+      header.dwBufferLength := len;
+      header.dwBytesRecorded := len;
       header.dwFlags := MHDR_ISSTRM;
       rc := midiOutPrepareHeader(HMIDIOUT(hMidiStream), PMidiHdr(header),
         SizeOf(midiheader_t));
