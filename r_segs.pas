@@ -74,15 +74,15 @@ var
   worldhigh: integer;
   worldlow: integer;
 
-  pixhigh: fixed_t;
-  pixlow: fixed_t;
+  pixhigh: int64; // R_WiggleFix
+  pixlow: int64; // R_WiggleFix
   pixhighstep: fixed_t;
   pixlowstep: fixed_t;
 
-  topfrac: fixed_t;
+  topfrac: int64; // R_WiggleFix
   topstep: fixed_t;
 
-  bottomfrac: fixed_t;
+  bottomfrac: int64; // R_WiggleFix
   bottomstep: fixed_t;
 
   walllights: Plighttable_tPArray;
@@ -205,6 +205,8 @@ end;
 var
   HEIGHTBITS: integer = 12;
   HEIGHTUNIT: integer = 1 shl 12;
+  WORLDBITS: integer = 4;
+  WORLDUNIT: integer = 1 shl 4;
 
 //
 // R_FixWiggle()
@@ -303,6 +305,8 @@ begin
     MAX_RWSCALE := scale_values[frontsector.scaleindex].clamp;
     HEIGHTBITS := scale_values[frontsector.scaleindex].heightbits;
     HEIGHTUNIT := 1 shl HEIGHTBITS;
+    WORLDBITS := 16 - HEIGHTBITS;
+    WORLDUNIT := 1 shl WORLDBITS;
   end;
 end;
 
@@ -341,6 +345,12 @@ begin
         ceilingplane.top[rw_x] := top;
         ceilingplane.bottom[rw_x] := bottom;
       end;
+      // SoM: this should be set here
+      if bottom > viewheight then
+        bottom := viewheight
+      else if bottom < 0 then
+        bottom := -1;
+      ceilingclip[rw_x] := bottom;
     end;
 
     yh := _SHR(bottomfrac, HEIGHTBITS);
@@ -360,6 +370,10 @@ begin
         floorplane.bottom[rw_x] := bottom;
       end;
       // SoM: this should be set here to prevent overdraw
+      if top > viewheight then
+        top := viewheight
+      else if top < -1 then
+        top := -1;
       floorclip[rw_x] := top;
     end;
 
@@ -735,29 +749,29 @@ begin
     markceiling := false; // below view plane
 
   // calculate incremental stepping values for texture edges
-  worldtop := _SHR(worldtop, 4);
-  worldbottom := _SHR(worldbottom, 4);
+  worldtop := _SHR(worldtop, WORLDBITS);
+  worldbottom := _SHR(worldbottom, WORLDBITS);
 
   topstep := -FixedMul(rw_scalestep, worldtop);
-  topfrac := _SHR(centeryfrac, 4) - FixedMul(worldtop, rw_scale);
+  topfrac := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldtop, rw_scale);
 
   bottomstep := -FixedMul(rw_scalestep, worldbottom);
-  bottomfrac := _SHR(centeryfrac, 4) - FixedMul(worldbottom, rw_scale);
+  bottomfrac := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldbottom, rw_scale);
 
   if backsector <> nil then
   begin
-    worldhigh := _SHR(worldhigh, 4);
-    worldlow := _SHR(worldlow, 4);
+    worldhigh := _SHR(worldhigh, WORLDBITS);
+    worldlow := _SHR(worldlow, WORLDBITS);
 
     if worldhigh < worldtop then
     begin
-      pixhigh := _SHR(centeryfrac, 4) - FixedMul(worldhigh, rw_scale);
+      pixhigh := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldhigh, rw_scale);
       pixhighstep := -FixedMul(rw_scalestep, worldhigh);
     end;
 
     if worldlow > worldbottom then
     begin
-      pixlow := _SHR(centeryfrac, 4) - FixedMul(worldlow, rw_scale);
+      pixlow := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldlow, rw_scale);
       pixlowstep := -FixedMul(rw_scalestep, worldlow);
     end;
   end;
