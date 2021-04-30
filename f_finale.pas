@@ -489,9 +489,7 @@ begin
     casttics := 15;
 end;
 
-//
 // F_CastResponder
-//
 function F_CastResponder(ev: Pevent_t): boolean;
 begin
   if ev._type <> ev_keydown then
@@ -568,9 +566,7 @@ begin
   end;
 end;
 
-//
 // F_CastDrawer
-//
 procedure F_CastDrawer;
 var
   sprdef: Pspritedef_t;
@@ -598,9 +594,7 @@ begin
   V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
-//
 // F_DrawPatchCol
-//
 procedure F_DrawPatchCol(scr: integer; x: integer; patch: Ppatch_t; col: integer);
 var
   column: Pcolumn_t;
@@ -630,9 +624,7 @@ begin
   end;
 end;
 
-//
 // F_BunnyScroll
-//
 var
   laststage: integer = 0;
 
