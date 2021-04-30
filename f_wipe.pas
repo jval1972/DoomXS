@@ -34,15 +34,6 @@ procedure wipe_EndScreen;
 
 function wipe_Ticker(ticks: integer): boolean;
 
-type
-  wipe_t = (
-    // simple gradual pixel change for 8-bit only
-    wipe_ColorXForm,
-    // weird screen melt
-    wipe_Melt,
-    wipe_NUMWIPES
-  );
-
 implementation
 
 uses
