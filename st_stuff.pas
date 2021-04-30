@@ -133,7 +133,7 @@ const
   ST_X2 = 104;
 
   ST_FX = 143;
-  ST_FY = ST_Y + 1; // VJ was 169;
+  ST_FY = ST_Y + 1; // JVAL was 169;
 
 // Number of status faces.
   ST_NUMPAINFACES = 5;
@@ -155,7 +155,7 @@ const
   ST_DEADFACE = ST_GODFACE + 1;
 
   ST_FACESX = 143;
-  ST_FACESY = ST_Y; // VJ was 168;
+  ST_FACESY = ST_Y; // JVAL was 168;
 
   ST_EVILGRINCOUNT = 2 * TICRATE;
   ST_STRAIGHTFACECOUNT = TICRATE div 2;
@@ -176,105 +176,105 @@ const
 // AMMO number pos.
   ST_AMMOWIDTH = 3;
   ST_AMMOX = 44;
-  ST_AMMOY = ST_Y + 3; // VJ was 171;
+  ST_AMMOY = ST_Y + 3; // JVAL was 171;
 
 // HEALTH number pos.
   ST_HEALTHWIDTH = 3;
   ST_HEALTHX = 90;
-  ST_HEALTHY = ST_Y + 3; // VJ was 171;
+  ST_HEALTHY = ST_Y + 3; // JVAL was 171;
 
 // Weapon pos.
   ST_ARMSX = 111;
-  ST_ARMSY = ST_Y + 4; // VJ was 172;
+  ST_ARMSY = ST_Y + 4; // JVAL was 172;
   ST_ARMSBGX = 104;
-  ST_ARMSBGY = ST_Y; // VJ was 168;
+  ST_ARMSBGY = ST_Y; // JVAL was 168;
   ST_ARMSXSPACE = 12;
   ST_ARMSYSPACE = 10;
 
 // Frags pos.
   ST_FRAGSX = 138;
-  ST_FRAGSY = ST_Y + 3; // VJ was 171;
+  ST_FRAGSY = ST_Y + 3; // JVAL was 171;
   ST_FRAGSWIDTH = 2;
 
 // ARMOR number pos.
   ST_ARMORWIDTH = 3;
   ST_ARMORX = 221;
-  ST_ARMORY = ST_Y + 3; // VJ was 171;
+  ST_ARMORY = ST_Y + 3; // JVAL was 171;
 
 // Key icon positions.
   ST_KEY0WIDTH = 8;
   ST_KEY0HEIGHT = 5;
   ST_KEY0X = 239;
-  ST_KEY0Y = ST_Y + 3; // VJ was 171;
+  ST_KEY0Y = ST_Y + 3; // JVAL was 171;
   ST_KEY1WIDTH = ST_KEY0WIDTH;
   ST_KEY1X = 239;
-  ST_KEY1Y = ST_Y + 13; // VJ was 181;
+  ST_KEY1Y = ST_Y + 13; // JVAL was 181;
   ST_KEY2WIDTH = ST_KEY0WIDTH;
   ST_KEY2X = 239;
-  ST_KEY2Y = ST_Y + 23; // VJ was 191;
+  ST_KEY2Y = ST_Y + 23; // JVAL was 191;
 
 // Ammunition counter.
   ST_AMMO0WIDTH = 3;
   ST_AMMO0HEIGHT = 6;
   ST_AMMO0X = 288;
-  ST_AMMO0Y = ST_Y + 5; // VJ was 173;
+  ST_AMMO0Y = ST_Y + 5; // JVAL was 173;
   ST_AMMO1WIDTH = ST_AMMO0WIDTH;
   ST_AMMO1X = 288;
-  ST_AMMO1Y = ST_Y + 11; // VJ was 179;
+  ST_AMMO1Y = ST_Y + 11; // JVAL was 179;
   ST_AMMO2WIDTH = ST_AMMO0WIDTH;
   ST_AMMO2X = 288;
-  ST_AMMO2Y = ST_Y + 23; // VJ was 191;
+  ST_AMMO2Y = ST_Y + 23; // JVAL was 191;
   ST_AMMO3WIDTH = ST_AMMO0WIDTH;
   ST_AMMO3X = 288;
-  ST_AMMO3Y = ST_Y + 17; // VJ was 185;
+  ST_AMMO3Y = ST_Y + 17; // JVAL was 185;
 
 // Indicate maximum ammunition.
 // Only needed because backpack exists.
   ST_MAXAMMO0WIDTH = 3;
   ST_MAXAMMO0HEIGHT = 5;
   ST_MAXAMMO0X = 314;
-  ST_MAXAMMO0Y = ST_Y + 5; // VJ was 173;
+  ST_MAXAMMO0Y = ST_Y + 5; // JVAL was 173;
   ST_MAXAMMO1WIDTH = ST_MAXAMMO0WIDTH;
   ST_MAXAMMO1X = 314;
-  ST_MAXAMMO1Y = ST_Y + 11; // VJ was 179;
+  ST_MAXAMMO1Y = ST_Y + 11; // JVAL was 179;
   ST_MAXAMMO2WIDTH = ST_MAXAMMO0WIDTH;
   ST_MAXAMMO2X = 314;
-  ST_MAXAMMO2Y = ST_Y + 23; // VJ was 191;
+  ST_MAXAMMO2Y = ST_Y + 23; // JVAL was 191;
   ST_MAXAMMO3WIDTH = ST_MAXAMMO0WIDTH;
   ST_MAXAMMO3X = 314;
-  ST_MAXAMMO3Y = ST_Y + 17; // VJ was 185;
+  ST_MAXAMMO3Y = ST_Y + 17; // JVAL was 185;
 
 // pistol
   ST_WEAPON0X = 110;
-  ST_WEAPON0Y = ST_Y + 4; // VJ was 172;
+  ST_WEAPON0Y = ST_Y + 4; // JVAL was 172;
 
 // shotgun
   ST_WEAPON1X = 122;
-  ST_WEAPON1Y = ST_Y + 4; // VJ was 172;
+  ST_WEAPON1Y = ST_Y + 4; // JVAL was 172;
 
 // chain gun
   ST_WEAPON2X = 134;
-  ST_WEAPON2Y = ST_Y + 4; // VJ was 172;
+  ST_WEAPON2Y = ST_Y + 4; // JVAL was 172;
 
 // missile launcher
   ST_WEAPON3X = 110;
-  ST_WEAPON3Y = ST_Y + 13; // VJ was 181;
+  ST_WEAPON3Y = ST_Y + 13; // JVAL was 181;
 
 // plasma gun
   ST_WEAPON4X = 122;
-  ST_WEAPON4Y = ST_Y + 13; // VJ was 181;
+  ST_WEAPON4Y = ST_Y + 13; // JVAL was 181;
 
  // bfg
   ST_WEAPON5X = 134;
-  ST_WEAPON5Y = ST_Y + 13; // VJ was 181;
+  ST_WEAPON5Y = ST_Y + 13; // JVAL was 181;
 
 // WPNS title
   ST_WPNSX = 109;
-  ST_WPNSY = ST_Y + 23; // VJ was 191;
+  ST_WPNSY = ST_Y + 23; // JVAL was 191;
 
  // DETH title
   ST_DETHX = 109;
-  ST_DETHY = ST_Y + 23; // VJ was 191;
+  ST_DETHY = ST_Y + 23; // JVAL was 191;
 
 //Incoming messages window location
   ST_MSGTEXTX = 0;

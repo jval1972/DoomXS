@@ -665,7 +665,7 @@ begin
   if ch <> Ord('y') then
     exit;
 
-  G_DeferedInitNew(sk_nightmare, epi + 1, 1); // VJ nightmare become sk_nightmare
+  G_DeferedInitNew(sk_nightmare, epi + 1, 1); // JVAL: nightmare become sk_nightmare
   M_ClearMenus;
 end;
 

@@ -42,7 +42,6 @@ procedure R_DrawSkyColumn;
 
 // The Spectre/Invisibility effect.
 procedure R_DrawFuzzColumn;
-//procedure R_DrawFuzzColumnLow; // VJ ??? not implement ???
 
 // Draw with color translation tables,
 //  for player sprite rendering,

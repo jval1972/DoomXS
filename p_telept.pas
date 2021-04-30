@@ -109,7 +109,7 @@ begin
 
         sector := Psubsector_t(m.subsector).sector;
         // wrong sector
-        if sector <> @sectors[i] then // VJ (was (sector-sectors != i ))
+        if sector <> @sectors[i] then
         begin
           thinker := thinker.next;
           continue;

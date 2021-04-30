@@ -530,15 +530,11 @@ begin
   if lumpcache[lump] = nil then
   begin
     // read the lump in
-    //printf ("cache miss on lump %i\n",lump);
-    Z_Malloc(W_LumpLength(lump), tag, @lumpcache[lump]); // VJ     ptr := Z_Malloc(W_LumpLength(lump), tag, {ови @ ???)lumpcache[lump]);
+    Z_Malloc(W_LumpLength(lump), tag, @lumpcache[lump]);
     W_ReadLump(lump, lumpcache[lump]);
   end
   else
-  begin
-    //printf ("cache hit on lump %i\n",lump);
-    Z_ChangeTag(lumpcache[lump],tag);
-  end;
+    Z_ChangeTag(lumpcache[lump], tag);
 
   result := lumpcache[lump];
 end;

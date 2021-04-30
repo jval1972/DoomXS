@@ -112,7 +112,7 @@ var
     begin
       // Remove a post.
       Inc(start);
-      Inc(next);       // VJ maybe after????
+      Inc(next);
       solidsegs[start] := solidsegs[next];
     end;
     newend := start + 1;
@@ -364,7 +364,7 @@ const
 
 function R_CheckBBox(bspcoordA: Pfixed_tArray; const side: integer): boolean;
 var
-  bspcoord: array[0..3] of fixed_t; // VJ
+  bspcoord: array[0..3] of fixed_t;
   boxx: integer;
   boxy: integer;
   boxpos: integer;

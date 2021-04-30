@@ -99,7 +99,7 @@ const
 
 var
   deathmatchstarts: array[0..MAX_DEATHMATCH_STARTS - 1] of mapthing_t;
-  deathmatch_p: integer; // VJ
+  deathmatch_p: integer;
 
   playerstarts: array[0..MAXPLAYERS - 1] of mapthing_t;
 

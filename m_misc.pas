@@ -325,7 +325,7 @@ begin
   s := TStrList.Create;
   try
     // read the file in, overriding any set defaults
-    if fexists(defaultfile) then // VJ
+    if fexists(defaultfile) then
       s.LoadFromFile(defaultfile);
 
     for i := 0 to s.Count - 1 do

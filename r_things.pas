@@ -236,7 +236,7 @@ begin
     //  filling in the frames for whatever is found
     for l := start + 1 to finish - 1 do
     begin
-      if lumpinfo[l].v1 = intname then // VJ
+      if lumpinfo[l].v1 = intname then
       begin
         frame := Ord(lumpinfo[l].name[4]) - Ord('A');
         rotation := Ord(lumpinfo[l].name[5]) - Ord('0');

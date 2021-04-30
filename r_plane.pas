@@ -382,8 +382,7 @@ begin
           angle := _SHR(viewangle + xtoviewangle[x], ANGLETOSKYSHIFT);
           dc_x := x;
           dc_source := R_GetColumn(skytexture, angle);
-        // VJ
-        // call skycolfunc(), not colfunc()
+          // JVAL: call skycolfunc(), not colfunc()
           skycolfunc;
         end;
       end;

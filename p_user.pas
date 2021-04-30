@@ -172,7 +172,7 @@ end;
 // Decrease POV height to floor height.
 const
   ANG5 = ANG90 div 18;
-  ANG355 = ANG270 + ANG5 * 17; // add by VJ
+  ANG355 = ANG270 + ANG5 * 17;
 
 procedure P_DeathThink(player: Pplayer_t);
 var

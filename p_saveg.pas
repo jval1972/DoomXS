@@ -558,7 +558,7 @@ begin
         ceiling.sector := @sectors[integer(ceiling.sector)];
         ceiling.sector.specialdata := ceiling;
 
-        if Assigned(ceiling.thinker._function.acp1) then // VJ works ???
+        if Assigned(ceiling.thinker._function.acp1) then
           @ceiling.thinker._function.acp1 := @T_MoveCeiling;
 
         P_AddThinker(@ceiling.thinker);
