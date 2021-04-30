@@ -238,7 +238,7 @@ begin
   Data := W_CacheLumpNum(lump, PU_STATIC);
 
   ms := Pmapsector_t(Data);
-  for i := 0 to numsectors - 1 do //; i++, ss++, ms++)
+  for i := 0 to numsectors - 1 do
   begin
     ss := @sectors[i];
     ss.floorheight := ms.floorheight * FRACUNIT;
