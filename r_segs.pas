@@ -326,7 +326,7 @@ begin
   while rw_x < rw_stopx do
   begin
     // mark floor / ceiling areas
-    yl := _SHR(topfrac + HEIGHTUNIT - 1, HEIGHTBITS);
+    yl := (topfrac + HEIGHTUNIT - 1) div HEIGHTUNIT;
 
     // no space above wall?
     if yl < ceilingclip[rw_x] + 1 then
@@ -353,7 +353,7 @@ begin
       ceilingclip[rw_x] := bottom;
     end;
 
-    yh := _SHR(bottomfrac, HEIGHTBITS);
+    yh := bottomfrac div HEIGHTUNIT;
 
     if yh >= floorclip[rw_x] then
       yh := floorclip[rw_x] - 1;
@@ -784,7 +784,6 @@ begin
      (pds.sprtopclip = nil) then
   begin
     memcpy(@openings[lastopening], @ceilingclip[start], SizeOf(ceilingclip[0]) * (rw_stopx - start));
-    pds.sprtopclip := PSmallIntArray(@openings[lastopening - start]);
     lastopening := lastopening + rw_stopx - start;
   end;
 
@@ -792,7 +791,6 @@ begin
      (pds.sprbottomclip = nil) then
   begin
     memcpy(@openings[lastopening], @floorclip[start], SizeOf(floorclip[0]) * (rw_stopx - start));
-    pds.sprbottomclip := PSmallIntArray(@openings[lastopening - start]);
     lastopening := lastopening + rw_stopx - start;
   end;
 
