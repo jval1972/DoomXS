@@ -80,9 +80,7 @@ var
   sendpause: boolean;        // send a pause event next tic
   paused: boolean;
 
-//
 // controls (have defaults)
-//
   key_right: integer;
   key_left: integer;
 
@@ -251,7 +249,7 @@ var
   mousearray: array[0..2] of boolean;
   mousebuttons: PBooleanArray;
 
-// mouse values are used once 
+// mouse values are used once
   mousex: integer;
   mousey: integer;
 
@@ -288,12 +286,10 @@ begin
     result := result + PIntegerArray(cmd)[i];
 end;
 
-//
 // G_BuildTiccmd
 // Builds a ticcmd from all of the available inputs
 // or reads it from the demo buffer.
 // If recording a demo, write it out
-//
 procedure G_BuildTiccmd(cmd: Pticcmd_t);
 var
   i: integer;
@@ -386,7 +382,7 @@ begin
   if gamekeydown[key_use] or ((usejoystick <> 0) and joybuttons[joybuse]) then
   begin
     cmd.buttons := cmd.buttons or BT_USE;
-  // clear double clicks if hit use button
+    // clear double clicks if hit use button
     dclicks := 0;
   end;
 
@@ -489,9 +485,7 @@ begin
   end;
 end;
 
-//
 // G_DoLoadLevel
-//
 procedure G_DoLoadLevel;
 var
   i: integer;
@@ -553,10 +547,8 @@ begin
   memset(joybuttons, 0, SizeOf(joybuttons));
 end;
 
-//
 // G_Responder
 // Get info needed to make ticcmd_ts for the players.
-//
 function G_Responder(ev: Pevent_t): boolean;
 var
   bmask: integer;
@@ -690,10 +682,8 @@ begin
   result := false;
 end;
 
-//
 // G_Ticker
 // Make ticcmd_ts for the players.
-//
 procedure G_Ticker;
 var
   i: integer;
@@ -827,15 +817,11 @@ begin
   end;
 end;
 
-//
 // PLAYER STRUCTURE FUNCTIONS
 // also see P_SpawnPlayer in P_Things
-//
 
-//
 // G_PlayerFinishLevel
 // Can when a player completes a level.
-//
 procedure G_PlayerFinishLevel(player: integer);
 var
   p: Pplayer_t;
@@ -851,11 +837,9 @@ begin
   p.bonuscount := 0;
 end;
 
-//
 // G_PlayerReborn
 // Called after a player dies
 // almost everything is cleared and initialized
-//
 procedure G_PlayerReborn(player: integer);
 var
   p: Pplayer_t;
@@ -892,12 +876,10 @@ begin
     p.maxammo[i] := maxammo[i];
 end;
 
-//
 // G_CheckSpot
 // Returns false if the player cannot be respawned
 // at the given mapthing_t spot
 // because something is occupying it
-//
 function G_CheckSpot(playernum: integer; mthing: Pmapthing_t): boolean;
 var
   x: fixed_t;
@@ -949,11 +931,9 @@ begin
   result := true;
 end;
 
-//
 // G_DeathMatchSpawnPlayer
 // Spawns a player at one of the random death match spots
 // called at level load and each death
-//
 procedure G_DeathMatchSpawnPlayer(playernum: integer);
 var
   i, j: integer;
@@ -978,9 +958,7 @@ begin
   P_SpawnPlayer(@playerstarts[playernum]);
 end;
 
-//
 // G_DoReborn
-//
 procedure G_DoReborn(playernum: integer);
 var
   i: integer;
@@ -1043,9 +1021,8 @@ var
     420, 150, 210, 150, 240, 150, 180, 150, 150, 300, 330, 420, 300, 180, 120, 30
   );
 
-//
 // G_DoCompleted
-//
+var
   secretexit: boolean;
 
 procedure G_ExitLevel;
@@ -1093,7 +1070,6 @@ begin
         end;
     end;
   end;
-
 
   wminfo.didsecret := players[consoleplayer].didsecret;
   wminfo.epsd := gameepisode - 1;
@@ -1167,9 +1143,7 @@ begin
   WI_Start(@wminfo);
 end;
 
-//
-// G_WorldDone 
-//
+// G_WorldDone
 procedure G_WorldDone;
 begin
   gameaction := ga_worlddone;
@@ -1198,10 +1172,8 @@ begin
   viewactive := true;
 end;
 
-//
 // G_InitFromSavegame
 // Can be called by the startup code or the menu task.
-//
 var
   savename: string;
 
@@ -1288,11 +1260,9 @@ begin
   R_FillBackScreen;
 end;
 
-//
 // G_SaveGame
 // Called by the menu task.
 // Description is a 24 byte text string
-//
 procedure G_SaveGame(slot: integer; const description: string);
 begin
   savegameslot := slot;
@@ -1372,11 +1342,9 @@ begin
   R_FillBackScreen;
 end;
 
-//
 // G_InitNew
 // Can be called by the startup code or the menu task,
 // consoleplayer, displayplayer, playeringame[] should be set.
-//
 var
   d_skill: skill_t;
   d_episode: integer;
@@ -1492,9 +1460,7 @@ begin
   G_DoLoadLevel;
 end;
 
-//
 // DEMO RECORDING
-//
 const
   DEMOMARKER = $80;
 
@@ -1547,9 +1513,7 @@ begin
   G_ReadDemoTiccmd(cmd);  // make SURE it is exactly the same
 end;
 
-//
 // G_RecordDemo
-//
 procedure G_RecordDemo(const name: string);
 var
   i: integer;
@@ -1610,9 +1574,7 @@ begin
   end;
 end;
 
-//
 // G_PlayDemo
-//
 var
   defdemoname: string;
 
@@ -1685,9 +1647,7 @@ begin
   demoplayback := true;
 end;
 
-//
 // G_TimeDemo
-//
 procedure G_TimeDemo(const name: string);
 begin
   nodrawers := M_CheckParm('-nodraw') > 0;
@@ -1699,16 +1659,9 @@ begin
   gameaction := ga_playdemo;
 end;
 
-(*
-===================
-=
-= G_CheckDemoStatus
-=
-= Called after a death or level completion to allow demos to be cleaned up
-= Returns true if a new demo loop action will take place
-===================
-*)
-
+// G_CheckDemoStatus
+//  Called after a death or level completion to allow demos to be cleaned up
+//  Returns true if a new demo loop action will take place
 function G_CheckDemoStatus: boolean;
 var
   endtime: integer;
