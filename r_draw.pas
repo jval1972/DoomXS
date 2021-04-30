@@ -276,7 +276,6 @@ const
 
 var
   fuzzpos: integer = 0;
-  lastleveltime: integer = -1;
 
 // Framebuffer postprocessing.
 // Creates a fuzzy image by copying pixels
@@ -291,12 +290,6 @@ var
   dest: PByteArray;
 begin
   R_ClampDC;
-
-  if lastleveltime <> leveltime then
-  begin
-    fuzzpos := rndtable[leveltime] mod FUZZTABLE;
-    lastleveltime := leveltime;
-  end;
 
   // Adjust borders. Low...
   if dc_yl = 0 then
