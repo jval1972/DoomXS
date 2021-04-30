@@ -865,18 +865,18 @@ var
   itemcount: integer;
   secretcount: integer;
 begin
-  memcpy(@frags, @players[player].frags, SizeOf(frags));
+  p := @players[player];
+  memcpy(@frags, @p.frags, SizeOf(frags));
   killcount := players[player].killcount;
   itemcount := players[player].itemcount;
   secretcount := players[player].secretcount;
 
-  p := @players[player];
   memset(p, 0, SizeOf(player_t));
 
-  memcpy(@players[player].frags, @frags, SizeOf(players[player].frags));
-  players[player].killcount := killcount;
-  players[player].itemcount := itemcount;
-  players[player].secretcount := secretcount;
+  memcpy(@p.frags, @frags, SizeOf(p.frags));
+  p.killcount := killcount;
+  p.itemcount := itemcount;
+  p.secretcount := secretcount;
 
   p.usedown := true;
   p.attackdown := true;  // don't do anything immediately
