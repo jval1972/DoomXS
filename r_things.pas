@@ -90,19 +90,15 @@ const
   MINZ = FRACUNIT * 4;
   BASEYCENTER = 100;
 
-//
 // Sprite rotation 0 is facing the viewer,
 //  rotation 1 is one angle turn CLOCKWISE around the axis.
 // This is not the same as the angle,
 //  which increases counter clockwise (protractor).
 // There was a lot of stuff grabbed wrong, so I changed it...
-//
 var
   spritelights: Plighttable_tPArray;
 
-//
 // INITIALIZATION FUNCTIONS
-//
 const
   MAXFRAMES = 29; // Maximun number of frames in sprite
 
@@ -111,10 +107,8 @@ var
   maxframe: integer;
   spritename: string;
 
-//
 // R_InstallSpriteLump
 // Local function for R_InitSprites.
-//
 procedure R_InstallSpriteLump(lump: integer;
   frame: LongWord; rotation: LongWord; flipped: boolean);
 var
@@ -163,7 +157,6 @@ begin
   sprtemp[frame].flip[rotation] := flipped;
 end;
 
-//
 // R_InitSpriteDefs
 // Pass a null terminated list of sprite names
 //  (4 chars exactly) to be used.
@@ -171,13 +164,12 @@ end;
 //  for horizontally flipped sprites.
 // Will report an error if the lumps are inconsistant.
 // Only called at startup.
-//
+
 // Sprite lump names are 4 characters for the actor,
 //  a letter for the frame, and a number for the rotation.
 // A sprite that is flippable will have an additional
 //  letter/number appended.
 // The rotation character can be 0 to signify no rotations.
-//
 procedure R_InitSpriteDefs(namelist: PsprnamesArray_t);
 
   procedure sprtempreset;
@@ -207,7 +199,6 @@ var
   patched: integer;
 begin
   // count the number of sprite names
-
   numsprites := 0;
   while namelist[numsprites] <> '' do
     inc(numsprites);
@@ -298,9 +289,7 @@ begin
   end;
 end;
 
-//
 // GAME FUNCTIONS
-//
 var
   vissprites: array[0..MAXVISSPRITES - 1] of vissprite_t;
   vissprite_p: integer;
@@ -339,12 +328,10 @@ begin
   end;
 end;
 
-//
 // R_DrawMaskedColumn
 // Used for sprites and masked mid textures.
 // Masked means: partly transparent, i.e. stored
 //  in posts/runs of opaque pixels.
-//
 procedure R_DrawMaskedColumn(column: Pcolumn_t);
 var
   topscreen: integer;
@@ -383,10 +370,8 @@ begin
   dc_texturemid := basetexturemid;
 end;
 
-//
 // R_DrawVisSprite
 //  mfloorclip and mceilingclip should also be set.
-//
 procedure R_DrawVisSprite(vis: Pvissprite_t; x1: integer; x2: integer);
 var
   column: Pcolumn_t;
