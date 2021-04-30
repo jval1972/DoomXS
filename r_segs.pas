@@ -495,6 +495,7 @@ var
   offsetangle: angle_t;
   vtop: fixed_t;
   lightnum: integer;
+  pds: Pdrawseg_t;
 begin
   // don't overflow and crash
   if ds_p = MAXDRAWSEGS then
@@ -519,23 +520,24 @@ begin
   rw_distance := FixedMul(hyp, sineval);
 
   rw_x := start;
-  drawsegs[ds_p].x1 := rw_x;
-  drawsegs[ds_p].x2 := stop;
-  drawsegs[ds_p].curline := curline;
+  pds := @drawsegs[ds_p];
+  pds.x1 := rw_x;
+  pds.x2 := stop;
+  pds.curline := curline;
   rw_stopx := stop + 1;
 
   // calculate scale at both ends and step
   rw_scale := R_ScaleFromGlobalAngle(viewangle + xtoviewangle[start]);
-  drawsegs[ds_p].scale1 := rw_scale;
+  pds.scale1 := rw_scale;
 
   if stop > start then
   begin
-    drawsegs[ds_p].scale2 := R_ScaleFromGlobalAngle(viewangle + xtoviewangle[stop]);
-    rw_scalestep := (drawsegs[ds_p].scale2 - rw_scale) div (stop - start);
-    drawsegs[ds_p].scalestep := rw_scalestep
+    pds.scale2 := R_ScaleFromGlobalAngle(viewangle + xtoviewangle[stop]);
+    rw_scalestep := (pds.scale2 - rw_scale) div (stop - start);
+    pds.scalestep := rw_scalestep
   end
   else
-    drawsegs[ds_p].scale2 := drawsegs[ds_p].scale1;
+    pds.scale2 := pds.scale1;
 
   // calculate texture boundaries
   //  and decide if floor / ceiling marks are needed
@@ -548,7 +550,7 @@ begin
   toptexture := 0;
   bottomtexture := 0;
   maskedtexture := false;
-  drawsegs[ds_p].maskedtexturecol := nil;
+  pds.maskedtexturecol := nil;
 
   if backsector = nil then
   begin
@@ -567,53 +569,53 @@ begin
       rw_midtexturemid := worldtop; // top of texture at top
     rw_midtexturemid := rw_midtexturemid + sidedef.rowoffset;
 
-    drawsegs[ds_p].silhouette := SIL_BOTH;
-    drawsegs[ds_p].sprtopclip := @screenheightarray;
-    drawsegs[ds_p].sprbottomclip := @negonearray;
-    drawsegs[ds_p].bsilheight := MAXINT;
-    drawsegs[ds_p].tsilheight := MININT;
+    pds.silhouette := SIL_BOTH;
+    pds.sprtopclip := @screenheightarray;
+    pds.sprbottomclip := @negonearray;
+    pds.bsilheight := MAXINT;
+    pds.tsilheight := MININT;
   end
   else
   begin
     // two sided line
-    drawsegs[ds_p].sprtopclip := nil;
-    drawsegs[ds_p].sprbottomclip := nil;
-    drawsegs[ds_p].silhouette := 0;
+    pds.sprtopclip := nil;
+    pds.sprbottomclip := nil;
+    pds.silhouette := 0;
 
     if frontsector.floorheight > backsector.floorheight then
     begin
-      drawsegs[ds_p].silhouette := SIL_BOTTOM;
-      drawsegs[ds_p].bsilheight := frontsector.floorheight;
+      pds.silhouette := SIL_BOTTOM;
+      pds.bsilheight := frontsector.floorheight;
     end
     else if backsector.floorheight > viewz then
     begin
-      drawsegs[ds_p].silhouette := SIL_BOTTOM;
-      drawsegs[ds_p].bsilheight := MAXINT;
+      pds.silhouette := SIL_BOTTOM;
+      pds.bsilheight := MAXINT;
     end;
 
     if frontsector.ceilingheight < backsector.ceilingheight then
     begin
-      drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
-      drawsegs[ds_p].tsilheight := frontsector.ceilingheight;
+      pds.silhouette := pds.silhouette or SIL_TOP;
+      pds.tsilheight := frontsector.ceilingheight;
     end
     else if backsector.ceilingheight < viewz then
     begin
-      drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
-      drawsegs[ds_p].tsilheight := MININT;
+      pds.silhouette := pds.silhouette or SIL_TOP;
+      pds.tsilheight := MININT;
     end;
 
     if backsector.ceilingheight <= frontsector.floorheight then
     begin
-      drawsegs[ds_p].sprbottomclip := @negonearray;
-      drawsegs[ds_p].bsilheight := MAXINT;
-      drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_BOTTOM;
+      pds.sprbottomclip := @negonearray;
+      pds.bsilheight := MAXINT;
+      pds.silhouette := pds.silhouette or SIL_BOTTOM;
     end;
 
     if backsector.floorheight >= frontsector.ceilingheight then
     begin
-      drawsegs[ds_p].sprtopclip := @screenheightarray;
-      drawsegs[ds_p].tsilheight := MININT;
-      drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
+      pds.sprtopclip := @screenheightarray;
+      pds.tsilheight := MININT;
+      pds.silhouette := pds.silhouette or SIL_TOP;
     end;
 
     worldhigh := backsector.ceilingheight - viewz;
@@ -680,7 +682,7 @@ begin
       // masked midtexture
       maskedtexture := true;
       maskedtexturecol := PSmallIntArray(@openings[lastopening - rw_x]);
-      drawsegs[ds_p].maskedtexturecol := maskedtexturecol;
+      pds.maskedtexturecol := maskedtexturecol;
       lastopening := lastopening + rw_stopx - rw_x;
     end;
   end;
@@ -778,31 +780,31 @@ begin
   R_RenderSegLoop;
 
   // save sprite clipping info
-  if ((drawsegs[ds_p].silhouette and SIL_TOP <> 0) or maskedtexture) and
-     (drawsegs[ds_p].sprtopclip = nil) then
+  if ((pds.silhouette and SIL_TOP <> 0) or maskedtexture) and
+     (pds.sprtopclip = nil) then
   begin
     memcpy(@openings[lastopening], @ceilingclip[start], SizeOf(ceilingclip[0]) * (rw_stopx - start));
-    drawsegs[ds_p].sprtopclip := PSmallIntArray(@openings[lastopening - start]);
+    pds.sprtopclip := PSmallIntArray(@openings[lastopening - start]);
     lastopening := lastopening + rw_stopx - start;
   end;
 
-  if ((drawsegs[ds_p].silhouette and SIL_BOTTOM <> 0) or maskedtexture) and
-     (drawsegs[ds_p].sprbottomclip = nil) then
+  if ((pds.silhouette and SIL_BOTTOM <> 0) or maskedtexture) and
+     (pds.sprbottomclip = nil) then
   begin
     memcpy(@openings[lastopening], @floorclip[start], SizeOf(floorclip[0]) * (rw_stopx - start));
-    drawsegs[ds_p].sprbottomclip := PSmallIntArray(@openings[lastopening - start]);
+    pds.sprbottomclip := PSmallIntArray(@openings[lastopening - start]);
     lastopening := lastopening + rw_stopx - start;
   end;
 
-  if maskedtexture and (drawsegs[ds_p].silhouette and SIL_TOP = 0) then
+  if maskedtexture and (pds.silhouette and SIL_TOP = 0) then
   begin
-    drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_TOP;
-    drawsegs[ds_p].tsilheight := MININT;
+    pds.silhouette := pds.silhouette or SIL_TOP;
+    pds.tsilheight := MININT;
   end;
-  if maskedtexture and (drawsegs[ds_p].silhouette and SIL_BOTTOM = 0) then
+  if maskedtexture and (pds.silhouette and SIL_BOTTOM = 0) then
   begin
-    drawsegs[ds_p].silhouette := drawsegs[ds_p].silhouette or SIL_BOTTOM;
-    drawsegs[ds_p].bsilheight := MAXINT;
+    pds.silhouette := pds.silhouette or SIL_BOTTOM;
+    pds.bsilheight := MAXINT;
   end;
   inc(ds_p);
 end;
