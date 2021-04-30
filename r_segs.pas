@@ -90,7 +90,6 @@ var
 implementation
 
 uses
-  doomtype,
   doomdef,
   doomstat,
   doomdata,

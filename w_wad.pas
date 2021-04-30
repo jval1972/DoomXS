@@ -90,7 +90,6 @@ var
 implementation
 
 uses
-  doomtype,
   i_system,
   z_memory;
 

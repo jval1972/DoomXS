@@ -47,8 +47,7 @@ function FixedDiv2(const a, b: fixed_t): fixed_t;
 implementation
 
 uses
-  d_delphi,
-  doomtype;
+  d_delphi;
 
 function FixedMul(const a, b: fixed_t): fixed_t; assembler;
 asm

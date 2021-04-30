@@ -29,7 +29,6 @@ unit st_stuff;
 interface
 
 uses
-  doomtype,
   doomdef,
   d_event;
 

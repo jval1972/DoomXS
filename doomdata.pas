@@ -29,8 +29,6 @@ unit doomdata;
 interface
 
 uses
-  // The most basic types we use, portability.
-  doomtype,
   // Some global defines, that configure the game.
   doomdef,
   // char8_t

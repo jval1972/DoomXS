@@ -37,7 +37,6 @@ implementation
 uses
   WinSock,
   d_delphi,
-  doomtype,
   d_event,
   d_net,
   d_player,

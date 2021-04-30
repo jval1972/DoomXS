@@ -28,6 +28,12 @@ unit d_delphi;
 
 interface
 
+const
+  MAXSHORT = smallint($7fff);
+  MINSHORT = smallint($8000);
+  MAXINT = longint($7fffffff);
+  MININT = longint($80000000);
+
 type
   PPointer = ^Pointer;
 

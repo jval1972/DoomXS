@@ -29,7 +29,6 @@ unit f_finale;
 interface
 
 uses
-  doomtype,
   d_event;
 
 function F_Responder(ev: Pevent_t): boolean;

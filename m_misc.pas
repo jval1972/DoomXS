@@ -42,7 +42,6 @@ implementation
 
 uses
   d_delphi,
-  doomtype,
   doomdef,
   d_englsh,
   d_main,

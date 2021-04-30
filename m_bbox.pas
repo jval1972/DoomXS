@@ -46,7 +46,7 @@ procedure M_AddToBox(box: Pfixed_tArray; x: fixed_t; y: fixed_t);
 implementation
 
 uses
-  doomtype;
+  d_delphi;
 
 procedure M_ClearBox(box: Pfixed_tArray);
 begin

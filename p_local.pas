@@ -29,7 +29,7 @@ unit p_local;
 interface
 
 uses
-  doomtype,
+  d_delphi,
   m_fixed,
   p_mobj_h,
   r_defs;

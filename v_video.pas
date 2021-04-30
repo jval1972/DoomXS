@@ -30,7 +30,6 @@ interface
 
 uses
   d_delphi,
-  doomtype,
   doomdef,
 // Needed because we are refering to patches.
   r_defs;
