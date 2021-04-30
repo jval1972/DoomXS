@@ -34,10 +34,10 @@ uses
 
 function F_Responder(ev: Pevent_t): boolean;
 
-{ Called by main loop. }
+// Called by main loop.
 procedure F_Ticker;
 
-{ Called by main loop. }
+// Called by main loop.
 procedure F_Drawer;
 
 procedure F_StartFinale;
@@ -221,9 +221,7 @@ begin
     result := F_CastResponder(ev);
 end;
 
-//
 // F_Ticker
-//
 procedure F_Ticker;
 var
   i: integer;
@@ -342,15 +340,13 @@ begin
   V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
-//
 // Final DOOM 2 animation
 // Casting by id Software.
 //   in order of appearance
-//
 type
   castinfo_t = record
     name: string;
-    _type: mobjtype_t;
+    casttype: mobjtype_t;
   end;
   Pcastinfo_t = ^castinfo_t;
 
@@ -368,16 +364,14 @@ var
   castonmelee: integer;
   castattacking: boolean;
 
-//
 // F_StartCast
-//
 procedure F_StartCast;
 begin
   if finalestage = 2 then
     exit;
   wipegamestate := -1;    // force a screen wipe
   castnum := 0;
-  caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
+  caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
   casttics := caststate.tics;
   castdeath := false;
   finalestage := 2;
@@ -387,9 +381,7 @@ begin
   S_ChangeMusic(Ord(mus_evil), true);
 end;
 
-//
 // F_CastTicker
-//
 procedure F_CastTicker;
 var
   st: integer;
@@ -406,9 +398,9 @@ begin
     castdeath := false;
     if castorder[castnum].name = '' then
       castnum := 0;
-    if mobjinfo[Ord(castorder[castnum]._type)].seesound <> 0 then
-      S_StartSound(nil, mobjinfo[Ord(castorder[castnum]._type)].seesound);
-    caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
+    if mobjinfo[Ord(castorder[castnum].casttype)].seesound <> 0 then
+      S_StartSound(nil, mobjinfo[Ord(castorder[castnum].casttype)].seesound);
+    caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
     castframes := 0;
   end
   else
@@ -418,7 +410,7 @@ begin
     begin
       castattacking := false;
       castframes := 0;
-      caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
+      caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
       casttics := caststate.tics;
       if casttics = -1 then
         casttics := 15;
@@ -468,27 +460,27 @@ begin
     // go into attack frame
     castattacking := true;
     if castonmelee <> 0 then
-      caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].meleestate]
+      caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].meleestate]
     else
-      caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].missilestate];
+      caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].missilestate];
     castonmelee := castonmelee xor 1;
     if caststate = @states[Ord(S_NULL)] then
     begin
       if castonmelee <> 0 then
-        caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].meleestate]
+        caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].meleestate]
       else
-        caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].missilestate];
+        caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].missilestate];
     end;
   end;
 
   if castattacking then
   begin
     if (castframes = 24) or
-       (caststate = @states[mobjinfo[Ord(castorder[castnum]._type)].seestate]) then
+       (caststate = @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate]) then
     begin
       castattacking := false;
       castframes := 0;
-      caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].seestate];
+      caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
     end;
   end;
 
@@ -516,12 +508,12 @@ begin
 
   // go into death frame
   castdeath := true;
-  caststate := @states[mobjinfo[Ord(castorder[castnum]._type)].deathstate];
+  caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].deathstate];
   casttics := caststate.tics;
   castframes := 0;
   castattacking := false;
-  if mobjinfo[Ord(castorder[castnum]._type)].deathsound <> 0 then
-    S_StartSound(nil, mobjinfo[Ord(castorder[castnum]._type)].deathsound);
+  if mobjinfo[Ord(castorder[castnum].casttype)].deathsound <> 0 then
+    S_StartSound(nil, mobjinfo[Ord(castorder[castnum].casttype)].deathsound);
 
   result := true;
 end;
@@ -745,58 +737,58 @@ end;
 
 initialization
   castorder[0].name := CC_ZOMBIE;
-  castorder[0]._type := MT_POSSESSED;
+  castorder[0].casttype := MT_POSSESSED;
 
   castorder[1].name := CC_SHOTGUN;
-  castorder[1]._type := MT_SHOTGUY;
+  castorder[1].casttype := MT_SHOTGUY;
 
   castorder[2].name := CC_HEAVY;
-  castorder[2]._type := MT_CHAINGUY;
+  castorder[2].casttype := MT_CHAINGUY;
 
   castorder[3].name := CC_IMP;
-  castorder[3]._type := MT_TROOP;
+  castorder[3].casttype := MT_TROOP;
 
   castorder[4].name := CC_DEMON;
-  castorder[4]._type := MT_SERGEANT;
+  castorder[4].casttype := MT_SERGEANT;
 
   castorder[5].name := CC_LOST;
-  castorder[5]._type := MT_SKULL;
+  castorder[5].casttype := MT_SKULL;
 
   castorder[6].name := CC_CACO;
-  castorder[6]._type := MT_HEAD;
+  castorder[6].casttype := MT_HEAD;
 
   castorder[7].name := CC_HELL;
-  castorder[7]._type := MT_KNIGHT;
+  castorder[7].casttype := MT_KNIGHT;
 
   castorder[8].name := CC_BARON;
-  castorder[8]._type := MT_BRUISER;
+  castorder[8].casttype := MT_BRUISER;
 
   castorder[9].name := CC_ARACH;
-  castorder[9]._type := MT_BABY;
+  castorder[9].casttype := MT_BABY;
 
   castorder[10].name := CC_PAIN;
-  castorder[10]._type := MT_PAIN;
+  castorder[10].casttype := MT_PAIN;
 
   castorder[11].name := CC_REVEN;
-  castorder[11]._type := MT_UNDEAD;
+  castorder[11].casttype := MT_UNDEAD;
 
   castorder[12].name := CC_MANCU;
-  castorder[12]._type := MT_FATSO;
+  castorder[12].casttype := MT_FATSO;
 
   castorder[13].name := CC_ARCH;
-  castorder[13]._type := MT_VILE;
+  castorder[13].casttype := MT_VILE;
 
   castorder[14].name := CC_SPIDER;
-  castorder[14]._type := MT_SPIDER;
+  castorder[14].casttype := MT_SPIDER;
 
   castorder[15].name := CC_CYBER;
-  castorder[15]._type := MT_CYBORG;
+  castorder[15].casttype := MT_CYBORG;
 
   castorder[16].name := CC_HERO;
-  castorder[16]._type := MT_PLAYER;
+  castorder[16].casttype := MT_PLAYER;
 
   castorder[17].name := '';
-  castorder[17]._type := mobjtype_t(0);
+  castorder[17].casttype := mobjtype_t(0);
 
 end.
 
