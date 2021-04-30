@@ -383,9 +383,7 @@ type
   end;
   Ppcx_t = ^pcx_t;
 
-//
 // WritePCXfile
-//
 procedure WritePCXfile(const filename: string; data: PByteArray;
   width, height: integer; palette: PByteArray);
 var
@@ -454,9 +452,7 @@ begin
   Z_Free(pcx);
 end;
 
-//
 // M_ScreenShot
-//
 procedure M_ScreenShot;
 var
   i: integer;
