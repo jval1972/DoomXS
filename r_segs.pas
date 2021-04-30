@@ -784,6 +784,7 @@ begin
      (pds.sprtopclip = nil) then
   begin
     memcpy(@openings[lastopening], @ceilingclip[start], SizeOf(ceilingclip[0]) * (rw_stopx - start));
+    pds.sprtopclip := @openings[lastopening - start];
     lastopening := lastopening + rw_stopx - start;
   end;
 
@@ -791,6 +792,7 @@ begin
      (pds.sprbottomclip = nil) then
   begin
     memcpy(@openings[lastopening], @floorclip[start], SizeOf(floorclip[0]) * (rw_stopx - start));
+    pds.sprbottomclip := @openings[lastopening - start];
     lastopening := lastopening + rw_stopx - start;
   end;
 
