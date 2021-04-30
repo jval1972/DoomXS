@@ -427,7 +427,6 @@ begin
       min_y := vertexes[i].y
     else if vertexes[i].y > max_y then
       max_y := vertexes[i].y;
-
   end;
 
   max_w := max_x - min_x;
@@ -1104,40 +1103,41 @@ procedure AM_drawWalls;
 var
   i: integer;
   l: mline_t;
+  line: Pline_t;
 begin
+  line := @lines[0];
   for i := 0 to numlines - 1 do
   begin
-    l.a.x := lines[i].v1.x;
-    l.a.y := lines[i].v1.y;
-    l.b.x := lines[i].v2.x;
-    l.b.y := lines[i].v2.y;
-    if (cheating <> 0) or (lines[i].flags and ML_MAPPED <> 0) then
+    l.a.x := line.v1.x;
+    l.a.y := line.v1.y;
+    l.b.x := line.v2.x;
+    l.b.y := line.v2.y;
+    if (cheating <> 0) or (line.flags and ML_MAPPED <> 0) then
     begin
-      if (lines[i].flags and LINE_NEVERSEE <> 0) and (cheating = 0) then
+      if (line.flags and LINE_NEVERSEE <> 0) and (cheating = 0) then
         continue;
-      if lines[i].backsector = nil then
+      if line.backsector = nil then
       begin
         AM_drawMline(@l, WALLCOLORS);
       end
       else
       begin
-        if lines[i].special = 39 then
+        if line.special = 39 then
         begin // teleporters
           AM_drawMline(@l, WALLCOLORS + WALLRANGE div 2);
         end
-        else if lines[i].flags and ML_SECRET <> 0 then // secret door
+        else if line.flags and ML_SECRET <> 0 then // secret door
         begin
           if cheating <> 0 then
             AM_drawMline(@l, SECRETWALLCOLORS)
           else
             AM_drawMline(@l, WALLCOLORS);
         end
-        else if lines[i].backsector.floorheight <> lines[i].frontsector.floorheight then
+        else if line.backsector.floorheight <> line.frontsector.floorheight then
         begin
           AM_drawMline(@l, FDWALLCOLORS); // floor level change
         end
-        else if lines[i].backsector.ceilingheight <>
-          lines[i].frontsector.ceilingheight then
+        else if line.backsector.ceilingheight <> line.frontsector.ceilingheight then
         begin
           AM_drawMline(@l, CDWALLCOLORS); // ceiling level change
         end
@@ -1152,6 +1152,7 @@ begin
       if lines[i].flags and LINE_NEVERSEE = 0 then
         AM_drawMline(@l, GRAYS + 3);
     end;
+    inc(line);
   end;
 end;
 
