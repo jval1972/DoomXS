@@ -54,10 +54,7 @@ uses
   v_video,
   z_memory;
 
-//
-//                       SCREEN WIPE PACKAGE
-//
-
+// SCREEN WIPE PACKAGE
 
 var
   wipe_scr_start: PByteArray;
@@ -90,7 +87,7 @@ var
   RANDOMS: array[0..319] of byte;
 begin
   for i := 0 to SCREENWIDTH - 1 do
-    SHEIGHTS[i] := trunc(i * 320 / SCREENWIDTH);
+    SHEIGHTS[i] := Trunc(i * 320 / SCREENWIDTH);
   for i := 0 to 319 do
     RANDOMS[i] := M_Random;
 
@@ -114,7 +111,7 @@ begin
       yy[i] := -15;
   end;
 
-// JVAL change wipe timing
+  // JVAL change wipe timing
   vy := FRACUNIT * SCREENWIDTH div 200;
   for i := 0 to SCREENWIDTH - 1 do
     yy[i] := yy[i] * vy;
