@@ -71,12 +71,7 @@ var
 function neterror: string; forward;
 
 const
-  PRE_CONNECT = 0;
   PRE_DISCONNECT = 1;
-  PRE_ALLHERE = 2;
-  PRE_CONACK = 3;
-  PRE_ALLHEREACK = 4;
-  PRE_GO = 5;
 
   // Set PreGamePacket.fake to this so that the game rejects any pregame packets
   // after it starts. This translates to NCMD_SETUP|NCMD_MULTI.
@@ -98,9 +93,7 @@ type
     machines: array[0..MAXNETNODES - 1] of machine_t;
   end;
 
-
 // UDPsocket
-
 function UDPsocket: TSocket;
 begin
   // allocate a socket
@@ -109,9 +102,7 @@ begin
     I_Error('UDPsocket(): Can not create socket: %s', [neterror]);
 end;
 
-
 // BindToLocalPort
-
 procedure BindToLocalPort(s: TSocket; port: word);
 var
   v: integer;
@@ -142,20 +133,16 @@ begin
   end;
 
   if i = doomcom.numnodes then
-    // packet is not from one of the players (new game broadcast?)
-    i := -1;
+    i := -1;  // packet is not from one of the players (new game broadcast?)
 
   Result := i;
 end;
 
-
 // PacketSend
-
 procedure PacketSend;
 var
   c: integer;
 begin
-  //printf ("sending %i\n",gametic);
   c := sendto(mysocket, doomcom.Data, doomcom.datalength, 0,
     sendaddress[doomcom.remotenode], SizeOf(sendaddress[doomcom.remotenode]));
 
@@ -167,9 +154,7 @@ const
   BACKUPTICS = 36;
   MAX_MSGLEN = BACKUPTICS * 10;
 
-
 // PacketGet
-
 procedure PacketGet;
 var
   c: integer;
@@ -192,13 +177,10 @@ begin
       printf('The connection from player %d was dropped' + #13#10,
         [sendplayer[node]]);
 
-      // VJ      doomcom.data[0] = $80;  // NCMD_EXIT
       c := 1;
     end
     else if err <> WSAEWOULDBLOCK then
-    begin
-      I_Error('PacketGet(): %s', [neterror]);
-    end
+      I_Error('PacketGet(): %s', [neterror])
     else
     begin
       doomcom.remotenode := -1; // no packet
@@ -246,18 +228,18 @@ var
   port: word;
   portpart: string;
   isnamed: boolean;
-  _pos: integer;
+  pp: integer;
   i: integer;
 begin
   isnamed := False;
 
   address.sin_family := AF_INET;
 
-  _pos := Pos(':', Name);
-  if _pos > 0 then
+  pp := Pos(':', Name);
+  if pp > 0 then
   begin
     portpart := '';
-    for i := _pos + 1 to Length(Name) do
+    for i := pp + 1 to Length(Name) do
       portpart := portpart + Name[i];
     port := atoi(portpart);
     if port = 0 then
@@ -316,13 +298,11 @@ begin
   if WSAStartup($0101, wsad) <> 0 then
     I_Error('StartNetwork(): Could not initialize Windows Sockets');
 
-  //  atterm (CloseNetwork);
   CloseNetwork;
 
   netsend := PacketSend;
   netget := PacketGet;
   netgame := True;
-  //  multiplayer := true; // VJ -> removed
 
   // create communication socket
   mysocket := UDPsocket;
@@ -377,7 +357,6 @@ begin
     Dec(doomcom.numnodes);
   end;
 end;
-
 
 procedure I_InitNetwork;
 var
