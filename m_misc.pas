@@ -28,7 +28,7 @@ unit m_misc;
 
 interface
 
-function M_WriteFile(const name: string; source: pointer; length: integer): boolean;
+function M_WriteFile(const name: string; source: pointer; len: integer): boolean;
 
 function M_ReadFile(const name: string; var buffer: Pointer): integer;
 
@@ -58,7 +58,7 @@ uses
   z_memory,
   doomstat;
 
-function M_WriteFile(const name: string; source: pointer; length: integer): boolean;
+function M_WriteFile(const name: string; source: pointer; len: integer): boolean;
 var
   handle: file;
   count: integer;
@@ -73,7 +73,7 @@ begin
     exit;
   end;
 
-  BlockWrite(handle, source^, length, count);
+  BlockWrite(handle, source^, len, count);
   close(handle);
 
   result := count > 0;

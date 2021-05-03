@@ -573,14 +573,14 @@ end;
 procedure R_InitColormaps;
 var
   lump: integer;
-  length: integer;
+  len: integer;
 begin
   // Load in the light tables,
   //  256 byte align tables.
   lump := W_GetNumForName('COLORMAP');
-  length := W_LumpLength(lump) + 255;
-  colormaps := Z_Malloc(length, PU_STATIC, nil);
-  colormaps := Plighttable_tArray((integer(colormaps) + 255)and (not $ff));
+  len := W_LumpLength(lump) + 255;
+  colormaps := Z_Malloc(len, PU_STATIC, nil);
+  colormaps := Plighttable_tArray((integer(colormaps) + 255) and not $ff);
   W_ReadLump(lump, colormaps);
 end;
 
