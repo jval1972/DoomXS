@@ -330,7 +330,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + column.topdelta * swidth);
-        count := column.length;
+        count := column.len;
 
         while count > 0 do
         begin
@@ -339,7 +339,7 @@ begin
           dest := PByte(integer(dest) + swidth);
           dec(count);
         end;
-        column := Pcolumn_t(integer(column) + column.length + 4);
+        column := Pcolumn_t(integer(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);
@@ -377,7 +377,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
-        count := column.length;
+        count := column.len;
         fracy := 0;
         lasty := 0;
 
@@ -393,7 +393,7 @@ begin
             dec(count);
           end;
         end;
-        column := Pcolumn_t(integer(column) + column.length + 4);
+        column := Pcolumn_t(integer(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);
@@ -448,7 +448,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + column.topdelta * swidth);
-        count := column.length;
+        count := column.len;
 
         while count > 0 do
         begin
@@ -457,7 +457,7 @@ begin
           inc(dest, swidth);
           dec(count);
         end;
-        column := Pcolumn_t(integer(column) + column.length + 4);
+        column := Pcolumn_t(integer(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);
@@ -500,7 +500,7 @@ begin
       begin
         source := PByte(integer(column) + 3);
         dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
-        count := column.length;
+        count := column.len;
         fracy := 0;
         lasty := 0;
 
@@ -516,7 +516,7 @@ begin
             dec(count);
           end;
         end;
-        column := Pcolumn_t(integer(column) + column.length + 4);
+        column := Pcolumn_t(integer(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);

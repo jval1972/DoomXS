@@ -345,7 +345,7 @@ begin
     // calculate unclipped screen coordinates
     // for post
     topscreen := sprtopscreen + spryscale * column.topdelta;
-    bottomscreen := topscreen + spryscale * column.length;
+    bottomscreen := topscreen + spryscale * column.len;
 
     dc_yl := (topscreen + FRACUNIT - 1) div FRACUNIT;
     dc_yh := (bottomscreen - 1) div FRACUNIT;
@@ -364,7 +364,7 @@ begin
       //  or (SHADOW) R_DrawFuzzColumn.
       colfunc;
     end;
-    incp(pointer(column), column.length + 4);
+    incp(pointer(column), column.len + 4);
   end;
 
   dc_texturemid := basetexturemid;

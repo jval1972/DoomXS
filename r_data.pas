@@ -203,7 +203,7 @@ begin
   begin
     source := PByteArray(integer(patch) + 3);
 
-    count := patch.length;
+    count := patch.len;
     position := originy + patch.topdelta;
 
     if position < 0 then
@@ -218,7 +218,7 @@ begin
     if count > 0 then
       memcpy(@cache[position], source, count);
 
-    patch := Pcolumn_t(integer(patch) + patch.length + 4);
+    patch := Pcolumn_t(integer(patch) + patch.len + 4);
   end;
 end;
 

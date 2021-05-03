@@ -219,7 +219,7 @@ type
   // posts are runs of non masked source pixels
   post_t = packed record
     topdelta: byte; // -1 is the last post in a column
-    length: byte;   // length data bytes follows
+    len: byte;   // length data bytes follows
   end;
   Ppost_t = ^post_t;
 

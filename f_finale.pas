@@ -610,7 +610,7 @@ begin
   begin
     source := PByte(integer(column) + 3);
     dest := PByte(integer(desttop) + column.topdelta * 320);
-    count := column.length;
+    count := column.len;
 
     while count > 0 do
     begin
@@ -619,7 +619,7 @@ begin
       inc(dest, 320);
       dec(count);
     end;
-    column := Pcolumn_t(integer(column) + column.length + 4);
+    column := Pcolumn_t(integer(column) + column.len + 4);
   end;
 end;
 
