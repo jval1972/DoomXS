@@ -683,9 +683,7 @@ begin
   V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
 end;
 
-//
 // F_Drawer
-//
 procedure F_Drawer;
 begin
   if finalestage = 2 then
