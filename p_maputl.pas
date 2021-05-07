@@ -30,7 +30,6 @@ interface
 
 uses
   m_bbox,
-  doomdef,
   p_local,
   p_mobj_h,
   m_fixed,
@@ -62,7 +61,6 @@ var
   openbottom: fixed_t;
   openrange: fixed_t;
   lowfloor: fixed_t;
-
   trace: divline_t;
 
 implementation
@@ -212,7 +210,7 @@ begin
 
   // try to quickly decide by looking at sign bits
   if (line.dy xor line.dx xor dx xor dy) and $80000000 <> 0 then
-  begin                                                              //(left is negative)
+  begin //(left is negative)
     result := (line.dy xor dx) and $80000000;
     if result <> 0 then
       result := 1;
@@ -251,7 +249,7 @@ begin
   den := FixedMul(_SHR(v1.dy, 8), v2.dx) - FixedMul(_SHR(v1.dx, 8), v2.dy);
 
   if den = 0 then
-    Result := 0     // Parallel
+    Result := 0 // Parallel
   else
   begin
     num := FixedMul(_SHR((v1.x - v2.x), 8), v1.dy) +
