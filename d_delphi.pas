@@ -100,8 +100,6 @@ function atoi(const s: string): integer;
 
 function memcpy(dst: pointer; const src: pointer; len: integer): pointer;
 
-function memset(buf: pointer; c: integer; len: integer): pointer;
-
 function malloc(size: integer): Pointer;
 
 function IntToStrZfill(const z: integer; const x: integer): string;
@@ -257,12 +255,6 @@ function memcpy(dst: pointer; const src: pointer; len: integer): pointer;
 begin
   move(src^, dst^, len);
   Result := dst;
-end;
-
-function memset(buf: pointer; c: integer; len: integer): pointer;
-begin
-  FillChar(buf^, len, c);
-  Result := buf;
 end;
 
 function malloc(size: integer): Pointer;
