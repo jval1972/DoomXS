@@ -274,8 +274,6 @@ const
 var
   bodyque: array[0..BODYQUESIZE - 1] of Pmobj_t;
 
-  statcopy: pointer;        // for statistics driver
-
 function G_CmdChecksum(cmd: Pticcmd_t): integer;
 var
   i: integer;
@@ -1135,9 +1133,6 @@ begin
   gamestate := GS_INTERMISSION;
   viewactive := false;
   automapactive := false;
-
-  if statcopy <> nil then
-    memcpy(statcopy, @wminfo, SizeOf(wminfo));
 
   WI_Start(@wminfo);
 end;
