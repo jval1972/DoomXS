@@ -29,11 +29,12 @@ unit p_lights;
 interface
 
 uses
-  doomdef,
   m_rnd,
   p_spec,
   r_defs,
   z_memory;
+
+procedure T_FireFlicker(flick: Pfireflicker_t);
 
 procedure P_SpawnFireFlicker(sector: Psector_t);
 
@@ -55,12 +56,9 @@ procedure P_SpawnGlowingLight(sector: Psector_t);
 
 procedure T_LightFlash(flash: Plightflash_t);
 
-procedure T_FireFlicker(flick: Pfireflicker_t);
-
 implementation
 
 uses
-  d_delphi,
   p_tick,
   p_setup;
 
@@ -94,7 +92,7 @@ begin
   // Nothing special about it during gameplay.
   sector.special := 0;
 
-  flick := Z_Malloc(SizeOf(flick^), PU_LEVSPEC, nil);
+  flick := Z_Malloc(SizeOf(fireflicker_t), PU_LEVSPEC, nil);
 
   P_AddThinker(@flick.thinker);
 
@@ -137,7 +135,7 @@ begin
   // nothing special about it during gameplay
   sector.special := 0;
 
-  flash := Z_Malloc(SizeOf(flash^), PU_LEVSPEC, nil);
+  flash := Z_Malloc(SizeOf(lightflash_t), PU_LEVSPEC, nil);
 
   P_AddThinker(@flash.thinker);
 
@@ -179,7 +177,7 @@ procedure P_SpawnStrobeFlash(sector: Psector_t; fastOrSlow, inSync: integer);
 var
   flash: Pstrobe_t;
 begin
-  flash := Z_Malloc(SizeOf(flash^), PU_LEVSPEC, nil);
+  flash := Z_Malloc(SizeOf(strobe_t), PU_LEVSPEC, nil);
 
   P_AddThinker(@flash.thinker);
 
