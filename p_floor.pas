@@ -30,10 +30,8 @@ interface
 
 uses
   z_memory,
-  doomdef,
   p_spec,
   m_fixed,
-  p_local,
   r_defs,
   s_sound,
   doomstat,
