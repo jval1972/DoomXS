@@ -91,9 +91,9 @@ type
   LPDIRECTSOUNDBUFFER = IDirectSoundBuffer;
 
 var
-  pDS: LPDIRECTSOUND;
-  pDSBPrimary: LPDIRECTSOUNDBUFFER;
-  HandleCount: integer;
+  pDS: LPDIRECTSOUND = nil;
+  pDSBPrimary: LPDIRECTSOUNDBUFFER = nil;
+  HandleCount: integer = 1;
 
   SampleFormat: TWAVEFORMATEX;
 
@@ -497,10 +497,5 @@ begin
   for i := 0 to Ord(NUMSFX) - 1 do
     S_sfx[i].data := nil;
 end;
-
-initialization
-  pDS := nil;
-  pDSBPrimary := nil;
-  HandleCount := 1;
 
 end.
