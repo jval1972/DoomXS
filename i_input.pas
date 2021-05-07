@@ -275,7 +275,6 @@ begin
       D_PostEvent(@ev);
     end;
   end;
-
 end;
 
 procedure I_SynchronizeInput(active: boolean);
