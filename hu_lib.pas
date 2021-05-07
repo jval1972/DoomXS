@@ -385,13 +385,9 @@ begin
 end;
 
 procedure HUlib_drawIText(it: Phu_itext_t);
-var
-  l: Phu_textline_t;
 begin
-  l := @it.l;
-
   if it._on^ then
-    HUlib_drawTextLine(l, true); // draw the line w/ cursor
+    HUlib_drawTextLine(@it.l, true); // draw the line w/ cursor
 end;
 
 procedure HUlib_eraseIText(it: Phu_itext_t);
