@@ -214,9 +214,7 @@ begin
   result := V_PreserveY(y + h) - V_PreserveY(y);
 end;
 
-//
 // V_CopyRect
-//
 procedure V_CopyRect(
   srcx: integer;
   srcy: integer;
@@ -404,11 +402,9 @@ begin
 end;
 
 
-//
 // V_DrawPatchFlipped
 // Masks a column based masked pic to the screen.
 // Flips horizontally, e.g. to mirror face.
-//
 procedure V_DrawPatchFlipped(x, y: integer; scrn: integer; patch: Ppatch_t; preserve: boolean);
 var
   count: integer;
