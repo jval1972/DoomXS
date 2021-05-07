@@ -341,10 +341,8 @@ var
   pagetic: integer;
   pagename: string;
 
-
 // D_PageTicker
 // Handles timing for warped projection
-
 procedure D_PageTicker;
 begin
   Dec(pagetic);
@@ -615,10 +613,9 @@ begin
   gamemode := indetermined;
 end;
 
-
 // Find a Response File
 
-// JVAL: Changed to handle more that 1 response files
+// JVAL: Changed to handle more than 1 response files
 procedure FindResponseFile;
 var
   i: integer;
@@ -1069,7 +1066,7 @@ begin
     if autostart or netgame then
       G_InitNew(startskill, startepisode, startmap)
     else
-      D_StartTitle;                // start up intro loop
+      D_StartTitle; // start up intro loop
   end;
 
   D_DoomLoop;  // never returns
