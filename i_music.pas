@@ -213,7 +213,7 @@ var
   header: Pmusheader_t;
   score: PByteArray;
   spos: integer;
-  event: PMidiEvent_tArray;
+  event: PMidiEvent_t;
   channel: byte;
   etype: integer;
   delta: integer;
@@ -232,18 +232,19 @@ begin
 
   count := GetSongLength(MusData);
   score := PByteArray(@MusData[header.scoreStart]);
-  event := MidiEvents;
+  event := @MidiEvents[0];
 
   i := 0;
   while i < NUMTEMPOEVENTS do
   begin
-    event[i].time := 0;
-    event[i].ID := 0;
-    event[i]._type := MEVT_TEMPO;
-    event[i].data[0] := $00;
-    event[i].data[1] := $80; //not sure how to work this out, should be 140bpm
-    event[i].data[2] := $02; //but it's guessed so it sounds about right
+    event.time := 0;
+    event.ID := 0;
+    event._type := MEVT_TEMPO;
+    event.data[0] := $00;
+    event.data[1] := $80; //not sure how to work this out, should be 140bpm
+    event.data[2] := $02; //but it's guessed so it sounds about right
     Inc(i);
+    Inc(event);
   end;
 
   delta := 0;
@@ -253,11 +254,11 @@ begin
   finished := False;
   while True do
   begin
-    event[i].time := delta;
+    event.time := delta;
     delta := 0;
-    event[i].ID := 0;
+    event.ID := 0;
     etype := _SHR(score[spos], 4) and 7;
-    event[i]._type := MEVT_SHORTMSG;
+    event._type := MEVT_SHORTMSG;
     channel := score[spos] and 15;
     if channel = 9 then
       channel := 15
@@ -269,54 +270,54 @@ begin
     case etype of
       0:
       begin
-        event[i].data[0] := channel or $80;
-        event[i].data[1] := score[spos];
+        event.data[0] := channel or $80;
+        event.data[1] := score[spos];
         Inc(spos);
-        event[i].data[2] := channelvol[channel];
+        event.data[2] := channelvol[channel];
       end;
       1:
       begin
-        event[i].data[0] := channel or $90;
-        event[i].data[1] := score[spos] and 127;
+        event.data[0] := channel or $90;
+        event.data[1] := score[spos] and 127;
           if score[spos] and 128 <> 0 then
         begin
           Inc(spos);
           channelvol[channel] := score[spos];
         end;
         Inc(spos);
-        event[i].data[2] := channelvol[channel];
+        event.data[2] := channelvol[channel];
       end;
       2:
       begin
-        event[i].data[0] := channel or $e0;
-        event[i].data[1] := (score[spos] and 1) shr 6;
-        event[i].data[2] := (score[spos] div 2) and 127;
+        event.data[0] := channel or $e0;
+        event.data[1] := (score[spos] and 1) shr 6;
+        event.data[2] := (score[spos] div 2) and 127;
         Inc(spos);
       end;
       3:
       begin
-        event[i].data[0] := channel or $b0;
-        event[i].data[1] := XLateMUSControl(score[spos]);
+        event.data[0] := channel or $b0;
+        event.data[1] := XLateMUSControl(score[spos]);
         Inc(spos);
-        event[i].data[2] := 0;
+        event.data[2] := 0;
       end;
       4:
       begin
         if score[spos] <> 0 then
         begin
-          event[i].data[0] := channel or $b0;
-          event[i].data[1] := MidiControlers[score[spos]];
+          event.data[0] := channel or $b0;
+          event.data[1] := MidiControlers[score[spos]];
           Inc(spos);
-          event[i].data[2] := score[spos];
+          event.data[2] := score[spos];
           Inc(spos);
         end
         else
         begin
-          event[i].data[0] := channel or $c0;
+          event.data[0] := channel or $c0;
           Inc(spos);
-          event[i].data[1] := score[spos];
+          event.data[1] := score[spos];
           Inc(spos);
-          event[i].data[2] := 64;
+          event.data[2] := 64;
         end;
       end;
       else
@@ -324,7 +325,7 @@ begin
     end;
     if finished then
       break;
-    Inc(i);
+    Inc(event);
     Dec(count);
     if count < 3 then
       I_Error('I_MusToMidi(): Overflow');
@@ -629,7 +630,7 @@ begin
 end;
 
 const
-  midivolumecontrol: array[0..15] of integer = (
+  midivolumecontrol: array[0..15] of LongWord = (
     0, 7, 13, 20, 27, 33, 40, 47, 53, 60, 67, 73, 80, 87, 93, 100
   );
 
@@ -642,13 +643,12 @@ procedure I_SetMusicVolumeMus(volume: integer);
 var
   rc: MMRESULT;
   dwEvent: DWORD;
-  vol100: integer;
+  vol100: LongWord;
   ch: DWORD;
   i: integer;
 begin
   snd_MusicVolume := volume;
   // Now set volume on output device.
-  // Whatever( snd_MusciVolume );
   if (CurrentSong <> nil) and (snd_MusicVolume = 0) and started then
     I_StopMusic(CurrentSong);
 
