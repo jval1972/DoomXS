@@ -507,7 +507,6 @@ begin
     Inc(maketic);
   end;
 
-
   if singletics then
     exit;         // singletic update is syncronous
 
