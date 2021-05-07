@@ -45,20 +45,16 @@ procedure D_DoAdvanceDemo;
 
 procedure D_AddFile(_file: string);
 
-
 // D_DoomMain()
 // Not a globally visible function, just included for source reference,
 // calls all startup code, parses command line options.
 // If not overrided by user input, calls N_AdvanceDemo.
-
 procedure D_DoomMain;
 
 // Called by IO functions when input is detected.
 procedure D_PostEvent(ev: Pevent_t);
 
-
 // BASE LEVEL
-
 procedure D_PageTicker;
 
 procedure D_PageDrawer;
