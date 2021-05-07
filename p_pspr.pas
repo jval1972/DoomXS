@@ -478,24 +478,21 @@ end;
 // A_FireMissile
 procedure A_FireMissile(player: Pplayer_t; psp: Ppspdef_t);
 begin
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - 1;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]);
   P_SpawnPlayerMissile(player.mo, MT_ROCKET);
 end;
 
 // A_FireBFG
 procedure A_FireBFG(player: Pplayer_t; psp: Ppspdef_t);
 begin
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - BFGCELLS;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)], BFGCELLS);
   P_SpawnPlayerMissile(player.mo, MT_BFG);
 end;
 
 // A_FirePlasma
 procedure A_FirePlasma(player: Pplayer_t; psp: Ppspdef_t);
 begin
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - 1;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]);
 
   P_SetPsprite(player,
     Ord(ps_flash), statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate +
