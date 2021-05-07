@@ -552,8 +552,7 @@ begin
   S_StartSound(player.mo, Ord(sfx_pistol));
 
   P_SetMobjState(player.mo, S_PLAY_ATK2);
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - 1;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]);
 
   P_SetPsprite(player, Ord(ps_flash),
     statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate));
@@ -570,8 +569,7 @@ begin
   S_StartSound(player.mo, Ord(sfx_shotgn));
   P_SetMobjState(player.mo, S_PLAY_ATK2);
 
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - 1;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]);
 
   P_SetPsprite(player, Ord(ps_flash),
     statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate));
@@ -592,8 +590,7 @@ begin
   S_StartSound(player.mo, Ord(sfx_dshtgn));
   P_SetMobjState(player.mo, S_PLAY_ATK2);
 
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - 2;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)], 2);
 
   P_SetPsprite(player, Ord(ps_flash),
     statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate));
@@ -619,8 +616,7 @@ begin
     exit;
 
   P_SetMobjState(player.mo, S_PLAY_ATK2);
-  player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] :=
-    player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] - 1;
+  Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]);
 
   P_SetPsprite(player, Ord(ps_flash),
     statenum_t(weaponinfo[Ord(player.readyweapon)].flashstate +
