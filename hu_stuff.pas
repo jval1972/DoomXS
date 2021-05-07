@@ -47,7 +47,6 @@ const
   HU_MSGREFRESH = KEY_ENTER;
   HU_MSGX = 0;
   HU_MSGY = 0;
-  HU_MSGWIDTH = 64; // in characters
   HU_MSGHEIGHT = 1; // in lines
 
   HU_MSGTIMEOUT = 4 * TICRATE;
