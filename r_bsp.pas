@@ -474,7 +474,7 @@ begin
   while solidsegs[start].last < sx2 do
     Inc(start);
 
-  Result := (sx1 < solidsegs[start].first) or (sx2 > solidsegs[start].last) {then
+  Result := (sx1 < solidsegs[start].first) or (sx2 > solidsegs[start].last);
 end;
 
 // R_Subsector
@@ -518,8 +518,7 @@ begin
   while count <> 0 do
   begin
     R_AddLine(line);
-    Inc(i_line);
-    line := @segs[i_line];
+    inc(line);
     Dec(count);
   end;
 end;
@@ -560,3 +559,4 @@ begin
 end;
 
 end.
+
