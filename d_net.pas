@@ -113,7 +113,7 @@ type
     angleoffset: smallint;
 
     // The packet data to be sent.
-    Data: doomdata_t;
+    data: doomdata_t;
   end;
   Pdoomcom_t = ^doomcom_t;
 
@@ -652,7 +652,7 @@ begin
   if doomcom.id <> DOOMCOM_ID then
     I_Error('D_CheckNetGame(): Doomcom buffer invalid!');
 
-  netbuffer := @doomcom.Data;
+  netbuffer := @doomcom.data;
   consoleplayer := doomcom.consoleplayer;
   displayplayer := doomcom.consoleplayer;
   if netgame then

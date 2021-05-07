@@ -41,7 +41,7 @@ procedure I_PauseSong(handle: integer);
 procedure I_ResumeSong(handle: integer);
 
 // Registers a song handle to song data.
-function I_RegisterSong(Data: pointer; size: integer): integer;
+function I_RegisterSong(data: pointer; size: integer): integer;
 
 // Called by anything that wishes to start music.
 //  plays a song, and when the song is done,
@@ -90,7 +90,7 @@ type
     time: LongWord;                  { Ticks since last event }
     ID: LongWord;                    { Reserved, must be zero }
     case integer of
-      1: (Data: packed array[0..2] of byte;
+      1: (data: packed array[0..2] of byte;
         _type: byte);
       2: (mevent: LongWord);
   end;
@@ -164,7 +164,7 @@ end;
 const
   NUMTEMPOEVENTS = 2;
 
-function GetSongLength(Data: PByteArray): integer;
+function GetSongLength(data: PByteArray): integer;
 var
   done: boolean;
   midievents: integer;
@@ -172,20 +172,20 @@ var
   time: boolean;
   i: integer;
 begin
-  header := Pmusheader_t(Data);
+  header := Pmusheader_t(data);
   i := header.scoreStart;
   midievents := 0;
   done := header.ID <> MUSMAGIC;
   time := False;
   while not done do
   begin
-    if Data[i] and $80 <> 0 then
+    if data[i] and $80 <> 0 then
       time := True;
     Inc(i);
-    case _SHR(Data[i - 1], 4) and 7 of
+    case _SHR(data[i - 1], 4) and 7 of
       1:
       begin
-        if Data[i] and $80 <> 0 then
+        if data[i] and $80 <> 0 then
           Inc(i);
         Inc(i);
       end;
@@ -199,7 +199,7 @@ begin
     Inc(midievents);
     if time then
     begin
-      while Data[i] and $80 <> 0 do
+      while data[i] and $80 <> 0 do
         Inc(i);
       Inc(i);
       time := False;
@@ -240,9 +240,9 @@ begin
     event[i].time := 0;
     event[i].ID := 0;
     event[i]._type := MEVT_TEMPO;
-    event[i].Data[0] := $00;
-    event[i].Data[1] := $80; //not sure how to work this out, should be 140bpm
-    event[i].Data[2] := $02; //but it's guessed so it sounds about right
+    event[i].data[0] := $00;
+    event[i].data[1] := $80; //not sure how to work this out, should be 140bpm
+    event[i].data[2] := $02; //but it's guessed so it sounds about right
     Inc(i);
   end;
 
@@ -269,54 +269,54 @@ begin
     case etype of
       0:
       begin
-        event[i].Data[0] := channel or $80;
-        event[i].Data[1] := score[spos];
+        event[i].data[0] := channel or $80;
+        event[i].data[1] := score[spos];
         Inc(spos);
-        event[i].Data[2] := channelvol[channel];
+        event[i].data[2] := channelvol[channel];
       end;
       1:
       begin
-        event[i].Data[0] := channel or $90;
-        event[i].Data[1] := score[spos] and 127;
+        event[i].data[0] := channel or $90;
+        event[i].data[1] := score[spos] and 127;
           if score[spos] and 128 <> 0 then
         begin
           Inc(spos);
           channelvol[channel] := score[spos];
         end;
         Inc(spos);
-        event[i].Data[2] := channelvol[channel];
+        event[i].data[2] := channelvol[channel];
       end;
       2:
       begin
-        event[i].Data[0] := channel or $e0;
+        event[i].data[0] := channel or $e0;
         event[i].data[1] := (score[spos] and 1) shr 6;
         event[i].data[2] := (score[spos] div 2) and 127;
         Inc(spos);
       end;
       3:
       begin
-        event[i].Data[0] := channel or $b0;
-        event[i].Data[1] := XLateMUSControl(score[spos]);
+        event[i].data[0] := channel or $b0;
+        event[i].data[1] := XLateMUSControl(score[spos]);
         Inc(spos);
-        event[i].Data[2] := 0;
+        event[i].data[2] := 0;
       end;
       4:
       begin
         if score[spos] <> 0 then
         begin
-          event[i].Data[0] := channel or $b0;
-          event[i].Data[1] := MidiControlers[score[spos]];
+          event[i].data[0] := channel or $b0;
+          event[i].data[1] := MidiControlers[score[spos]];
           Inc(spos);
-          event[i].Data[2] := score[spos];
+          event[i].data[2] := score[spos];
           Inc(spos);
         end
         else
         begin
-          event[i].Data[0] := channel or $c0;
+          event[i].data[0] := channel or $c0;
           Inc(spos);
-          event[i].Data[1] := score[spos];
+          event[i].data[1] := score[spos];
           Inc(spos);
-          event[i].Data[2] := 64;
+          event[i].data[2] := 64;
         end;
       end;
       else
@@ -556,14 +556,14 @@ begin
   Z_Free(song);
 end;
 
-function I_RegisterSong(Data: pointer; size: integer): integer;
+function I_RegisterSong(data: pointer; size: integer): integer;
 var
   song: Psonginfo_t;
   i: integer;
   f: file;
 begin
   song := Z_Malloc(SizeOf(songinfo_t), PU_STATIC, nil);
-  song.numevents := GetSongLength(PByteArray(Data));
+  song.numevents := GetSongLength(PByteArray(data));
   song.nextevent := 0;
   song.midievents := Z_Malloc(song.numevents * SizeOf(MidiEvent_t), PU_STATIC, nil);
   song.originalmidievents := Z_Malloc(song.numevents * SizeOf(MidiEvent_t), PU_STATIC, nil);
@@ -571,7 +571,7 @@ begin
   if m_type = m_midi then
     I_StopMidi;
 
-  if I_MusToMidi(PByteArray(Data), song.midievents) then
+  if I_MusToMidi(PByteArray(data), song.midievents) then
   begin
     memcpy(song.originalmidievents, song.midievents, song.numevents * SizeOf(MidiEvent_t));
     I_InitMus;
@@ -607,7 +607,7 @@ begin
     Assign(f, MidiFileName);
     {$I-}
     rewrite(f, 1);
-    BlockWrite(f, Data^, size);
+    BlockWrite(f, data^, size);
     Close(f);
     {$I+}
     if IOResult <> 0 then

@@ -39,7 +39,6 @@ uses
   s_sound,
   // State.
   doomstat,
-  // Data.
   sounds;
 
 var

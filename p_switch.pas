@@ -59,7 +59,6 @@ uses
   g_game,
   s_sound,
   r_data,
-  // Data
   sounds,
   // State
   doomstat;

@@ -190,7 +190,6 @@ uses
   v_video,
   w_wad,
   s_sound,
-// Data.
   d_englsh,
   sounds,
 // SKY handling - still the wrong place.

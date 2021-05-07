@@ -37,7 +37,6 @@ uses
   p_pspr_h,
   // State.
   doomstat,
-  // Data.
   sounds;
 
 procedure A_Fall(actor: Pmobj_t);

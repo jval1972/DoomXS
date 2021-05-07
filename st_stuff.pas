@@ -101,7 +101,6 @@ uses
   v_video,
 // State.
   doomstat,
-// Data.
   d_englsh,
   sounds,
 // for mapnames

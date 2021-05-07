@@ -93,7 +93,6 @@ uses
   hu_stuff,
   s_sound,
   doomstat,
-  // Data.
   sounds;
 
 var

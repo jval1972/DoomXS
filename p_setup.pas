@@ -126,7 +126,7 @@ uses
 // P_LoadVertexes
 procedure P_LoadVertexes(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   ml: Pmapvertex_t;
   li: Pvertex_t;
@@ -139,9 +139,9 @@ begin
   vertexes := Z_Malloc(numvertexes * SizeOf(vertex_t), PU_LEVEL, nil);
 
   // Load data into cache.
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ml := Pmapvertex_t(Data);
+  ml := Pmapvertex_t(data);
 
   // Copy and convert vertex coordinates,
   // internal representation as fixed.
@@ -154,13 +154,13 @@ begin
   end;
 
   // Free buffer memory.
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 // P_LoadSegs
 procedure P_LoadSegs(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   ml: Pmapseg_t;
   li: Pseg_t;
@@ -171,9 +171,9 @@ begin
   numsegs := W_LumpLength(lump) div SizeOf(mapseg_t);
   segs := Z_Malloc(numsegs * SizeOf(seg_t), PU_LEVEL, nil);
   memset(segs, 0, numsegs * SizeOf(seg_t));
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ml := Pmapseg_t(Data);
+  ml := Pmapseg_t(data);
   for i := 0 to numsegs - 1 do
   begin
     li := @segs[i];
@@ -195,22 +195,22 @@ begin
     Inc(ml);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 // P_LoadSubsectors
 procedure P_LoadSubsectors(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   ms: Pmapsubsector_t;
   ss: Psubsector_t;
 begin
   numsubsectors := W_LumpLength(lump) div SizeOf(mapsubsector_t);
   subsectors := Z_Malloc(numsubsectors * SizeOf(subsector_t), PU_LEVEL, nil);
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ms := Pmapsubsector_t(Data);
+  ms := Pmapsubsector_t(data);
   memset(subsectors, 0, numsubsectors * SizeOf(subsector_t));
 
   for i := 0 to numsubsectors - 1 do
@@ -221,13 +221,13 @@ begin
     Inc(ms);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 // P_LoadSectors
 procedure P_LoadSectors(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   ms: Pmapsector_t;
   ss: Psector_t;
@@ -235,9 +235,9 @@ begin
   numsectors := W_LumpLength(lump) div SizeOf(mapsector_t);
   sectors := Z_Malloc(numsectors * SizeOf(sector_t), PU_LEVEL, nil);
   memset(sectors, 0, numsectors * SizeOf(sector_t));
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  ms := Pmapsector_t(Data);
+  ms := Pmapsector_t(data);
   for i := 0 to numsectors - 1 do
   begin
     ss := @sectors[i];
@@ -255,13 +255,13 @@ begin
     Inc(ms);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 // P_LoadNodes
 procedure P_LoadNodes(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   j: integer;
   k: integer;
@@ -270,9 +270,9 @@ var
 begin
   numnodes := W_LumpLength(lump) div SizeOf(mapnode_t);
   nodes := Z_Malloc(numnodes * SizeOf(node_t), PU_LEVEL, nil);
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  mn := Pmapnode_t(Data);
+  mn := Pmapnode_t(data);
 
   for i := 0 to numnodes - 1 do
   begin
@@ -290,22 +290,22 @@ begin
     Inc(mn);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 // P_LoadThings
 procedure P_LoadThings(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   mt: Pmapthing_t;
   numthings: integer;
   spawn: boolean;
 begin
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
   numthings := W_LumpLength(lump) div SizeOf(mapthing_t);
 
-  mt := Pmapthing_t(Data);
+  mt := Pmapthing_t(data);
   for i := 0 to numthings - 1 do
   begin
     spawn := True;
@@ -341,7 +341,7 @@ begin
     Inc(mt);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 
@@ -350,7 +350,7 @@ end;
 
 procedure P_LoadLineDefs(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   mld: Pmaplinedef_t;
   ld: Pline_t;
@@ -360,9 +360,9 @@ begin
   numlines := W_LumpLength(lump) div SizeOf(maplinedef_t);
   lines := Z_Malloc(numlines * SizeOf(line_t), PU_LEVEL, nil);
   memset(lines, 0, numlines * SizeOf(line_t));
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  mld := Pmaplinedef_t(Data);
+  mld := Pmaplinedef_t(data);
   for i := 0 to numlines - 1 do
   begin
     ld := @lines[i];
@@ -426,7 +426,7 @@ begin
     Inc(mld);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 
@@ -434,7 +434,7 @@ end;
 
 procedure P_LoadSideDefs(lump: integer);
 var
-  Data: pointer;
+  data: pointer;
   i: integer;
   msd: Pmapsidedef_t;
   sd: Pside_t;
@@ -442,9 +442,9 @@ begin
   numsides := W_LumpLength(lump) div SizeOf(mapsidedef_t);
   sides := Z_Malloc(numsides * SizeOf(side_t), PU_LEVEL, nil);
   memset(sides, 0, numsides * SizeOf(side_t));
-  Data := W_CacheLumpNum(lump, PU_STATIC);
+  data := W_CacheLumpNum(lump, PU_STATIC);
 
-  msd := Pmapsidedef_t(Data);
+  msd := Pmapsidedef_t(data);
   for i := 0 to numsides - 1 do
   begin
     sd := @sides[i];
@@ -457,7 +457,7 @@ begin
     Inc(msd);
   end;
 
-  Z_Free(Data);
+  Z_Free(data);
 end;
 
 // P_LoadBlockMap

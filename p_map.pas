@@ -42,7 +42,6 @@ uses
   r_defs,
   // State.
   doomstat,
-  // Data.
   sounds;
 
 function P_TeleportMove(thing: Pmobj_t; x, y: fixed_t): boolean;

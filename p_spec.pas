@@ -353,7 +353,6 @@ uses
   p_telept,
   p_tick,
   s_sound,
-  // Data.
   sounds;
 
 // Animating textures and planes
