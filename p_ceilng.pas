@@ -30,8 +30,6 @@ interface
 
 uses
   z_memory,
-  doomdef,
-  p_local,
   p_spec,
   r_defs,
   s_sound,
@@ -52,7 +50,6 @@ function EV_CeilingCrushStop(line: Pline_t): integer;
 implementation
 
 uses
-  d_delphi,
   m_fixed,
   p_mobj_h,
   p_tick,
