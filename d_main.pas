@@ -119,10 +119,6 @@ uses
   r_draw,
   r_main;
 
-const
-  BGCOLOR = 7;
-  FGCOLOR = 8;
-
 // D_PostEvent
 // Called by the I/O functions when input is detected
 procedure D_PostEvent(ev: Pevent_t);
