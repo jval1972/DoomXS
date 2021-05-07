@@ -490,7 +490,7 @@ end;
 // F_CastResponder
 function F_CastResponder(ev: Pevent_t): boolean;
 begin
-  if ev._type <> ev_keydown then
+  if ev.typ <> ev_keydown then
   begin
     result := false;
     exit;

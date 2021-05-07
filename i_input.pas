@@ -215,9 +215,9 @@ begin
       if key <> 0 then
       begin
         if curkeys[i] and $80 <> 0 then
-          ev._type := ev_keydown
+          ev.typ := ev_keydown
         else
-          ev._type := ev_keyup;
+          ev.typ := ev_keyup;
         ev.data1 := key;
         D_PostEvent(@ev);
       end;
@@ -226,9 +226,9 @@ begin
       if key <> 0 then
       begin
         if curkeys[i] and $80 <> 0 then
-          ev._type := ev_keydown
+          ev.typ := ev_keydown
         else
-          ev._type := ev_keyup;
+          ev.typ := ev_keyup;
         ev.data1 := key;
         D_PostEvent(@ev);
       end;
@@ -249,7 +249,7 @@ begin
 
   getcursorposfunc(pt);
 
-  ev._type := ev_mouse;
+  ev.typ := ev_mouse;
   ev.data1 := mflags;
   ev.data2 := mlastx - pt.x;
   ev.data3 := mlasty - pt.y;
@@ -265,7 +265,7 @@ begin
     jInfo.dwFlags := JOY_RETURNALL;
     if joyGetPosEx(JOYSTICKID1, @jInfo) = JOYERR_NOERROR then
     begin
-      ev._type := ev_joystick;
+      ev.typ := ev_joystick;
       if jInfo.dwButtonNumber > 0 then
         ev.data1 := jInfo.wButtons and ((1 shl NUMJOYBUTTONS) - 1) // Only first NUMJOYBUTTONS buttons of joystic in use
       else

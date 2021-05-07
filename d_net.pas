@@ -558,7 +558,7 @@ begin
 
   repeat
     ev := @events[eventtail];
-    if (ev._type = ev_keydown) and (ev.data1 = KEY_ESCAPE) then
+    if (ev.typ = ev_keydown) and (ev.data1 = KEY_ESCAPE) then
       I_Error('CheckAbort(): Network game synchronization aborted.');
 
     eventtail := (eventtail + 1) and (MAXEVENTS - 1);

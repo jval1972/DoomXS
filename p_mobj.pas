@@ -38,7 +38,7 @@ function P_SetMobjState(mobj: Pmobj_t; state: statenum_t): boolean;
 
 procedure P_MobjThinker(mobj: Pmobj_t);
 
-function P_SpawnMobj(x, y, z: fixed_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMobj(x, y, z: fixed_t; typ: mobjtype_t): Pmobj_t;
 
 procedure P_RemoveMobj(mobj: Pmobj_t);
 
@@ -48,9 +48,9 @@ procedure P_SpawnMapThing(mthing: Pmapthing_t);
 
 procedure P_SpawnPuff(x, y, z: fixed_t);
 
-function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; typ: mobjtype_t): Pmobj_t;
 
-procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
+procedure P_SpawnPlayerMissile(source: Pmobj_t; typ: mobjtype_t);
 
 procedure P_RespawnSpecials;
 
@@ -128,7 +128,7 @@ begin
   mo.momy := 0;
   mo.momz := 0;
 
-  P_SetMobjState(mo, statenum_t(mobjinfo[Ord(mo._type)].deathstate));
+  P_SetMobjState(mo, statenum_t(mobjinfo[Ord(mo.typ)].deathstate));
 
   mo.tics := mo.tics - (P_Random and 3);
 
@@ -412,7 +412,7 @@ begin
     z := ONFLOORZ;
 
   // inherit attributes from deceased one
-  mo := P_SpawnMobj(x, y, z, mobj._type);
+  mo := P_SpawnMobj(x, y, z, mobj.typ);
   mo.spawnpoint := mobj.spawnpoint;
   mo.angle := ANG45 * (mthing.angle div 45);
 
@@ -482,7 +482,7 @@ begin
 end;
 
 // P_SpawnMobj
-function P_SpawnMobj(x, y, z: fixed_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMobj(x, y, z: fixed_t; typ: mobjtype_t): Pmobj_t;
 var
   mobj: Pmobj_t;
   st: Pstate_t;
@@ -490,9 +490,9 @@ var
 begin
   mobj := Z_Malloc(SizeOf(mobj^), PU_LEVEL, nil);
   memset(mobj, 0, SizeOf(mobj^));
-  info := @mobjinfo[Ord(_type)];
+  info := @mobjinfo[Ord(typ)];
 
-  mobj._type := _type;
+  mobj.typ := typ;
   mobj.info := info;
   mobj.x := x;
   mobj.y := y;
@@ -541,8 +541,8 @@ var
 procedure P_RemoveMobj(mobj: Pmobj_t);
 begin
   if (mobj.flags and MF_SPECIAL <> 0) and
-    (mobj.flags and MF_DROPPED = 0) and (mobj._type <> MT_INV) and
-    (mobj._type <> MT_INS) then
+    (mobj.flags and MF_DROPPED = 0) and (mobj.typ <> MT_INV) and
+    (mobj.typ <> MT_INS) then
   begin
     itemrespawnque[iquehead] := mobj.spawnpoint;
     itemrespawntime[iquehead] := leveltime;
@@ -600,7 +600,7 @@ begin
   i := 0;
   while i < Ord(NUMMOBJTYPES) do
   begin
-    if mthing._type = mobjinfo[i].doomednum then
+    if mthing.typ = mobjinfo[i].doomednum then
       break;
     Inc(i);
   end;
@@ -633,13 +633,13 @@ var
   i: integer;
 begin
   // not playing?
-  if not playeringame[mthing._type - 1] then
+  if not playeringame[mthing.typ - 1] then
     exit;
 
-  p := @players[mthing._type - 1];
+  p := @players[mthing.typ - 1];
 
   if p.playerstate = PST_REBORN then
-    G_PlayerReborn(mthing._type - 1);
+    G_PlayerReborn(mthing.typ - 1);
 
   x := mthing.x * FRACUNIT;
   y := mthing.y * FRACUNIT;
@@ -647,8 +647,8 @@ begin
   mobj := P_SpawnMobj(x, y, z, MT_PLAYER);
 
   // set color translations for player sprites
-  if mthing._type > 1 then
-    mobj.flags := mobj.flags or _SHL(mthing._type - 1, MF_TRANSSHIFT);
+  if mthing.typ > 1 then
+    mobj.flags := mobj.flags or _SHL(mthing.typ - 1, MF_TRANSSHIFT);
 
   mobj.angle := ANG45 * (mthing.angle div 45);
   mobj.player := p;
@@ -672,7 +672,7 @@ begin
     for i := 0 to Ord(NUMCARDS) - 1 do
       p.cards[i] := True;
 
-  if mthing._type - 1 = consoleplayer then
+  if mthing.typ - 1 = consoleplayer then
   begin
     // wake up the status bar
     ST_Start;
@@ -694,7 +694,7 @@ var
   z: fixed_t;
 begin
   // count deathmatch start positions
-  if mthing._type = 11 then
+  if mthing.typ = 11 then
   begin
     if deathmatch_p < MAX_DEATHMATCH_STARTS then
     begin
@@ -705,10 +705,10 @@ begin
   end;
 
   // check for players specially
-  if mthing._type <= 4 then
+  if mthing.typ <= 4 then
   begin
     // save spots for respawning in network games
-    playerstarts[mthing._type - 1] := mthing^;
+    playerstarts[mthing.typ - 1] := mthing^;
     if deathmatch = 0 then
       P_SpawnPlayer(mthing);
     exit;
@@ -732,14 +732,14 @@ begin
   i := 0;
   while i < Ord(NUMMOBJTYPES) do
   begin
-    if mthing._type = mobjinfo[i].doomednum then
+    if mthing.typ = mobjinfo[i].doomednum then
       break;
     Inc(i);
   end;
 
   if i = Ord(NUMMOBJTYPES) then
     I_Error('P_SpawnMapThing(): Unknown type %d at (%d, %d)',
-      [mthing._type, mthing.x, mthing.y]);
+      [mthing.typ, mthing.x, mthing.y]);
 
   // don't spawn keycards and players in deathmatch
   if (deathmatch <> 0) and (mobjinfo[i].flags and MF_NOTDMATCH <> 0) then
@@ -837,13 +837,13 @@ end;
 
 
 // P_SpawnMissile
-function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; _type: mobjtype_t): Pmobj_t;
+function P_SpawnMissile(source: Pmobj_t; dest: Pmobj_t; typ: mobjtype_t): Pmobj_t;
 var
   th: Pmobj_t;
   an: angle_t;
   dist: integer;
 begin
-  th := P_SpawnMobj(source.x, source.y, source.z + 4 * 8 * FRACUNIT, _type);
+  th := P_SpawnMobj(source.x, source.y, source.z + 4 * 8 * FRACUNIT, typ);
 
   if th.info.seesound <> 0 then
     S_StartSound(th, th.info.seesound);
@@ -874,7 +874,7 @@ end;
 
 // P_SpawnPlayerMissile
 // Tries to aim at a nearby monster
-procedure P_SpawnPlayerMissile(source: Pmobj_t; _type: mobjtype_t);
+procedure P_SpawnPlayerMissile(source: Pmobj_t; typ: mobjtype_t);
 var
   th: Pmobj_t;
   an: angle_t;
@@ -909,7 +909,7 @@ begin
   y := source.y;
   z := source.z + 4 * 8 * FRACUNIT;
 
-  th := P_SpawnMobj(x, y, z, _type);
+  th := P_SpawnMobj(x, y, z, typ);
 
   if th.info.seesound <> 0 then
     S_StartSound(th, th.info.seesound);

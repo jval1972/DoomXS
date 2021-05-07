@@ -554,7 +554,7 @@ var
   i: integer;
 begin
   // allow spy mode changes even during the demo
-  if (gamestate = GS_LEVEL) and (ev._type = ev_keydown) and
+  if (gamestate = GS_LEVEL) and (ev.typ = ev_keydown) and
      (ev.data1 = KEY_F12) and (singledemo or (deathmatch = 0)) then
   begin
   // spy mode
@@ -571,9 +571,9 @@ begin
   if (gameaction = ga_nothing) and not singledemo and
      (demoplayback or (gamestate = GS_DEMOSCREEN)) then
   begin
-    if (ev._type = ev_keydown) or
-       ((ev._type = ev_mouse) and (ev.data1 <> 0)) or
-       ((ev._type = ev_joystick) and (ev.data1 <> 0)) then
+    if (ev.typ = ev_keydown) or
+       ((ev.typ = ev_mouse) and (ev.data1 <> 0)) or
+       ((ev.typ = ev_joystick) and (ev.data1 <> 0)) then
     begin
       M_StartControlPanel;
       result := true;
@@ -611,7 +611,7 @@ begin
     end;
   end;
 
-  case ev._type of
+  case ev.typ of
     ev_keydown:
       begin
         if ev.data1 = KEY_PAUSE then
@@ -947,7 +947,7 @@ begin
     i := P_Random mod selections;
     if G_CheckSpot(playernum, @deathmatchstarts[i]) then
     begin
-      deathmatchstarts[i]._type := playernum + 1;
+      deathmatchstarts[i].typ := playernum + 1;
       P_SpawnPlayer(@deathmatchstarts[i]);
       exit;
     end;
@@ -990,9 +990,9 @@ begin
     begin
       if G_CheckSpot (playernum, @playerstarts[i]) then
       begin
-        playerstarts[i]._type := playernum + 1; // fake as other player
+        playerstarts[i].typ := playernum + 1; // fake as other player
         P_SpawnPlayer(@playerstarts[i]);
-        playerstarts[i]._type := i + 1; // restore
+        playerstarts[i].typ := i + 1; // restore
         exit;
       end;
       // he's going to be inside something.  Too bad.

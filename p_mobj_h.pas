@@ -165,7 +165,7 @@ type
     // If == validcount, already checked.
     validcount: integer;
 
-    _type: mobjtype_t;
+    typ: mobjtype_t;
     info: Pmobjinfo_t; // &mobjinfo[mobj->type]
 
     tics: integer; // state tic counter

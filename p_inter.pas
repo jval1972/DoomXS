@@ -687,7 +687,7 @@ var
 begin
   target.flags := target.flags and not (MF_SHOOTABLE or MF_FLOAT or MF_SKULLFLY);
 
-  if target._type <> MT_SKULL then
+  if target.typ <> MT_SKULL then
     target.flags := target.flags and not MF_NOGRAVITY;
 
   target.flags := target.flags or MF_CORPSE or MF_DROPOFF;
@@ -741,7 +741,7 @@ begin
   // Drop stuff.
   // This determines the kind of object spawned
   // during the death frame of a thing.
-  case target._type of
+  case target.typ of
     MT_WOLFSS,
     MT_POSSESSED:
       item := MT_CLIP;
@@ -875,8 +875,8 @@ begin
 
   target.reactiontime := 0; // we're awake now...
 
-  if ((target.threshold = 0) or (target._type = MT_VILE)) and
-    (source <> nil) and (source <> target) and (source._type <> MT_VILE) then
+  if ((target.threshold = 0) or (target.typ = MT_VILE)) and
+    (source <> nil) and (source <> target) and (source.typ <> MT_VILE) then
   begin
     // if not intent on another player,
     // chase after this one

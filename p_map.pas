@@ -363,9 +363,9 @@ begin
       exit;
     end;
 
-    if (tmthing.target <> nil) and ((tmthing.target._type = thing._type) or
-      ((tmthing.target._type = MT_KNIGHT) and (thing._type = MT_BRUISER)) or
-      ((tmthing.target._type = MT_BRUISER) and (thing._type = MT_KNIGHT))) then
+    if (tmthing.target <> nil) and ((tmthing.target.typ = thing.typ) or
+      ((tmthing.target.typ = MT_KNIGHT) and (thing.typ = MT_BRUISER)) or
+      ((tmthing.target.typ = MT_BRUISER) and (thing.typ = MT_KNIGHT))) then
     begin
       // Don't hit same species as originator.
       if thing = tmthing.target then
@@ -374,7 +374,7 @@ begin
         exit;
       end;
 
-      if thing._type <> MT_PLAYER then
+      if thing.typ <> MT_PLAYER then
       begin
         // Explode, but do no damage.
         // Let players missile other players.
@@ -1256,7 +1256,7 @@ begin
 
   // Boss spider and cyborg
   // take no damage from concussion.
-  if (thing._type = MT_CYBORG) or (thing._type = MT_SPIDER) then
+  if (thing.typ = MT_CYBORG) or (thing.typ = MT_SPIDER) then
   begin
     Result := True;
     exit;

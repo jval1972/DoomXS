@@ -48,7 +48,7 @@ procedure T_MoveFloor(floor: Pfloormove_t);
 
 function EV_DoFloor(line: Pline_t; floortype: floor_e): integer;
 
-function EV_BuildStairs(line: Pline_t; _type: stair_e): integer;
+function EV_BuildStairs(line: Pline_t; typ: stair_e): integer;
 
 implementation
 
@@ -215,7 +215,7 @@ begin
 
     if floor.direction = 1 then
     begin
-      if floor._type = donutRaise then
+      if floor.typ = donutRaise then
       begin
         floor.sector.special := floor.newspecial;
         floor.sector.floorpic := floor.texture;
@@ -223,7 +223,7 @@ begin
     end
     else if floor.direction = -1 then
     begin
-      if floor._type = lowerAndChange then
+      if floor.typ = lowerAndChange then
       begin
         floor.sector.special := floor.newspecial;
         floor.sector.floorpic := floor.texture;
@@ -266,7 +266,7 @@ begin
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
     floor.thinker.func.acp1 := @T_MoveFloor;
-    floor._type := floortype;
+    floor.typ := floortype;
     floor.crush := False;
 
     case floortype of
@@ -408,7 +408,7 @@ begin
 end;
 
 // BUILD A STAIRCASE!
-function EV_BuildStairs(line: Pline_t; _type: stair_e): integer;
+function EV_BuildStairs(line: Pline_t; typ: stair_e): integer;
 var
   secnum: integer;
   height: integer;
@@ -445,8 +445,8 @@ begin
     floor.thinker.func.acp1 := @T_MoveFloor;
     floor.direction := 1;
     floor.sector := sec;
-    floor._type := buildStair;
-    case _type of
+    floor.typ := buildStair;
+    case typ of
       build8:
       begin
         speed := FLOORSPEED div 4;
@@ -509,7 +509,7 @@ begin
         floor.sector := sec;
         floor.speed := speed;
         floor.floordestheight := height;
-        floor._type := buildStair;
+        floor.typ := buildStair;
 
         ok := true;
         break;

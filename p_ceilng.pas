@@ -43,7 +43,7 @@ var
 
 procedure T_MoveCeiling(ceiling: Pceiling_t);
 
-function EV_DoCeiling(line: Pline_t; _type: ceiling_e): integer;
+function EV_DoCeiling(line: Pline_t; typ: ceiling_e): integer;
 
 procedure P_AddActiveCeiling(c: Pceiling_t);
 
@@ -119,13 +119,13 @@ begin
 
       if leveltime and 7 = 0 then
       begin
-        if ceiling._type <> silentCrushAndRaise then
+        if ceiling.typ <> silentCrushAndRaise then
           S_StartSound(@ceiling.sector.soundorg, Ord(sfx_stnmov));
       end;
 
       if res = pastdest then
       begin
-        case ceiling._type of
+        case ceiling.typ of
           raiseToHighest:
             P_RemoveActiveCeiling(ceiling);
           silentCrushAndRaise:
@@ -147,13 +147,13 @@ begin
 
       if leveltime and 7 = 0 then
       begin
-        if ceiling._type <> silentCrushAndRaise then
+        if ceiling.typ <> silentCrushAndRaise then
           S_StartSound(@ceiling.sector.soundorg, Ord(sfx_stnmov));
       end;
 
       if res = pastdest then
       begin
-        case ceiling._type of
+        case ceiling.typ of
           silentCrushAndRaise:
           begin
             S_StartSound(@ceiling.sector.soundorg, Ord(sfx_pstop));
@@ -178,7 +178,7 @@ begin
       begin
         if res = crushed then
         begin
-          case ceiling._type of
+          case ceiling.typ of
             silentCrushAndRaise,
             crushAndRaise,
             lowerAndCrush:
@@ -192,7 +192,7 @@ end;
 
 // EV_DoCeiling
 // Move a ceiling up/down and all around!
-function EV_DoCeiling(line: Pline_t; _type: ceiling_e): integer;
+function EV_DoCeiling(line: Pline_t; typ: ceiling_e): integer;
 var
   initial: boolean;
   secnum: integer;
@@ -203,7 +203,7 @@ begin
   Result := 0;
 
   // Reactivate in-stasis ceilings...for certain types.
-  case _type of
+  case typ of
     fastCrushAndRaise,
     silentCrushAndRaise,
     crushAndRaise:
@@ -231,7 +231,7 @@ begin
     ceiling.sector := sec;
     ceiling.crush := False;
 
-    case _type of
+    case typ of
       fastCrushAndRaise:
       begin
         ceiling.crush := True;
@@ -247,7 +247,7 @@ begin
         ceiling.crush := True;
         ceiling.topheight := sec.ceilingheight;
         ceiling.bottomheight := sec.floorheight;
-        if _type <> lowerToFloor then
+        if typ <> lowerToFloor then
           ceiling.bottomheight := ceiling.bottomheight + 8 * FRACUNIT;
         ceiling.direction := -1;
         ceiling.speed := CEILSPEED;
@@ -256,7 +256,7 @@ begin
       lowerToFloor:
       begin
         ceiling.bottomheight := sec.floorheight;
-        if _type <> lowerToFloor then
+        if typ <> lowerToFloor then
           ceiling.bottomheight := ceiling.bottomheight + 8 * FRACUNIT;
         ceiling.direction := -1;
         ceiling.speed := CEILSPEED;
@@ -271,7 +271,7 @@ begin
     end;
 
     ceiling.tag := sec.tag;
-    ceiling._type := _type;
+    ceiling.typ := typ;
     P_AddActiveCeiling(ceiling);
   end;
 end;

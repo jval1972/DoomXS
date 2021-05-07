@@ -193,7 +193,7 @@ type
     x: smallint;
     y: smallint;
     angle: smallint;
-    _type: smallint;
+    typ: smallint;
     options: smallint;
   end;
   Pmapthing_t = ^mapthing_t;

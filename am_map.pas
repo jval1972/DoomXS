@@ -629,14 +629,14 @@ begin
 
   if not automapactive then
   begin
-    if (ev._type = ev_keydown) and (ev.data1 = AM_STARTKEY) then
+    if (ev.typ = ev_keydown) and (ev.data1 = AM_STARTKEY) then
     begin
       AM_Start;
       viewactive := False;
       Result := True;
     end;
   end
-  else if ev._type = ev_keydown then
+  else if ev.typ = ev_keydown then
   begin
     Result := True;
     case ev.data1 of
@@ -735,7 +735,7 @@ begin
       cheating := (cheating + 1) mod 3;
     end;
   end
-  else if ev._type = ev_keyup then
+  else if ev.typ = ev_keyup then
   begin
     Result := False;
     case ev.data1 of
@@ -1506,12 +1506,12 @@ begin
 
   ////////////////////////////////////////////////////////////////////////////////
   ZeroMemory(@st_notify_AM_initVariables, SizeOf(st_notify_AM_initVariables));
-  st_notify_AM_initVariables._type := ev_keyup;
+  st_notify_AM_initVariables.typ := ev_keyup;
   st_notify_AM_initVariables.data1 := AM_MSGENTERED;
 
   ////////////////////////////////////////////////////////////////////////////////
   ZeroMemory(@st_notify_AM_Stop, SizeOf(st_notify_AM_Stop));
-  st_notify_AM_Stop._type := ev_keyup;
+  st_notify_AM_Stop.typ := ev_keyup;
   st_notify_AM_Stop.data1 := AM_MSGEXITED;
 end;
 

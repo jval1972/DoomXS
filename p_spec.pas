@@ -185,7 +185,7 @@ type
     oldstatus: plat_e;
     crush: boolean;
     tag: integer;
-    _type: plattype_e;
+    typ: plattype_e;
   end;
   Pplat_t = ^plat_t;
 
@@ -209,7 +209,7 @@ type
 
   vldoor_t = record
     thinker: thinker_t;
-    _type: vldoor_e;
+    typ: vldoor_e;
     sector: Psector_t;
     topheight: fixed_t;
     speed: fixed_t;
@@ -242,7 +242,7 @@ type
 
   ceiling_t = record
     thinker: thinker_t;
-    _type: ceiling_e;
+    typ: ceiling_e;
     sector: Psector_t;
     bottomheight: fixed_t;
     topheight: fixed_t;
@@ -305,7 +305,7 @@ type
 
   floormove_t = record
     thinker: thinker_t;
-    _type: floor_e;
+    typ: floor_e;
     crush: boolean;
     sector: Psector_t;
     direction: integer;
@@ -710,7 +710,7 @@ begin
   if thing.player = nil then
   begin
     // Things that should NOT trigger specials...
-    case thing._type of
+    case thing.typ of
       MT_ROCKET,
       MT_PLASMA,
       MT_BFG,
@@ -1431,7 +1431,7 @@ begin
       P_AddThinker(@floor.thinker);
       s2.specialdata := floor;
       floor.thinker.func.acp1 := @T_MoveFloor;
-      floor._type := donutRaise;
+      floor.typ := donutRaise;
       floor.crush := False;
       floor.direction := 1;
       floor.sector := s2;
@@ -1445,7 +1445,7 @@ begin
       P_AddThinker(@floor.thinker);
       s1.specialdata := floor;
       floor.thinker.func.acp1 := @T_MoveFloor;
-      floor._type := lowerFloor;
+      floor.typ := lowerFloor;
       floor.crush := False;
       floor.direction := -1;
       floor.sector := s1;

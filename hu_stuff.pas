@@ -503,16 +503,16 @@ begin
 
   if ev.data1 = KEY_RSHIFT then
   begin
-    shiftdown := ev._type = ev_keydown;
+    shiftdown := ev.typ = ev_keydown;
     exit;
   end
   else if ev.data1 = KEY_RALT then
   begin
-    altdown := ev._type = ev_keydown;
+    altdown := ev.typ = ev_keydown;
     exit;
   end;
 
-  if ev._type <> ev_keydown then
+  if ev.typ <> ev_keydown then
     exit;
 
   numplayers := 0;

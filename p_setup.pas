@@ -312,7 +312,7 @@ begin
     // Do not spawn cool, new monsters if !commercial
     if gamemode <> commercial then
     begin
-      case mt._type of
+      case mt.typ of
         68, // Arachnotron
         64, // Archvile
         88, // Boss Brain
@@ -333,7 +333,7 @@ begin
       mt.x := smallint(mt.x);
       mt.y := smallint(mt.y);
       mt.angle := smallint(mt.angle);
-      mt._type := smallint(mt._type);
+      mt.typ := smallint(mt.typ);
       mt.options := smallint(mt.options);
 
       P_SpawnMapThing(mt);

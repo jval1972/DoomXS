@@ -332,14 +332,14 @@ begin
 
   dist := _SHR(dist, FRACBITS);
 
-  if actor._type = MT_VILE then
+  if actor.typ = MT_VILE then
     if dist > 14 * 64 then
     begin
       Result := False; // too far away
       exit;
     end;
 
-  if actor._type = MT_UNDEAD then
+  if actor.typ = MT_UNDEAD then
   begin
     if dist < 196 then
     begin
@@ -350,14 +350,14 @@ begin
   end;
 
 
-  if (actor._type = MT_CYBORG) or (actor._type = MT_SPIDER) or
-    (actor._type = MT_SKULL) then
+  if (actor.typ = MT_CYBORG) or (actor.typ = MT_SPIDER) or
+    (actor.typ = MT_SKULL) then
     dist := _SHR(dist, 1);
 
   if dist > 200 then
     dist := 200;
 
-  if (actor._type = MT_CYBORG) and (dist > 160) then
+  if (actor.typ = MT_CYBORG) and (dist > 160) then
     dist := 160;
 
   if P_Random < dist then
@@ -665,7 +665,7 @@ begin
     if @th.func.acp1 = @P_MobjThinker then
     begin
       mo2 := Pmobj_t(th);
-      if (mo2 <> mo) and (mo2._type = mo._type) and (mo2.health > 0) then
+      if (mo2 <> mo) and (mo2.typ = mo.typ) and (mo2.health > 0) then
         exit; // other Keen not dead
     end;
     th := th.next;
@@ -723,7 +723,7 @@ begin
       sound := actor.info.seesound;
     end;
 
-    if (actor._type = MT_SPIDER) or (actor._type = MT_CYBORG) then
+    if (actor.typ = MT_SPIDER) or (actor.typ = MT_CYBORG) then
       // full volume
       S_StartSound(nil, sound)
     else
@@ -1456,7 +1456,7 @@ begin
   while currentthinker <> @thinkercap do
   begin
     if (@currentthinker.func.acp1 = @P_MobjThinker) and
-      (Pmobj_t(currentthinker)._type = MT_SKULL) then
+      (Pmobj_t(currentthinker).typ = MT_SKULL) then
       Inc(count);
     currentthinker := currentthinker.next;
   end;
@@ -1530,7 +1530,7 @@ begin
   end;
 
   // Check for bosses.
-  if (actor._type = MT_SPIDER) or (actor._type = MT_CYBORG) then
+  if (actor.typ = MT_SPIDER) or (actor.typ = MT_CYBORG) then
     // full volume
     S_StartSound(nil, sound)
   else
@@ -1569,7 +1569,7 @@ begin
     if gamemap <> 7 then
       exit;
 
-    if (mo._type <> MT_FATSO) and (mo._type <> MT_BABY) then
+    if (mo.typ <> MT_FATSO) and (mo.typ <> MT_BABY) then
       exit;
   end
   else
@@ -1579,29 +1579,29 @@ begin
       begin
         if gamemap <> 8 then
           exit;
-        if mo._type <> MT_BRUISER then
+        if mo.typ <> MT_BRUISER then
           exit;
       end;
       2:
       begin
         if gamemap <> 8 then
           exit;
-        if mo._type <> MT_CYBORG then
+        if mo.typ <> MT_CYBORG then
           exit;
       end;
       3:
       begin
         if gamemap <> 8 then
           exit;
-        if mo._type <> MT_SPIDER then
+        if mo.typ <> MT_SPIDER then
           exit;
       end;
       4:
       begin
         case gamemap of
-          6: if mo._type <> MT_CYBORG then
+          6: if mo.typ <> MT_CYBORG then
               exit;
-          8: if mo._type <> MT_SPIDER then
+          8: if mo.typ <> MT_SPIDER then
               exit;
         end;
       end;
@@ -1633,7 +1633,7 @@ begin
     if @th.func.acp1 = @P_MobjThinker then
     begin
       mo2 := Pmobj_t(th);
-      if (mo2 <> mo) and (mo2._type = mo._type) and (mo2.health > 0) then
+      if (mo2 <> mo) and (mo2.typ = mo.typ) and (mo2.health > 0) then
       begin
         // other boss not dead
         exit;
@@ -1647,13 +1647,13 @@ begin
   begin
     if gamemap = 7 then
     begin
-      if mo._type = MT_FATSO then
+      if mo.typ = MT_FATSO then
       begin
         junk.tag := 666;
         EV_DoFloor(@junk, lowerFloorToLowest);
         exit;
       end;
-      if mo._type = MT_BABY then
+      if mo.typ = MT_BABY then
       begin
         junk.tag := 667;
         EV_DoFloor(@junk, raiseToTexture);
@@ -1747,7 +1747,7 @@ begin
     if @thinker.func.acp1 = @P_MobjThinker then // is a mobj
     begin
       m := Pmobj_t(thinker);
-      if m._type = MT_BOSSTARGET then
+      if m.typ = MT_BOSSTARGET then
       begin
         if numbraintargets >= MAXBRAINTARGETS then
           I_Error('A_BrainAwake(): numbraintargets = %d >= MAXBRAINTARGETS',
@@ -1854,7 +1854,7 @@ var
   fog: Pmobj_t;
   targ: Pmobj_t;
   r: integer;
-  _type: mobjtype_t;
+  typ: mobjtype_t;
 begin
   mo.reactiontime := mo.reactiontime - 1;
   if mo.reactiontime > 0 then
@@ -1878,29 +1878,29 @@ begin
   // Probability distribution (kind of :),
   // decreasing likelihood.
   if r < 50 then
-    _type := MT_TROOP
+    typ := MT_TROOP
   else if r < 90 then
-    _type := MT_SERGEANT
+    typ := MT_SERGEANT
   else if r < 120 then
-    _type := MT_SHADOWS
+    typ := MT_SHADOWS
   else if r < 130 then
-    _type := MT_PAIN
+    typ := MT_PAIN
   else if r < 160 then
-    _type := MT_HEAD
+    typ := MT_HEAD
   else if r < 162 then
-    _type := MT_VILE
+    typ := MT_VILE
   else if r < 172 then
-    _type := MT_UNDEAD
+    typ := MT_UNDEAD
   else if r < 192 then
-    _type := MT_BABY
+    typ := MT_BABY
   else if r < 222 then
-    _type := MT_FATSO
+    typ := MT_FATSO
   else if r < 246 then
-    _type := MT_KNIGHT
+    typ := MT_KNIGHT
   else
-    _type := MT_BRUISER;
+    typ := MT_BRUISER;
 
-  newmobj := P_SpawnMobj(targ.x, targ.y, targ.z, _type);
+  newmobj := P_SpawnMobj(targ.x, targ.y, targ.z, typ);
   if P_LookForPlayers(newmobj, True) then
     P_SetMobjState(newmobj, statenum_t(newmobj.info.seestate));
 

@@ -45,7 +45,7 @@ var
 
 procedure T_PlatRaise(plat: Pplat_t);
 
-function EV_DoPlat(line: Pline_t; _type: plattype_e; amount: integer): integer;
+function EV_DoPlat(line: Pline_t; typ: plattype_e; amount: integer): integer;
 
 procedure P_ActivateInStasis(tag: integer);
 
@@ -74,7 +74,7 @@ begin
     begin
       res := T_MovePlane(plat.sector, plat.speed, plat.high, plat.crush, 0, 1);
 
-      if (plat._type = raiseAndChange) or (plat._type = raiseToNearestAndChange) then
+      if (plat.typ = raiseAndChange) or (plat.typ = raiseToNearestAndChange) then
       begin
           if leveltime and 7 = 0 then
           S_StartSound(@plat.sector.soundorg, Ord(sfx_stnmov));
@@ -94,7 +94,7 @@ begin
           plat.status := waiting;
           S_StartSound(@plat.sector.soundorg, Ord(sfx_pstop));
 
-          case plat._type of
+          case plat.typ of
             blazeDWUS,
             downWaitUpStay:
               P_RemoveActivePlat(plat);
@@ -133,7 +133,7 @@ end;
 
 // Do Platforms
 //  "amount" is only used for SOME platforms.
-function EV_DoPlat(line: Pline_t; _type: plattype_e; amount: integer): integer;
+function EV_DoPlat(line: Pline_t; typ: plattype_e; amount: integer): integer;
 var
   plat: Pplat_t;
   secnum: integer;
@@ -142,7 +142,7 @@ begin
   Result := 0;
 
   // Activate all <type> plats that are in_stasis
-  if _type = perpetualRaise then
+  if typ = perpetualRaise then
     P_ActivateInStasis(line.tag);
 
   secnum := P_FindSectorFromLineTag(line, -1);
@@ -159,14 +159,14 @@ begin
     plat := Z_Malloc(SizeOf(plat_t), PU_LEVSPEC, nil);
     P_AddThinker(@plat.thinker);
 
-    plat._type := _type;
+    plat.typ := typ;
     plat.sector := sec;
     plat.sector.specialdata := plat;
     plat.thinker.func.acp1 := @T_PlatRaise;
     plat.crush := False;
     plat.tag := line.tag;
 
-    case _type of
+    case typ of
       raiseToNearestAndChange:
       begin
         plat.speed := PLATSPEED div 2;

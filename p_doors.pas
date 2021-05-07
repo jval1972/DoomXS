@@ -42,9 +42,9 @@ uses
 
 procedure T_VerticalDoor(door: Pvldoor_t);
 
-function EV_DoLockedDoor(line: Pline_t; _type: vldoor_e; thing: Pmobj_t): integer;
+function EV_DoLockedDoor(line: Pline_t; typ: vldoor_e; thing: Pmobj_t): integer;
 
-function EV_DoDoor(line: Pline_t; _type: vldoor_e): integer;
+function EV_DoDoor(line: Pline_t; typ: vldoor_e): integer;
 
 procedure EV_VerticalDoor(line: Pline_t; thing: Pmobj_t);
 
@@ -76,7 +76,7 @@ begin
       dec(door.topcountdown);
       if door.topcountdown = 0 then
       begin
-        case door._type of
+        case door.typ of
           blazeRaise:
           begin
             door.direction := -1; // time to go back down
@@ -101,11 +101,11 @@ begin
       dec(door.topcountdown);
       if door.topcountdown = 0 then
       begin
-        case door._type of
+        case door.typ of
           raiseIn5Mins:
           begin
             door.direction := 1;
-            door._type := normal;
+            door.typ := normal;
             S_StartSound(@door.sector.soundorg, Ord(sfx_doropn));
           end;
         end;
@@ -118,7 +118,7 @@ begin
         False, 1, door.direction);
       if res = pastdest then
       begin
-        case door._type of
+        case door.typ of
           blazeRaise,
           blazeClose:
           begin
@@ -141,7 +141,7 @@ begin
       end
       else if res = crushed then
       begin
-        case door._type of
+        case door.typ of
           blazeClose,
           close:    // DO NOT GO BACK UP!
           begin
@@ -161,7 +161,7 @@ begin
         False, 1, door.direction);
       if res = pastdest then
       begin
-        case door._type of
+        case door.typ of
           blazeRaise,
           normal:
           begin
@@ -183,7 +183,7 @@ end;
 
 // EV_DoLockedDoor
 // Move a locked door up/down
-function EV_DoLockedDoor(line: Pline_t; _type: vldoor_e; thing: Pmobj_t): integer;
+function EV_DoLockedDoor(line: Pline_t; typ: vldoor_e; thing: Pmobj_t): integer;
 var
   p: Pplayer_t;
 begin
@@ -233,10 +233,10 @@ begin
     end;
   end;
 
-  Result := EV_DoDoor(line, _type);
+  Result := EV_DoDoor(line, typ);
 end;
 
-function EV_DoDoor(line: Pline_t; _type: vldoor_e): integer;
+function EV_DoDoor(line: Pline_t; typ: vldoor_e): integer;
 var
   initial: boolean;
   secnum: integer;
@@ -266,11 +266,11 @@ begin
 
     door.thinker.func.acp1 := @T_VerticalDoor;
     door.sector := sec;
-    door._type := _type;
+    door.typ := typ;
     door.topwait := VDOORWAIT;
     door.speed := VDOORSPEED;
 
-    case _type of
+    case typ of
       blazeClose:
       begin
         door.topheight := P_FindLowestCeilingSurrounding(sec);
@@ -428,23 +428,23 @@ begin
     26,
     27,
     28:
-      door._type := normal;
+      door.typ := normal;
     31,
     32,
     33,
     34:
     begin
-      door._type := open;
+      door.typ := open;
       line.special := 0;
     end;
     117: // blazing door raise
     begin
-      door._type := blazeRaise;
+      door.typ := blazeRaise;
       door.speed := VDOORSPEED * 4;
     end;
     118: // blazing door open
     begin
-      door._type := blazeOpen;
+      door.typ := blazeOpen;
       line.special := 0;
       door.speed := VDOORSPEED * 4;
     end;
@@ -470,7 +470,7 @@ begin
   door.thinker.func.acp1 := @T_VerticalDoor;
   door.sector := sec;
   door.direction := 0;
-  door._type := normal;
+  door.typ := normal;
   door.speed := VDOORSPEED;
   door.topcountdown := 30 * TICRATE;
 end;
@@ -490,7 +490,7 @@ begin
   door.thinker.func.acp1 := @T_VerticalDoor;
   door.sector := sec;
   door.direction := 2;
-  door._type := raiseIn5Mins;
+  door.typ := raiseIn5Mins;
   door.speed := VDOORSPEED;
   door.topheight := P_FindLowestCeilingSurrounding(sec);
   door.topheight := door.topheight - 4 * FRACUNIT;

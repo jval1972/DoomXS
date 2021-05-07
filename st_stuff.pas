@@ -467,7 +467,7 @@ var
 begin
   result := false;
   // Filter automap on/off.
-  if (ev._type = ev_keyup) and
+  if (ev.typ = ev_keyup) and
      ((ev.data1 and $ffff0000) = AM_MSGHEADER) then
   begin
     case ev.data1 of
@@ -485,7 +485,7 @@ begin
     end;
   end
   // if a user keypress...
-  else if ev._type = ev_keydown then
+  else if ev.typ = ev_keydown then
   begin
     if not netgame then
     begin

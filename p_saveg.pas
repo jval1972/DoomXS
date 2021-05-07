@@ -348,7 +348,7 @@ begin
           Pplayer_t(mobj.player).mo := mobj;
         end;
         P_SetThingPosition(mobj);
-        mobj.info := @mobjinfo[Ord(mobj._type)];
+        mobj.info := @mobjinfo[Ord(mobj.typ)];
         mobj.floorz := Psubsector_t(mobj.subsector).sector.floorheight;
         mobj.ceilingz := Psubsector_t(mobj.subsector).sector.ceilingheight;
         @mobj.thinker.func.acp1 := @P_MobjThinker;

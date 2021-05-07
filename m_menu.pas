@@ -1051,7 +1051,7 @@ var
 begin
   ch := -1;
 
-  if (ev._type = ev_joystick) and (joywait < I_GetTime) then
+  if (ev.typ = ev_joystick) and (joywait < I_GetTime) then
   begin
     if ev.data3 = -1 then
     begin
@@ -1086,7 +1086,7 @@ begin
       joywait := I_GetTime + 5;
     end;
   end
-  else if (ev._type = ev_mouse) and (mousewait < I_GetTime) then
+  else if (ev.typ = ev_mouse) and (mousewait < I_GetTime) then
   begin
     mousey := mousey + ev.data3;
     if mousey < lasty - 30 then
@@ -1132,7 +1132,7 @@ begin
       mousewait := I_GetTime + 15;
     end;
   end
-  else if ev._type = ev_keydown then
+  else if ev.typ = ev_keydown then
     ch := ev.data1;
 
   if ch = -1 then

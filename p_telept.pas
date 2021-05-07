@@ -101,7 +101,7 @@ begin
         m := Pmobj_t(thinker);
 
         // not a teleportman
-        if m._type <> MT_TELEPORTMAN then
+        if m.typ <> MT_TELEPORTMAN then
         begin
           thinker := thinker.next;
           continue;
