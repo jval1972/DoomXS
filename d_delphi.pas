@@ -532,7 +532,6 @@ begin
   end;
 end;
 
-
 function toupper(ch: char): char;
 asm
   CMP     AL,'a'
