@@ -39,10 +39,7 @@ const
   ST_WIDTH = 320;
   ST_Y = 200 - ST_HEIGHT;
 
-
-//
 // STATUS BAR
-//
 
 // Called by main loop.
 function ST_Responder(ev: Pevent_t): boolean;
@@ -58,8 +55,6 @@ procedure ST_Start;
 
 // Called by startup code.
 procedure ST_Init;
-
-
 
 // States for status bar code.
 type
@@ -99,16 +94,13 @@ uses
   s_sound,
 // Needs access to LFB.
   v_video,
-// State.
   doomstat,
   d_englsh,
   sounds,
 // for mapnames
   hu_stuff;
 
-//
 // STATUS BAR DATA
-//
 
 const
 // Palette indices.
@@ -497,9 +489,6 @@ begin
   begin
     if not netgame then
     begin
-      // b. - enabled for more debug fun.
-      // if (gameskill != sk_nightmare) {
-
       // 'dqd' cheat for toggleable god mode
       if cht_CheckCheat(@cheat_god, Chr(ev.data1)) then
       begin
@@ -687,12 +676,10 @@ begin
   result := lastcalc;
 end;
 
-//
 // This is a not-very-pretty routine which handles
 //  the face states and their timing.
 // the precedence of expressions is:
 //  dead > evil grin > turned head > straight ahead
-//
 var
   lastattackdown: integer = -1;
   priority: integer = 0;
@@ -861,9 +848,6 @@ procedure ST_updateWidgets;
 var
   i: integer;
 begin
-  // must redirect the pointer if the ready weapon has changed.
-  //  if (w_ready.data != plyr->readyweapon)
-  //  {
   if weaponinfo[Ord(plyr.readyweapon)].ammo = am_noammo then
     w_ready.num := @largeammo
   else
@@ -1060,12 +1044,8 @@ begin
   for i := 0 to 5 do
   begin
     sprintf(namebuf, 'STGNUM%d', [i + 2]);
-
-    // gray #
-    arms[i][0] := W_CacheLumpName(namebuf, PU_STATIC);
-
-    // yellow #
-    arms[i][1] := shortnum[i + 2];
+    arms[i][0] := W_CacheLumpName(namebuf, PU_STATIC); // gray #
+    arms[i][1] := shortnum[i + 2]; // yellow #
   end;
 
   // face backgrounds for different color players

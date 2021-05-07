@@ -35,7 +35,6 @@ uses
   s_sound,
   d_player,
   p_pspr_h,
-  // State.
   doomstat,
   sounds;
 

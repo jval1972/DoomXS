@@ -37,7 +37,6 @@ uses
   p_local,
   r_defs,
   s_sound,
-  // State.
   doomstat,
   sounds;
 

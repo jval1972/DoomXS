@@ -118,7 +118,6 @@ uses
   st_stuff,
 // Needs access to LFB (guess what).
   v_video,
-// State.
   doomstat;
 
 //

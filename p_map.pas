@@ -40,7 +40,6 @@ uses
   tables,
   d_player,
   r_defs,
-  // State.
   doomstat,
   sounds;
 

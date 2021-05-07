@@ -60,7 +60,6 @@ uses
   s_sound,
   r_data,
   sounds,
-  // State
   doomstat;
 
 type

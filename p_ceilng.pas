@@ -35,7 +35,6 @@ uses
   p_spec,
   r_defs,
   s_sound,
-  // State.
   doomstat,
   sounds;
 
