@@ -32,9 +32,7 @@ const
   D_DEVSTR = 'Development mode ON.' + #13#10;
   D_CDROM = 'CD-ROM Version: default.cfg from c:\doomdata' + #13#10;
 
-  { }
-  {  M_Menu.C }
-  { }
+  // Menu
   PRESSKEY = 'press a key.';
   PRESSYN = 'press y or n.';
   QUITMSG = 'are you sure you want to' + #13#10 +
@@ -79,9 +77,7 @@ const
   GAMMALVL3 = 'Gamma correction level 3';
   GAMMALVL4 = 'Gamma correction level 4';
 
-  { }
-  {  P_inter.C }
-  { }
+  // p_inter
   GOTARMOR = 'Picked up the armor.';
   GOTMEGA = 'Picked up the MegaArmor!';
   GOTHTHBONUS = 'Picked up a health bonus.';
@@ -124,9 +120,7 @@ const
   GOTSHOTGUN = 'You got the shotgun!';
   GOTSHOTGUN2 = 'You got the super shotgun!';
 
-  { }
-  { P_Doors.C }
-  { }
+  // p_doors
   PD_BLUEO = 'You need a blue key to activate this object';
   PD_REDO = 'You need a red key to activate this object';
   PD_YELLOWO = 'You need a yellow key to activate this object';
@@ -134,14 +128,10 @@ const
   PD_REDK = 'You need a red key to open this door';
   PD_YELLOWK = 'You need a yellow key to open this door';
 
-  { }
-  { G_game.C }
-  { }
+  // g_game
   GGSAVED = 'game saved.';
 
-  { }
-  {  HU_stuff.C }
-  { }
+  // hu_stuff
   HUSTR_MSGU = '[Message unsent]';
 
   HUSTR_E1M1 = 'E1M1: Hangar';
@@ -311,8 +301,7 @@ const
 
   HUSTR_MESSAGESENT = '[Message Sent]';
 
-  { The following should NOT be changed unless it seems }
-  { just AWFULLY necessary }
+  // The following should NOT be changed unless it seems just AWFULLY necessary
   HUSTR_PLRGREEN = 'Green: ';
   HUSTR_PLRINDIGO = 'Indigo: ';
   HUSTR_PLRBROWN = 'Brown: ';
@@ -323,9 +312,7 @@ const
   HUSTR_KEYBROWN = 'b';
   HUSTR_KEYRED = 'r';
 
-  { }
-  {  AM_map.C }
-  { }
+  // am__map
   AMSTR_FOLLOWON = 'Follow Mode ON';
   AMSTR_FOLLOWOFF = 'Follow Mode OFF';
   AMSTR_GRIDON = 'Grid ON';
@@ -333,9 +320,7 @@ const
   AMSTR_MARKEDSPOT = 'Marked Spot';
   AMSTR_MARKSCLEARED = 'All Marks Cleared';
 
-  { }
-  {  ST_stuff.C }
-  { }
+  // st_stuff
   STSTR_MUS = 'Music Change';
   STSTR_NOMUS = 'IMPOSSIBLE SELECTION';
   STSTR_DQDON = 'Degreelessness Mode On';
@@ -353,9 +338,7 @@ const
   STSTR_CHOPPERS = '... doesn''t suck - GM';
   STSTR_CLEV = 'Changing Level...';
 
-  { }
-  { F_Finale.C }
-  { }
+  // f_Finale
   E1TEXT =
     'Once you beat the big badasses and' + #13#10 +
     'clean out the moon base you''re supposed' + #13#10 +
@@ -393,7 +376,6 @@ const
     'Now, it''s on to the final chapter of' + #13#10 +
     'DOOM! -- Inferno.';
 
-
   E3TEXT =
     'The loathsome spiderdemon that' + #13#10 +
     'masterminded the invasion of the moon' + #13#10 +
@@ -413,7 +395,6 @@ const
     'spawn could have come through that' + #13#10 +
     'door with you ...';
 
-
   E4TEXT =
     'the spider mastermind must have sent forth' + #13#10 +
     'its legions of hellspawn before your' + #13#10 +
@@ -432,9 +413,7 @@ const
     ' ' + #13#10 +
     'next stop, hell on earth!';
 
-
-// after level 6, put this:
-
+  // after level 6, put this:
   C1TEXT =
     'YOU HAVE ENTERED DEEPLY INTO THE INFESTED' + #13#10 +
     'STARPORT. BUT SOMETHING IS WRONG. THE' + #13#10 +
@@ -449,8 +428,7 @@ const
     'SWITCH WHICH HOLDS EARTH''S POPULATION' + #13#10 +
     'HOSTAGE.';
 
-// After level 11, put this:
-
+  // After level 11, put this:
   C2TEXT =
     'YOU HAVE WON! YOUR VICTORY HAS ENABLED' + #13#10 +
     'HUMANKIND TO EVACUATE EARTH AND ESCAPE' + #13#10 +
@@ -470,9 +448,7 @@ const
     'STARPORT.'' SLOWLY AND PAINFULLY YOU GET' + #13#10 +
     'UP AND RETURN TO THE FRAY.';
 
-
-// After level 20, put this:
-
+  // After level 20, put this:
   C3TEXT =
     'YOU ARE AT THE CORRUPT HEART OF THE CITY,' + #13#10 +
     'SURROUNDED BY THE CORPSES OF YOUR ENEMIES.' + #13#10 +
@@ -484,9 +460,7 @@ const
     'OTHER SIDE. WHAT DO YOU CARE IF YOU''VE' + #13#10 +
     'GOT TO GO THROUGH HELL TO GET TO IT?';
 
-
-// After level 29, put this:
-
+  // After level 29, put this:
   C4TEXT =
     'THE HORRENDOUS VISAGE OF THE BIGGEST' + #13#10 +
     'DEMON YOU''VE EVER SEEN CRUMBLES BEFORE' + #13#10 +
@@ -504,10 +478,7 @@ const
     'HOME. REBUILDING EARTH OUGHT TO BE A' + #13#10 +
     'LOT MORE FUN THAN RUINING IT WAS.' + #13#10;
 
-
-
-// Before level 31, put this:
-
+  // Before level 31, put this:
   C5TEXT =
     'CONGRATULATIONS, YOU''VE FOUND THE SECRET' + #13#10 +
     'LEVEL! LOOKS LIKE IT''S BEEN BUILT BY' + #13#10 +
@@ -515,17 +486,13 @@ const
     'WHO THE INMATES OF THIS CORNER OF HELL' + #13#10 +
     'WILL BE.';
 
-
-// Before level 32, put this:
-
+  // Before level 32, put this:
   C6TEXT =
     'CONGRATULATIONS, YOU''VE FOUND THE' + #13#10 +
     'SUPER SECRET LEVEL!  YOU''D BETTER' + #13#10 +
     'BLAZE THROUGH THIS ONE!' + #13#10;
 
-
-// after map 06
-
+  // after map 06
   P1TEXT =
     'You gloat over the steaming carcass of the' + #13#10 +
     'Guardian.  With its death, you''ve wrested' + #13#10 +
@@ -540,9 +507,7 @@ const
     'moving, keep fighting, keep killing.' + #13#10 +
     'Oh yes, keep living, too.';
 
-
-// after map 11
-
+  // after map 11
   P2TEXT =
     'Even the deadly Arch-Vile labyrinth could' + #13#10 +
     'not stop you, and you''ve gotten to the' + #13#10 +
@@ -551,9 +516,7 @@ const
     ' ' + #13#10 +
     'You''re good at that kind of thing.';
 
-
-// after map 20
-
+  // after map 20
   P3TEXT =
     'You''ve bashed and battered your way into' + #13#10 +
     'the heart of the devil-hive.  Time for a' + #13#10 +
@@ -566,8 +529,7 @@ const
     'get ready to give the bastard a little Hell' + #13#10 +
     'of your own making!';
 
-// after map 30
-
+  // after map 30
   P4TEXT =
     'The Gatekeeper''s evil face is splattered' + #13#10 +
     'all over the place.  As its tattered corpse' + #13#10 +
@@ -582,21 +544,18 @@ const
     'when you die, you''ll need it for some' + #13#10 +
     'final cleaning-up ...';
 
-// before map 31
-
+  // before map 31
   P5TEXT =
     'You''ve found the second-hardest level we' + #13#10 +
     'got. Hope you have a saved game a level or' + #13#10 +
     'two previous.  If not, be prepared to die' + #13#10 +
     'aplenty. For master marines only.';
 
-// before map 32
-
+  // before map 32
   P6TEXT =
     'Betcha wondered just what WAS the hardest' + #13#10 +
     'level we had ready for ya?  Now you know.' + #13#10 +
     'No one gets out alive.';
-
 
   T1TEXT =
     'You''ve fought your way out of the infested' + #13#10 +
@@ -612,7 +571,6 @@ const
     'complex still has some warlike ordnance' + #13#10 +
     'laying around.';
 
-
   T2TEXT =
     'You hear the grinding of heavy machinery' + #13#10 +
     'ahead.  You sure hope they''re not stamping' + #13#10 +
@@ -623,7 +581,6 @@ const
     'maniacs packed into one mad killer.' + #13#10 +
     ' ' + #13#10 +
     'You don''t plan to go down easy.';
-
 
   T3TEXT =
     'The vista opening ahead looks real damn' + #13#10 +
@@ -648,14 +605,12 @@ const
     'A blue light begins to glow inside the' + #13#10 +
     'ruined skull of the demon-spitter.';
 
-
   T5TEXT =
     'What now? Looks totally different. Kind' + #13#10 +
     'of like King Tut''s condo. Well,' + #13#10 +
     'whatever''s here can''t be any worse' + #13#10 +
     'than usual. Can it?  Or maybe it''s best' + #13#10 +
     'to let sleeping gods lie..';
-
 
   T6TEXT =
     'Time for a vacation. You''ve burst the' + #13#10 +
@@ -669,10 +624,7 @@ const
     'As you step off the transport, you hear' + #13#10 +
     'the stomp of a cyberdemon''s iron shoe.';
 
-
-  { }
-  { Character cast strings F_FINALE.C }
-  { }
+  // Character cast strings
   CC_ZOMBIE  = 'ZOMBIEMAN';
   CC_SHOTGUN = 'SHOTGUN GUY';
   CC_HEAVY = 'HEAVY WEAPON DUDE';
@@ -719,11 +671,9 @@ const
 // Misc. other strings.
   SAVEGAMENAME = 'doomsav';
 
-//
 // File locations,
 // relative to current position.
 // Path names are OS-sensitive.
-//
   DEVMAPS = 'devmaps';
   DEVDATA = 'devdata';
 
