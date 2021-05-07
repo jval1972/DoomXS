@@ -869,7 +869,6 @@ var
   y: integer;
   w: integer;
 begin
-
   WI_SlamBackground;
 
   // draw animated background
