@@ -87,9 +87,7 @@ type
   );
 
 const
-//
 // Difficulty/skill settings/filters.
-//
 
 // Skill flags.
   MTF_EASY = 1;
@@ -108,9 +106,7 @@ type
     sk_nightmare
   );
 
-//
 // Key cards.
-//
   card_t = (
     it_bluecard,
     it_yellowcard,
@@ -172,11 +168,9 @@ const
   INFRATICS = 120 * TICRATE;
   IRONTICS = 60 * TICRATE;
 
-//
 // DOOM keyboard definition.
 // This is the stuff configured by Setup.Exe.
 // Most key data are simple ascii (uppercased).
-//
 const
   KEY_RIGHTARROW = $ae;
   KEY_LEFTARROW = $ac;
