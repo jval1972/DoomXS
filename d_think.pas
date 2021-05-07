@@ -48,7 +48,7 @@ type
   thinker_t = record
     prev: Pthinker_t;
     next: Pthinker_t;
-    _function: think_t;
+    func: think_t;
   end;
 
 implementation

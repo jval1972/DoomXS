@@ -92,7 +92,7 @@ begin
       while thinker <> @thinkercap do
       begin
         // not a mobj
-        if @thinker._function.acp1 <> @P_MobjThinker then
+        if @thinker.func.acp1 <> @P_MobjThinker then
         begin
           thinker := thinker.next;
           continue;

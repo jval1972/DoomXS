@@ -1430,7 +1430,7 @@ begin
       floor := Z_Malloc(SizeOf(floormove_t), PU_LEVSPEC, nil);
       P_AddThinker(@floor.thinker);
       s2.specialdata := floor;
-      floor.thinker._function.acp1 := @T_MoveFloor;
+      floor.thinker.func.acp1 := @T_MoveFloor;
       floor._type := donutRaise;
       floor.crush := False;
       floor.direction := 1;
@@ -1444,7 +1444,7 @@ begin
       floor := Z_Malloc(sizeof(floormove_t), PU_LEVSPEC, nil);
       P_AddThinker(@floor.thinker);
       s1.specialdata := floor;
-      floor.thinker._function.acp1 := @T_MoveFloor;
+      floor.thinker.func.acp1 := @T_MoveFloor;
       floor._type := lowerFloor;
       floor.crush := False;
       floor.direction := -1;

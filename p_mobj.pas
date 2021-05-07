@@ -434,7 +434,7 @@ begin
   begin
     P_XYMovement(mobj);
 
-    if not Assigned(mobj.thinker._function.acv) then
+    if not Assigned(mobj.thinker.func.acv) then
       exit; // mobj was removed
   end;
 
@@ -442,7 +442,7 @@ begin
   begin
     P_ZMovement(mobj);
 
-    if not Assigned(mobj.thinker._function.acv) then
+    if not Assigned(mobj.thinker.func.acv) then
       exit; // mobj was removed
   end;
 
@@ -526,7 +526,7 @@ begin
     mobj.z := mobj.ceilingz - mobj.info.height
   else
     mobj.z := z;
-  @mobj.thinker._function.acp1 := @P_MobjThinker;
+  @mobj.thinker.func.acp1 := @P_MobjThinker;
 
   P_AddThinker(@mobj.thinker);
 

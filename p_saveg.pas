@@ -279,7 +279,7 @@ begin
   th := thinkercap.next;
   while th <> @thinkercap do
   begin
-    if @th._function.acp1 = @P_MobjThinker then
+    if @th.func.acp1 = @P_MobjThinker then
     begin
       save_p[0] := Ord(tc_mobj);
       save_p := @save_p[1];
@@ -315,7 +315,7 @@ begin
   begin
     next := currentthinker.next;
 
-    if @currentthinker._function.acp1 = @P_MobjThinker then
+    if @currentthinker.func.acp1 = @P_MobjThinker then
       P_RemoveMobj(Pmobj_t(currentthinker))
     else
       Z_Free(currentthinker);
@@ -351,7 +351,7 @@ begin
         mobj.info := @mobjinfo[Ord(mobj._type)];
         mobj.floorz := Psubsector_t(mobj.subsector).sector.floorheight;
         mobj.ceilingz := Psubsector_t(mobj.subsector).sector.ceilingheight;
-        @mobj.thinker._function.acp1 := @P_MobjThinker;
+        @mobj.thinker.func.acp1 := @P_MobjThinker;
         P_AddThinker(@mobj.thinker);
       end;
       else
@@ -402,7 +402,7 @@ begin
   begin
     th := th1;
     th1 := th1.next;
-    if not Assigned(th._function.acv) then
+    if not Assigned(th.func.acv) then
     begin
       i := 0;
       while i < MAXCEILINGS do
@@ -425,7 +425,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_MoveCeiling then
+    if @th.func.acp1 = @T_MoveCeiling then
     begin
       save_p[0] := Ord(tc_ceiling);
       save_p := @save_p[1];
@@ -437,7 +437,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_VerticalDoor then
+    if @th.func.acp1 = @T_VerticalDoor then
     begin
       save_p[0] := Ord(tc_door);
       save_p := @save_p[1];
@@ -449,7 +449,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_MoveFloor then
+    if @th.func.acp1 = @T_MoveFloor then
     begin
       save_p[0] := Ord(tc_floor);
       save_p := @save_p[1];
@@ -461,7 +461,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_PlatRaise then
+    if @th.func.acp1 = @T_PlatRaise then
     begin
       save_p[0] := Ord(tc_plat);
       save_p := @save_p[1];
@@ -473,7 +473,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_LightFlash then
+    if @th.func.acp1 = @T_LightFlash then
     begin
       save_p[0] := Ord(tc_flash);
       save_p := @save_p[1];
@@ -485,7 +485,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_StrobeFlash then
+    if @th.func.acp1 = @T_StrobeFlash then
     begin
       save_p[0] := Ord(tc_strobe);
       save_p := @save_p[1];
@@ -497,7 +497,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_Glow then
+    if @th.func.acp1 = @T_Glow then
     begin
       save_p[0] := Ord(tc_glow);
       save_p := @save_p[1];
@@ -509,7 +509,7 @@ begin
       continue;
     end;
 
-    if @th._function.acp1 = @T_FireFlicker then
+    if @th.func.acp1 = @T_FireFlicker then
     begin
       save_p[0] := Ord(tc_fireflicker);
       save_p := @save_p[1];
@@ -558,8 +558,8 @@ begin
         ceiling.sector := @sectors[integer(ceiling.sector)];
         ceiling.sector.specialdata := ceiling;
 
-        if Assigned(ceiling.thinker._function.acp1) then
-          @ceiling.thinker._function.acp1 := @T_MoveCeiling;
+        if Assigned(ceiling.thinker.func.acp1) then
+          @ceiling.thinker.func.acp1 := @T_MoveCeiling;
 
         P_AddThinker(@ceiling.thinker);
         P_AddActiveCeiling(ceiling);
@@ -572,7 +572,7 @@ begin
         save_p := @save_p[SizeOf(vldoor_t)];
         door.sector := @sectors[integer(door.sector)];
         door.sector.specialdata := door;
-        @door.thinker._function.acp1 := @T_VerticalDoor;
+        @door.thinker.func.acp1 := @T_VerticalDoor;
         P_AddThinker(@door.thinker);
       end;
 
@@ -583,7 +583,7 @@ begin
         save_p := @save_p[SizeOf(floormove_t)];
         floor.sector := @sectors[integer(floor.sector)];
         floor.sector.specialdata := floor;
-        @floor.thinker._function.acp1 := @T_MoveFloor;
+        @floor.thinker.func.acp1 := @T_MoveFloor;
         P_AddThinker(@floor.thinker);
       end;
 
@@ -595,8 +595,8 @@ begin
         plat.sector := @sectors[integer(plat.sector)];
         plat.sector.specialdata := plat;
 
-        if Assigned(plat.thinker._function.acp1) then
-          @plat.thinker._function.acp1 := @T_PlatRaise;
+        if Assigned(plat.thinker.func.acp1) then
+          @plat.thinker.func.acp1 := @T_PlatRaise;
 
         P_AddThinker(@plat.thinker);
         P_AddActivePlat(plat);
@@ -608,7 +608,7 @@ begin
         memcpy(flash, save_p, SizeOf(lightflash_t));
         save_p := @save_p[SizeOf(lightflash_t)];
         flash.sector := @sectors[integer(flash.sector)];
-        @flash.thinker._function.acp1 := @T_LightFlash;
+        @flash.thinker.func.acp1 := @T_LightFlash;
         P_AddThinker(@flash.thinker);
       end;
 
@@ -618,7 +618,7 @@ begin
         memcpy(strobe, save_p, SizeOf(strobe_t));
         save_p := @save_p[SizeOf(strobe_t)];
         strobe.sector := @sectors[integer(strobe.sector)];
-        @strobe.thinker._function.acp1 := @T_StrobeFlash;
+        @strobe.thinker.func.acp1 := @T_StrobeFlash;
         P_AddThinker(@strobe.thinker);
       end;
 
@@ -628,7 +628,7 @@ begin
         memcpy(glow, save_p, SizeOf(glow_t));
         save_p := @save_p[SizeOf(glow_t)];
         glow.sector := @sectors[integer(glow.sector)];
-        @glow.thinker._function.acp1 := @T_Glow;
+        @glow.thinker.func.acp1 := @T_Glow;
         P_AddThinker(@glow.thinker);
       end;
 
@@ -637,7 +637,7 @@ begin
         flicker := Z_Malloc(SizeOf(fireflicker_t), PU_LEVEL, nil);
         memcpy(flicker, save_p, SizeOf(fireflicker_t));
         save_p := @save_p[SizeOf(fireflicker_t)];
-        @flicker.thinker._function.acp1 := @T_FireFlicker;
+        @flicker.thinker.func.acp1 := @T_FireFlicker;
         flicker.sector := @sectors[integer(flicker.sector)];
         P_AddThinker(@flicker.thinker);
       end;

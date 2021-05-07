@@ -89,7 +89,7 @@ end;
 procedure P_RemoveThinker(thinker: Pthinker_t);
 begin
   // FIXME: NOP.
-  thinker._function.acv := nil;
+  thinker.func.acv := nil;
 end;
 
 // P_RunThinkers
@@ -101,7 +101,7 @@ begin
   currentthinker := thinkercap.next;
   while currentthinker <> @thinkercap do
   begin
-    if not Assigned(currentthinker._function.acv) then
+    if not Assigned(currentthinker.func.acv) then
     begin
       // time to remove it
       currentthinker.next.prev := currentthinker.prev;
@@ -112,8 +112,8 @@ begin
     end
     else
     begin
-      if Assigned(currentthinker._function.acp1) then
-        currentthinker._function.acp1(currentthinker);
+      if Assigned(currentthinker.func.acp1) then
+        currentthinker.func.acp1(currentthinker);
       currentthinker := currentthinker.next;
     end;
   end;

@@ -662,7 +662,7 @@ begin
   th := thinkercap.next;
   while th <> @thinkercap do
   begin
-    if @th._function.acp1 = @P_MobjThinker then
+    if @th.func.acp1 = @P_MobjThinker then
     begin
       mo2 := Pmobj_t(th);
       if (mo2 <> mo) and (mo2._type = mo._type) and (mo2.health > 0) then
@@ -1455,7 +1455,7 @@ begin
   currentthinker := thinkercap.next;
   while currentthinker <> @thinkercap do
   begin
-    if (@currentthinker._function.acp1 = @P_MobjThinker) and
+    if (@currentthinker.func.acp1 = @P_MobjThinker) and
       (Pmobj_t(currentthinker)._type = MT_SKULL) then
       Inc(count);
     currentthinker := currentthinker.next;
@@ -1630,7 +1630,7 @@ begin
   th := thinkercap.next;
   while th <> @thinkercap do
   begin
-    if @th._function.acp1 = @P_MobjThinker then
+    if @th.func.acp1 = @P_MobjThinker then
     begin
       mo2 := Pmobj_t(th);
       if (mo2 <> mo) and (mo2._type = mo._type) and (mo2.health > 0) then
@@ -1744,7 +1744,7 @@ begin
   thinker := thinkercap.next;
   while thinker <> @thinkercap do
   begin
-    if @thinker._function.acp1 = @P_MobjThinker then // is a mobj
+    if @thinker.func.acp1 = @P_MobjThinker then // is a mobj
     begin
       m := Pmobj_t(thinker);
       if m._type = MT_BOSSTARGET then

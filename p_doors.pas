@@ -264,7 +264,7 @@ begin
     P_AddThinker(@door.thinker);
     sec.specialdata := door;
 
-    door.thinker._function.acp1 := @T_VerticalDoor;
+    door.thinker.func.acp1 := @T_VerticalDoor;
     door.sector := sec;
     door._type := _type;
     door.topwait := VDOORWAIT;
@@ -417,7 +417,7 @@ begin
   door := Z_Malloc(SizeOf(vldoor_t), PU_LEVSPEC, nil);
   P_AddThinker(@door.thinker);
   sec.specialdata := door;
-  door.thinker._function.acp1 := @T_VerticalDoor;
+  door.thinker.func.acp1 := @T_VerticalDoor;
   door.sector := sec;
   door.direction := 1;
   door.speed := VDOORSPEED;
@@ -467,7 +467,7 @@ begin
   sec.specialdata := door;
   sec.special := 0;
 
-  door.thinker._function.acp1 := @T_VerticalDoor;
+  door.thinker.func.acp1 := @T_VerticalDoor;
   door.sector := sec;
   door.direction := 0;
   door._type := normal;
@@ -487,7 +487,7 @@ begin
   sec.specialdata := door;
   sec.special := 0;
 
-  door.thinker._function.acp1 := @T_VerticalDoor;
+  door.thinker.func.acp1 := @T_VerticalDoor;
   door.sector := sec;
   door.direction := 2;
   door._type := raiseIn5Mins;

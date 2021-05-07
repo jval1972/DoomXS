@@ -265,7 +265,7 @@ begin
     ZeroMemory(floor, SizeOf(floormove_t));
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
-    floor.thinker._function.acp1 := @T_MoveFloor;
+    floor.thinker.func.acp1 := @T_MoveFloor;
     floor._type := floortype;
     floor.crush := False;
 
@@ -442,7 +442,7 @@ begin
     ZeroMemory(floor, SizeOf(floormove_t));
     P_AddThinker(@floor.thinker);
     sec.specialdata := floor;
-    floor.thinker._function.acp1 := @T_MoveFloor;
+    floor.thinker.func.acp1 := @T_MoveFloor;
     floor.direction := 1;
     floor.sector := sec;
     floor._type := buildStair;
@@ -504,7 +504,7 @@ begin
         P_AddThinker(@floor.thinker);
 
         sec.specialdata := floor;
-        floor.thinker._function.acp1 := @T_MoveFloor;
+        floor.thinker.func.acp1 := @T_MoveFloor;
         floor.direction := 1;
         floor.sector := sec;
         floor.speed := speed;

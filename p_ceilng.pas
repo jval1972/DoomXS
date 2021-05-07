@@ -97,7 +97,7 @@ begin
       (activeceilings[i].direction = 0) then
     begin
       activeceilings[i].direction := activeceilings[i].olddirection;
-      activeceilings[i].thinker._function.acp1 := @T_MoveCeiling;
+      activeceilings[i].thinker.func.acp1 := @T_MoveCeiling;
     end;
 end;
 
@@ -227,7 +227,7 @@ begin
     ceiling := Z_Malloc(SizeOf(ceiling_t), PU_LEVSPEC, nil);
     P_AddThinker(@ceiling.thinker);
     sec.specialdata := ceiling;
-    ceiling.thinker._function.acp1 := @T_MoveCeiling;
+    ceiling.thinker.func.acp1 := @T_MoveCeiling;
     ceiling.sector := sec;
     ceiling.crush := False;
 
@@ -288,7 +288,7 @@ begin
       (activeceilings[i].direction <> 0) then
     begin
       activeceilings[i].olddirection := activeceilings[i].direction;
-      activeceilings[i].thinker._function.acv := nil;
+      activeceilings[i].thinker.func.acv := nil;
       activeceilings[i].direction := 0; // in-stasis
       Result := 1;
     end;

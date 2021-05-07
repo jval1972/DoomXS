@@ -736,7 +736,7 @@ begin
   th := thinkercap.next;
   while th <> @thinkercap do
   begin
-    if @th._function.acp1 = @P_MobjThinker then
+    if @th.func.acp1 = @P_MobjThinker then
       spritepresent[Ord(Pmobj_t(th).sprite)] := 1;
     th := th.next;
   end;

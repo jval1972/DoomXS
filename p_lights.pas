@@ -98,7 +98,7 @@ begin
 
   P_AddThinker(@flick.thinker);
 
-  flick.thinker._function.acp1 := @T_FireFlicker;
+  flick.thinker.func.acp1 := @T_FireFlicker;
   flick.sector := sector;
   flick.maxlight := sector.lightlevel;
   flick.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel) + 16;
@@ -141,7 +141,7 @@ begin
 
   P_AddThinker(@flash.thinker);
 
-  flash.thinker._function.acp1 := @T_LightFlash;
+  flash.thinker.func.acp1 := @T_LightFlash;
   flash.sector := sector;
   flash.maxlight := sector.lightlevel;
 
@@ -186,7 +186,7 @@ begin
   flash.sector := sector;
   flash.darktime := fastOrSlow;
   flash.brighttime := STROBEBRIGHT;
-  flash.thinker._function.acp1 := @T_StrobeFlash;
+  flash.thinker.func.acp1 := @T_StrobeFlash;
   flash.maxlight := sector.lightlevel;
   flash.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel);
 
@@ -325,7 +325,7 @@ begin
   g.sector := sector;
   g.minlight := P_FindMinSurroundingLight(sector, sector.lightlevel);
   g.maxlight := sector.lightlevel;
-  g.thinker._function.acp1 := @T_Glow;
+  g.thinker.func.acp1 := @T_Glow;
   g.direction := -1;
 
   sector.special := 0;

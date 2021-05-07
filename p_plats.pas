@@ -162,7 +162,7 @@ begin
     plat._type := _type;
     plat.sector := sec;
     plat.sector.specialdata := plat;
-    plat.thinker._function.acp1 := @T_PlatRaise;
+    plat.thinker.func.acp1 := @T_PlatRaise;
     plat.crush := False;
     plat.tag := line.tag;
 
@@ -237,7 +237,7 @@ begin
       (activeplats[i].status = in_stasis) then
     begin
       activeplats[i].status := activeplats[i].oldstatus;
-      activeplats[i].thinker._function.acp1 := @T_PlatRaise;
+      activeplats[i].thinker.func.acp1 := @T_PlatRaise;
     end;
 end;
 
@@ -252,7 +252,7 @@ begin
     begin
       activeplats[i].oldstatus := activeplats[i].status;
       activeplats[i].status := in_stasis;
-      activeplats[i].thinker._function.acv := nil;
+      activeplats[i].thinker.func.acv := nil;
     end;
 end;
 
