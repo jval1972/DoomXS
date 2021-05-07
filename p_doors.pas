@@ -31,7 +31,6 @@ interface
 uses
   z_memory,
   doomdef,
-  p_local,
   p_mobj_h,
   p_spec,
   r_defs,
@@ -55,7 +54,6 @@ procedure P_SpawnDoorRaiseIn5Mins(sec: Psector_t; secnum: integer);
 implementation
 
 uses
-  d_delphi,
   m_fixed,
   d_player,
   p_tick,
