@@ -819,12 +819,8 @@ end;
 
 // G_PlayerFinishLevel
 // Can when a player completes a level.
-procedure G_PlayerFinishLevel(player: integer);
-var
-  p: Pplayer_t;
+procedure G_PlayerFinishLevel(p: Pplayer_t);
 begin
-  p := @players[player];
-
   memset(@p.powers, 0, SizeOf(p.powers));
   memset(@p.cards, 0, SizeOf(p.cards));
   p.mo.flags := p.mo.flags and not MF_SHADOW; // cancel invisibility
@@ -1047,7 +1043,7 @@ begin
 
   for i := 0 to MAXPLAYERS - 1 do
     if playeringame[i] then
-      G_PlayerFinishLevel(i); // take away cards and stuff
+      G_PlayerFinishLevel(@players[i]); // take away cards and stuff
 
   if automapactive then
     AM_Stop;
