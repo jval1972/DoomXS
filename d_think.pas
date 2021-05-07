@@ -34,10 +34,10 @@ type
   actionf_p2 = procedure(p1, p2: pointer);
 
   actionf_t = record
-    case longint of
-      0 : ( acp1 : actionf_p1 );
-      1 : ( acv : actionf_v );
-      2 : ( acp2 : actionf_p2 );
+    case integer of
+      0 : (acp1: actionf_p1);
+      1 : (acv: actionf_v);
+      2 : (acp2: actionf_p2);
     end;
   Pactionf_t = ^actionf_t;
 
@@ -46,9 +46,9 @@ type
 
   Pthinker_t = ^thinker_t;
   thinker_t = record
-    prev : Pthinker_t;
-    next : Pthinker_t;
-    _function : think_t;
+    prev: Pthinker_t;
+    next: Pthinker_t;
+    _function: think_t;
   end;
 
 implementation
