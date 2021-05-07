@@ -81,7 +81,7 @@ end;
 // and includes it in the new clip list.
 type
   cliprange_t = record
-    First: integer;
+    first: integer;
     last: integer;
   end;
   Pcliprange_t = ^cliprange_t;
@@ -98,7 +98,7 @@ var
 // Does handle solid walls,
 //  e.g. single sided LineDefs (middle texture)
 //  that entirely block the view.
-procedure R_ClipSolidWallSegment(First, last: integer);
+procedure R_ClipSolidWallSegment(first, last: integer);
 var
   next: integer;
   start: integer;
@@ -122,16 +122,16 @@ begin
   // Find the first range that touches the range
   //  (adjacent pixels are touching).
   start := 0;
-  while solidsegs[start].last < First - 1 do
+  while solidsegs[start].last < first - 1 do
     Inc(start);
 
-  if First < solidsegs[start].First then
+  if first < solidsegs[start].first then
   begin
-    if last < solidsegs[start].First - 1 then
+    if last < solidsegs[start].first - 1 then
     begin
       // Post is entirely visible (above start),
       //  so insert a new clippost.
-      R_StoreWallRange(First, last);
+      R_StoreWallRange(first, last);
       next := newend;
       Inc(newend);
 
@@ -140,15 +140,15 @@ begin
         solidsegs[next] := solidsegs[next - 1];
         Dec(next);
       end;
-      solidsegs[next].First := First;
+      solidsegs[next].first := first;
       solidsegs[next].last := last;
       exit;
     end;
 
     // There is a fragment above *start.
-    R_StoreWallRange(First, solidsegs[start].First - 1);
+    R_StoreWallRange(first, solidsegs[start].first - 1);
     // Now adjust the clip size.
-    solidsegs[start].First := First;
+    solidsegs[start].first := first;
   end;
 
   // Bottom contained in start?
@@ -156,10 +156,10 @@ begin
     exit;
 
   next := start;
-  while last >= solidsegs[next + 1].First - 1 do
+  while last >= solidsegs[next + 1].first - 1 do
   begin
     // There is a fragment between two posts.
-    R_StoreWallRange(solidsegs[next].last + 1, solidsegs[next + 1].First - 1);
+    R_StoreWallRange(solidsegs[next].last + 1, solidsegs[next + 1].first - 1);
     Inc(next);
 
     if last <= solidsegs[next].last then
@@ -187,36 +187,36 @@ end;
 //  but does not includes it in the clip list.
 // Does handle windows,
 //  e.g. LineDefs with upper and lower texture.
-procedure R_ClipPassWallSegment(First, last: integer);
+procedure R_ClipPassWallSegment(first, last: integer);
 var
   start: integer;
 begin
   // Find the first range that touches the range
   //  (adjacent pixels are touching).
   start := 0;
-  while solidsegs[start].last < First - 1 do
+  while solidsegs[start].last < first - 1 do
     Inc(start);
 
-  if First < solidsegs[start].First then
+  if first < solidsegs[start].first then
   begin
-    if last < solidsegs[start].First - 1 then
+    if last < solidsegs[start].first - 1 then
     begin
       // Post is entirely visible (above start).
-      R_StoreWallRange(First, last);
+      R_StoreWallRange(first, last);
       exit;
     end;
     // There is a fragment above *start.
-    R_StoreWallRange(First, solidsegs[start].First - 1);
+    R_StoreWallRange(first, solidsegs[start].first - 1);
   end;
 
   // Bottom contained in start?
   if last <= solidsegs[start].last then
     exit;
 
-  while last >= solidsegs[start + 1].First - 1 do
+  while last >= solidsegs[start + 1].first - 1 do
   begin
     // There is a fragment between two posts.
-    R_StoreWallRange(solidsegs[start].last + 1, solidsegs[start + 1].First - 1);
+    R_StoreWallRange(solidsegs[start].last + 1, solidsegs[start + 1].first - 1);
     Inc(start);
 
     if last <= solidsegs[start].last then
@@ -230,9 +230,9 @@ end;
 // R_ClearClipSegs
 procedure R_ClearClipSegs;
 begin
-  solidsegs[0].First := -$7fffffff;
+  solidsegs[0].first := -$7fffffff;
   solidsegs[0].last := -1;
-  solidsegs[1].First := viewwidth;
+  solidsegs[1].first := viewwidth;
   solidsegs[1].last := $7fffffff;
   newend := 2;
 end;
@@ -364,7 +364,7 @@ const
 
 function R_CheckBBox(bspcoordA: Pfixed_tArray; const side: integer): boolean;
 var
-  bspcoord: array[0..3] of fixed_t;
+  bspcoord: Pfixed_tArray;
   boxx: integer;
   boxy: integer;
   boxpos: integer;
@@ -381,19 +381,9 @@ var
   sx2: integer;
 begin
   if side = 0 then
-  begin
-    bspcoord[0] := bspcoordA[0];
-    bspcoord[1] := bspcoordA[1];
-    bspcoord[2] := bspcoordA[2];
-    bspcoord[3] := bspcoordA[3];
-  end
+    bspcoord := bspcoordA
   else
-  begin
-    bspcoord[0] := bspcoordA[4];
-    bspcoord[1] := bspcoordA[5];
-    bspcoord[2] := bspcoordA[6];
-    bspcoord[3] := bspcoordA[7];
-  end;
+    bspcoord := @bspcoordA[4];
 
   // Find the corners of the box
   // that define the edges from current viewpoint.
@@ -488,7 +478,7 @@ begin
   while solidsegs[start].last < sx2 do
     Inc(start);
 
-  if (sx1 >= solidsegs[start].First) and (sx2 <= solidsegs[start].last) then
+  if (sx1 >= solidsegs[start].first) and (sx2 <= solidsegs[start].last) then
     // The clippost contains the new span.
     Result := False
   else
