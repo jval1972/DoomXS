@@ -166,26 +166,14 @@ type
 //   starting from the middle.
 const
   NUMPLYRLINES = 7;
-
-var
-  player_arrow: array[0..NUMPLYRLINES - 1] of mline_t;
-
-const
   NUMCHEATPLYRLINES = 16;
-
-var
-  cheat_player_arrow: array[0..NUMCHEATPLYRLINES - 1] of mline_t;
-
-const
   NUMTRIANGLEGUYLINES = 3;
-
-var
-  triangle_guy: array[0..NUMTRIANGLEGUYLINES - 1] of mline_t;
-
-const
   NUMTHINTRIANGLEGUYLINES = 3;
 
 var
+  player_arrow: array[0..NUMPLYRLINES - 1] of mline_t;
+  cheat_player_arrow: array[0..NUMCHEATPLYRLINES - 1] of mline_t;
+  triangle_guy: array[0..NUMTRIANGLEGUYLINES - 1] of mline_t;
   thintriangle_guy: array[0..NUMTHINTRIANGLEGUYLINES - 1] of mline_t;
 
 var
@@ -254,11 +242,8 @@ var
 
 var
   marknums: packed array[0..9] of Ppatch_t; // numbers used for marking by the automap
-
   markpoints: array[0..AM_NUMMARKPOINTS - 1] of mpoint_t; // where the points are
-
   markpointnum: integer = 0; // next point to be assigned
-
   followplayer: boolean = True; // specifies whether to follow the player around
 
 const
@@ -266,8 +251,7 @@ const
 
 var
   cheat_amap: cheatseq_t;
-
-  stopped: boolean = True;
+  am_stopped: boolean = True;
 
 function AM_Responder(ev: Pevent_t): boolean;
 
@@ -577,7 +561,7 @@ begin
   AM_unloadPics;
   automapactive := False;
   ST_Responder(@st_notify_AM_Stop);
-  stopped := True;
+  am_stopped := True;
 end;
 
 var
@@ -586,9 +570,9 @@ var
 
 procedure AM_Start;
 begin
-  if not stopped then
+  if not am_stopped then
     AM_Stop;
-  stopped := False;
+  am_stopped := False;
 
   if (lastlevel <> gamemap) or (lastepisode <> gameepisode) then
   begin
@@ -767,7 +751,6 @@ begin
       end;
     end;
   end;
-
 end;
 
 // Zooming
@@ -815,7 +798,6 @@ begin
   // Change x,y location
   if (m_paninc.x <> 0) or (m_paninc.y <> 0) then
     AM_changeWindowLoc;
-
 end;
 
 // Clear automap frame buffer.
@@ -1363,7 +1345,6 @@ begin
   pl.b.y := -((8 * PLAYERRADIUS) div 7) div 4;
 
 ////////////////////////////////////////////////////////////////////////////////
-
   pl := @cheat_player_arrow[0];
   pl.a.x := -((8 * PLAYERRADIUS) div 7) + ((8 * PLAYERRADIUS) div 7) div 8;
   pl.a.y := 0;
@@ -1461,7 +1442,6 @@ begin
   pl.b.y := -((8 * PLAYERRADIUS) div 7) div 7;
 
 ////////////////////////////////////////////////////////////////////////////////
-
   pl := @triangle_guy[0];
   pl.a.x := Round(-0.867 * FRACUNIT);
   pl.a.y := Round(-0.5 * FRACUNIT);
@@ -1481,7 +1461,6 @@ begin
   pl.b.y := Round(-0.5 * FRACUNIT);
 
 ////////////////////////////////////////////////////////////////////////////////
-
   pl := @thintriangle_guy[0];
   pl.a.x := Round(-0.5 * FRACUNIT);
   pl.a.y := Round(-0.7 * FRACUNIT);
