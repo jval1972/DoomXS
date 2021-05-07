@@ -501,7 +501,6 @@ begin
   P_SpawnPlayerMissile(player.mo, MT_PLASMA);
 end;
 
-
 // P_BulletSlope
 // Sets a slope so a near miss is at aproximately
 // the height of the intended target
