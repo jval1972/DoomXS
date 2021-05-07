@@ -844,9 +844,9 @@ var
 begin
   p := @players[player];
   memcpy(@frags, @p.frags, SizeOf(frags));
-  killcount := players[player].killcount;
-  itemcount := players[player].itemcount;
-  secretcount := players[player].secretcount;
+  killcount := p.killcount;
+  itemcount := p.itemcount;
+  secretcount := p.secretcount;
 
   ZeroMemory(p, SizeOf(player_t));
 
