@@ -29,16 +29,8 @@ unit p_plats;
 interface
 
 uses
-  i_system,
-  z_memory,
-  m_rnd,
-  doomdef,
   p_spec,
-  p_local,
-  r_defs,
-  s_sound,
-  doomstat,
-  sounds;
+  r_defs;
 
 var
   activeplats: array[0..MAXPLATS - 1] of Pplat_t;
@@ -59,11 +51,17 @@ implementation
 
 uses
   d_delphi,
+  doomdef,
   m_fixed,
+  i_system,
+  m_rnd,
   p_mobj_h,
   p_tick,
+  p_floor,
   p_setup,
-  p_floor;
+  s_sound,
+  sounds,
+  z_memory;
 
 procedure T_PlatRaise(plat: Pplat_t);
 var
