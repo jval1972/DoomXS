@@ -496,7 +496,6 @@ var
   i_line: integer;
   sub: Psubsector_t;
 begin
-  Inc(sscount);
   sub := @subsectors[num];
   frontsector := sub.sector;
   count := sub.numlines;

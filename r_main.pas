@@ -152,7 +152,6 @@ var
 //
   clipangle: angle_t;
 
-  sscount: integer;
   linecount: integer;
   loopcount: integer;
 
@@ -806,8 +805,6 @@ begin
 
   // JVAL: Widescreen support
   planerelativeaspect := 320 / 200 * SCREENHEIGHT / SCREENWIDTH * relative_aspect;
-
-  sscount := 0;
 
   if player.fixedcolormap <> 0 then
   begin
