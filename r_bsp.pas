@@ -53,13 +53,10 @@ var
 implementation
 
 uses
-  d_delphi,
   doomdata,
   m_fixed,
   tables,
-  doomdef,
   m_bbox,
-  i_system,
   p_setup,
   r_segs,
   r_main,
@@ -67,7 +64,6 @@ uses
   r_things,
   r_draw,
   r_sky,
-  // State.
   doomstat;
 
 // R_ClearDrawSegs
@@ -401,7 +397,7 @@ begin
   else
     boxy := 2;
 
-  boxpos := _SHL(boxy, 2) + boxx;
+  boxpos := boxy * 4 + boxx;
   if boxpos = 5 then
   begin
     Result := True;
