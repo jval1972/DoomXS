@@ -795,7 +795,6 @@ begin
     P_SetMobjState(th, S_PUFF3);
 end;
 
-
 // P_SpawnBlood
 procedure P_SpawnBlood(x, y, z: fixed_t; damage: integer);
 var
