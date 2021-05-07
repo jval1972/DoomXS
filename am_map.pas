@@ -307,7 +307,7 @@ end;
 
 function FTOM(x: integer): integer;
 begin
-  Result := FixedMul(_SHL(x, 16), scale_ftom);
+  Result := FixedMul(x * FRACUNIT, scale_ftom);
 end;
 
 function MTOF(x: integer): integer;
@@ -770,9 +770,7 @@ begin
 
 end;
 
-
 // Zooming
-
 procedure AM_changeWindowScale;
 begin
   // Change the scaling multipliers
@@ -1039,7 +1037,7 @@ begin
   end;
 end;
 
-// Clip lines, draw visible part sof lines.
+// Clip lines, draw visible parts of lines.
 var
   fl: fline_t;
 
@@ -1149,7 +1147,7 @@ begin
     end
     else if plr.powers[Ord(pw_allmap)] <> 0 then
     begin
-      if lines[i].flags and LINE_NEVERSEE = 0 then
+      if line.flags and LINE_NEVERSEE = 0 then
         AM_drawMline(@l, GRAYS + 3);
     end;
     inc(line);
