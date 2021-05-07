@@ -88,7 +88,7 @@ type
   Pdivline_t = ^divline_t;
 
   thingORline_t = record
-  case longint of
+    case integer of
     0: (thing: Pmobj_t);
     1: (line: Pline_t);
   end;
