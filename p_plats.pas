@@ -131,10 +131,8 @@ begin
   end;
 end;
 
-
 // Do Platforms
 //  "amount" is only used for SOME platforms.
-
 function EV_DoPlat(line: Pline_t; _type: plattype_e; amount: integer): integer;
 var
   plat: Pplat_t;
@@ -143,7 +141,7 @@ var
 begin
   Result := 0;
 
-  //  Activate all <type> plats that are in_stasis
+  // Activate all <type> plats that are in_stasis
   if _type = perpetualRaise then
     P_ActivateInStasis(line.tag);
 

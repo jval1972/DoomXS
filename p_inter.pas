@@ -272,9 +272,7 @@ begin
   player.cards[Ord(card)] := True;
 end;
 
-
 // P_GivePower
-
 function P_GivePower(player: Pplayer_t; power: (*powertype_t*)integer): boolean;
 begin
   if power = Ord(pw_invulnerability) then
