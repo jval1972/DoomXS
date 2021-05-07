@@ -158,7 +158,6 @@ type
     procedure AppendText(const s: string);
     procedure LoadFromFile(const fname: string);
     procedure SaveToFile(const fname: string);
-    function IndexOf(const s: string): integer;
     function Strings(const i: integer): string;
     function Names(const i: integer): string;
     function Values(const i: integer): string;
@@ -426,19 +425,6 @@ begin
   for i := 0 to fcount - 1 do
     writeln(t, flist[i]);
   closefile(t);
-end;
-
-function TStrList.IndexOf(const s: string): integer;
-var
-  i: integer;
-begin
-  for i := 0 to fcount - 1 do
-    if flist[i] = s then
-    begin
-      Result := i;
-      Exit;
-    end;
-  Result := -1;
 end;
 
 function TStrList.Strings(const i: integer): string;
