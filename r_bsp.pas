@@ -474,11 +474,7 @@ begin
   while solidsegs[start].last < sx2 do
     Inc(start);
 
-  if (sx1 >= solidsegs[start].first) and (sx2 <= solidsegs[start].last) then
-    // The clippost contains the new span.
-    Result := False
-  else
-    Result := True;
+  Result := (sx1 < solidsegs[start].first) or (sx2 > solidsegs[start].last) {then
 end;
 
 // R_Subsector
