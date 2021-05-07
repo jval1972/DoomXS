@@ -1389,7 +1389,7 @@ begin
             sides[buttonlist[i].line.sidenum[0]].bottomtexture := buttonlist[i].btexture;
         end;
         S_StartSound(@buttonlist[i].soundorg, Ord(sfx_swtchn));
-        memset(@buttonlist[i], 0, SizeOf(button_t));
+        ZeroMemory(@buttonlist[i], SizeOf(button_t));
       end;
 
     end;
@@ -1586,7 +1586,7 @@ begin
     activeplats[i] := nil;
 
   for i := 0 to MAXBUTTONS - 1 do
-    memset(@buttonlist[i], 0, SizeOf(button_t));
+    ZeroMemory(@buttonlist[i], SizeOf(button_t));
 end;
 
 end.

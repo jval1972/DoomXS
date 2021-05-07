@@ -523,7 +523,7 @@ begin
   begin
     if playeringame[i] and (players[i].playerstate = PST_DEAD) then
       players[i].playerstate := PST_REBORN;
-    memset(@players[i].frags, 0, SizeOf(players[i].frags));
+    ZeroMemory(@players[i].frags, SizeOf(players[i].frags));
   end;
 
   P_SetupLevel(gameepisode, gamemap, 0, gameskill);
@@ -532,7 +532,7 @@ begin
   gameaction := ga_nothing;
 
   // clear cmd building stuff
-  memset(@gamekeydown, 0, SizeOf(gamekeydown));
+  ZeroMemory(@gamekeydown, SizeOf(gamekeydown));
   joyxmove := 0;
   joyymove := 0;
   mousex := 0;
@@ -540,8 +540,8 @@ begin
   sendpause := false;
   sendsave := false;
   paused := false;
-  memset(mousebuttons, 0, SizeOf(mousebuttons));
-  memset(joybuttons, 0, SizeOf(joybuttons));
+  ZeroMemory(mousebuttons, SizeOf(mousebuttons));
+  ZeroMemory(joybuttons, SizeOf(joybuttons));
 end;
 
 // G_Responder
@@ -821,8 +821,8 @@ end;
 // Can when a player completes a level.
 procedure G_PlayerFinishLevel(p: Pplayer_t);
 begin
-  memset(@p.powers, 0, SizeOf(p.powers));
-  memset(@p.cards, 0, SizeOf(p.cards));
+  ZeroMemory(@p.powers, SizeOf(p.powers));
+  ZeroMemory(@p.cards, SizeOf(p.cards));
   p.mo.flags := p.mo.flags and not MF_SHADOW; // cancel invisibility
   p.extralight := 0;    // cancel gun flashes
   p.fixedcolormap := 0; // cancel ir gogles
@@ -848,7 +848,7 @@ begin
   itemcount := players[player].itemcount;
   secretcount := players[player].secretcount;
 
-  memset(p, 0, SizeOf(player_t));
+  ZeroMemory(p, SizeOf(player_t));
 
   memcpy(@p.frags, @frags, SizeOf(p.frags));
   p.killcount := killcount;

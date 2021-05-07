@@ -489,7 +489,7 @@ var
   info: Pmobjinfo_t;
 begin
   mobj := Z_Malloc(SizeOf(mobj^), PU_LEVEL, nil);
-  memset(mobj, 0, SizeOf(mobj^));
+  ZeroMemory(mobj, SizeOf(mobj^));
   info := @mobjinfo[Ord(typ)];
 
   mobj.typ := typ;

@@ -393,7 +393,7 @@ begin
   if lumpcache = nil then
     I_Error('W_InitMultipleFiles(): Couldn''t allocate lumpcache');
 
-  memset(lumpcache, 0, size);
+  ZeroMemory(lumpcache, size);
 end;
 
 // W_InitFile

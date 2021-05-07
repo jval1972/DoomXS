@@ -72,7 +72,7 @@ var
   v: integer;
   address: TSockAddrIn;
 begin
-  memset(@address, 0, SizeOf(address));
+  ZeroMemory(@address, SizeOf(address));
   address.sin_family := AF_INET;
   address.sin_addr.s_addr := INADDR_ANY;
   address.sin_port := port;

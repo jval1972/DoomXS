@@ -170,7 +170,7 @@ var
 begin
   numsegs := W_LumpLength(lump) div SizeOf(mapseg_t);
   segs := Z_Malloc(numsegs * SizeOf(seg_t), PU_LEVEL, nil);
-  memset(segs, 0, numsegs * SizeOf(seg_t));
+  ZeroMemory(segs, numsegs * SizeOf(seg_t));
   data := W_CacheLumpNum(lump, PU_STATIC);
 
   ml := Pmapseg_t(data);
@@ -211,7 +211,7 @@ begin
   data := W_CacheLumpNum(lump, PU_STATIC);
 
   ms := Pmapsubsector_t(data);
-  memset(subsectors, 0, numsubsectors * SizeOf(subsector_t));
+  ZeroMemory(subsectors, numsubsectors * SizeOf(subsector_t));
 
   for i := 0 to numsubsectors - 1 do
   begin
@@ -234,7 +234,7 @@ var
 begin
   numsectors := W_LumpLength(lump) div SizeOf(mapsector_t);
   sectors := Z_Malloc(numsectors * SizeOf(sector_t), PU_LEVEL, nil);
-  memset(sectors, 0, numsectors * SizeOf(sector_t));
+  ZeroMemory(sectors, numsectors * SizeOf(sector_t));
   data := W_CacheLumpNum(lump, PU_STATIC);
 
   ms := Pmapsector_t(data);
@@ -359,7 +359,7 @@ var
 begin
   numlines := W_LumpLength(lump) div SizeOf(maplinedef_t);
   lines := Z_Malloc(numlines * SizeOf(line_t), PU_LEVEL, nil);
-  memset(lines, 0, numlines * SizeOf(line_t));
+  ZeroMemory(lines, numlines * SizeOf(line_t));
   data := W_CacheLumpNum(lump, PU_STATIC);
 
   mld := Pmaplinedef_t(data);
@@ -441,7 +441,7 @@ var
 begin
   numsides := W_LumpLength(lump) div SizeOf(mapsidedef_t);
   sides := Z_Malloc(numsides * SizeOf(side_t), PU_LEVEL, nil);
-  memset(sides, 0, numsides * SizeOf(side_t));
+  ZeroMemory(sides, numsides * SizeOf(side_t));
   data := W_CacheLumpNum(lump, PU_STATIC);
 
   msd := Pmapsidedef_t(data);
@@ -476,7 +476,7 @@ begin
   // clear out mobj chains
   count := SizeOf(Pmobj_t) * bmapwidth * bmapheight;
   blocklinks := Z_Malloc(count, PU_LEVEL, nil);
-  memset(blocklinks, 0, count);
+  ZeroMemory(blocklinks, count);
 end;
 
 // P_GroupLines

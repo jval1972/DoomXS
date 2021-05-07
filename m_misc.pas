@@ -405,11 +405,11 @@ begin
   pcx.ymax := WORD(height - 1);
   pcx.hres := 1;
   pcx.vres := 1;
-  memset(@pcx.palette, 0, SizeOf(pcx.palette));
+  ZeroMemory(@pcx.palette, SizeOf(pcx.palette));
   pcx.color_planes := 1;    // chunky image
   pcx.bytes_per_line := WORD(width);
   pcx.palette_type := 2;    // not a grey scale
-  memset(@pcx.filler, 0, SizeOf(pcx.filler));
+  ZeroMemory(@pcx.filler, SizeOf(pcx.filler));
 
 
   // pack the image
