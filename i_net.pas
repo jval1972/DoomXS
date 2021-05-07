@@ -37,105 +37,49 @@ implementation
 uses
   WinSock,
   d_delphi,
-  d_event,
   d_net,
-  d_player,
-  g_game,
   i_system,
+  g_game,
   m_argv,
-  doomstat;
-
-const
-  IPPORT_USERRESERVED = 5000;
-
-type
-  socklen_t = integer;
-
-
-// NETWORKING
-
-var
-  DOOMPORT: word;
-  mysocket: TSocket;
-  sendaddress: array[0..MAXNETNODES - 1] of sockaddr_in;
-  sendplayer: array[0..MAXNETNODES] of byte;
+  r_main,
+  tables;
 
 var
   netget: PProcedure;
   netsend: PProcedure;
 
-var
-  sendsocket: integer;
-  insocket: integer;
-
-function neterror: string; forward;
-
 const
-  PRE_DISCONNECT = 1;
+  IPPORT_USERRESERVED = 5000;
 
-  // Set PreGamePacket.fake to this so that the game rejects any pregame packets
-  // after it starts. This translates to NCMD_SETUP|NCMD_MULTI.
-  PRE_FAKE = $30;
-
-type
-  machine_t = record
-    address: LongWord;
-    port: word;
-    player: byte;
-    pad: byte;
-  end;
-
-  PreGamePacket_t = record
-    fake: byte;
-    _message: byte;
-    numnodes: byte;
-    consolenum: byte;
-    machines: array[0..MAXNETNODES - 1] of machine_t;
-  end;
+var
+  DOOMPORT: integer = (IPPORT_USERRESERVED + $1d);
+  sendsocket: TSocket;
+  insocket: TSocket;
+  sendaddress: array[0..MAXNETNODES - 1] of TSockAddrIn;
 
 // UDPsocket
 function UDPsocket: TSocket;
 begin
   // allocate a socket
-  Result := socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if Result = INVALID_SOCKET then
-    I_Error('UDPsocket(): Can not create socket: %s', [neterror]);
+  result := socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if result = INVALID_SOCKET then
+    I_Error('UDPsocket(): Can''t create socket: result = %d'#13#10 , [result]);
 end;
 
 // BindToLocalPort
-procedure BindToLocalPort(s: TSocket; port: word);
+procedure BindToLocalPort(s: integer; port: integer);
 var
   v: integer;
-  address: sockaddr_in;
+  address: TSockAddrIn;
 begin
   memset(@address, 0, SizeOf(address));
   address.sin_family := AF_INET;
   address.sin_addr.s_addr := INADDR_ANY;
-  address.sin_port := htons(port);
+  address.sin_port := port;
 
   v := bind(s, address, SizeOf(address));
-  if v = SOCKET_ERROR then
-    I_Error('BindToLocalPort(): %s', [neterror]);
-end;
-
-function FindNode(const address: sockaddr_in): integer;
-var
-  i: integer;
-begin
-  // find remote node number
-  i := 0;
-  while i < doomcom.numnodes do
-  begin
-    if (address.sin_addr.s_addr = sendaddress[i].sin_addr.s_addr) and
-      (address.sin_port = sendaddress[i].sin_port) then
-      break;
-    Inc(i);
-  end;
-
-  if i = doomcom.numnodes then
-    i := -1;  // packet is not from one of the players (new game broadcast?)
-
-  Result := i;
+  if v = -1 then
+    I_Error('BindToLocalPort(): Failed.');
 end;
 
 // PacketSend
@@ -143,236 +87,67 @@ procedure PacketSend;
 var
   c: integer;
 begin
-  c := sendto(mysocket, doomcom.Data, doomcom.datalength, 0,
-    sendaddress[doomcom.remotenode], SizeOf(sendaddress[doomcom.remotenode]));
+  c := sendto(sendsocket, netbuffer^, doomcom.datalength, 0,
+        sendaddress[doomcom.remotenode], SizeOf(sendaddress[doomcom.remotenode]));
 
-  if c = -1 then
-    I_Error('PacketSend(): sendto() returned -1');
+  if c = SOCKET_ERROR then
+    I_Error('PacketSend(): sendto() failed.');
 end;
-
-const
-  BACKUPTICS = 36;
-  MAX_MSGLEN = BACKUPTICS * 10;
 
 // PacketGet
 procedure PacketGet;
 var
+  i: integer;
   c: integer;
-  fromlen: socklen_t;
-  fromaddress: sockaddr_in;
-  node: integer;
-  err: integer;
+  fromaddress: TSockAddrIn;
+  fromlen: integer;
 begin
   fromlen := SizeOf(fromaddress);
-  c := recvfrom(mysocket, doomcom.Data, MAX_MSGLEN, 0, fromaddress, fromlen);
-  node := FindNode(fromaddress);
-
+  c := recvfrom(insocket, netbuffer^, SizeOf(doomdata_t), 0, fromaddress, fromlen);
   if c = SOCKET_ERROR then
   begin
-    err := WSAGetLastError;
-
-    if (err = WSAECONNRESET) and (node >= 0) then
-    begin
-      // The remote node aborted unexpectedly, so pretend it sent an exit packet
-      printf('The connection from player %d was dropped' + #13#10,
-        [sendplayer[node]]);
-
-      c := 1;
-    end
-    else if err <> WSAEWOULDBLOCK then
-      I_Error('PacketGet(): %s', [neterror])
-    else
-    begin
-      doomcom.remotenode := -1; // no packet
-      exit;
-    end;
+    c := WSAGetLastError;
+    if c <> WSAEWOULDBLOCK then
+      I_Error('PacketGet(): Network error.');
+    doomcom.remotenode := -1;        // no packet
+    exit;
   end;
 
-  doomcom.remotenode := node;
+  // find remote node number
+  i := 0;
+  while i < doomcom.numnodes do
+  begin
+    if fromaddress.sin_addr.s_addr = sendaddress[i].sin_addr.s_addr then
+      break;
+    inc(i);
+  end;
+
+  if i = doomcom.numnodes then
+  begin
+    // packet is not from one of the players (new game broadcast)
+    doomcom.remotenode := -1;        // no packet
+    exit;
+  end;
+
+  doomcom.remotenode := i;  // good packet from a game player
   doomcom.datalength := c;
 end;
 
-var
-  fromaddress_pg: sockaddr_in;
-
-function PreGet(buffer: pointer; bufferlen: integer; noabort: boolean): PSOCKADDR;
-var
-  fromlen: socklen_t;
-  c: integer;
-  err: integer;
-begin
-  fromlen := SizeOf(fromaddress_pg);
-  c := recvfrom(mysocket, buffer^, bufferlen, 0, fromaddress_pg, fromlen);
-
-  if c = SOCKET_ERROR then
-  begin
-    err := WSAGetLastError;
-    if (err = WSAEWOULDBLOCK) or (noabort and (err = WSAECONNRESET)) then
-    begin
-      Result := nil; // no packet
-      exit;
-    end;
-    I_Error('PreGet(): %s', [neterror]);
-  end;
-  Result := @fromaddress_pg;
-end;
-
-procedure PreSend(buffer: pointer; bufferlen: integer; _to: PSOCKADDR);
-begin
-  sendto(mysocket, buffer^, bufferlen, 0, _to^, SizeOf(_to^));
-end;
-
-procedure BuildAddress(address: PSOCKADDR; var Name: string);
-var
-  hostentry: PHostEnt;  // host information entry
-  port: word;
-  portpart: string;
-  isnamed: boolean;
-  pp: integer;
-  i: integer;
-begin
-  isnamed := False;
-
-  address.sin_family := AF_INET;
-
-  pp := Pos(':', Name);
-  if pp > 0 then
-  begin
-    portpart := '';
-    for i := pp + 1 to Length(Name) do
-      portpart := portpart + Name[i];
-    port := atoi(portpart);
-    if port = 0 then
-    begin
-      printf('Weird port: %s (using %d)' + #13#10, [portpart, DOOMPORT]);
-      port := DOOMPORT;
-    end;
-  end
-  else
-    port := DOOMPORT;
-
-  address.sin_port := htons(port);
-
-  for i := 1 to Length(Name) do
-  begin
-    if not (Name[i] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']) then
-    begin
-      isnamed := True;
-      break;
-    end;
-  end;
-
-  if not isnamed then
-  begin
-    address.sin_addr.s_addr := inet_addr(PChar(Name));
-    printf('Node number %d address %s' + #13#10, [doomcom.numnodes, Name]);
-  end
-  else
-  begin
-    hostentry := gethostbyname(PChar(Name));
-    if hostentry = nil then
-      I_Error('gethostbyname(): Could not find %s' + #13#10 + '%s',
-        [Name, neterror]);
-    address.sin_addr.s_addr := LongWord(hostentry.h_addr_list);
-    printf('Node number %d hostname %s' + #13#10,
-      [doomcom.numnodes, StringVal(hostentry.h_name)]);
-  end;
-end;
-
-procedure CloseNetwork;
-begin
-  if mysocket <> INVALID_SOCKET then
-  begin
-    closesocket(mysocket);
-    mysocket := INVALID_SOCKET;
-  end;
-  WSACleanup;
-end;
-
-procedure StartNetwork(autoPort: boolean);
-var
-  trueval: integer;
-  wsad: WSADATA;
-begin
-  trueval := 1;
-  if WSAStartup($0101, wsad) <> 0 then
-    I_Error('StartNetwork(): Could not initialize Windows Sockets');
-
-  CloseNetwork;
-
-  netsend := PacketSend;
-  netget := PacketGet;
-  netgame := True;
-
-  // create communication socket
-  mysocket := UDPsocket;
-  if autoPort then
-    BindToLocalPort(mysocket, 0)
-  else
-    BindToLocalPort(mysocket, DOOMPORT);
-  ioctlsocket(mysocket, FIONBIO, trueval);
-end;
-
-procedure WaitForPlayers(i: integer);
-begin
-  if i = myargc then
-    I_Error('WaitForPlayers(): Not enough parameters after -net');
-
-  StartNetwork(False);
-
-  // parse player number and host list
-  doomcom.consoleplayer := Ord(myargv[i + 1][1]) - Ord('1');
-  printf('Console player number: %d' + #13#10, [doomcom.consoleplayer]);
-
-  doomcom.numnodes := 1;    // this node for sure
-
-  Inc(i, 2);
-  while (i <= myargc) and (myargv[i][1] <> '-') and (myargv[i][1] <> '+') do
-  begin
-    BuildAddress(@sendaddress[doomcom.numnodes], myargv[i]);
-    Inc(doomcom.numnodes);
-    Inc(i);
-  end;
-
-  printf('Total players: %d' + #13#10, [doomcom.numnodes]);
-
-  doomcom.id := DOOMCOM_ID;
-  doomcom.numplayers := doomcom.numnodes;
-end;
-
-procedure SendAbort;
-var
-  dis: array[0..1] of byte;
-begin
-  dis[0] := PRE_FAKE;
-  dis[1] := PRE_DISCONNECT;
-
-  Dec(doomcom.numnodes);
-  while doomcom.numnodes > 0 do
-  begin
-    PreSend(@dis, 2, @sendaddress[doomcom.numnodes]);
-    PreSend(@dis, 2, @sendaddress[doomcom.numnodes]);
-    PreSend(@dis, 2, @sendaddress[doomcom.numnodes]);
-    PreSend(@dis, 2, @sendaddress[doomcom.numnodes]);
-    Dec(doomcom.numnodes);
-  end;
-end;
-
+// I_InitNetwork
 procedure I_InitNetwork;
 var
   trueval: integer;
-  i: integer;
-  j: integer;
+  i, err: integer;
   p: integer;
-  hostentry: PHostEnt; // host information entry
-  addr: string;
+  hostentry: PHostEnt;    // host information entry
+  wsadata: TWSAData;
 begin
   trueval := 1;
-  doomcom := malloc(SizeOf(doomcom^));
+  ZeroMemory(@doomcom, SizeOf(doomcom_t));
 
   // set up for network
   i := M_CheckParm('-dup');
-  if (i <> 0) and (i < myargc - 1) then
+  if (i > 0) and (i < myargc - 1) then
   begin
     doomcom.ticdup := Ord(myargv[i + 1][1]) - Ord('0');
     if doomcom.ticdup < 1 then
@@ -383,16 +158,16 @@ begin
   else
     doomcom.ticdup := 1;
 
-  if M_CheckParm('-extratic') <> 0 then
+  if M_CheckParm('-extratic') > 0 then
     doomcom.extratics := 1
   else
     doomcom.extratics := 0;
 
   p := M_CheckParm('-port');
-  if (p <> 0) and (p < myargc - 1) then
+  if (p > 0) and (p < myargc - 1) then
   begin
     DOOMPORT := atoi(myargv[p + 1]);
-    printf('using alternate port %d' + #13#10, [DOOMPORT]);
+    printf('Using Port %d'#13#10, [DOOMPORT]);
   end;
 
   // parse network game options,
@@ -401,7 +176,7 @@ begin
   if i = 0 then
   begin
     // single player game
-    netgame := False;
+    netgame := false;
     doomcom.id := DOOMCOM_ID;
     doomcom.numplayers := 1;
     doomcom.numnodes := 1;
@@ -410,44 +185,57 @@ begin
     exit;
   end;
 
+  err := WSAStartup($0101, wsadata);
+  if err <> 0 then
+    I_Error('I_InitNetwork(): Could not initialize Windows Sockets, WSAStartup result = %d', [err]);
+
   netsend := PacketSend;
   netget := PacketGet;
-  netgame := True;
+  netgame := true;
 
   // parse player number and host list
   doomcom.consoleplayer := Ord(myargv[i + 1][1]) - Ord('1');
+  printf('console player number: %d'#13#10, [doomcom.consoleplayer]);
 
-  doomcom.numnodes := 1; // this node for sure
+  doomcom.numnodes := 1;    // this node for sure
 
-  Inc(i);
-  while (i < myargc - 1) and (myargv[i + 1][1] <> '-') do
+  inc(i);
+  inc(i);
+  while (i < myargc) and (myargv[i][1] <> '-') do
   begin
-    Inc(i);
     sendaddress[doomcom.numnodes].sin_family := AF_INET;
-    sendaddress[doomcom.numnodes].sin_port := htons(DOOMPORT);
     if myargv[i][1] = '.' then
     begin
-      addr := '';
-      for j := 2 to Length(myargv[i]) do
-        addr := addr + myargv[i][j];
-      sendaddress[doomcom.numnodes].sin_addr.s_addr := inet_addr(PChar(addr));
+      printf('Node number %d address %s'#13#10, [doomcom.numnodes, Copy(myargv[i], 2, Length(myargv[i]) - 1)]);
+      sendaddress[doomcom.numnodes].sin_addr.s_addr := inet_addr(PChar(Copy(myargv[i], 2, Length(myargv[i]) - 1)));
     end
     else
     begin
+      printf('Node number %d hostname %s'#13#10, [doomcom.numnodes, myargv[i]]);
       hostentry := gethostbyname(PChar(myargv[i]));
       if hostentry = nil then
-        I_Error('I_InitNetwork(): gethostbyname: couldn''t find %s', [myargv[i]]);
-      sendaddress[doomcom.numnodes].sin_addr.s_addr := PLongWord(hostentry.h_addr_list)^;
+        I_Error('gethostbyname(): couldn''t find %s', [myargv[i]]);
+      sendaddress[doomcom.numnodes].sin_addr.s_addr := PInteger(hostentry.h_addr_list^)^;
     end;
-    doomcom.numnodes := doomcom.numnodes + 1;
+    inc(i);
+    if (i < myargc) and (myargv[i][1] = ':') then
+    begin
+      printf('Node number %d port %s'#13#10, [doomcom.numnodes, Copy(myargv[i], 2, Length(myargv[i]) - 1)]);
+      sendaddress[doomcom.numnodes].sin_port := htons(atoi(Copy(myargv[i], 2, Length(myargv[i]) - 1)));
+      inc(i);
+    end
+    else
+      sendaddress[doomcom.numnodes].sin_port := htons(DOOMPORT);
+    inc(doomcom.numnodes);
   end;
 
+  printf('Total number of players : %d'#13#10, [doomcom.numnodes]);
   doomcom.id := DOOMCOM_ID;
   doomcom.numplayers := doomcom.numnodes;
 
-  // build message to receive
+// build message to receive
   insocket := UDPsocket;
-  BindToLocalPort(insocket, htons(DOOMPORT));
+  BindToLocalPort(insocket,htons(DOOMPORT));
   ioctlsocket(insocket, FIONBIO, trueval);
 
   sendsocket := UDPsocket;
@@ -462,14 +250,5 @@ begin
   else
     I_Error('I_NetCmd(): Bad net cmd: %d', [doomcom.command]);
 end;
-
-function neterror: string;
-begin
-  Result := '';
-end;
-
-initialization
-  DOOMPORT := (IPPORT_USERRESERVED + 29);
-  mysocket := INVALID_SOCKET;
 
 end.

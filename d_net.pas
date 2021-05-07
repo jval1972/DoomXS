@@ -60,11 +60,8 @@ type
   // Network packet data.
 
   doomdata_t = record
-    // High bit is retransmit request.
-    checksum: LongWord;
-    // Only valid if NCMD_RETRANSMIT.
-    retransmitfrom: byte;
-
+    checksum: LongWord; // High bit is retransmit request.
+    retransmitfrom: byte; // Only valid if NCMD_RETRANSMIT.
     starttic: byte;
     player: byte;
     numtics: byte;
@@ -115,21 +112,19 @@ type
     // 1 = left, 0 = center, -1 = right
     angleoffset: smallint;
 
-    // 1 = drone
-    drone: smallint;
     // The packet data to be sent.
     Data: doomdata_t;
   end;
   Pdoomcom_t = ^doomcom_t;
 
-{ Create any new ticcmds and broadcast to other players. }
+// Create any new ticcmds and broadcast to other players.
 procedure NetUpdate;
 
-{ Broadcasts special packets to other players }
-{  to notify of game exit }
+// Broadcasts special packets to other players
+// to notify of game exit
 procedure D_QuitNetGame;
 
-{? how many ticks to run? }
+//How many ticks to run?
 procedure TryRunTics;
 
 procedure CheckAbort;
@@ -138,11 +133,10 @@ procedure D_CheckNetGame;
 
 var
   netcmds: array[0..MAXPLAYERS - 1] of array[0..(BACKUPTICS) - 1] of ticcmd_t;
-
   maketic: integer;
-
-  doomcom: Pdoomcom_t;
+  doomcom: doomcom_t;
   ticdup: integer;
+  netbuffer: Pdoomdata_t; // points inside doomcom
 
 implementation
 
@@ -163,33 +157,24 @@ const
   NCMD_KILL = $10000000;  // kill game
   NCMD_CHECKSUM = $0fffffff;
 
-var
-  netbuffer: Pdoomdata_t; // points inside doomcom
-
-
 // NETWORKING
 
 // gametic is the tic about to (or currently being) run
 // maketic is the tick that hasn't had control made for it yet
 // nettics[] has the maketics for all players
-
 // a gametic cannot be run until nettics[] > gametic for all players
-
 const
   CRESENDCOUNT = 10;
   PL_DRONE = $80; // bit flag in doomdata->player
 
 var
   localcmds: array[0..(BACKUPTICS) - 1] of ticcmd_t;
-
   nettics: array[0..(MAXNETNODES) - 1] of integer;
   nodeingame: array[0..(MAXNETNODES) - 1] of boolean; // set false as nodes leave game
   remoteresend: array[0..(MAXNETNODES) - 1] of boolean; // set when local needs tics
   resendto: array[0..(MAXNETNODES) - 1] of integer; // set when remote needs tics
   resendcount: array[0..(MAXNETNODES) - 1] of integer;
-
   nodeforplayer: array[0..(MAXPLAYERS) - 1] of integer;
-
   skiptics: integer;
   maxsend: integer; // BACKUPTICS/(2*ticdup)-1
 
@@ -211,7 +196,7 @@ var
 begin
   Result := $1234567;
 
-  p := PLongWordArray(pointer(netbuffer));
+  p := PLongWordArray(netbuffer);
 
   // Hack: first position of doomdata_t is checksum (LongWord)
   for i := 1 to NetbufferSize div 4 do
@@ -371,9 +356,7 @@ begin
   Result := True;
 end;
 
-
 // GetPackets
-
 var
   exitmsg: string;
 
@@ -469,11 +452,9 @@ begin
   end;
 end;
 
-
 // NetUpdate
 // Builds ticcmds for console player,
 // sends out a packet
-
 var
   gametime: integer;
 
@@ -695,11 +676,9 @@ begin
     [consoleplayer + 1, doomcom.numplayers, doomcom.numnodes]);
 end;
 
-
 // D_QuitNetGame
 // Called before quitting to leave a net game
 // without hanging the other players
-
 procedure D_QuitNetGame;
 var
   i, j: integer;
