@@ -63,7 +63,6 @@ var
   showMessages: integer;
 
   menuactive: boolean;
-
   inhelpscreens: boolean;
 
   // Blocky mode, has default, 0 = high, 1 = normal
@@ -123,7 +122,6 @@ const
 
 var
   gammamsg: array[0..4] of string;
-
   // we are going to be entering a savegame string
   saveStringEnter: integer;
   saveSlot: integer;  // which slot to save in
@@ -154,7 +152,6 @@ type
   Pmenuitem_tArray = ^menuitem_tArray;
 
   Pmenu_t = ^menu_t;
-
   menu_t = record
     numitems: smallint; // # of menu items
     prevMenu: Pmenu_t;   // previous menu
@@ -179,7 +176,6 @@ var
 
 
 // PROTOTYPES
-
 procedure M_NewGame(choice: integer); forward;
 procedure M_Episode(choice: integer); forward;
 procedure M_ChooseSkill(choice: integer); forward;
