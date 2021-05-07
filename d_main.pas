@@ -66,21 +66,17 @@ procedure D_StartTitle;
 // wipegamestate can be set to -1 to force a wipe on the next draw
 var
   wipegamestate: integer = Ord(GS_DEMOSCREEN);
-
-  nomonsters: boolean;        // checkparm of -nomonsters
-  fastparm: boolean;          // checkparm of -fast
-  devparm: boolean;       // started game with -devparm
+  nomonsters: boolean;  // checkparm of -nomonsters
+  fastparm: boolean;    // checkparm of -fast
+  devparm: boolean;     // started game with -devparm
   singletics: boolean = False; // debug flag to cancel adaptiveness
   autostart: boolean;
   startskill: skill_t;
-  respawnparm: boolean;   // checkparm of -respawn
-
+  respawnparm: boolean; // checkparm of -respawn
   startepisode: integer;
   startmap: integer;
   advancedemo: boolean;
-
   basedefault: string;  // default file
-
 
 implementation
 
@@ -130,19 +126,13 @@ procedure D_ProcessEvents;
 var
   ev: Pevent_t;
 begin
-  // IF STORE DEMO, DO NOT ACCEPT INPUT
-  if (gamemode = commercial) and (W_CheckNumForName('map01') < 0) then
-    exit;
-
   if I_GameFinished then
     exit;
 
   while eventtail <> eventhead do
   begin
     ev := @events[eventtail];
-    if M_Responder(ev) then
-    // menu ate the event
-    else
+    if not M_Responder(ev) then // menu ate the event
       G_Responder(ev);
     if I_GameFinished then
     begin
@@ -352,10 +342,8 @@ begin
   V_DrawPatch(0, 0, 0, W_CacheLumpName(pagename, PU_CACHE), True);
 end;
 
-
 // D_AdvanceDemo
 // Called after each demo or intro demosequence finishes
-
 procedure D_AdvanceDemo;
 begin
   advancedemo := True;
@@ -610,7 +598,6 @@ begin
 end;
 
 // Find a Response File
-
 // JVAL: Changed to handle more than 1 response files
 procedure FindResponseFile;
 var
@@ -620,7 +607,7 @@ var
   index: integer;
   myargv1: string;
   infile: string;
-  _file: string;
+  f: string;
   s: TStrList;
 begin
   s := TStrList.Create;
@@ -646,16 +633,16 @@ begin
 
         size := FileSize(handle);
         seek(handle, 0);
-        SetLength(_file, size);
-        BlockRead(handle, (@_file[1])^, size);
+        SetLength(f, size);
+        BlockRead(handle, (@f[1])^, size);
         Close(handle);
 
         infile := '';
-        for index := 1 to Length(_file) do
-          if _file[index] = ' ' then
+        for index := 1 to Length(f) do
+          if f[index] = ' ' then
             infile := infile + #13#10
           else
-            infile := infile + _file[i];
+            infile := infile + f[i];
 
         s.AppendText(infile);
       end
@@ -678,9 +665,7 @@ begin
   end;
 end;
 
-
 // D_DoomMain
-
 procedure D_DoomMain;
 var
   p: integer;
@@ -697,7 +682,6 @@ begin
   M_InitArgv;
 
   FindResponseFile;
-
   IdentifyVersion;
 
   printf('I_InitializeIO: Initializing input/output streams.' + #13#10);
