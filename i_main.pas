@@ -117,7 +117,7 @@ begin
     nil);
 
   SetWindowLong(hMainWnd, GWL_STYLE, 0);
-  
+
   D_DoomMain;
 end;
 
