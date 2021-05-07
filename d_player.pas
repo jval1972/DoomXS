@@ -33,7 +33,6 @@ uses
 // of other structs: items (internal inventory),
 // animation states (closely tied to the sprites
 // used to represent them, unfortunately).
-  d_items,
   p_pspr_h,
 // In addition, the player is just a special
 // case of the generic moving object/actor.
@@ -45,37 +44,24 @@ uses
   m_fixed,
   doomdef;
 
-  { }
-  { Player states. }
-  { }
-
+// Player states. 
 type
   playerstate_t = (
-  { Playing or camping. }
-    PST_LIVE,
-  { Dead on the ground, view follows killer. }
-    PST_DEAD,
-  { Ready to restart/respawn??? }
-    PST_REBORN);
+    PST_LIVE,   // Playing or camping.
+    PST_DEAD,   // Dead on the ground, view follows killer.
+    PST_REBORN  // Ready to restart/respawn???
+  );
 
-  { }
-  { Player internal flags, for cheats and debug. }
-  { }
-
+// Player internal flags, for cheats and debug.
 const
-  { No clipping, walk through barriers. }
-    CF_NOCLIP = 1;
-  { No damage, no health loss. }
-    CF_GODMODE = 2;
-  { Not really a cheat, just a debug aid. }
-    CF_NOMOMENTUM = 4;
+    CF_NOCLIP = 1;      // No clipping, walk through barriers.
+    CF_GODMODE = 2;     // No damage, no health loss.
+    CF_NOMOMENTUM = 4;  // Not really a cheat, just a debug aid.
 
 type
-  { }
-  { Extended player object info: player_t }
-  { }
+// Extended player object info: player_t
   player_t = record
-    mo : Pmobj_t;
+    mo: Pmobj_t;
     playerstate: playerstate_t;
     cmd: ticcmd_t;
 
@@ -158,21 +144,17 @@ type
   end;
   Pplayer_t = ^player_t;
 
-  { }
-  { INTERMISSION }
-  { Structure passed e.g. to WI_Start(wb) }
-  { }
-
+// INTERMISSION
+// Structure passed e.g. to WI_Start(wb)
   wbplayerstruct_t = record
-    _in : boolean; // whether the player is in game
+    _in: boolean; // whether the player is in game
 
     // Player stats, kills, collected items etc.
-    skills : integer;
-    sitems : integer;
-    ssecret : integer;
-    stime : integer;
-    frags : array[0..3] of integer;
-    score : integer; // current score on entry, modified on return
+    skills: integer;
+    sitems: integer;
+    ssecret: integer;
+    stime: integer;
+    frags: array[0..MAXPLAYERS - 1] of integer;
   end;
   Pwbplayerstruct_t = ^wbplayerstruct_t;
   wbplayerstruct_tArray = packed array[0..$FFFF] of wbplayerstruct_t;
@@ -199,7 +181,7 @@ type
     // index of this player in game
     pnum: integer;
 
-    plyr: array[0..MAXPLAYERS-1] of wbplayerstruct_t;
+    plyr: array[0..MAXPLAYERS - 1] of wbplayerstruct_t;
   end;
   Pwbstartstruct_t = ^wbstartstruct_t;
 
