@@ -29,7 +29,6 @@ unit p_telept;
 interface
 
 uses
-  
   p_mobj_h,
   r_defs;
 
@@ -39,7 +38,6 @@ function EV_Teleport(line: Pline_t; side: integer; thing: Pmobj_t): integer;
 implementation
 
 uses
-  
   doomdef,
   doomstat,
   d_think,
@@ -158,4 +156,3 @@ begin
 end;
 
 end.
-

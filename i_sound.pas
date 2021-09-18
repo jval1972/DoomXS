@@ -69,10 +69,8 @@ uses
   mmsystem,
   z_memory,
   m_argv,
-  
   i_system,
   i_main,
-  
   w_wad;
 
 // The number of internal mixing channels,
@@ -497,5 +495,3 @@ begin
 end;
 
 end.
-
-

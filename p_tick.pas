@@ -29,8 +29,6 @@ unit p_tick;
 interface
 
 uses
-  
-  
   d_think;
 
 // THINKERS
@@ -57,7 +55,6 @@ var
 implementation
 
 uses
-  
   doomdef,
   d_player,
   g_game,
@@ -146,4 +143,3 @@ begin
 end;
 
 end.
-

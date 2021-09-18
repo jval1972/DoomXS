@@ -76,13 +76,11 @@ uses
   d_delphi,
   tables,
   d_items,
-  
   i_video,
   z_memory,
   w_wad,
   g_game,
   st_lib,
-  
   p_inter,
   d_player,
   r_defs,
@@ -444,15 +442,7 @@ end;
 
 procedure ST_FinishRefresh;
 begin
-  V_CopyRect(ST_X,
-             0,
-             SCN_ST,
-             ST_WIDTH,
-             ST_HEIGHT,
-             ST_X,
-             ST_Y,
-             SCN_FG,
-             True);
+  V_CopyRect(ST_X, 0, SCN_ST, ST_WIDTH, ST_HEIGHT, ST_X, ST_Y, SCN_FG, True);
 end;
 
 // Respond to keyboard input events,
@@ -1367,7 +1357,3 @@ initialization
   cheat_mypos.p := '';
 
 end.
-
-
-
-

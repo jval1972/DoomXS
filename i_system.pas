@@ -287,7 +287,3 @@ initialization
     Freq := 1000;
 
 end.
-
-
-
-

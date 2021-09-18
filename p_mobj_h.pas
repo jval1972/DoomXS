@@ -127,78 +127,59 @@ type
   mobj_t = record
     // List: thinker links.
     thinker: thinker_t;
-
     // Info for drawing: position.
     x: fixed_t;
     y: fixed_t;
     z: fixed_t;
-
     // More list: links in sector (if needed)
     snext: Pmobj_t;
     sprev: Pmobj_t;
-
     //More drawing info: to determine current sprite.
     angle: angle_t; // orientation
     sprite: spritenum_t; // used to find patch_t and flip value
     frame: integer; // might be ORed with FF_FULLBRIGHT
-
     // Interaction info, by BLOCKMAP.
     // Links in blocks (if needed).
     bnext: Pmobj_t;
     bprev: Pmobj_t;
-
     subsector: pointer; //Psubsector_t;
-
     // The closest interval over all contacted Sectors.
     floorz: fixed_t;
     ceilingz: fixed_t;
-
     // For movement checking.
     radius: fixed_t;
     height: fixed_t;
-
     // Momentums, used to update position.
     momx: fixed_t;
     momy: fixed_t;
     momz: fixed_t;
-
     // If == validcount, already checked.
     validcount: integer;
-
     typ: mobjtype_t;
     info: Pmobjinfo_t; // &mobjinfo[mobj->type]
-
     tics: integer; // state tic counter
     state: Pstate_t;
     flags: integer;
     health: integer;
-
     // Movement direction, movement generation (zig-zagging).
     movedir: integer; // 0-7
     movecount: integer; // when 0, select a new dir
-
     // Thing being chased/attacked (or NULL),
     // also the originator for missiles.
     target: Pmobj_t;
-
     // Reaction time: if non 0, don't attack yet.
     // Used by player to freeze a bit after teleporting.
     reactiontime: integer;
-
     // If >0, the target will be chased
     // no matter what (even if shot)
     threshold: integer;
-
     // Additional info record for player avatars only.
     // Only valid if type == MT_PLAYER
     player: pointer; //Pplayer_t;
-
     // Player number last looked for.
     lastlook: integer;
-
     // For nightmare respawn.
     spawnpoint: mapthing_t;
-
     // Thing being chased/attacked for tracers.
     tracer: Pmobj_t;
   end;

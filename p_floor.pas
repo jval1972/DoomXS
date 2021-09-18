@@ -34,7 +34,6 @@ uses
   m_fixed,
   r_defs,
   s_sound,
-  
   sounds;
 
 // FLOORS
@@ -55,7 +54,6 @@ uses
   doomdata,
   p_map,
   p_tick,
-  
   p_setup,
   r_data;
 
@@ -517,6 +515,3 @@ begin
 end;
 
 end.
-
-
-

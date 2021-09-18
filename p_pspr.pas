@@ -98,7 +98,6 @@ uses
   d_items,
   m_rnd,
   p_local,
-  
   p_tick,
   p_mobj,
   p_enemy,
@@ -725,5 +724,3 @@ begin
 end;
 
 end.
-
-

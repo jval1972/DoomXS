@@ -171,7 +171,6 @@ var
 implementation
 
 uses
-  
   m_fixed;
 
 // x and y translation tables for stretcing
@@ -553,4 +552,3 @@ begin
 end;
 
 end.
-

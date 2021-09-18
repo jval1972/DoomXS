@@ -806,4 +806,3 @@ initialization
   destination_keys[3] := HUSTR_KEYRED;
 
 end.
-

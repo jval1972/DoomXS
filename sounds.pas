@@ -74,7 +74,6 @@ type
 //
 // Identifiers for all music in game.
 //
-
   musicenum_t = (
     mus_None,
     mus_e1m1,
@@ -338,7 +337,6 @@ var
   S_sfx: array[0..108] of sfxinfo_t = (
   // S_sfx[0] needs to be a dummy for odd reasons.
     (name: 'none';   singularity: False; priority:   0; link: nil; pitch: -1; volume: -1; data: nil; usefulness: 0; lumpnum: 0),
-
     (name: 'pistol'; singularity: False; priority:  64; link: nil; pitch: -1; volume: -1; data: nil; usefulness: 0; lumpnum: 0),
     (name: 'shotgn'; singularity: False; priority:  64; link: nil; pitch: -1; volume: -1; data: nil; usefulness: 0; lumpnum: 0),
     (name: 'sgcock'; singularity: False; priority:  64; link: nil; pitch: -1; volume: -1; data: nil; usefulness: 0; lumpnum: 0),

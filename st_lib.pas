@@ -44,19 +44,13 @@ type
     //  of the number (right-justified)
     x: integer;
     y: integer;
-
     width: integer; // max # of digits in number
-
     oldnum: integer;  // last number value
-
     num: PInteger;  // pointer to current value
-
     // pointer to boolean stating
     //  whether to update number
     _on: PBoolean;
-
     p: Ppatch_tPArray;  // list of patches for 0-9
-
     data: integer;  // user data
   end;
   Pst_number_t = ^st_number_t;
@@ -74,17 +68,12 @@ type
     // center-justified location of icons
     x: integer;
     y: integer;
-
     oldinum: integer; // last icon number
-
     inum: PInteger; // pointer to current icon
-
     // pointer to boolean stating
     //  whether to update icon
     _on: PBoolean;
-
     p: Ppatch_tPArray;  // list of icons
-
     data: integer;  // user data
   end;
   Pst_multicon_t = ^st_multicon_t;
@@ -94,15 +83,11 @@ type
     // center-justified location of icon
     x: integer;
     y: integer;
-
     oldval: boolean;  // last icon value
-
     val: PBoolean;  // pointer to current icon status
-
     // pointer to boolean
     //  stating whether to update icon
     _on: PBoolean;
-
     p: Ppatch_t;   // icon
     data: integer; // user data
   end;
@@ -144,7 +129,6 @@ procedure STlib_updateBinIcon(bi: Pst_binicon_t; refresh: boolean);
 implementation
 
 uses
-  
   z_memory,
   v_video,
   i_system,
@@ -320,6 +304,3 @@ begin
 end;
 
 end.
-
-
-

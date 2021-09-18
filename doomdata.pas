@@ -29,8 +29,6 @@ unit doomdata;
 interface
 
 uses
-  // Some global defines, that configure the game.
-  
   // char8_t
   w_wad;
 
@@ -201,4 +199,3 @@ type
 implementation
 
 end.
-

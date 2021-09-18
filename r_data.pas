@@ -80,12 +80,9 @@ procedure R_SetupLevel;
 implementation
 
 uses
-  
-  
   d_think,
   g_game,
   i_system,
-  
   p_setup,
   p_tick,
   p_mobj_h,
@@ -768,5 +765,3 @@ begin
 end;
 
 end.
-
-

@@ -42,9 +42,7 @@ implementation
 
 uses
   d_delphi,
-  
   doomdata,
-  
   p_local,
   p_setup,
   r_defs,
@@ -365,6 +363,3 @@ begin
 end;
 
 end.
-
-
-

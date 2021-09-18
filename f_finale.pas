@@ -56,7 +56,6 @@ uses
   r_defs,
   r_things,
 // Functions.
-  
   z_memory,
   v_video,
   w_wad,
@@ -779,8 +778,3 @@ initialization
   castorder[17].casttype := mobjtype_t(0);
 
 end.
-
-
-
-
-

@@ -73,8 +73,6 @@ implementation
 
 uses
   d_delphi,
-  
-  
   tables,
   i_system,
   r_sky,
@@ -416,5 +414,3 @@ begin
 end;
 
 end.
-
-

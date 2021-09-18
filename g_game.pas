@@ -1703,8 +1703,3 @@ initialization
   joybuttons := @joyarray[0];
 
 end.
-
-
-
-
-

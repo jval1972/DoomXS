@@ -90,10 +90,7 @@ var
 implementation
 
 uses
-  
-  
   doomdata,
-  
   r_main,
   r_data,
   r_bsp,
@@ -809,7 +806,3 @@ begin
 end;
 
 end.
-
-
-
-

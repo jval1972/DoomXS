@@ -31,8 +31,6 @@ interface
 uses
   d_delphi,
   tables,
-  // Screenwidth.
-  
   // Some more or less basic data types
   // we depend on.
   m_fixed,
@@ -318,7 +316,6 @@ type
     mobjflags: integer;
   end;
 
-
   // Sprites are patches with a special naming convention
   //  so they can be recognized by R_InitSprites.
   // The base name is NNNNFx or NNNNFxFx, with
@@ -332,7 +329,6 @@ type
   //  thus NNNNF2F5 defines a mirrored patch.
   // Some sprites will only have one picture used
   // for all views: NNNNF0
-
   spriteframe_t = packed record
     // If False use 0 for any position.
     // Note: as eight entries are available,
@@ -387,5 +383,3 @@ type
 implementation
 
 end.
-
-

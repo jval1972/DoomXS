@@ -50,12 +50,10 @@ procedure P_RemoveActivePlat(plat: Pplat_t);
 implementation
 
 uses
-  
   doomdef,
   m_fixed,
   i_system,
   m_rnd,
-  
   p_tick,
   p_floor,
   p_setup,
@@ -285,4 +283,3 @@ begin
 end;
 
 end.
-

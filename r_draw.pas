@@ -108,11 +108,8 @@ implementation
 
 uses
   doomdef,
-  
-  
   w_wad,
   z_memory,
-  
   r_data,
   r_main,
   st_stuff,
@@ -612,6 +609,3 @@ begin
 end;
 
 end.
-
-
-

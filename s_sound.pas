@@ -94,7 +94,6 @@ uses
   m_fixed,
   m_rnd,
   p_mobj_h,
-  
   sounds,
   z_memory,
   w_wad,
@@ -627,7 +626,3 @@ begin
 end;
 
 end.
-
-
-
-

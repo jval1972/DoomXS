@@ -33,7 +33,6 @@ uses
   p_spec,
   r_defs,
   s_sound,
-  
   sounds;
 
 var
@@ -51,7 +50,6 @@ implementation
 
 uses
   m_fixed,
-  
   p_tick,
   p_setup,
   p_floor;
@@ -292,4 +290,3 @@ begin
 end;
 
 end.
-

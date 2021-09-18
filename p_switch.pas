@@ -45,9 +45,7 @@ var
 implementation
 
 uses
-  
   doomdata,
-  
   p_setup,
   p_lights,
   p_plats,
@@ -669,4 +667,3 @@ begin
 end;
 
 end.
-

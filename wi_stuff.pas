@@ -61,7 +61,6 @@ uses
   d_event,
   z_memory,
   m_rnd,
-  
   w_wad,
   g_game,
   s_sound,
@@ -1696,7 +1695,3 @@ initialization
   anims[3] := nil;
 
 end.
-
-
-
-

@@ -35,7 +35,6 @@ uses
   p_spec,
   r_defs,
   s_sound,
-  
   d_englsh,
   sounds;
 
@@ -497,4 +496,3 @@ begin
 end;
 
 end.
-

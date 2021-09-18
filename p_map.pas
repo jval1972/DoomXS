@@ -32,7 +32,6 @@ uses
   m_bbox,
   m_rnd,
   i_system,
-  
   p_local,
   p_mobj_h,
   s_sound,
@@ -40,7 +39,6 @@ uses
   tables,
   d_player,
   r_defs,
-  
   sounds;
 
 function P_TeleportMove(thing: Pmobj_t; x, y: fixed_t): boolean;
@@ -95,7 +93,6 @@ uses
   doomdata,
   g_game,
   info_h,
-  
   p_setup,
   p_maputl,
   p_inter,
@@ -1409,7 +1406,3 @@ begin
 end;
 
 end.
-
-
-
-
