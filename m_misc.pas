@@ -68,14 +68,14 @@ begin
   {$I+}
   if IOResult <> 0 then
   begin
-    result := false;
-    exit;
+    Result := False;
+    Exit;
   end;
 
   BlockWrite(handle, source^, len, count);
   close(handle);
 
-  result := count > 0;
+  Result := count > 0;
 end;
 
 function M_ReadFile(const name: string; var buffer: Pointer): integer;
@@ -90,12 +90,12 @@ begin
   if IOResult <> 0 then
     I_Error('M_ReadFile(): Could not read file %s', [name]);
 
-  result := FileSize(handle);
-  buffer := Z_Malloc(result, PU_STATIC, nil);
-  BlockRead(handle, buffer^, result, count);
+  Result := FileSize(handle);
+  buffer := Z_Malloc(Result, PU_STATIC, nil);
+  BlockRead(handle, buffer^, Result, count);
   close(handle);
 
-  if count < result then
+  if count < Result then
     I_Error('M_ReadFile(): Could not read file %s', [name]);
 end;
 
