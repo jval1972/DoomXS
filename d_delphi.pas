@@ -535,21 +535,21 @@ end;
 function toupper(ch: char): char;
 asm
   CMP     AL,'a'
-  JB      @@exit
+  JB      @@Exit
   CMP     AL,'z'
-  JA      @@exit
+  JA      @@Exit
   SUB     AL,'a' - 'A'
-@@exit:
+@@Exit:
 end;
 
 function tolower(ch: char): char;
 asm
   CMP     AL,'A'
-  JB      @@exit
+  JB      @@Exit
   CMP     AL,'Z'
-  JA      @@exit
+  JA      @@Exit
   SUB     AL,'A' - 'a'
-@@exit:
+@@Exit:
 end;
 
 function _SHL(const x: integer; const bits: integer): integer; assembler;

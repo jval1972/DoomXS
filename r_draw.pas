@@ -172,7 +172,7 @@ begin
 
   // Zero length, column does not exceed a pixel.
   if count < 0 then
-    exit;
+    Exit;
 
   // Framebuffer destination address.
   // Use ylookup LUT to avoid multiply with ScreenWidth.
@@ -231,7 +231,7 @@ begin
 
   // Zero length, column does not exceed a pixel.
   if count < 0 then
-    exit;
+    Exit;
 
   // Framebuffer destination address.
   // Use ylookup LUT to avoid multiply with ScreenWidth.
@@ -301,7 +301,7 @@ begin
 
   // Zero length.
   if count < 0 then
-    exit;
+    Exit;
 
   // Does not work with blocky mode.
   dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
@@ -345,7 +345,7 @@ begin
 
   count := dc_yh - dc_yl;
   if count < 0 then
-    exit;
+    Exit;
 
   // FIXME. As above.
   dest := @((ylookup[dc_yl]^)[columnofs[dc_x]]);
@@ -526,7 +526,7 @@ var
   tscaledviewwidth: integer;
 begin
   if scaledviewwidth = SCREENWIDTH then
-    exit;
+    Exit;
 
   if gamemode = commercial then
     name := 'GRNROCK'   // DOOM II border patch.
@@ -554,7 +554,7 @@ begin
   x := 0;
   while x < tscaledviewwidth do
   begin
-    V_DrawPatch(tviewwindowx + x, tviewwindowy - 8, SCN_TMP, patch, false);
+    V_DrawPatch(tviewwindowx + x, tviewwindowy - 8, SCN_TMP, patch, False);
     x := x + 8;
   end;
 
@@ -562,7 +562,7 @@ begin
   x := 0;
   while x < tscaledviewwidth do
   begin
-    V_DrawPatch(tviewwindowx + x, tviewwindowy + tviewheight, SCN_TMP, patch, false);
+    V_DrawPatch(tviewwindowx + x, tviewwindowy + tviewheight, SCN_TMP, patch, False);
     x := x + 8;
   end;
 
@@ -570,7 +570,7 @@ begin
   y := 0;
   while y < tviewheight do
   begin
-    V_DrawPatch(tviewwindowx - 8, tviewwindowy + y, SCN_TMP, patch, false);
+    V_DrawPatch(tviewwindowx - 8, tviewwindowy + y, SCN_TMP, patch, False);
     y := y + 8;
   end;
 
@@ -578,24 +578,24 @@ begin
   y := 0;
   while y < tviewheight do
   begin
-    V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + y, SCN_TMP, patch, false);
+    V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + y, SCN_TMP, patch, False);
     y := y + 8;
   end;
 
   // Draw beveled edge.
   V_DrawPatch(tviewwindowx - 8, tviewwindowy - 8, SCN_TMP,
-    W_CacheLumpName('brdr_tl', PU_CACHE), false);
+    W_CacheLumpName('brdr_tl', PU_CACHE), False);
 
   V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy - 8, SCN_TMP,
-    W_CacheLumpName('brdr_tr', PU_CACHE), false);
+    W_CacheLumpName('brdr_tr', PU_CACHE), False);
 
   V_DrawPatch(tviewwindowx - 8, tviewwindowy + tviewheight, SCN_TMP,
-    W_CacheLumpName('brdr_bl', PU_CACHE), false);
+    W_CacheLumpName('brdr_bl', PU_CACHE), False);
 
   V_DrawPatch(tviewwindowx + tscaledviewwidth, tviewwindowy + tviewheight, SCN_TMP,
-    W_CacheLumpName('brdr_br', PU_CACHE), false);
+    W_CacheLumpName('brdr_br', PU_CACHE), False);
 
-  V_CopyRect(0, 0, SCN_TMP, 320, 200, 0, 0, SCN_BG, true);
+  V_CopyRect(0, 0, SCN_TMP, 320, 200, 0, 0, SCN_BG, True);
 end;
 
 //
@@ -612,3 +612,6 @@ begin
 end;
 
 end.
+
+
+

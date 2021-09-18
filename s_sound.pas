@@ -173,7 +173,7 @@ begin
     channels[i].sfxinfo := nil;
 
   // no sounds are playing, and they are not mus_paused
-  mus_paused := false;
+  mus_paused := False;
 
   // Note that sounds have not been cached (yet).
   for i := 1 to Ord(NUMSFX) - 1 do
@@ -198,7 +198,7 @@ begin
       S_StopChannel(cnum);
 
   // start new music for the level
-  mus_paused := false;
+  mus_paused := False;
 
   if gamemode = commercial then
     mnum := Ord(mus_runnin) + gamemap - 1
@@ -224,7 +224,7 @@ begin
     end;
   end;
 
-  S_ChangeMusic(mnum, true);
+  S_ChangeMusic(mnum, True);
 end;
 
 procedure S_StartSoundAtVolume(origin_p: pointer; sfx_id: integer; volume: integer);
@@ -253,7 +253,7 @@ begin
     volume := volume + sfx.volume;
 
     if volume < 1 then
-      exit;
+      Exit;
 
     if volume > snd_SfxVolume then
       volume := snd_SfxVolume;
@@ -278,7 +278,7 @@ begin
       sep := NORM_SEP;
 
     if not rc then
-      exit;
+      Exit;
   end
   else
     sep := NORM_SEP;
@@ -311,7 +311,7 @@ begin
   cnum := S_GetChannel(origin, sfx);
 
   if cnum < 0 then
-    exit;
+    Exit;
 
   // This is supposed to handle the loading/caching.
   // For some odd reason, the caching is done nearly
@@ -354,7 +354,7 @@ begin
   if (mus_playing <> nil) and not mus_paused then
   begin
     I_PauseSong(mus_playing.handle);
-    mus_paused := true;
+    mus_paused := True;
   end;
 end;
 
@@ -363,7 +363,7 @@ begin
   if (mus_playing <> nil) and mus_paused then
   begin
     I_ResumeSong(mus_playing.handle);
-    mus_paused := false;
+    mus_paused := False;
   end;
 end;
 
@@ -448,7 +448,7 @@ end;
 // Starts some music with the music id found in sounds.h.
 procedure S_StartMusic(music_id: integer);
 begin
-  S_ChangeMusic(music_id, false);
+  S_ChangeMusic(music_id, False);
 end;
 
 procedure S_ChangeMusic(musicnum: integer; looping: boolean);
@@ -461,7 +461,7 @@ begin
   music := @S_music[musicnum];
 
   if mus_playing = music then
-    exit;
+    Exit;
 
   // shutdown old music
   S_StopMusic;
@@ -537,8 +537,8 @@ begin
 
   if (gamemap <> 8) and (approx_dist > S_CLIPPING_DIST) then
   begin
-    result := false;
-    exit;
+    Result := False;
+    Exit;
   end;
 
   // angle of source to listener
@@ -570,7 +570,7 @@ begin
     vol^ := (snd_SfxVolume * ((S_CLIPPING_DIST - approx_dist) div FRACUNIT)) div
               S_ATTENUATOR;
 
-  result := vol^ > 0;
+  Result := vol^ > 0;
 end;
 
 // S_GetChannel :
@@ -610,8 +610,8 @@ begin
     if cnum = numChannels then
     begin
       // FUCK!  No lower priority.  Sorry, Charlie.
-      result := -1;
-      exit;
+      Result := -1;
+      Exit;
     end
     else
       S_StopChannel(cnum); // Otherwise, kick out lower priority.
@@ -623,7 +623,11 @@ begin
   c.sfxinfo := sfxinfo;
   c.origin := origin;
 
-  result := cnum;
+  Result := cnum;
 end;
 
 end.
+
+
+
+

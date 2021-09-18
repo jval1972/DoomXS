@@ -183,7 +183,7 @@ begin
 end;
 
 // P_CheckAmmo
-// Returns true if there is enough ammo to shoot.
+// Returns True if there is enough ammo to shoot.
 // If not, selects the next weapon to use.
 function P_CheckAmmo(player: Pplayer_t): boolean;
 var
@@ -205,7 +205,7 @@ begin
   if (ammo = am_noammo) or (player.ammo[Ord(ammo)] >= count) then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // Out of ammo, pick a weapon to change to.
@@ -293,7 +293,7 @@ begin
     //  (pending weapon should allready be validated)
     newstate := statenum_t(weaponinfo[Ord(player.readyweapon)].downstate);
     P_SetPsprite(player, Ord(ps_weapon), newstate);
-    exit;
+    Exit;
   end;
 
   // check for fire
@@ -305,7 +305,7 @@ begin
     begin
       player.attackdown := True;
       P_FireWeapon(player);
-      exit;
+      Exit;
     end;
   end
   else
@@ -352,14 +352,14 @@ begin
 
   // Is already down.
   if psp.sy < WEAPONBOTTOM then
-    exit;
+    Exit;
 
   // Player is dead.
   if player.playerstate = PST_DEAD then
   begin
     psp.sy := WEAPONBOTTOM;
     // don't bring weapon back up
-    exit;
+    Exit;
   end;
 
   // The old weapon has been lowered off the screen,
@@ -368,7 +368,7 @@ begin
   begin
     // Player is dead, so keep the weapon off screen.
     P_SetPsprite(player, Ord(ps_weapon), S_NULL);
-    exit;
+    Exit;
   end;
 
   player.readyweapon := player.pendingweapon;
@@ -384,7 +384,7 @@ begin
   psp.sy := psp.sy - RAISESPEED;
 
   if psp.sy > WEAPONTOP then
-    exit;
+    Exit;
 
   psp.sy := WEAPONTOP;
 
@@ -449,7 +449,7 @@ begin
   if linetarget = nil then
   begin
     S_StartSound(player.mo, Ord(sfx_sawful));
-    exit;
+    Exit;
   end;
 
   S_StartSound(player.mo, Ord(sfx_sawhit));
@@ -609,7 +609,7 @@ begin
   S_StartSound(player.mo, Ord(sfx_pistol));
 
   if player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)] = 0 then
-    exit;
+    Exit;
 
   P_SetMobjState(player.mo, S_PLAY_ATK2);
   Dec(player.ammo[Ord(weaponinfo[Ord(player.readyweapon)].ammo)]);
@@ -725,3 +725,5 @@ begin
 end;
 
 end.
+
+

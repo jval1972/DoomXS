@@ -106,7 +106,7 @@ begin
     if player.viewz > player.mo.ceilingz - 4 * FRACUNIT then
       player.viewz := player.mo.ceilingz - 4 * FRACUNIT;
 
-    exit;
+    Exit;
   end;
 
   angle := (FINEANGLES div 20 * leveltime) and FINEMASK;
@@ -245,7 +245,7 @@ begin
   if player.playerstate = PST_DEAD then
   begin
     P_DeathThink(player);
-    exit;
+    Exit;
   end;
 
   // Move around.

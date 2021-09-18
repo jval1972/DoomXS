@@ -52,7 +52,7 @@ type
 { Use button, to open doors, activate switches. }
 { Flag: game events, not really buttons. }
 { Flag, weapon change pending. }
-{ If true, the next 3 bits hold weapon num. }
+{ If True, the next 3 bits hold weapon num. }
 { The 3bit weapon mask and shift, convenience. }
 { Pause the game. }
 { Save the game at each console. }
@@ -68,7 +68,7 @@ const
   BT_SPECIAL = 128;
   BT_SPECIALMASK = 3;
   // Flag, weapon change pending.
-  // If true, the next 3 bits hold weapon num.
+  // If True, the next 3 bits hold weapon num.
   BT_CHANGE = 4;
   // The 3bit weapon mask and shift, convenience.
   BT_WEAPONMASK = (8 + 16 + 32);

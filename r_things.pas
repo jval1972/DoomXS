@@ -137,7 +137,7 @@ begin
       sprtemp[frame].lump[r] := lump - firstspritelump;
       sprtemp[frame].flip[r] := flipped;
     end;
-    exit;
+    Exit;
   end;
 
   // the lump is only used for one rotation
@@ -183,7 +183,7 @@ procedure R_InitSpriteDefs(namelist: PsprnamesArray_t);
       for j := 0 to 7 do
       begin
         sprtemp[i].lump[j] := -1;
-        sprtemp[i].flip[j] := false;
+        sprtemp[i].flip[j] := False;
       end;
     end;
   end;
@@ -204,7 +204,7 @@ begin
     inc(numsprites);
 
   if numsprites = 0 then
-    exit;
+    Exit;
 
   sprites := Z_Malloc(numsprites * SizeOf(spritedef_t), PU_STATIC, nil);
 
@@ -237,13 +237,13 @@ begin
         else
           patched := l;
 
-        R_InstallSpriteLump(patched, frame, rotation, false);
+        R_InstallSpriteLump(patched, frame, rotation, False);
 
         if lumpinfo[l].name[6] <> #0 then
         begin
           frame := Ord(lumpinfo[l].name[6]) - Ord('A');
           rotation := Ord(lumpinfo[l].name[7]) - Ord('0');
-          R_InstallSpriteLump(l, frame, rotation, true);
+          R_InstallSpriteLump(l, frame, rotation, True);
         end;
       end;
     end;
@@ -320,10 +320,10 @@ var
 function R_NewVisSprite: Pvissprite_t;
 begin
   if vissprite_p = MAXVISSPRITES then
-    result := @overflowsprite
+    Result := @overflowsprite
   else
   begin
-    result := @vissprites[vissprite_p];
+    Result := @vissprites[vissprite_p];
     inc(vissprite_p);
   end;
 end;
@@ -488,7 +488,7 @@ begin
 
   // thing is behind view plane?
   if tz < MINZ then
-    exit;
+    Exit;
 
   xscale := FixedDiv(projection, tz);
 
@@ -498,7 +498,7 @@ begin
 
   // too far off the side?
   if abs(tx) > 4 * tz then
-    exit;
+    Exit;
 
   // decide which patch to use for sprite relative to player
   sprdef := @sprites[Ord(thing.sprite)];
@@ -525,14 +525,14 @@ begin
 
   // off the right side?
   if x1 > viewwidth then
-    exit;
+    Exit;
 
   tx := tx + spritewidth[lump];
   x2 := ((centerxfrac + FixedMul(tx, xscale)) div FRACUNIT) - 1;
 
   // off the left side
   if x2 < 0 then
-    exit;
+    Exit;
 
   // store information in a vissprite
   vis := R_NewVisSprite;
@@ -591,7 +591,7 @@ begin
   // subsectors during BSP building.
   // Thus we check whether its already added.
   if sec.validcount = validcount then
-    exit;
+    Exit;
 
   // Well, now it will be done.
   sec.validcount := validcount;
@@ -642,14 +642,14 @@ begin
 
   // off the right side
   if x1 > viewwidth then
-    exit;
+    Exit;
 
   tx := tx + spritewidth[lump];
   x2 := ((centerxfrac + FixedMul(tx, pspritescale)) div FRACUNIT) - 1;
 
   // off the left side
   if x2 < 0 then
-    exit;
+    Exit;
 
   // store information in a vissprite
   vis := @avis;
@@ -732,7 +732,7 @@ begin
   count := vissprite_p;
 
   if count = 0 then
-    exit;
+    Exit;
 
   unsorted.next := @unsorted;
   unsorted.prev := @unsorted;
@@ -925,3 +925,7 @@ begin
 end;
 
 end.
+
+
+
+

@@ -121,7 +121,7 @@ var
   s: PByteArray;
   d: PByteArray;
 begin
-  result := 1;
+  Result := 1;
 
   while ticks > 0 do
   begin
@@ -130,7 +130,7 @@ begin
       if yy[i] < 0 then
       begin
         yy[i] := yy[i] + vy;
-        result := 0;
+        Result := 0;
       end
       else if yy[i] < SCREENHEIGHT * FRACUNIT then
       begin
@@ -158,7 +158,7 @@ begin
           d[idx] := s[j];
           idx := idx + SCREENWIDTH;
         end;
-        result := 0;
+        Result := 0;
       end;
     end;
     dec(ticks);
@@ -183,7 +183,7 @@ begin
 end;
 
 var
-  wiping: boolean = false;
+  wiping: boolean = False;
 
 // when zero, stop the wipe
 function wipe_Ticker(ticks: integer): boolean;
@@ -191,7 +191,7 @@ begin
   // initial stuff
   if not wiping then
   begin
-    wiping := true;
+    wiping := True;
     wipe_initMelt;
   end;
 
@@ -199,11 +199,14 @@ begin
   if wipe_doMelt(ticks) <> 0 then
   begin
     // final stuff
-    wiping := false;
+    wiping := False;
     wipe_exitMelt;
   end;
 
-  result := not wiping;
+  Result := not wiping;
 end;
 
 end.
+
+
+

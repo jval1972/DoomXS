@@ -217,19 +217,19 @@ begin
   if node.dx = 0 then
   begin
     if x <= node.x then
-      result := node.dy > 0
+      Result := node.dy > 0
     else
-      result := node.dy < 0;
-    exit;
+      Result := node.dy < 0;
+    Exit;
   end;
 
   if node.dy = 0 then
   begin
     if y <= node.y then
-      result := node.dx < 0
+      Result := node.dx < 0
     else
-      result := node.dx > 0;
-    exit;
+      Result := node.dx > 0;
+    Exit;
   end;
 
   dx := (x - node.x);
@@ -238,14 +238,14 @@ begin
   // Try to quickly decide by looking at sign bits.
   if ((node.dy xor node.dx xor dx xor dy) and $80000000) <> 0 then
   begin
-    result := ((node.dy xor dx) and $80000000) <> 0;
-    exit;
+    Result := ((node.dy xor dx) and $80000000) <> 0;
+    Exit;
   end;
 
   left := FixedMul(_SHR(node.dy, FRACBITS), dx);
   right := FixedMul(dy, _SHR(node.dx, FRACBITS));
 
-  result := right >= left;
+  Result := right >= left;
 end;
 
 function R_PointOnSegSide(x: fixed_t; y: fixed_t; line: Pseg_t): boolean;
@@ -268,19 +268,19 @@ begin
   if ldx = 0 then
   begin
     if x <= lx then
-      result := ldy > 0
+      Result := ldy > 0
     else
-      result := ldy < 0;
-    exit;
+      Result := ldy < 0;
+    Exit;
   end;
 
   if ldy = 0 then
   begin
     if y <= ly then
-      result := ldx < 0
+      Result := ldx < 0
     else
-      result := ldx > 0;
-    exit;
+      Result := ldx > 0;
+    Exit;
   end;
 
   dx := x - lx;
@@ -289,14 +289,14 @@ begin
   // Try to quickly decide by looking at sign bits.
   if ((ldy xor ldx xor dx xor dy) and $80000000) <> 0 then
   begin
-    result := ((ldy xor dx) and $80000000) <> 0;
-    exit;
+    Result := ((ldy xor dx) and $80000000) <> 0;
+    Exit;
   end;
 
   left := FixedMul(_SHR(ldy, FRACBITS), dx);
   right := FixedMul(dy, _SHR(ldx, FRACBITS));
 
-  result := left <= right;
+  Result := left <= right;
 end;
 
 //
@@ -316,8 +316,8 @@ begin
 
   if (x = 0) and (y = 0) then
   begin
-    result := 0;
-    exit;
+    Result := 0;
+    Exit;
   end;
 
   if x >= 0 then
@@ -329,14 +329,14 @@ begin
       if x > y then
       begin
         // octant 0
-        result := tantoangle[SlopeDiv(y, x)];
-        exit;
+        Result := tantoangle[SlopeDiv(y, x)];
+        Exit;
       end
       else
       begin
         // octant 1
-        result := ANG90 - 1 - tantoangle[SlopeDiv(x, y)];
-        exit;
+        Result := ANG90 - 1 - tantoangle[SlopeDiv(x, y)];
+        Exit;
       end;
     end
     else
@@ -346,14 +346,14 @@ begin
       if x > y then
       begin
         // octant 8
-        result := -tantoangle[SlopeDiv(y, x)];
-        exit;
+        Result := -tantoangle[SlopeDiv(y, x)];
+        Exit;
       end
       else
       begin
         // octant 7
-        result := ANG270 + tantoangle[SlopeDiv(x, y)];
-        exit;
+        Result := ANG270 + tantoangle[SlopeDiv(x, y)];
+        Exit;
       end;
     end;
   end
@@ -367,14 +367,14 @@ begin
       if x > y then
       begin
         // octant 3
-        result := ANG180 - 1 - tantoangle[SlopeDiv(y, x)];
-        exit;
+        Result := ANG180 - 1 - tantoangle[SlopeDiv(y, x)];
+        Exit;
       end
       else
       begin
         // octant 2
-        result := ANG90 + tantoangle[SlopeDiv(x, y)];
-        exit;
+        Result := ANG90 + tantoangle[SlopeDiv(x, y)];
+        Exit;
       end;
     end
     else
@@ -384,19 +384,19 @@ begin
       if x > y then
       begin
         // octant 4
-        result := ANG180 + tantoangle[SlopeDiv(y, x)];
-        exit;
+        Result := ANG180 + tantoangle[SlopeDiv(y, x)];
+        Exit;
       end
       else
       begin
         // octant 5
-        result := ANG270 - 1 - tantoangle[SlopeDiv(x, y)];
-        exit;
+        Result := ANG270 - 1 - tantoangle[SlopeDiv(x, y)];
+        Exit;
       end;
     end;
   end;
 
-  result := 0;
+  Result := 0;
 end;
 
 function R_PointToAngle2(x1: fixed_t; y1: fixed_t; x2: fixed_t; y2: fixed_t): angle_t;
@@ -404,7 +404,7 @@ begin
   viewx := x1;
   viewy := y1;
 
-  result := R_PointToAngle(x2, y2);
+  Result := R_PointToAngle(x2, y2);
 end;
 
 function R_PointToDist(x: fixed_t; y: fixed_t): fixed_t;
@@ -427,7 +427,7 @@ begin
   angle := (tantoangle[FixedDiv(dy, dx) shr DBITS] + ANG90) shr ANGLETOFINESHIFT;
 
   // use as cosine
-  result := FixedDiv(dx, finesine[angle]);
+  Result := FixedDiv(dx, finesine[angle]);
 end;
 
 //
@@ -477,15 +477,15 @@ begin
 
   if den > _SHR(num, 16) then
   begin
-    result := FixedDiv(num, den);
+    Result := FixedDiv(num, den);
 
-    if result > MAX_RWSCALE then
-      result := MAX_RWSCALE
-    else if result < 256 then
-      result := 256
+    if Result > MAX_RWSCALE then
+      Result := MAX_RWSCALE
+    else if Result < 256 then
+      Result := 256
   end
   else
-    result := 64 * FRACUNIT;
+    Result := 64 * FRACUNIT;
 end;
 
 //
@@ -634,7 +634,7 @@ var
 
 procedure R_SetViewSize(blocks: integer; detail: integer);
 begin
-  setsizeneeded := true;
+  setsizeneeded := True;
   setblocks := blocks;
   setdetail := detail;
 end;
@@ -651,7 +651,7 @@ var
   level: integer;
   startmap: integer;
 begin
-  setsizeneeded := false;
+  setsizeneeded := False;
 
   if setblocks = 11 then
   begin
@@ -766,8 +766,8 @@ begin
   // single subsector is a special case
   if numnodes = 0 then
   begin
-    result := @subsectors[0];
-    exit;
+    Result := @subsectors[0];
+    Exit;
   end;
 
   nodenum := numnodes - 1;
@@ -782,7 +782,7 @@ begin
     nodenum := node.children[side];
   end;
 
-  result := @subsectors[nodenum and not NF_SUBSECTOR];
+  Result := @subsectors[nodenum and not NF_SUBSECTOR];
 end;
 
 //

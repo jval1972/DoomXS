@@ -195,7 +195,7 @@ begin
   end;
 
   inc(lastvisplane);
-  result := lastvisplane;
+  Result := lastvisplane;
 end;
 
 // R_FindPlane
@@ -222,8 +222,8 @@ begin
 
   if check < lastvisplane then
   begin
-    result := @visplanes[check];
-    exit;
+    Result := @visplanes[check];
+    Exit;
   end;
 
   if lastvisplane = MAXVISPLANES then
@@ -231,15 +231,15 @@ begin
 
   lastvisplane := R_NewVisPlane;
 
-  result := @visplanes[check];
-  result.height := height;
-  result.picnum := picnum;
-  result.lightlevel := lightlevel;
-  result.minx := SCREENWIDTH;
-  result.maxx := -1;
+  Result := @visplanes[check];
+  Result.height := height;
+  Result.picnum := picnum;
+  Result.lightlevel := lightlevel;
+  Result.minx := SCREENWIDTH;
+  Result.maxx := -1;
 
   for i := 0 to SCREENWIDTH - 1 do
-    result.top[i] := VISEND;
+    Result.top[i] := VISEND;
 end;
 
 //
@@ -291,8 +291,8 @@ begin
     pl.maxx := unionh;
 
     // use the same one
-    result := pl;
-    exit;
+    Result := pl;
+    Exit;
   end;
 
   // make a new visplane
@@ -300,18 +300,18 @@ begin
   if lastvisplane = MAXVISPLANES then
     I_Error('R_CheckPlane(): no more visplanes');
 
-  result := @visplanes[lastvisplane];
-  result.height := pl.height;
-  result.picnum := pl.picnum;
-  result.lightlevel := pl.lightlevel;
+  Result := @visplanes[lastvisplane];
+  Result.height := pl.height;
+  Result.picnum := pl.picnum;
+  Result.lightlevel := pl.lightlevel;
 
   lastvisplane := R_NewVisPlane;
 
-  result.minx := start;
-  result.maxx := stop;
+  Result.minx := start;
+  Result.maxx := stop;
 
   for i := 0 to SCREENWIDTH - 1 do
-    result.top[i] := VISEND;
+    Result.top[i] := VISEND;
 end;
 
 // R_MakeSpans
@@ -416,3 +416,5 @@ begin
 end;
 
 end.
+
+

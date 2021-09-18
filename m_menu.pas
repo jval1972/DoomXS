@@ -421,7 +421,7 @@ begin
   if netgame then
   begin
     M_StartMessage(LOADNET, nil, False);
-    exit;
+    Exit;
   end;
 
   M_SetupNextMenu(@LoadDef);
@@ -477,11 +477,11 @@ begin
   if not usergame then
   begin
     M_StartMessage(SAVEDEAD, nil, False);
-    exit;
+    Exit;
   end;
 
   if gamestate <> GS_LEVEL then
-    exit;
+    Exit;
 
   M_SetupNextMenu(@SaveDef);
   M_ReadSaveStrings;
@@ -505,11 +505,11 @@ begin
   if not usergame then
   begin
     S_StartSound(nil, Ord(sfx_oof));
-    exit;
+    Exit;
   end;
 
   if gamestate <> GS_LEVEL then
-    exit;
+    Exit;
 
   if quickSaveSlot < 0 then
   begin
@@ -517,7 +517,7 @@ begin
     M_ReadSaveStrings;
     M_SetupNextMenu(@SaveDef);
     quickSaveSlot := -2;  // means to pick a slot now
-    exit;
+    Exit;
   end;
   sprintf(tempstring, QSPROMPT, [savegamestrings[quickSaveSlot]]);
   M_StartMessage(tempstring, @M_QuickSaveResponse, True);
@@ -538,13 +538,13 @@ begin
   if netgame then
   begin
     M_StartMessage(QLOADNET, nil, False);
-    exit;
+    Exit;
   end;
 
   if quickSaveSlot < 0 then
   begin
     M_StartMessage(QSAVESPOT, nil, False);
-    exit;
+    Exit;
   end;
   sprintf(tempstring, QLPROMPT, [savegamestrings[quickSaveSlot]]);
   M_StartMessage(tempstring, @M_QuickLoadResponse, True);
@@ -637,7 +637,7 @@ begin
   if netgame and not demoplayback then
   begin
     M_StartMessage(SNEWGAME, nil, False);
-    exit;
+    Exit;
   end;
 
   if gamemode = commercial then
@@ -658,7 +658,7 @@ end;
 procedure M_VerifyNightmare(ch: integer);
 begin
   if ch <> Ord('y') then
-    exit;
+    Exit;
 
   G_DeferedInitNew(sk_nightmare, epi + 1, 1); // JVAL: nightmare become sk_nightmare
   M_ClearMenus;
@@ -669,7 +669,7 @@ begin
   if choice = Ord(nightmare) then
   begin
     M_StartMessage(SNIGHTMARE, @M_VerifyNightmare, True);
-    exit;
+    Exit;
   end;
 
   G_DeferedInitNew(skill_t(choice), epi + 1, 1);
@@ -682,7 +682,7 @@ begin
   begin
     M_StartMessage(SWSTRING, nil, False);
     M_SetupNextMenu(@ReadDef1);
-    exit;
+    Exit;
   end;
 
   // Yet another hack...
@@ -743,7 +743,7 @@ end;
 procedure M_EndGameResponse(ch: integer);
 begin
   if ch <> Ord('y') then
-    exit;
+    Exit;
 
   currentMenu.lastOn := itemOn;
   M_ClearMenus;
@@ -755,13 +755,13 @@ begin
   if not usergame then
   begin
     S_StartSound(nil, Ord(sfx_oof));
-    exit;
+    Exit;
   end;
 
   if netgame then
   begin
     M_StartMessage(NETEND, nil, False);
-    exit;
+    Exit;
   end;
 
   M_StartMessage(SENDGAME, @M_EndGameResponse, True);
@@ -810,7 +810,7 @@ const
 procedure M_QuitResponse(ch: integer);
 begin
   if ch <> Ord('y') then
-    exit;
+    Exit;
   if not netgame then
   begin
     if gamemode = commercial then
@@ -985,7 +985,7 @@ var
 begin
   len := Length(str);
   if len = 0 then
-    exit;
+    Exit;
 
   ch := 1;
   cx := x;
@@ -1134,7 +1134,7 @@ begin
   if ch = -1 then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   // Save Game string input
@@ -1178,7 +1178,7 @@ begin
       end;
     end;
     Result := True;
-    exit;
+    Exit;
   end;
 
   // Take care of any messages that need input
@@ -1188,7 +1188,7 @@ begin
       (ch = Ord('y')) or (ch = KEY_ESCAPE))) then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     menuactive := messageLastMenuActive;
@@ -1199,18 +1199,18 @@ begin
     Result := True;
 
     if I_GameFinished then
-      exit;
+      Exit;
 
     menuactive := False;
     S_StartSound(nil, Ord(sfx_swtchx));
-    exit;
+    Exit;
   end;
 
   if devparm and (ch = KEY_F1) then
   begin
     G_ScreenShot;
     Result := True;
-    exit;
+    Exit;
   end;
 
   // F-Keys
@@ -1221,24 +1221,24 @@ begin
         if automapactive or chat_on then
         begin
           Result := False;
-          exit;
+          Exit;
         end;
         M_SizeDisplay(0);
         S_StartSound(nil, Ord(sfx_stnmov));
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_EQUALS:   // Screen size up
       begin
         if automapactive or chat_on then
         begin
           Result := False;
-          exit;
+          Exit;
         end;
         M_SizeDisplay(1);
         S_StartSound(nil, Ord(sfx_stnmov));
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F1:      // Help key
       begin
@@ -1251,7 +1251,7 @@ begin
         itemOn := 0;
         S_StartSound(nil, Ord(sfx_swtchn));
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F2:  // Save
       begin
@@ -1259,7 +1259,7 @@ begin
         S_StartSound(nil, Ord(sfx_swtchn));
         M_SaveGame(0);
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F3:  // Load
       begin
@@ -1267,7 +1267,7 @@ begin
         S_StartSound(nil, Ord(sfx_swtchn));
         M_LoadGame(0);
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F4:   // Sound Volume
       begin
@@ -1276,49 +1276,49 @@ begin
         itemOn := Ord(sfx_vol);
         S_StartSound(nil, Ord(sfx_swtchn));
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F5:   // Detail toggle
       begin
         M_ChangeDetail(0);
         S_StartSound(nil, Ord(sfx_swtchn));
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F6:   // Quicksave
       begin
         S_StartSound(nil, Ord(sfx_swtchn));
         M_QuickSave;
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F7:   // End game
       begin
         S_StartSound(nil, Ord(sfx_swtchn));
         M_EndGame(0);
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F8:   // Toggle messages
       begin
         M_ChangeMessages(0);
         S_StartSound(nil, Ord(sfx_swtchn));
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F9:   // Quickload
       begin
         S_StartSound(nil, Ord(sfx_swtchn));
         M_QuickLoad;
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F10:  // Quit DOOM
       begin
         S_StartSound(nil, Ord(sfx_swtchn));
         M_QuitDOOM(0);
         Result := True;
-        exit;
+        Exit;
       end;
       KEY_F11:  // gamma toggle
       begin
@@ -1328,7 +1328,7 @@ begin
         players[consoleplayer].msg := gammamsg[usegamma];
         I_SetPalette(W_CacheLumpName('PLAYPAL', PU_CACHE));
         Result := True;
-        exit;
+        Exit;
       end;
     end;
 
@@ -1340,10 +1340,10 @@ begin
       M_StartControlPanel;
       S_StartSound(nil, Ord(sfx_swtchn));
       Result := True;
-      exit;
+      Exit;
     end;
     Result := False;
-    exit;
+    Exit;
   end;
 
   // Keys usable within menu
@@ -1358,7 +1358,7 @@ begin
         S_StartSound(nil, Ord(sfx_pstop));
       until currentMenu.menuitems[itemOn].status <> -1;
       Result := True;
-      exit;
+      Exit;
     end;
     KEY_UPARROW:
     begin
@@ -1370,7 +1370,7 @@ begin
         S_StartSound(nil, Ord(sfx_pstop));
       until currentMenu.menuitems[itemOn].status <> -1;
       Result := True;
-      exit;
+      Exit;
     end;
     KEY_LEFTARROW:
     begin
@@ -1381,7 +1381,7 @@ begin
         currentMenu.menuitems[itemOn].routine(0);
       end;
       Result := True;
-      exit;
+      Exit;
     end;
     KEY_RIGHTARROW:
     begin
@@ -1392,7 +1392,7 @@ begin
         currentMenu.menuitems[itemOn].routine(1);
       end;
       Result := True;
-      exit;
+      Exit;
     end;
     KEY_ENTER:
     begin
@@ -1412,7 +1412,7 @@ begin
         end;
       end;
       Result := True;
-      exit;
+      Exit;
     end;
     KEY_ESCAPE:
     begin
@@ -1420,7 +1420,7 @@ begin
       M_ClearMenus;
       S_StartSound(nil, Ord(sfx_swtchx));
       Result := True;
-      exit;
+      Exit;
     end;
     KEY_BACKSPACE:
     begin
@@ -1432,7 +1432,7 @@ begin
         S_StartSound(nil, Ord(sfx_swtchn));
       end;
       Result := True;
-      exit;
+      Exit;
     end;
     else
     begin
@@ -1442,7 +1442,7 @@ begin
           itemOn := i;
           S_StartSound(nil, Ord(sfx_pstop));
           Result := True;
-          exit;
+          Exit;
         end;
       for i := 0 to itemOn do
         if currentMenu.menuitems[i].alphaKey = Chr(ch) then
@@ -1450,7 +1450,7 @@ begin
           itemOn := i;
           S_StartSound(nil, Ord(sfx_pstop));
           Result := True;
-          exit;
+          Exit;
         end;
     end;
   end;
@@ -1463,7 +1463,7 @@ procedure M_StartControlPanel;
 begin
   // intro might call this repeatedly
   if menuactive then
-    exit;
+    Exit;
 
   menuactive := True;
   currentMenu := @MainDef;// JDC
@@ -1510,11 +1510,11 @@ begin
       y := y + hu_font[0].height;
       M_WriteText(x, y, s);
     end;
-    exit;
+    Exit;
   end;
 
   if not menuactive then
-    exit;
+    Exit;
 
   if Assigned(currentMenu.routine) then
     currentMenu.routine; // call Draw routine

@@ -170,7 +170,7 @@ begin
   // See if button is already pressed
   for i := 0 to MAXBUTTONS - 1 do
     if (buttonlist[i].btimer <> 0) and (buttonlist[i].line = line) then
-      exit;
+      Exit;
 
   for i := 0 to MAXBUTTONS - 1 do
   begin
@@ -181,7 +181,7 @@ begin
       buttonlist[i].btexture := texture;
       buttonlist[i].btimer := time;
       buttonlist[i].soundorg := Pmobj_t(@line.frontsector.soundorg);
-      exit;
+      Exit;
     end;
   end;
 
@@ -221,7 +221,7 @@ begin
       if useAgain then
         P_StartButton(line, top, switchlist[i], BUTTONTIME);
 
-      exit;
+      Exit;
     end
     else
     begin
@@ -233,7 +233,7 @@ begin
         if useAgain then
           P_StartButton(line, middle, switchlist[i], BUTTONTIME);
 
-        exit;
+        Exit;
       end
       else
       begin
@@ -245,7 +245,7 @@ begin
           if useAgain then
             P_StartButton(line, bottom, switchlist[i], BUTTONTIME);
 
-          exit;
+          Exit;
         end;
       end;
     end;
@@ -269,7 +269,7 @@ begin
       else
       begin
         Result := False;
-        exit;
+        Exit;
       end;
     end;
   end;
@@ -282,7 +282,7 @@ begin
     if line.flags and ML_SECRET <> 0 then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     case line.special of
@@ -293,7 +293,7 @@ begin
       else
       begin
         Result := False;
-        exit;
+        Exit;
       end;
     end;
   end;
@@ -669,3 +669,4 @@ begin
 end;
 
 end.
+

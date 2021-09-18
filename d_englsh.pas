@@ -401,7 +401,7 @@ const
     'final confrontation with that terrible' + #13#10 +
     'beast from hell.  but you stepped forward' + #13#10 +
     'and brought forth eternal damnation and' + #13#10 +
-    'suffering upon the horde as a true hero' + #13#10 +
+    'suffering upon the horde as a True hero' + #13#10 +
     'would in the face of something so evil.' + #13#10 +
     ' ' + #13#10 +
     'besides, someone was gonna pay for what' + #13#10 +

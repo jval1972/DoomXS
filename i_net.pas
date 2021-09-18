@@ -59,9 +59,9 @@ var
 function UDPsocket: TSocket;
 begin
   // allocate a socket
-  result := socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if result = INVALID_SOCKET then
-    I_Error('UDPsocket(): Can''t create socket: result = %d'#13#10 , [result]);
+  Result := socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if Result = INVALID_SOCKET then
+    I_Error('UDPsocket(): Can''t create socket: Result = %d'#13#10 , [Result]);
 end;
 
 // BindToLocalPort
@@ -108,7 +108,7 @@ begin
     if c <> WSAEWOULDBLOCK then
       I_Error('PacketGet(): Network error.');
     doomcom.remotenode := -1;        // no packet
-    exit;
+    Exit;
   end;
 
   // find remote node number
@@ -124,7 +124,7 @@ begin
   begin
     // packet is not from one of the players (new game broadcast)
     doomcom.remotenode := -1;        // no packet
-    exit;
+    Exit;
   end;
 
   doomcom.remotenode := i;  // good packet from a game player
@@ -174,22 +174,22 @@ begin
   if i = 0 then
   begin
     // single player game
-    netgame := false;
+    netgame := False;
     doomcom.id := DOOMCOM_ID;
     doomcom.numplayers := 1;
     doomcom.numnodes := 1;
     doomcom.deathmatch := 0;
     doomcom.consoleplayer := 0;
-    exit;
+    Exit;
   end;
 
   err := WSAStartup($0101, wsadata);
   if err <> 0 then
-    I_Error('I_InitNetwork(): Could not initialize Windows Sockets, WSAStartup result = %d', [err]);
+    I_Error('I_InitNetwork(): Could not initialize Windows Sockets, WSAStartup Result = %d', [err]);
 
   netsend := PacketSend;
   netget := PacketGet;
-  netgame := true;
+  netgame := True;
 
   // parse player number and host list
   doomcom.consoleplayer := Ord(myargv[i + 1][1]) - Ord('1');
@@ -250,3 +250,7 @@ begin
 end;
 
 end.
+
+
+
+

@@ -163,7 +163,7 @@ type
   wbstartstruct_t = record
     epsd: integer; // episode # (0-2)
 
-    // if true, splash the secret level
+    // if True, splash the secret level
     didsecret: boolean;
 
     // previous and next levels, origin 0

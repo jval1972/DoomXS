@@ -115,11 +115,11 @@ function char8tostring(src: char8_t): string;
 var
   i: integer;
 begin
-  result := '';
+  Result := '';
   i := 0;
   while (i < 8) and (src[i] <> #0) do
   begin
-    result := result + src[i];
+    Result := Result + src[i];
     inc(i);
   end;
 end;
@@ -136,20 +136,20 @@ begin
   i := 1;
   while (i <= len) do
   begin
-    result[i - 1] := src[i];
+    Result[i - 1] := src[i];
     inc(i);
   end;
 
   for i := len to 7 do
-    result[i] := #0;
+    Result[i] := #0;
 end;
 
 function filelength(handle: TFile): integer;
 begin
   try
-    result := handle.Size;
+    Result := handle.Size;
   except
-    result := 0;
+    Result := 0;
     I_Error('filelength(): Error fstating');
   end;
 end;
@@ -236,14 +236,14 @@ begin
   if not fexists(filename) then
   begin
     printf('W_AddFile(): File %s does not exist' + #13#10, [filename]);
-    exit;
+    Exit;
   end;
 
   try
     handle := TFile.Create(filename, fOpen);
   except
     printf('W_AddFile(): couldn''t open %s' + #13#10, [filename]);
-    exit;
+    Exit;
   end;
 
   printf(' adding %s' + #13#10, [filename]);
@@ -320,7 +320,7 @@ var
   fileinfo: Pfilelump_tArray;
 begin
   if reloadname = '' then
-    exit;
+    Exit;
 
   if not fexists(reloadname) then
     I_Error('W_Reload(): File %s does not exist' + #13#10, [reloadname]);
@@ -410,7 +410,7 @@ end;
 // W_NumLumps
 function W_NumLumps: integer;
 begin
-  result := numlumps;
+  Result := numlumps;
 end;
 
 // W_CheckNumForName
@@ -450,21 +450,21 @@ begin
     lump_p := @lumpinfo[i];
     if (lump_p.v1 = v1) and (lump_p.v2 = v2) then
     begin
-      result := i;
-      exit;
+      Result := i;
+      Exit;
     end;
   end;
 
   // TFB. Not found.
-  result := -1;
+  Result := -1;
 end;
 
 // W_GetNumForName
 // Calls W_CheckNumForName, but bombs out if not found.
 function W_GetNumForName(const name: string): integer;
 begin
-  result := W_CheckNumForName(name);
-  if result = -1 then
+  Result := W_CheckNumForName(name);
+  if Result = -1 then
     I_Error('W_GetNumForName(): %s not found!', [name]);
 end;
 
@@ -475,7 +475,7 @@ begin
   if lump >= numlumps then
     I_Error('W_LumpLength(): %d >= numlumps', [lump]);
 
-  result := lumpinfo[lump].size;
+  Result := lumpinfo[lump].size;
 end;
 
 // W_ReadLump
@@ -536,13 +536,15 @@ begin
   else
     Z_ChangeTag(lumpcache[lump], tag);
 
-  result := lumpcache[lump];
+  Result := lumpcache[lump];
 end;
 
 // W_CacheLumpName
 function W_CacheLumpName(const name: string; tag: integer): pointer;
 begin
-  result := W_CacheLumpNum(W_GetNumForName(name), tag);
+  Result := W_CacheLumpNum(W_GetNumForName(name), tag);
 end;
 
 end.
+
+

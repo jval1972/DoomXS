@@ -82,14 +82,14 @@ var
   ans: LongWord;
 begin
   if den < 512 then
-    result := SLOPERANGE
+    Result := SLOPERANGE
   else
   begin
     ans := _SHL(num, 3) div _SHR(den, 8);
     if ans < SLOPERANGE then
-      result := ans
+      Result := ans
     else
-      result := SLOPERANGE;
+      Result := SLOPERANGE;
   end;
 end;
 

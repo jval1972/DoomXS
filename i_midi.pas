@@ -85,7 +85,7 @@ begin
     DWORD(@mciOpenParms));
   // Failed to open device. Don't close it; just return error.
   if Result <> 0 then
-    exit;
+    Exit;
 
   // The device opened successfully; get the device ID.
   wDeviceID := mciOpenParms.wDeviceID;
@@ -99,13 +99,13 @@ begin
     if Result <> 0 then
     begin
       mciSendCommand(wDeviceID, MCI_CLOSE, 0, 0);
-      exit;
+      Exit;
     end
     else if LOWORD(mciStatusParms.dwReturn) <> word(MIDI_MAPPER) then
       // The output port is not the MIDI mapper.
     begin
       printf(rsErrNoMIDIMapper);
-      exit;
+      Exit;
     end;
   end;
 
@@ -141,7 +141,7 @@ begin
     begin
       DestroyWindow(hWnd);
       Window := 0;
-      exit;
+      Exit;
     end;
   end;
   Result := DefWindowProc(hWnd, Msg, WParam, LParam);

@@ -89,7 +89,7 @@ uses
   info;
 
 // P_SetMobjState
-// Returns true if the mobj is still present.
+// Returns True if the mobj is still present.
 function P_SetMobjState(mobj: Pmobj_t; state: statenum_t): boolean;
 var
   st: Pstate_t;
@@ -100,7 +100,7 @@ begin
       mobj.state := @states[Ord(S_NULL)];
       P_RemoveMobj(mobj);
       Result := False;
-      exit;
+      Exit;
     end;
 
     st := @states[Ord(state)];
@@ -165,7 +165,7 @@ begin
 
       P_SetMobjState(mo, statenum_t(mo.info.spawnstate));
     end;
-    exit;
+    Exit;
   end;
 
   player := mo.player;
@@ -216,7 +216,7 @@ begin
           // against the sky.
           // Does not handle sky floors.
           P_RemoveMobj(mo);
-          exit;
+          Exit;
         end;
         P_ExplodeMissile(mo);
       end
@@ -234,14 +234,14 @@ begin
     // debug option for no sliding at all
     mo.momx := 0;
     mo.momy := 0;
-    exit;
+    Exit;
   end;
 
   if (mo.flags and (MF_MISSILE or MF_SKULLFLY)) <> 0 then
-    exit; // no friction for missiles ever
+    Exit; // no friction for missiles ever
 
   if mo.z > mo.floorz then
-    exit; // no friction when airborne
+    Exit; // no friction when airborne
 
   if mo.flags and MF_CORPSE <> 0 then
   begin
@@ -251,7 +251,7 @@ begin
       (mo.momy > FRACUNIT div 4) or (mo.momy < -FRACUNIT div 4) then
     begin
       if mo.floorz <> Psubsector_t(mo.subsector).sector.floorheight then
-        exit;
+        Exit;
     end;
   end;
 
@@ -343,7 +343,7 @@ begin
     if (mo.flags and MF_MISSILE <> 0) and (mo.flags and MF_NOCLIP = 0) then
     begin
       P_ExplodeMissile(mo);
-      exit;
+      Exit;
     end;
   end
   else if mo.flags and MF_NOGRAVITY = 0 then
@@ -385,7 +385,7 @@ begin
 
   // somthing is occupying it's position?
   if not P_CheckPosition(mobj, x, y) then
-    exit; // no respwan
+    Exit; // no respwan
 
   // spawn a teleport fog at old spot
   // because of removal of the body?
@@ -434,7 +434,7 @@ begin
     P_XYMovement(mobj);
 
     if not Assigned(mobj.thinker.func.acv) then
-      exit; // mobj was removed
+      Exit; // mobj was removed
   end;
 
   if (mobj.z <> mobj.floorz) or (mobj.momz <> 0) then
@@ -442,7 +442,7 @@ begin
     P_ZMovement(mobj);
 
     if not Assigned(mobj.thinker.func.acv) then
-      exit; // mobj was removed
+      Exit; // mobj was removed
   end;
 
   // cycle through states,
@@ -454,27 +454,27 @@ begin
     // you can cycle through multiple states in a tic
     if mobj.tics = 0 then
       if not P_SetMobjState(mobj, mobj.state.nextstate) then
-        exit; // freed itself
+        Exit; // freed itself
   end
   else
   begin
     // check for nightmare respawn
     if mobj.flags and MF_COUNTKILL = 0 then
-      exit;
+      Exit;
 
     if not respawnmonsters then
-      exit;
+      Exit;
 
     mobj.movecount := mobj.movecount + 1;
 
     if mobj.movecount < 12 * TICRATE then
-      exit;
+      Exit;
 
     if leveltime and 31 <> 0 then
-      exit;
+      Exit;
 
     if P_Random > 4 then
-      exit;
+      Exit;
 
     P_NightmareRespawn(mobj);
   end;
@@ -575,15 +575,15 @@ var
 begin
   // only respawn items in deathmatch
   if deathmatch <> 2 then
-    exit;
+    Exit;
 
   // nothing left to respawn?
   if iquehead = iquetail then
-    exit;
+    Exit;
 
   // wait at least 30 seconds
   if leveltime - itemrespawntime[iquetail] < 30 * TICRATE then
-    exit;
+    Exit;
 
   mthing := @itemrespawnque[iquetail];
 
@@ -633,7 +633,7 @@ var
 begin
   // not playing?
   if not playeringame[mthing.typ - 1] then
-    exit;
+    Exit;
 
   p := @players[mthing.typ - 1];
 
@@ -700,7 +700,7 @@ begin
       memcpy(@deathmatchstarts[deathmatch_p], mthing, SizeOf(mthing^));
       Inc(deathmatch_p);
     end;
-    exit;
+    Exit;
   end;
 
   // check for players specially
@@ -710,12 +710,12 @@ begin
     playerstarts[mthing.typ - 1] := mthing^;
     if deathmatch = 0 then
       P_SpawnPlayer(mthing);
-    exit;
+    Exit;
   end;
 
   // check for apropriate skill level
   if not netgame and (mthing.options and 16 <> 0) then
-    exit;
+    Exit;
 
   if gameskill = sk_baby then
     bit := 1
@@ -725,7 +725,7 @@ begin
     bit := _SHL(1, Ord(gameskill) - 1);
 
   if mthing.options and bit = 0 then
-    exit;
+    Exit;
 
   // find which type to spawn
   i := 0;
@@ -742,12 +742,12 @@ begin
 
   // don't spawn keycards and players in deathmatch
   if (deathmatch <> 0) and (mobjinfo[i].flags and MF_NOTDMATCH <> 0) then
-    exit;
+    Exit;
 
   // don't spawn any monsters if -nomonsters
   if nomonsters and ((i = Ord(MT_SKULL)) or
     (mobjinfo[i].flags and MF_COUNTKILL <> 0)) then
-    exit;
+    Exit;
 
   // spawn it
   x := mthing.x * FRACUNIT;
@@ -924,3 +924,5 @@ begin
 end;
 
 end.
+
+

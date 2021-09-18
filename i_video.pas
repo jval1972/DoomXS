@@ -103,9 +103,9 @@ var
   src: PByte;
 begin
   if hMainWnd = 0 then
-    exit;
+    Exit;
   if screens[SCN_FG] = nil then
-    exit;
+    Exit;
 
   begin
     dest := @screen32;
@@ -170,12 +170,12 @@ var
 
   procedure I_ErrorInitGraphics(const proc: string);
   begin
-    I_Error('I_InitGraphics(): %s failed, result = %d', [proc, hres]);
+    I_Error('I_InitGraphics(): %s failed, Result = %d', [proc, hres]);
   end;
 
 begin
   if g_pDD <> nil then
-    exit;
+    Exit;
   ///////////////////////////////////////////////////////////////////////////
   // Create the main DirectDraw object
   ///////////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ begin
 
   ddsd.dwWidth := SCREENWIDTH;
   ddsd.dwHeight := SCREENHEIGHT;
-  ddsd.lPitch := 4 * SCREENWIDTH; // Display is true color
+  ddsd.lPitch := 4 * SCREENWIDTH; // Display is True color
   ddsd.lpSurface := @screen32;
 
   hres := g_pDD.CreateSurface(ddsd, g_pDDScreen, nil);

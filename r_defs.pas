@@ -230,7 +230,7 @@ type
   // OTHER TYPES
 
   // This could be wider for >8 bit display.
-  // Indeed, true color support is posibble
+  // Indeed, True color support is posibble
   //  precalculating 24bpp lightmap/colormap LUT.
   //  from darkening PLAYPAL to all black.
   // Could even us emore than 32 levels.
@@ -334,7 +334,7 @@ type
   // for all views: NNNNF0
 
   spriteframe_t = packed record
-    // If false use 0 for any position.
+    // If False use 0 for any position.
     // Note: as eight entries are available,
     //  we might as well insert the same name eight times.
     rotate: integer;
@@ -387,3 +387,5 @@ type
 implementation
 
 end.
+
+

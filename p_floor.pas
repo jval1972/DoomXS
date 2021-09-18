@@ -83,7 +83,7 @@ begin
             //return crushed;
           end;
           Result := pastdest;
-          exit;
+          Exit;
         end
         else
         begin
@@ -94,7 +94,7 @@ begin
             sector.floorheight := lastpos;
             P_ChangeSector(sector, crush);
             Result := crushed;
-            exit;
+            Exit;
           end;
         end;
       end
@@ -111,7 +111,7 @@ begin
             P_ChangeSector(sector, crush);
           end;
           Result := pastdest;
-          exit;
+          Exit;
         end
         else
         begin
@@ -123,12 +123,12 @@ begin
             if crush then
             begin
               Result := crushed;
-              exit;
+              Exit;
             end;
             sector.floorheight := lastpos;
             P_ChangeSector(sector, crush);
             Result := crushed;
-            exit;
+            Exit;
           end;
         end;
       end;
@@ -149,7 +149,7 @@ begin
             P_ChangeSector(sector, crush);
           end;
           Result := pastdest;
-          exit;
+          Exit;
         end
         else
         begin
@@ -161,12 +161,12 @@ begin
             if crush then
             begin
               Result := crushed;
-              exit;
+              Exit;
             end;
             sector.ceilingheight := lastpos;
             P_ChangeSector(sector, crush);
             Result := crushed;
-            exit;
+            Exit;
           end;
         end;
       end
@@ -183,7 +183,7 @@ begin
             P_ChangeSector(sector, crush);
           end;
           Result := pastdest;
-          exit;
+          Exit;
         end
         else
         begin
@@ -249,7 +249,7 @@ begin
   repeat
     secnum := P_FindSectorFromLineTag(line, secnum);
     if secnum < 0 then
-      exit;
+      Exit;
 
     sec := @sectors[secnum];
 
@@ -426,7 +426,7 @@ begin
   repeat
     secnum := P_FindSectorFromLineTag(line, secnum);
     if secnum < 0 then
-      exit;
+      Exit;
 
     sec := @sectors[secnum];
 
@@ -472,7 +472,7 @@ begin
     // 1.  Find 2-sided line with same sector side[0]
     // 2.  Other side is the next sector to raise
     repeat
-      ok := false;
+      ok := False;
       for i := 0 to sec.linecount - 1 do
       begin
         if sec.lines[i].flags and ML_TWOSIDED = 0 then
@@ -509,7 +509,7 @@ begin
         floor.floordestheight := height;
         floor.typ := buildStair;
 
-        ok := true;
+        ok := True;
         break;
       end;
     until not ok;
@@ -517,3 +517,6 @@ begin
 end;
 
 end.
+
+
+

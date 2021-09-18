@@ -435,10 +435,10 @@ procedure ST_RefreshBackground;
 begin
   if st_statusbaron then
   begin
-    V_DrawPatch(ST_X, 0, SCN_ST, sbar, false);
+    V_DrawPatch(ST_X, 0, SCN_ST, sbar, False);
 
     if netgame then
-      V_DrawPatch(ST_FX, 0, SCN_ST, faceback, false);
+      V_DrawPatch(ST_FX, 0, SCN_ST, faceback, False);
   end;
 end;
 
@@ -452,7 +452,7 @@ begin
              ST_X,
              ST_Y,
              SCN_FG,
-             true);
+             True);
 end;
 
 // Respond to keyboard input events,
@@ -465,7 +465,7 @@ var
   epsd: integer;
   map: integer;
 begin
-  result := false;
+  Result := False;
   // Filter automap on/off.
   if (ev.typ = ev_keyup) and
      ((ev.data1 and $ffff0000) = AM_MSGHEADER) then
@@ -474,7 +474,7 @@ begin
       AM_MSGENTERED:
         begin
           st_gamestate := AutomapState;
-          st_firsttime := true;
+          st_firsttime := True;
         end;
 
       AM_MSGEXITED:
@@ -531,7 +531,7 @@ begin
           plyr.ammo[i] := plyr.maxammo[i];
 
         for i := 0 to Ord(NUMCARDS) - 1 do
-          plyr.cards[i] := true;
+          plyr.cards[i] := True;
 
         plyr.msg := STSTR_KFAADDED;
       end
@@ -548,7 +548,7 @@ begin
           if (Ord(buf[1]) - Ord('0')) * 10 + Ord(buf[2]) - Ord('0') > 35 then
             plyr.msg := STSTR_NOMUS
           else
-            S_ChangeMusic(musnum, true);
+            S_ChangeMusic(musnum, True);
         end
         else
         begin
@@ -557,7 +557,7 @@ begin
           if (Ord(buf[1]) - Ord('1')) * 9 + Ord(buf[2]) - Ord('1') > 31 then
             plyr.msg := STSTR_NOMUS
           else
-            S_ChangeMusic(musnum, true);
+            S_ChangeMusic(musnum, True);
         end;
       end
       // Simplified, accepting both "noclip" and "idspispopd".
@@ -627,33 +627,33 @@ begin
         map := Ord(buf[2]) - Ord('0');
         // Catch invalid maps.
         if epsd < 1 then
-          exit;
+          Exit;
       end;
 
       if map < 1 then
-        exit;
+        Exit;
 
       // Ohmygod - this is not going to work.
       if (gamemode = retail) and
          ((epsd > 4) or (map > 9)) then
-        exit;
+        Exit;
 
       if (gamemode = registered) and
          ((epsd > 3) or (map > 9)) then
-        exit;
+        Exit;
 
       if (gamemode = shareware) and
          ((epsd > 1) or (map > 9)) then
-        exit;
+        Exit;
 
       if (gamemode = commercial) and
          ((epsd > 1) or (map > 34)) then
-        exit;
+        Exit;
 
       // So be it.
       plyr.msg := STSTR_CLEV;
       G_DeferedInitNew(gameskill, epsd, map);
-      result := true;
+      Result := True;
     end;
   end;
 end;
@@ -673,7 +673,7 @@ begin
     lastcalc := ST_FACESTRIDE * (((100 - health) * ST_NUMPAINFACES) div 101);
     oldhealth := health;
   end;
-  result := lastcalc;
+  Result := lastcalc;
 end;
 
 // This is a not-very-pretty routine which handles
@@ -708,13 +708,13 @@ begin
     if plyr.bonuscount <> 0 then
     begin
       // picking up bonus
-      doevilgrin := false;
+      doevilgrin := False;
 
       for i := 0 to Ord(NUMWEAPONS) - 1 do
       begin
         if oldweaponsowned[i] <> plyr.weaponowned[i] then
         begin
-          doevilgrin := true;
+          doevilgrin := True;
           oldweaponsowned[i] := plyr.weaponowned[i];
         end;
       end;
@@ -1004,9 +1004,9 @@ begin
   ST_doPaletteStuff;
 
   if st_firsttime then
-    ST_Refresh(true)
+    ST_Refresh(True)
   else
-    ST_DrawWidgets(true);
+    ST_DrawWidgets(True);
 end;
 
 procedure ST_loadGraphics;
@@ -1096,17 +1096,17 @@ procedure ST_initData;
 var
   i: integer;
 begin
-  st_firsttime := true;
+  st_firsttime := True;
   plyr := @players[consoleplayer];
 
   st_clock := 0;
   st_chatstate := StartChatState;
   st_gamestate := FirstPersonState;
 
-  st_statusbaron := true;
-  st_oldchat := false;
-  st_chat := false;
-  st_cursoron := false;
+  st_statusbaron := True;
+  st_oldchat := False;
+  st_chat := False;
+  st_cursoron := False;
 
   st_faceindex := 0;
   st_palette := -1;
@@ -1300,16 +1300,16 @@ begin
 end;
 
 var
-  st_stopped: boolean = true;
+  st_stopped: boolean = True;
 
 procedure ST_Stop;
 begin
   if st_stopped then
-    exit;
+    Exit;
 
   I_SetPalette(W_CacheLumpNum(lu_palette, PU_CACHE));
 
-  st_stopped := true;
+  st_stopped := True;
 end;
 
 procedure ST_Start;
@@ -1319,7 +1319,7 @@ begin
 
   ST_initData;
   ST_createWidgets;
-  st_stopped := false;
+  st_stopped := False;
 end;
 
 procedure ST_Init;
@@ -1367,3 +1367,7 @@ initialization
   cheat_mypos.p := '';
 
 end.
+
+
+
+

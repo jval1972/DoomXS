@@ -2140,7 +2140,7 @@ const
   {$EXTERNALSYM DDSCAPS_VIDEOPORT}
 
 (*
- * Indicates that a video memory surface is resident in true, local video
+ * Indicates that a video memory surface is resident in True, local video
  * memory rather than non-local video memory. If this flag is specified then
  * so must DDSCAPS_VIDEOMEMORY. This flag is mutually exclusive with
  * DDSCAPS_NONLOCALVIDMEM.
@@ -2150,7 +2150,7 @@ const
 
 (*
  * Indicates that a video memory surface is resident in non-local video
- * memory rather than true, local video memory. If this flag is specified
+ * memory rather than True, local video memory. If this flag is specified
  * then so must DDSCAPS_VIDEOMEMORY. This flag is mutually exclusive with
  * DDSCAPS_LOCALVIDMEM.
  *)
@@ -2755,7 +2755,7 @@ const
 
 (*
  * A calibrator is available to adjust the gamma ramp according to the
- * physical display properties so that the result will be identical on
+ * physical display properties so that the Result will be identical on
  * all calibrated systems.
  *)
   DDCAPS2_CANCALIBRATEGAMMA       = $00100000;
@@ -4088,7 +4088,7 @@ const
  * blt may be clipped, in which case the runtime will call the driver with
  * several blts. All blts (even if not clipped) are tagged with DDBLT_PRESENTATION
  * and the last (even if not clipped) additionally with DDBLT_LAST_PRESENTATION.
- * Thus the true rule is that the driver must not schedule a DDBLT_PRESENTATION
+ * Thus the True rule is that the driver must not schedule a DDBLT_PRESENTATION
  * blt if there are 3 or more DDBLT_PRESENTLAST blts in the hardware pipe.
  * If there are such blts in the pipe, the driver should return DDERR_WASSTILLDRAWING
  * until the oldest queued DDBLT_LAST_PRESENTATION blts has been retired (i.e. the
@@ -4792,7 +4792,7 @@ const
 
 (*
  * Request calibrator to adjust the gamma ramp according to the physical
- * properties of the display so that the result should appear identical
+ * properties of the display so that the Result should appear identical
  * on all systems.
  *)
   DDSGR_CALIBRATE                        = $00000001;

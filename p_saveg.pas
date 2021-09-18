@@ -56,7 +56,6 @@ implementation
 
 uses
   doomdef,
-  
   d_player,
   d_think,
   g_game,
@@ -64,7 +63,6 @@ uses
   info_h,
   info,
   i_system,
-  
   p_pspr_h,
   p_setup,
   p_mobj_h,
@@ -331,7 +329,7 @@ begin
     save_p := @save_p[1];
     case tclass of
       Ord(tc_end):
-        exit; // end of list
+        Exit; // end of list
 
       Ord(tc_mobj):
       begin
@@ -548,7 +546,7 @@ begin
     save_p := @save_p[1];
     case tclass of
       Ord(tc_endspecials):
-        exit; // end of list
+        Exit; // end of list
 
       Ord(tc_ceiling):
       begin
@@ -649,3 +647,4 @@ begin
 end;
 
 end.
+

@@ -65,7 +65,7 @@ procedure P_SlideMove(mo: Pmobj_t);
 var
   linetarget: Pmobj_t;  // who got hit (or NULL)
 
-  // If "floatok" true, move would be ok
+  // If "floatok" True, move would be ok
   // if within "tmfloorz - tmceilingz".
   floatok: boolean;
 
@@ -124,7 +124,7 @@ begin
   if thing.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   blockdist := thing.radius + tmthing.radius;
@@ -133,21 +133,21 @@ begin
   begin
     // didn't hit it
     Result := True;
-    exit;
+    Exit;
   end;
 
   // don't clip against self
   if thing = tmthing then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // monsters don't stomp things except on boss level
   if (tmthing.player = nil) and (gamemap <> 30) then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   P_DamageMobj(thing, tmthing, tmthing, 10000);
@@ -206,7 +206,7 @@ begin
       if not P_BlockThingsIterator(bx, by, PIT_StompThing) then
       begin
         Result := False;
-        exit;
+        Exit;
       end;
 
   // the move is ok,
@@ -234,20 +234,20 @@ begin
     (tmbbox[BOXBOTTOM] >= ld.bbox[BOXTOP]) then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   if P_BoxOnLineSide(@tmbbox, ld) <> -1 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // A line has been hit
 
   // The moving thing's destination position will cross
   // the given line.
-  // If this should not be allowed, return false.
+  // If this should not be allowed, return False.
   // If the line is special, keep track of it
   // to process later if the move is proven ok.
   // NOTE: specials are NOT sorted by order,
@@ -257,7 +257,7 @@ begin
   if ld.backsector = nil then
   begin
     Result := False;  // one sided line
-    exit;
+    Exit;
   end;
 
   if tmthing.flags and MF_MISSILE = 0 then
@@ -265,13 +265,13 @@ begin
     if ld.flags and ML_BLOCKING <> 0 then
     begin
       Result := False;  // explicitly blocking everything
-      exit;
+      Exit;
     end;
 
     if (tmthing.player = nil) and ((ld.flags and ML_BLOCKMONSTERS) <> 0) then
     begin
       Result := False;  // block monsters only
-      exit;
+      Exit;
     end;
   end;
 
@@ -312,14 +312,14 @@ begin
   if thing.flags and (MF_SOLID or MF_SPECIAL or MF_SHOOTABLE) = 0 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // don't clip against self
   if thing = tmthing then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   blockdist := thing.radius + tmthing.radius;
@@ -328,7 +328,7 @@ begin
   begin
     // didn't hit it
     Result := True;
-    exit;
+    Exit;
   end;
 
   // check for skulls slamming into things
@@ -345,7 +345,7 @@ begin
     P_SetMobjState(tmthing, statenum_t(tmthing.info.spawnstate));
 
     Result := False;  // stop moving
-    exit;
+    Exit;
   end;
 
   // missiles can hit other things
@@ -355,12 +355,12 @@ begin
     if tmthing.z > thing.z + thing.height then
     begin
       Result := True; // overhead
-      exit;
+      Exit;
     end;
     if tmthing.z + tmthing.height < thing.z then
     begin
       Result := True; // underneath
-      exit;
+      Exit;
     end;
 
     if (tmthing.target <> nil) and ((tmthing.target.typ = thing.typ) or
@@ -371,7 +371,7 @@ begin
       if thing = tmthing.target then
       begin
         Result := True;
-        exit;
+        Exit;
       end;
 
       if thing.typ <> MT_PLAYER then
@@ -379,15 +379,15 @@ begin
         // Explode, but do no damage.
         // Let players missile other players.
         Result := False;
-        exit;
+        Exit;
       end;
     end;
 
     if thing.flags and MF_SHOOTABLE = 0 then
     begin
       // didn't do any damage
-      result := thing.flags and MF_SOLID = 0;
-      exit;
+      Result := thing.flags and MF_SOLID = 0;
+      Exit;
     end;
 
     // damage / explode
@@ -396,7 +396,7 @@ begin
 
     // don't traverse any more
     Result := False;
-    exit;
+    Exit;
   end;
 
   // check for special pickup
@@ -411,7 +411,7 @@ begin
     Result := not solid;
   end
   else
-    result := thing.flags and MF_SOLID = 0;
+    Result := thing.flags and MF_SOLID = 0;
 end;
 
 // MOVEMENT CLIPPING
@@ -476,7 +476,7 @@ begin
   if tmflags and MF_NOCLIP <> 0 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // Check things first, possibly picking things up.
@@ -494,7 +494,7 @@ begin
       if not P_BlockThingsIterator(bx, by, PIT_CheckThing) then
       begin
         Result := False;
-        exit;
+        Exit;
       end;
 
   // check lines
@@ -508,7 +508,7 @@ begin
       if not P_BlockLinesIterator(bx, by, PIT_CheckLine) then
       begin
         Result := False;
-        exit;
+        Exit;
       end;
 
   Result := True;
@@ -529,7 +529,7 @@ begin
   if not P_CheckPosition(thing, x, y) then
   begin
     Result := False;  // solid wall or thing
-    exit;
+    Exit;
   end;
 
   if thing.flags and MF_NOCLIP = 0 then
@@ -537,7 +537,7 @@ begin
     if tmceilingz - tmfloorz < thing.height then
     begin
       Result := False;  // doesn't fit
-      exit;
+      Exit;
     end;
 
     floatok := True;
@@ -546,21 +546,21 @@ begin
       (tmceilingz - thing.z < thing.height) then
     begin
       Result := False;  // mobj must lower itself to fit
-      exit;
+      Exit;
     end;
 
     if (thing.flags and MF_TELEPORT = 0) and
       (tmfloorz - thing.z > 24 * FRACUNIT) then
     begin
       Result := False;  // too big a step up
-      exit;
+      Exit;
     end;
 
     if ((thing.flags and (MF_DROPOFF or MF_FLOAT)) = 0) and
       (tmfloorz - tmdropoffz > 24 * FRACUNIT) then
     begin
       Result := False;  // don't stand over a dropoff
-      exit;
+      Exit;
     end;
   end;
 
@@ -606,7 +606,7 @@ end;
 // whenever a sector changes height.
 // If the thing doesn't fit,
 // the z will be set to the lowest value
-// and false will be returned.
+// and False will be returned.
 function P_ThingHeightClip(thing: Pmobj_t): boolean;
 var
   onfloor: boolean;
@@ -661,13 +661,13 @@ begin
   if ld.slopetype = ST_HORIZONTAL then
   begin
     tmymove := 0;
-    exit;
+    Exit;
   end;
 
   if ld.slopetype = ST_VERTICAL then
   begin
     tmxmove := 0;
-    exit;
+    Exit;
   end;
 
   side := P_PointOnLineSide(slidemo.x, slidemo.y, ld);
@@ -721,11 +721,11 @@ begin
     begin
       // don't hit the back side
       Result := True;
-      exit;
+      Exit;
     end;
     isblocking;
     Result := False; // stop
-    exit;
+    Exit;
   end;
 
   // set openrange, opentop, openbottom
@@ -735,21 +735,21 @@ begin
   begin
     isblocking; // doesn't fit
     Result := False; // stop
-    exit;
+    Exit;
   end;
 
   if opentop - slidemo.z < slidemo.height then
   begin
     isblocking; // mobj is too high
     Result := False; // stop
-    exit;
+    Exit;
   end;
 
   if openbottom - slidemo.z > 24 * FRACUNIT then
   begin
     isblocking; // too big a step up
     Result := False; // stop
-    exit;
+    Exit;
   end;
 
   // this line doesn't block movement
@@ -788,7 +788,7 @@ begin
     if hitcount = 3 then
     begin
       stairstep;
-      exit;  // don't loop forever
+      Exit;  // don't loop forever
     end;
 
     // trace along the three leading corners
@@ -828,7 +828,7 @@ begin
     begin
       // the move most have hit the middle, so stairstep
       stairstep;
-      exit;
+      Exit;
     end;
 
     // fudge a bit to make sure it doesn't hit
@@ -841,7 +841,7 @@ begin
       if not P_TryMove(mo, mo.x + newx, mo.y + newy) then
       begin
         stairstep;
-        exit;
+        Exit;
       end;
     end;
 
@@ -853,7 +853,7 @@ begin
       bestslidefrac := FRACUNIT;
 
     if bestslidefrac <= 0 then
-      exit;
+      Exit;
 
     tmxmove := FixedMul(mo.momx, bestslidefrac);
     tmymove := FixedMul(mo.momy, bestslidefrac);
@@ -896,7 +896,7 @@ begin
     if li.flags and ML_TWOSIDED = 0 then
     begin
       Result := False; // stop
-      exit;
+      Exit;
     end;
 
     // Crosses a two sided line.
@@ -907,7 +907,7 @@ begin
     if openbottom >= opentop then
     begin
       Result := False; // stop
-      exit;
+      Exit;
     end;
 
     dist := FixedMul(attackrange, _in.frac);
@@ -929,11 +929,11 @@ begin
     if topslope <= bottomslope then
     begin
       Result := False; // stop
-      exit;
+      Exit;
     end;
 
     Result := True;  // shot continues
-    exit;
+    Exit;
   end;
 
   // shoot a thing
@@ -941,13 +941,13 @@ begin
   if th = shootthing then
   begin
     Result := True;  // can't shoot self
-    exit;
+    Exit;
   end;
 
   if th.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True; // corpse or something
-    exit;
+    Exit;
   end;
 
   // check angles to see if the thing can be aimed at
@@ -957,7 +957,7 @@ begin
   if thingtopslope < bottomslope then
   begin
     Result := True; // shot over the thing
-    exit;
+    Exit;
   end;
 
   thingbottomslope := FixedDiv(th.z - shootz, dist);
@@ -965,7 +965,7 @@ begin
   if thingbottomslope > topslope then
   begin
     Result := True; // shot under the thing
-    exit;
+    Exit;
   end;
 
   // this thing can be hit!
@@ -1010,14 +1010,14 @@ var
       if z > li.frontsector.ceilingheight then
       begin
         Result := False;
-        exit;
+        Exit;
       end;
 
       // it's a sky hack wall
       if (li.backsector <> nil) and (li.backsector.ceilingpic = skyflatnum) then
       begin
         Result := False;
-        exit;
+        Exit;
       end;
     end;
     // Spawn bullet puffs.
@@ -1038,7 +1038,7 @@ begin
     if li.flags and ML_TWOSIDED = 0 then
     begin
       Result := hitline;
-      exit;
+      Exit;
     end;
 
     // crosses a two sided line
@@ -1052,7 +1052,7 @@ begin
       if slope > aimslope then
       begin
         Result := hitline;
-        exit;
+        Exit;
       end;
     end;
 
@@ -1062,13 +1062,13 @@ begin
       if slope < aimslope then
       begin
         Result := hitline;
-        exit;
+        Exit;
       end;
     end;
 
     // shot continues
     Result := True;
-    exit;
+    Exit;
   end;
 
   // shoot a thing
@@ -1076,13 +1076,13 @@ begin
   if th = shootthing then
   begin
     Result := True; // can't shoot self
-    exit;
+    Exit;
   end;
 
   if th.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True; // corpse or something
-    exit;
+    Exit;
   end;
 
   // check angles to see if the thing can be aimed at
@@ -1092,7 +1092,7 @@ begin
   if thingtopslope < aimslope then
   begin
     Result := True; // shot over the thing
-    exit;
+    Exit;
   end;
 
   thingbottomslope := FixedDiv(th.z - shootz, dist);
@@ -1100,7 +1100,7 @@ begin
   if thingbottomslope > aimslope then
   begin
     Result := True; // shot under the thing
-    exit;
+    Exit;
   end;
 
 
@@ -1191,18 +1191,18 @@ begin
       S_StartSound(usething, Ord(sfx_noway));
       // can't use through a wall
       Result := False;
-      exit;
+      Exit;
     end;
     // not a special line, but keep checking
     Result := True;
-    exit;
+    Exit;
   end;
 
   side := 0;
   if P_PointOnLineSide(usething.x, usething.y, _in.d.line) = 1 then
     side := 1;
 
-  //  return false;    // don't use back side
+  //  return False;    // don't use back side
 
   P_UseSpecialLine(usething, _in.d.line, side);
 
@@ -1251,7 +1251,7 @@ begin
   if thing.flags and MF_SHOOTABLE = 0 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // Boss spider and cyborg
@@ -1259,7 +1259,7 @@ begin
   if (thing.typ = MT_CYBORG) or (thing.typ = MT_SPIDER) then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   dx := abs(thing.x - bombspot.x);
@@ -1277,7 +1277,7 @@ begin
   if dist >= bombdamage then
   begin
     Result := True; // out of range
-    exit;
+    Exit;
   end;
 
   if P_CheckSight(thing, bombspot) then
@@ -1321,10 +1321,10 @@ end;
 // call this routine to adjust the positions
 // of all things that touch the sector.
 
-// If anything doesn't fit anymore, true will be returned.
-// If crunch is true, they will take damage
+// If anything doesn't fit anymore, True will be returned.
+// If crunch is True, they will take damage
 //  as they are being crushed.
-// If Crunch is false, you should set the sector height back
+// If Crunch is False, you should set the sector height back
 //  the way it was and call P_ChangeSector again
 //  to undo the changes.
 var
@@ -1340,7 +1340,7 @@ begin
   begin
     // keep checking
     Result := True;
-    exit;
+    Exit;
   end;
 
   // crunch bodies to giblets
@@ -1354,7 +1354,7 @@ begin
 
     // keep checking
     Result := True;
-    exit;
+    Exit;
   end;
 
   // crunch dropped items
@@ -1364,14 +1364,14 @@ begin
 
     // keep checking
     Result := True;
-    exit;
+    Exit;
   end;
 
   if thing.flags and MF_SHOOTABLE = 0 then
   begin
     // assume it is bloody gibs or something
     Result := True;
-    exit;
+    Exit;
   end;
 
   nofit := True;
@@ -1409,3 +1409,7 @@ begin
 end;
 
 end.
+
+
+
+

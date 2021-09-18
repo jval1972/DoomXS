@@ -231,7 +231,7 @@ var
 begin
   // wake up all monsters in this sector
   if (sec.validcount = validcount) and (sec.soundtraversed <= soundblocks + 1) then
-    exit; // already flooded
+    Exit; // already flooded
 
   sec.validcount := validcount;
   sec.soundtraversed := soundblocks + 1;
@@ -282,8 +282,8 @@ begin
   pl := actor.target;
   if pl = nil then
   begin
-    result := false;
-    exit;
+    Result := False;
+    Exit;
   end;
 
   dist := P_AproxDistance(pl.x - actor.x, pl.y - actor.y);
@@ -291,7 +291,7 @@ begin
   if dist >= MELEERANGE - 20 * FRACUNIT + pl.info.radius then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   Result := P_CheckSight(actor, actor.target);
@@ -305,7 +305,7 @@ begin
   if not P_CheckSight(actor, actor.target) then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if actor.flags and MF_JUSTHIT <> 0 then
@@ -314,13 +314,13 @@ begin
     // so fight back!
     actor.flags := actor.flags and not MF_JUSTHIT;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if actor.reactiontime <> 0 then
   begin
     Result := False; // do not attack yet
-    exit;
+    Exit;
   end;
 
   // OPTIMIZE: get this from a global checksight
@@ -336,7 +336,7 @@ begin
     if dist > 14 * 64 then
     begin
       Result := False; // too far away
-      exit;
+      Exit;
     end;
 
   if actor.typ = MT_UNDEAD then
@@ -344,7 +344,7 @@ begin
     if dist < 196 then
     begin
       Result := False; // close for fist attack
-      exit;
+      Exit;
     end;
     dist := _SHR(dist, 1);
   end;
@@ -368,7 +368,7 @@ end;
 
 // P_Move
 // Move in the current direction,
-// returns false if the move is blocked.
+// returns False if the move is blocked.
 const
   xspeed: array[0..7] of fixed_t =
     (FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000, 0, 47000);
@@ -386,7 +386,7 @@ begin
   if actor.movedir = Ord(DI_NODIR) then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if Ord(actor.movedir) >= 8 then
@@ -410,13 +410,13 @@ begin
 
       actor.flags := actor.flags or MF_INFLOAT;
       Result := True;
-      exit;
+      Exit;
     end;
 
     if numspechit = 0 then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     actor.movedir := Ord(DI_NODIR);
@@ -427,11 +427,11 @@ begin
       ld := spechit[numspechit];
       // if the special is not a door
       // that can be opened,
-      // return false
+      // return False
       if P_UseSpecialLine(actor, ld, 0) then
         Result := True;
     end;
-    exit;
+    Exit;
   end
   else
     actor.flags := actor.flags and not MF_INFLOAT;
@@ -505,7 +505,7 @@ begin
       Inc(idx);
     actor.movedir := Ord(diags[idx]);
     if (actor.movedir <> Ord(turnaround)) and P_TryWalk(actor) then
-      exit;
+      Exit;
   end;
 
   // try other directions
@@ -525,14 +525,14 @@ begin
   begin
     actor.movedir := Ord(d[1]);
     if P_TryWalk(actor) then
-      exit; // either moved forward or attacked
+      Exit; // either moved forward or attacked
   end;
 
   if d[2] <> DI_NODIR then
   begin
     actor.movedir := Ord(d[2]);
     if P_TryWalk(actor) then
-      exit;
+      Exit;
   end;
 
   // there is no direct path to the player,
@@ -541,7 +541,7 @@ begin
   begin
     actor.movedir := Ord(olddir);
     if P_TryWalk(actor) then
-      exit;
+      Exit;
   end;
 
   // randomly determine direction of search
@@ -553,7 +553,7 @@ begin
       begin
         actor.movedir := Ord(tdir);
         if P_TryWalk(actor) then
-          exit;
+          Exit;
       end;
     end;
   end
@@ -565,7 +565,7 @@ begin
       begin
         actor.movedir := Ord(tdir);
         if P_TryWalk(actor) then
-          exit;
+          Exit;
       end;
     end;
   end;
@@ -574,7 +574,7 @@ begin
   begin
     actor.movedir := Ord(turnaround);
     if P_TryWalk(actor) then
-      exit;
+      Exit;
   end;
 
   actor.movedir := Ord(DI_NODIR); // can not move
@@ -582,8 +582,8 @@ end;
 
 
 // P_LookForPlayers
-// If allaround is false, only look 180 degrees in front.
-// Returns true if a player is targeted.
+// If allaround is False, only look 180 degrees in front.
+// Returns True if a player is targeted.
 function P_LookForPlayers(actor: Pmobj_t; allaround: boolean): boolean;
 var
   c: integer;
@@ -611,7 +611,7 @@ begin
     begin
       // done looking
       Result := False;
-      exit;
+      Exit;
     end;
     Inc(c);
 
@@ -639,7 +639,7 @@ begin
 
     actor.target := player.mo;
     Result := True;
-    exit;
+    Exit;
   end;
 
   Result := False;
@@ -666,7 +666,7 @@ begin
     begin
       mo2 := Pmobj_t(th);
       if (mo2 <> mo) and (mo2.typ = mo.typ) and (mo2.health > 0) then
-        exit; // other Keen not dead
+        Exit; // other Keen not dead
     end;
     th := th.next;
   end;
@@ -704,7 +704,7 @@ begin
   if not seeyou then
   begin
     if not P_LookForPlayers(actor, False) then
-      exit;
+      Exit;
   end;
 
   // go into chase state
@@ -769,10 +769,10 @@ begin
   begin
     // look for a new target
     if P_LookForPlayers(actor, True) then
-      exit; // got a new target
+      Exit; // got a new target
 
     P_SetMobjState(actor, statenum_t(actor.info.spawnstate));
-    exit;
+    Exit;
   end;
 
   // do not attack twice in a row
@@ -781,7 +781,7 @@ begin
     actor.flags := actor.flags and not MF_JUSTATTACKED;
     if (gameskill <> sk_nightmare) and not fastparm then
       P_NewChaseDir(actor);
-    exit;
+    Exit;
   end;
 
   // check for melee attack
@@ -791,7 +791,7 @@ begin
       S_StartSound(actor, actor.info.attacksound);
 
     P_SetMobjState(actor, statenum_t(actor.info.meleestate));
-    exit;
+    Exit;
   end;
 
   nomissile := False;
@@ -806,14 +806,14 @@ begin
     begin
       P_SetMobjState(actor, statenum_t(actor.info.missilestate));
       actor.flags := actor.flags or MF_JUSTATTACKED;
-      exit;
+      Exit;
     end;
   end;
 
   // possibly choose another target
   if netgame and (actor.threshold = 0) and not P_CheckSight(actor, actor.target) then
     if P_LookForPlayers(actor, True) then
-      exit;  // got a new target
+      Exit;  // got a new target
 
   // chase towards player
   actor.movecount := actor.movecount - 1;
@@ -829,7 +829,7 @@ end;
 procedure A_FaceTarget(actor: Pmobj_t);
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   actor.flags := actor.flags and not MF_AMBUSH;
 
@@ -848,7 +848,7 @@ var
   slope: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   angle := actor.angle;
@@ -869,7 +869,7 @@ var
   slope: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   S_StartSound(actor, Ord(sfx_shotgn));
   A_FaceTarget(actor);
@@ -892,7 +892,7 @@ var
   slope: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   S_StartSound(actor, Ord(sfx_shotgn));
   A_FaceTarget(actor);
@@ -911,7 +911,7 @@ begin
   A_FaceTarget(actor);
 
   if P_Random < 40 then
-    exit;
+    Exit;
 
   if (actor.target = nil) or (actor.target.health <= 0) or
     not P_CheckSight(actor, actor.target) then
@@ -924,7 +924,7 @@ begin
   A_FaceTarget(actor);
 
   if P_Random < 10 then
-    exit;
+    Exit;
 
   if (actor.target = nil) or (actor.target.health <= 0) or
     not P_CheckSight(actor, actor.target) then
@@ -934,7 +934,7 @@ end;
 procedure A_BspiAttack(actor: Pmobj_t);
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
 
@@ -948,7 +948,7 @@ var
   damage: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   if P_CheckMeleeRange(actor) then
@@ -956,7 +956,7 @@ begin
     S_StartSound(actor, Ord(sfx_claw));
     damage := (P_Random mod 8 + 1) * 3;
     P_DamageMobj(actor.target, actor, actor, damage);
-    exit;
+    Exit;
   end;
 
   // launch a missile
@@ -968,7 +968,7 @@ var
   damage: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   if P_CheckMeleeRange(actor) then
@@ -983,14 +983,14 @@ var
   damage: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   if P_CheckMeleeRange(actor) then
   begin
     damage := (P_Random mod 6 + 1) * 10;
     P_DamageMobj(actor.target, actor, actor, damage);
-    exit;
+    Exit;
   end;
 
   // launch a missile
@@ -1000,7 +1000,7 @@ end;
 procedure A_CyberAttack(actor: Pmobj_t);
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   P_SpawnMissile(actor, actor.target, MT_ROCKET);
@@ -1011,14 +1011,14 @@ var
   damage: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   if P_CheckMeleeRange(actor) then
   begin
     S_StartSound(actor, Ord(sfx_claw));
     damage := (P_Random mod 8 + 1) * 10;
     P_DamageMobj(actor.target, actor, actor, damage);
-    exit;
+    Exit;
   end;
 
   // launch a missile
@@ -1031,7 +1031,7 @@ var
   mo: Pmobj_t;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   actor.z := actor.z + 16 * FRACUNIT; // so missile spawns higher
@@ -1056,7 +1056,7 @@ var
 begin
   if (gametic - demostarttic) and 3 <> 0 then
     // [crispy] fix revenant internal demo bug
-    exit;
+    Exit;
 
   // spawn a puff of smoke behind the rocket
   P_SpawnPuff(actor.x, actor.y, actor.z);
@@ -1072,7 +1072,7 @@ begin
   dest := actor.tracer;
 
   if (dest = nil) or (dest.health <= 0) then
-    exit;
+    Exit;
 
   // change angle
   exact := R_PointToAngle2(actor.x, actor.y, dest.x, dest.y);
@@ -1115,7 +1115,7 @@ end;
 procedure A_SkelWhoosh(actor: Pmobj_t);
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   S_StartSound(actor, Ord(sfx_skeswg));
@@ -1126,7 +1126,7 @@ var
   damage: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
 
@@ -1153,19 +1153,19 @@ begin
   if thing.flags and MF_CORPSE = 0 then
   begin
     Result := True; // not a monster
-    exit;
+    Exit;
   end;
 
   if thing.tics <> -1 then
   begin
     Result := True; // not lying still yet
-    exit;
+    Exit;
   end;
 
   if thing.info.raisestate = Ord(S_NULL) then
   begin
     Result := True; // monster doesn't have a raise state
-    exit;
+    Exit;
   end;
 
   maxdist := thing.info.radius + mobjinfo[Ord(MT_VILE)].radius;
@@ -1173,7 +1173,7 @@ begin
   if (abs(thing.x - viletryx) > maxdist) or (abs(thing.y - viletryy) > maxdist) then
   begin
     Result := True; // not actually touching
-    exit;
+    Exit;
   end;
 
   corpsehit := thing;
@@ -1237,7 +1237,7 @@ begin
           corpsehit.flags := info.flags;
           corpsehit.health := info.spawnhealth;
           corpsehit.target := nil;
-          exit;
+          Exit;
         end;
       end;
     end;
@@ -1262,11 +1262,11 @@ var
 begin
   dest := actor.tracer;
   if dest = nil then
-    exit;
+    Exit;
 
   // don't move it if the vile lost sight
   if not P_CheckSight(actor.target, dest) then
-    exit;
+    Exit;
 
   an := dest.angle shr ANGLETOFINESHIFT;
 
@@ -1296,7 +1296,7 @@ var
   fog: Pmobj_t;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
 
@@ -1315,12 +1315,12 @@ var
   an: angle_t;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
 
   if not P_CheckSight(actor, actor.target) then
-    exit;
+    Exit;
 
   S_StartSound(actor, Ord(sfx_barexp));
   P_DamageMobj(actor.target, actor, actor, 20);
@@ -1331,7 +1331,7 @@ begin
   fire := actor.tracer;
 
   if fire = nil then
-    exit;
+    Exit;
 
   // move the fire between the vile and the player
   fire.x := actor.target.x - FixedMul(24 * FRACUNIT, finecosine[an]);
@@ -1418,7 +1418,7 @@ var
   dist: integer;
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   dest := actor.target;
   actor.flags := actor.flags or MF_SKULLFLY;
@@ -1464,7 +1464,7 @@ begin
   // if there are allready 20 skulls on the level,
   // don't spit another one
   if count > 20 then
-    exit;
+    Exit;
 
   // okay, there's playe for another one
   an := angle shr ANGLETOFINESHIFT;
@@ -1483,7 +1483,7 @@ begin
   begin
     // kill it immediately
     P_DamageMobj(newmobj, actor, actor, 10000);
-    exit;
+    Exit;
   end;
 
   newmobj.target := actor.target;
@@ -1497,7 +1497,7 @@ end;
 procedure A_PainAttack(actor: Pmobj_t);
 begin
   if actor.target = nil then
-    exit;
+    Exit;
 
   A_FaceTarget(actor);
   A_PainShootSkull(actor, actor.angle);
@@ -1516,7 +1516,7 @@ var
   sound: integer;
 begin
   case actor.info.deathsound of
-    0: exit;
+    0: Exit;
     Ord(sfx_podth1),
     Ord(sfx_podth2),
     Ord(sfx_podth3):
@@ -1567,10 +1567,10 @@ begin
   if gamemode = commercial then
   begin
     if gamemap <> 7 then
-      exit;
+      Exit;
 
     if (mo.typ <> MT_FATSO) and (mo.typ <> MT_BABY) then
-      exit;
+      Exit;
   end
   else
   begin
@@ -1578,37 +1578,37 @@ begin
       1:
       begin
         if gamemap <> 8 then
-          exit;
+          Exit;
         if mo.typ <> MT_BRUISER then
-          exit;
+          Exit;
       end;
       2:
       begin
         if gamemap <> 8 then
-          exit;
+          Exit;
         if mo.typ <> MT_CYBORG then
-          exit;
+          Exit;
       end;
       3:
       begin
         if gamemap <> 8 then
-          exit;
+          Exit;
         if mo.typ <> MT_SPIDER then
-          exit;
+          Exit;
       end;
       4:
       begin
         case gamemap of
           6: if mo.typ <> MT_CYBORG then
-              exit;
+              Exit;
           8: if mo.typ <> MT_SPIDER then
-              exit;
+              Exit;
         end;
       end;
       else
       begin
         if gamemap <> 8 then
-          exit;
+          Exit;
       end;
     end;
   end;
@@ -1623,7 +1623,7 @@ begin
   end;
 
   if i = MAXPLAYERS then
-    exit;  // no one left alive, so do not end game
+    Exit;  // no one left alive, so do not end game
 
   // scan the remaining thinkers to see
   // if all bosses are dead
@@ -1636,7 +1636,7 @@ begin
       if (mo2 <> mo) and (mo2.typ = mo.typ) and (mo2.health > 0) then
       begin
         // other boss not dead
-        exit;
+        Exit;
       end;
     end;
     th := th.next;
@@ -1651,13 +1651,13 @@ begin
       begin
         junk.tag := 666;
         EV_DoFloor(@junk, lowerFloorToLowest);
-        exit;
+        Exit;
       end;
       if mo.typ = MT_BABY then
       begin
         junk.tag := 667;
         EV_DoFloor(@junk, raiseToTexture);
-        exit;
+        Exit;
       end;
     end;
   end
@@ -1668,7 +1668,7 @@ begin
       begin
         junk.tag := 666;
         EV_DoFloor(@junk, lowerFloorToLowest);
-        exit;
+        Exit;
       end;
       4:
       begin
@@ -1676,13 +1676,13 @@ begin
         begin
           junk.tag := 666;
           EV_DoDoor(@junk, blazeOpen);
-          exit;
+          Exit;
         end
         else if gamemap = 8 then
         begin
           junk.tag := 666;
           EV_DoFloor(@junk, lowerFloorToLowest);
-          exit;
+          Exit;
         end;
       end;
     end;
@@ -1828,12 +1828,12 @@ var
 begin
   easy := easy xor 1;
   if (gameskill <= sk_easy) and (easy = 0) then
-    exit;
+    Exit;
 
   if numbraintargets = 0 then // JVAL
   begin
     A_BrainAwake(mo);
-    exit;
+    Exit;
   end;
 
   // shoot a cube at current target
@@ -1858,14 +1858,14 @@ var
 begin
   mo.reactiontime := mo.reactiontime - 1;
   if mo.reactiontime > 0 then
-    exit; // still flying
+    Exit; // still flying
 
   targ := mo.target;
 
   if targ = nil then
   begin
     P_RemoveMobj(mo);
-    exit;
+    Exit;
   end;
 
   // First spawn teleport fog.

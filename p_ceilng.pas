@@ -65,7 +65,7 @@ begin
     if activeceilings[i] = nil then
     begin
       activeceilings[i] := c;
-      exit;
+      Exit;
     end;
 end;
 
@@ -80,7 +80,7 @@ begin
       activeceilings[i].sector.specialdata := nil;
       P_RemoveThinker(@activeceilings[i].thinker);
       activeceilings[i] := nil;
-      exit;
+      Exit;
     end;
 end;
 
@@ -292,3 +292,4 @@ begin
 end;
 
 end.
+

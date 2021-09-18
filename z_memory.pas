@@ -112,8 +112,8 @@ end;
 
 function TMemManager.item2ptr(const id: integer): Pointer;
 begin
-  result := fitems[id];
-  incp(result, SizeOf(memmanageritem_t));
+  Result := fitems[id];
+  incp(Result, SizeOf(memmanageritem_t));
 end;
 
 function TMemManager.ptr2item(const ptr: Pointer): integer;
@@ -121,7 +121,7 @@ var
   p: pointer;
 begin
   p := ptr;
-  result := Pmemmanageritem_t(incp(p, -SizeOf(memmanageritem_t))).index;
+  Result := Pmemmanageritem_t(incp(p, -SizeOf(memmanageritem_t))).index;
 end;
 
 procedure TMemManager.M_Free(ptr: Pointer);
@@ -178,10 +178,10 @@ begin
   fitems[fnumitems].tag := tag;
   fitems[fnumitems].index := fnumitems;
   fitems[fnumitems].user := user;
-  result := item2ptr(fnumitems);
+  Result := item2ptr(fnumitems);
   inc(fnumitems);
   if user <> nil then
-    PPointer(user)^ := result;
+    PPointer(user)^ := Result;
 end;
 
 function TMemManager.M_Realloc(ptr: Pointer; size: integer; tag: integer; user: Pointer): pointer;
@@ -193,21 +193,21 @@ begin
   if size = 0 then
   begin
     M_Free(ptr);
-    result := nil;
-    exit;
+    Result := nil;
+    Exit;
   end;
 
   if ptr = nil then
   begin
-    result := M_Malloc(size, tag, user);
-    exit;
+    Result := M_Malloc(size, tag, user);
+    Exit;
   end;
 
   i := ptr2item(ptr);
   if fitems[i].size = size then
   begin
-    result := ptr;
-    exit;
+    Result := ptr;
+    Exit;
   end;
 
   if size > fitems[i].size then
@@ -218,8 +218,8 @@ begin
   tmp := malloc(copysize);
   memcpy(tmp, ptr, copysize);
   M_Free(ptr);
-  result := M_Malloc(size, tag, user);
-  memcpy(result, tmp, copysize);
+  Result := M_Malloc(size, tag, user);
+  memcpy(Result, tmp, copysize);
   FreeMem(tmp, copysize);
 end;
 
@@ -247,12 +247,12 @@ end;
 // You can pass a NULL user if the tag is < PU_PURGELEVEL.
 function Z_Malloc(size: integer; tag: integer; user: pointer): pointer;
 begin
-  result := memmanager.M_Malloc(size, tag, user);
+  Result := memmanager.M_Malloc(size, tag, user);
 end;
 
 function Z_Realloc(ptr: pointer; size: integer; tag: integer; user: pointer): pointer;
 begin
-  result := memmanager.M_Realloc(ptr, size, tag, user);
+  Result := memmanager.M_Realloc(ptr, size, tag, user);
 end;
 
 // Z_FreeTags
@@ -268,4 +268,6 @@ begin
 end;
 
 end.
+
+
 

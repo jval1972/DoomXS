@@ -72,21 +72,21 @@ begin
     if x = node.x then
     begin
       Result := 2;
-      exit;
+      Exit;
     end;
     if x <= node.x then
     begin
       if node.dy > 0 then
-        result := 1
+        Result := 1
       else
-        result := 0;
-      exit;
+        Result := 0;
+      Exit;
     end;
     if node.dy < 0 then
-      result := 1
+      Result := 1
     else
-      result := 0;
-    exit;
+      Result := 0;
+    Exit;
   end;
 
   if node.dy = 0 then
@@ -94,21 +94,21 @@ begin
     if x = node.y then
     begin
       Result := 2;
-      exit;
+      Exit;
     end;
     if y <= node.y then
     begin
       if node.dx < 0 then
-        result := 1
+        Result := 1
       else
-        result := 0;
-      exit;
+        Result := 0;
+      Exit;
     end;
     if node.dx > 0 then
-      result := 1
+      Result := 1
     else
-      result := 0;
-    exit;
+      Result := 0;
+    Exit;
   end;
 
   dx := (x - node.x);
@@ -120,7 +120,7 @@ begin
   if right < left then
   begin
     Result := 0; // front side
-    exit;
+    Exit;
   end;
 
   if left = right then
@@ -143,7 +143,7 @@ begin
   if den = 0 then
   begin
     Result := 0;
-    exit;
+    Exit;
   end;
 
   num := FixedMul(_SHR(v1.x - v2.x, 8), v1.dy) +
@@ -153,7 +153,7 @@ begin
 end;
 
 // P_CrossSubsector
-// Returns true
+// Returns True
 //  if strace crosses the given subsector successfully.
 function P_CrossSubsector(num: integer): boolean;
 var
@@ -212,7 +212,7 @@ begin
     if line.flags and ML_TWOSIDED = 0 then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     // crosses a two sided line
@@ -241,7 +241,7 @@ begin
     if openbottom >= opentop then
     begin
       Result := False; // stop
-      exit;
+      Exit;
     end;
 
     frac := P_InterceptVector2(@strace, @divl);
@@ -263,7 +263,7 @@ begin
     if topslope <= bottomslope then
     begin
       Result := False; // stop
-      exit;
+      Exit;
     end;
   end;
 
@@ -272,7 +272,7 @@ begin
 end;
 
 // P_CrossBSPNode
-// Returns true
+// Returns True
 //  if strace crosses the given node successfully.
 function P_CrossBSPNode(bspnum: integer): boolean;
 var
@@ -285,7 +285,7 @@ begin
       Result := P_CrossSubsector(0)
     else
       Result := P_CrossSubsector(bspnum and not NF_SUBSECTOR);
-    exit;
+    Exit;
   end;
 
   bsp := @nodes[bspnum];
@@ -299,7 +299,7 @@ begin
   if not P_CrossBSPNode(bsp.children[side]) then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   // the partition plane is crossed here
@@ -307,7 +307,7 @@ begin
   begin
     // the line doesn't touch the other side
     Result := True;
-    exit;
+    Exit;
   end;
 
   // cross the ending side
@@ -315,7 +315,7 @@ begin
 end;
 
 // P_CheckSight
-// Returns true
+// Returns True
 //  if a straight line between t1 and t2 is unobstructed.
 // Uses REJECT.
 function P_CheckSight(t1: Pmobj_t; t2: Pmobj_t): boolean;
@@ -342,7 +342,7 @@ begin
   begin
     // can't possibly be connected
     Result := False;
-    exit;
+    Exit;
   end;
 
   // An unobstructed LOS is possible.
@@ -365,3 +365,6 @@ begin
 end;
 
 end.
+
+
+

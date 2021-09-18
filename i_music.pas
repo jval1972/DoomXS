@@ -227,7 +227,7 @@ begin
   if not Result then
   begin
     printf('I_MusToMidi(): Not a MUS file' + #13#10);
-    exit;
+    Exit;
   end;
 
   count := GetSongLength(MusData);
@@ -352,10 +352,10 @@ var
   i: integer;
 begin
   if M_CheckParm('-nomusic') <> 0 then
-    exit;
+    Exit;
 
   if hMidiStream <> 0 then
-    exit;
+    Exit;
 
   ZeroMemory(@midicaps, SizeOf(midicaps));
   MidiDevice := MIDI_MAPPER;
@@ -371,7 +371,7 @@ begin
   begin
     numdev := midiOutGetNumDevs;
     if numdev = 0 then // fatal
-      exit;
+      Exit;
 
     for i := -1 to numdev - 1 do
     begin
@@ -396,7 +396,7 @@ begin
   if rc <> MMSYSERR_NOERROR then
   begin
     hMidiStream := 0;
-    printf('I_InitMusic(): midiStreamOpen failed, result = %d' + #13#10, [rc]);
+    printf('I_InitMusic(): midiStreamOpen failed, Result = %d' + #13#10, [rc]);
   end;
   started := False;
 end;
@@ -413,12 +413,12 @@ var
   rc: MMRESULT;
 begin
   if (song = nil) or (hMidiStream = 0) then
-    exit;
+    Exit;
 
   loopsong := False;
   rc := midiOutReset(HMIDIOUT(hMidiStream));
   if rc <> MMSYSERR_NOERROR then
-    printf('I_StopMusic(): midiOutReset failed, result = %d' + #13#10, [rc]);
+    printf('I_StopMusic(): midiOutReset failed, Result = %d' + #13#10, [rc]);
 
   started := False;
 
@@ -429,7 +429,7 @@ begin
       rc := midiOutUnprepareHeader(HMIDIOUT(hMidiStream), @song.header[i],
         SizeOf(midiheader_t));
       if rc <> MMSYSERR_NOERROR then
-        printf('I_StopMusic(): midiOutUnprepareHeader failed, result = %d' +
+        printf('I_StopMusic(): midiOutUnprepareHeader failed, Result = %d' +
           #13#10, [rc]);
 
       song.header[i].lpData := nil;
@@ -455,12 +455,12 @@ begin
   begin
     rc := midiStreamStop(hMidiStream);
     if rc <> MMSYSERR_NOERROR then
-      printf('I_ShutdownMusic(): midiStreamStop failed, result = %d' + #13#10, [rc]);
+      printf('I_ShutdownMusic(): midiStreamStop failed, Result = %d' + #13#10, [rc]);
 
     started := False;
     rc := midiStreamClose(hMidiStream);
     if rc <> MMSYSERR_NOERROR then
-      printf('I_ShutdownMusic(): midiStreamClose failed, result = %d' + #13#10, [rc]);
+      printf('I_ShutdownMusic(): midiStreamClose failed, Result = %d' + #13#10, [rc]);
 
     hMidiStream := 0;
   end;
@@ -478,7 +478,7 @@ end;
 procedure I_PlaySong(handle: integer; looping: boolean);
 begin
   if (handle = 0) or (hMidiStream = 0) then
-    exit;
+    Exit;
   loopsong := looping;
   CurrentSong := Psonginfo_t(handle);
   S_SetMusicVolume(snd_MusicVolume);
@@ -490,7 +490,7 @@ var
   rc: MMRESULT;
 begin
   if hMidiStream = 0 then
-    exit;
+    Exit;
 
   rc := midiStreamPause(hMidiStream);
   if rc <> MMSYSERR_NOERROR then
@@ -511,7 +511,7 @@ var
   rc: MMRESULT;
 begin
   if hMidiStream = 0 then
-    exit;
+    Exit;
 
   rc := midiStreamRestart(hMidiStream);
   if rc <> MMSYSERR_NOERROR then
@@ -532,7 +532,7 @@ var
   song: Psonginfo_t;
 begin
   if (handle = 0) or (hMidiStream = 0) then
-    exit;
+    Exit;
 
   song := Psonginfo_t(handle);
 
@@ -547,7 +547,7 @@ var
   song: Psonginfo_t;
 begin
   if (handle = 0) or (hMidiStream = 0) then
-    exit;
+    Exit;
 
   I_StopSong(handle);
 
@@ -583,7 +583,7 @@ begin
       printf('I_RegisterSong(): Could not initialize midi stream' + #13#10);
       m_type := m_none;
       Result := 0;
-      exit;
+      Exit;
     end;
 
     for i := 0 to NUMMIDIHEADERS - 1 do
@@ -616,7 +616,7 @@ begin
       printf('I_RegisterSong(): Could not initialize MCI' + #13#10);
       m_type := m_none;
       Result := 0;
-      exit;
+      Exit;
     end;
     I_PlayMidi;
   end;
@@ -626,7 +626,7 @@ end;
 // Is the song playing?
 function I_QrySongPlaying(handle: integer): boolean;
 begin
-  result := CurrentSong <> nil;
+  Result := CurrentSong <> nil;
 end;
 
 const
@@ -698,10 +698,10 @@ var
   rc: MMRESULT;
 begin
   if m_type <> m_mus then
-    exit;
+    Exit;
 
   if (snd_MusicVolume = 0) or (CurrentSong = nil) then
-    exit;
+    Exit;
 
   for i := 0 to NUMMIDIHEADERS - 1 do
   begin
@@ -713,7 +713,7 @@ begin
         rc := midiOutUnprepareHeader(HMIDIOUT(hMidiStream), PMidiHdr(header),
           SizeOf(midiheader_t));
         if rc <> MMSYSERR_NOERROR then
-          printf('I_ProcessMusic(): midiOutUnprepareHeader failed, result = %d' +
+          printf('I_ProcessMusic(): midiOutUnprepareHeader failed, Result = %d' +
             #13#10, [rc]);
       end;
       header.lpData := @CurrentSong.midievents[CurrentSong.nextevent];
@@ -749,3 +749,5 @@ begin
 end;
 
 end.
+
+

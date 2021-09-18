@@ -94,8 +94,8 @@ procedure F_StartFinale;
 begin
   gameaction := ga_nothing;
   gamestate := GS_FINALE;
-  viewactive := false;
-  automapactive := false;
+  viewactive := False;
+  automapactive := False;
 
   // Okay - IWAD dependend stuff.
   // This has been changed severly, and
@@ -106,7 +106,7 @@ begin
     registered,
     retail:
       begin
-        S_ChangeMusic(Ord(mus_victor), true);
+        S_ChangeMusic(Ord(mus_victor), True);
         case gameepisode of
           1:
             begin
@@ -135,7 +135,7 @@ begin
     // DOOM II and missions packs with E1, M34
     commercial:
       begin
-        S_ChangeMusic(Ord(mus_read_m), true);
+        S_ChangeMusic(Ord(mus_read_m), True);
         case gamemap of
           6:
             begin
@@ -203,7 +203,7 @@ begin
       end;
   else
     begin
-      S_ChangeMusic(Ord(mus_read_m), true);
+      S_ChangeMusic(Ord(mus_read_m), True);
       finaleflat := 'F_SKY1'; // Not used anywhere else.
       finaletext := C1TEXT;   // FIXME - other text, music?
     end;
@@ -214,9 +214,9 @@ end;
 
 function F_Responder(ev: Pevent_t): boolean;
 begin
-  result := false;
+  Result := False;
   if finalestage = 2 then
-    result := F_CastResponder(ev);
+    Result := F_CastResponder(ev);
 end;
 
 // F_Ticker
@@ -250,11 +250,11 @@ begin
   if finalestage = 2 then
   begin
     F_CastTicker;
-    exit;
+    Exit;
   end;
 
   if gamemode = commercial then
-    exit;
+    Exit;
 
   if (finalestage = 0) and (finalecount > Length(finaletext) * TEXTSPEED + TEXTWAIT) then
   begin
@@ -331,11 +331,11 @@ begin
     w := hu_font[c1].width;
     if cx + w > 320 then
       break;
-    V_DrawPatch(cx, cy, SCN_SCRF, hu_font[c1], false);
+    V_DrawPatch(cx, cy, SCN_SCRF, hu_font[c1], False);
     cx := cx + w;
     dec(count);
   end;
-  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
+  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, True);
 end;
 
 // Final DOOM 2 animation
@@ -366,17 +366,17 @@ var
 procedure F_StartCast;
 begin
   if finalestage = 2 then
-    exit;
+    Exit;
   wipegamestate := -1;    // force a screen wipe
   castnum := 0;
   caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
   casttics := caststate.tics;
-  castdeath := false;
+  castdeath := False;
   finalestage := 2;
   castframes := 0;
   castonmelee := 0;
-  castattacking := false;
-  S_ChangeMusic(Ord(mus_evil), true);
+  castattacking := False;
+  S_ChangeMusic(Ord(mus_evil), True);
 end;
 
 // F_CastTicker
@@ -387,13 +387,13 @@ var
 begin
   dec(casttics);
   if casttics > 0 then
-    exit; // not time to change state yet
+    Exit; // not time to change state yet
 
   if (caststate.tics = -1) or (caststate.nextstate = S_NULL) then
   begin
     // switch from deathstate to next monster
     inc(castnum);
-    castdeath := false;
+    castdeath := False;
     if castorder[castnum].name = '' then
       castnum := 0;
     if mobjinfo[Ord(castorder[castnum].casttype)].seesound <> 0 then
@@ -406,13 +406,13 @@ begin
   // just advance to next state in animation
     if caststate = @states[Ord(S_PLAY_ATK1)] then
     begin
-      castattacking := false;
+      castattacking := False;
       castframes := 0;
       caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
       casttics := caststate.tics;
       if casttics = -1 then
         casttics := 15;
-      exit;
+      Exit;
     end;
     st := Ord(caststate.nextstate);
     caststate := @states[st];
@@ -456,7 +456,7 @@ begin
   if castframes = 12 then
   begin
     // go into attack frame
-    castattacking := true;
+    castattacking := True;
     if castonmelee <> 0 then
       caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].meleestate]
     else
@@ -476,7 +476,7 @@ begin
     if (castframes = 24) or
        (caststate = @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate]) then
     begin
-      castattacking := false;
+      castattacking := False;
       castframes := 0;
       caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].seestate];
     end;
@@ -492,26 +492,26 @@ function F_CastResponder(ev: Pevent_t): boolean;
 begin
   if ev.typ <> ev_keydown then
   begin
-    result := false;
-    exit;
+    Result := False;
+    Exit;
   end;
 
   if castdeath then
   begin
-    result := true; // already in dying frames
-    exit;
+    Result := True; // already in dying frames
+    Exit;
   end;
 
   // go into death frame
-  castdeath := true;
+  castdeath := True;
   caststate := @states[mobjinfo[Ord(castorder[castnum].casttype)].deathstate];
   casttics := caststate.tics;
   castframes := 0;
-  castattacking := false;
+  castattacking := False;
   if mobjinfo[Ord(castorder[castnum].casttype)].deathsound <> 0 then
     S_StartSound(nil, mobjinfo[Ord(castorder[castnum].casttype)].deathsound);
 
-  result := true;
+  Result := True;
 end;
 
 procedure F_CastPrint(text: string);
@@ -558,7 +558,7 @@ begin
     else
     begin
       w := hu_font[c1].width;
-      V_DrawPatch(cx, 180, SCN_SCRF, hu_font[c1], false);
+      V_DrawPatch(cx, 180, SCN_SCRF, hu_font[c1], False);
       cx := cx + w;
     end;
   end;
@@ -574,7 +574,7 @@ var
   patch: Ppatch_t;
 begin
   // erase the entire screen to a background
-  V_DrawPatch(0, 0, SCN_SCRF, W_CacheLumpName('BOSSBACK', PU_CACHE), false);
+  V_DrawPatch(0, 0, SCN_SCRF, W_CacheLumpName('BOSSBACK', PU_CACHE), False);
 
   F_CastPrint(castorder[castnum].name);
 
@@ -586,10 +586,10 @@ begin
 
   patch := W_CacheLumpNum(lump + firstspritelump, PU_CACHE);
   if flip then
-    V_DrawPatchFlipped(160, 170, SCN_SCRF, patch, false)
+    V_DrawPatchFlipped(160, 170, SCN_SCRF, patch, False)
   else
-    V_DrawPatch(160, 170, SCN_SCRF, patch, false);
-  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
+    V_DrawPatch(160, 170, SCN_SCRF, patch, False);
+  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, True);
 end;
 
 // F_DrawPatchCol
@@ -658,7 +658,7 @@ begin
     begin
       V_DrawPatch((320 - 13 * 8) div 2,
                   (200 - 8 * 8) div 2,
-                   SCN_SCRF, W_CacheLumpName('END0', PU_CACHE), false);
+                   SCN_SCRF, W_CacheLumpName('END0', PU_CACHE), False);
       laststage := 0;
     end
     else
@@ -675,11 +675,11 @@ begin
       sprintf(name,'END%d', [stage]);
       V_DrawPatch((320 - 13 * 8) div 2,
                   (200 - 8 * 8) div 2,
-                   SCN_SCRF, W_CacheLumpName(name, PU_CACHE), false);
+                   SCN_SCRF, W_CacheLumpName(name, PU_CACHE), False);
     end;
   end;
 
-  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, true);
+  V_CopyRect(0, 0, SCN_SCRF, 320, 200, 0, 0, SCN_FG, True);
 end;
 
 // F_Drawer
@@ -688,7 +688,7 @@ begin
   if finalestage = 2 then
   begin
     F_CastDrawer;
-    exit;
+    Exit;
   end;
 
   if finalestage = 0 then
@@ -700,15 +700,15 @@ begin
         begin
           if gamemode = retail then
             V_DrawPatch(0, 0, 0,
-              W_CacheLumpName('CREDIT', PU_CACHE), true)
+              W_CacheLumpName('CREDIT', PU_CACHE), True)
           else
             V_DrawPatch(0, 0, 0,
-              W_CacheLumpName('HELP2', PU_CACHE), true);
+              W_CacheLumpName('HELP2', PU_CACHE), True);
         end;
       2:
         begin
           V_DrawPatch(0, 0, 0,
-            W_CacheLumpName('VICTORY2', PU_CACHE), true);
+            W_CacheLumpName('VICTORY2', PU_CACHE), True);
         end;
       3:
         begin
@@ -717,7 +717,7 @@ begin
       4:
         begin
           V_DrawPatch(0, 0, 0,
-            W_CacheLumpName('ENDPIC', PU_CACHE), true);
+            W_CacheLumpName('ENDPIC', PU_CACHE), True);
         end;
     end;
   end;
@@ -779,4 +779,8 @@ initialization
   castorder[17].casttype := mobjtype_t(0);
 
 end.
+
+
+
+
 

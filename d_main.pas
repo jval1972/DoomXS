@@ -127,7 +127,7 @@ var
   ev: Pevent_t;
 begin
   if I_GameFinished then
-    exit;
+    Exit;
 
   while eventtail <> eventhead do
   begin
@@ -137,7 +137,7 @@ begin
     if I_GameFinished then
     begin
       eventtail := eventhead;
-      exit;
+      Exit;
     end;
     Inc(eventtail);
     eventtail := eventtail and (MAXEVENTS - 1);
@@ -163,7 +163,7 @@ var
   redrawsbar: boolean;
 begin
   if nodrawers then
-    exit; // for comparative timing / profiling
+    Exit; // for comparative timing / profiling
 
   redrawsbar := False;
 
@@ -195,7 +195,7 @@ begin
   // see if the border needs to be updated to the screen
   if (gamestate = GS_LEVEL) and not automapactive and
     (scaledviewwidth <> SCREENWIDTH) then
-    V_CopyRect(0, 0, SCN_BG, SCREENWIDTH, SCREENHEIGHT, 0, 0, SCN_FG, false);
+    V_CopyRect(0, 0, SCN_BG, SCREENWIDTH, SCREENHEIGHT, 0, 0, SCN_FG, False);
 
   // do buffered drawing
   case gamestate of
@@ -256,7 +256,7 @@ begin
   if not wipe then
   begin
     I_FinishUpdate; // page flip or blit buffer
-    exit;
+    Exit;
   end;
 
   // wipe update
@@ -444,7 +444,7 @@ begin
     begin
       wadfiles[i] := _file;
       numwadfiles := i + 1;
-      exit;
+      Exit;
     end;
 end;
 
@@ -461,8 +461,8 @@ var
 begin
   if fexists(fn) then
   begin
-    result := fn;
-    exit;
+    Result := fn;
+    Exit;
   end;
 
   doomwaddir := getenv('DOOMWADDIR');
@@ -491,20 +491,20 @@ begin
       paths.Add(tmp);
   end;
 
-  result := fn;
+  Result := fn;
   for i := 0 to paths.Count - 1 do
   begin
     tmp := paths.Strings(i);
     if tmp[length(tmp)] <> '\' then
       tmp := tmp + '\';
-    if fexists(tmp + result) then
+    if fexists(tmp + Result) then
     begin
-      result := tmp + result;
+      Result := tmp + Result;
       paths.free;
-      exit;
+      Exit;
     end;
   end;
-  result := fn;
+  Result := fn;
   paths.free;
 end;
 
@@ -529,7 +529,7 @@ begin
       printf(' External main wad in use: %s'#13#10, [iwad]);
       gamemode := indetermined;
       D_AddFile(iwad);
-      exit;
+      Exit;
     end;
   end;
 
@@ -542,7 +542,7 @@ begin
     language := french;
     printf('French version' + #13#10);
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   iwad := FileInDoomPath('doom2.wad');
@@ -550,7 +550,7 @@ begin
   begin
     gamemode := commercial;
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   iwad := FileInDoomPath('plutonia.wad');
@@ -558,7 +558,7 @@ begin
   begin
     gamemode := commercial;
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   iwad := FileInDoomPath('tnt.wad');
@@ -566,7 +566,7 @@ begin
   begin
     gamemode := commercial;
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   iwad := FileInDoomPath('doomu.wad');
@@ -574,7 +574,7 @@ begin
   begin
     gamemode := retail;
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   iwad := FileInDoomPath('doom.wad');
@@ -582,7 +582,7 @@ begin
   begin
     gamemode := registered;
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   iwad := FileInDoomPath('doom1.wad');
@@ -590,7 +590,7 @@ begin
   begin
     gamemode := shareware;
     D_AddFile(iwad);
-    exit;
+    Exit;
   end;
 
   printf('Game mode indeterminate.' + #13#10);
@@ -1060,3 +1060,6 @@ initialization
     wadfiles[i] := '';
 
 end.
+
+
+

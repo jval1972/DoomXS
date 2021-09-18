@@ -72,7 +72,7 @@ begin
   if thing.flags and MF_MISSILE <> 0 then
   begin
     Result := 0;
-    exit;
+    Exit;
   end;
 
   // Don't teleport if hit back of line,
@@ -80,7 +80,7 @@ begin
   if side = 1 then
   begin
     Result := 0;
-    exit;
+    Exit;
   end;
 
   tag := line.tag;
@@ -122,7 +122,7 @@ begin
         if not P_TeleportMove(thing, m.x, m.y) then
         begin
           Result := 0;
-          exit;
+          Exit;
         end;
 
         if not (gamemission in [pack_tnt, pack_plut]) then
@@ -150,7 +150,7 @@ begin
         thing.momy := 0;
         thing.momz := 0;
         Result := 1;
-        exit;
+        Exit;
       end;
     end;
   end;
@@ -158,3 +158,4 @@ begin
 end;
 
 end.
+

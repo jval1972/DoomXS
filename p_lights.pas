@@ -71,7 +71,7 @@ var
 begin
   flick.count := flick.count - 1;
   if flick.count > 0 then
-    exit;
+    Exit;
 
   amount := (P_Random and 3) * 16;
 
@@ -111,7 +111,7 @@ procedure T_LightFlash(flash: Plightflash_t);
 begin
   flash.count := flash.count - 1;
   if flash.count > 0 then
-    exit;
+    Exit;
 
   if flash.sector.lightlevel = flash.maxlight then
   begin
@@ -156,7 +156,7 @@ procedure T_StrobeFlash(flash: Pstrobe_t);
 begin
   flash.count := flash.count - 1;
   if flash.count > 0 then
-    exit;
+    Exit;
 
   if flash.sector.lightlevel = flash.minlight then
   begin

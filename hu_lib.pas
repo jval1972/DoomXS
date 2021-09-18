@@ -159,7 +159,7 @@ procedure HUlib_clearTextLine(t: Phu_textline_t);
 begin
   t.len := 0;
   t.l[0] := Chr(0);
-  t.needsupdate := 1; //true;
+  t.needsupdate := 1; //True;
 end;
 
 procedure HUlib_initTextLine(t: Phu_textline_t; x: integer; y: integer; f: Ppatch_tPArray; sc: integer);
@@ -174,27 +174,27 @@ end;
 function HUlib_addCharToTextLine(t: Phu_textline_t; ch: char): boolean;
 begin
   if t.len = HU_MAXLINELENGTH then
-    result := false
+    Result := False
   else
   begin
     t.l[t.len] := ch;
     inc(t.len);
     t.l[t.len] := Chr(0);
     t.needsupdate := 4;
-    result := true;
+    Result := True;
   end;
 end;
 
 function HUlib_delCharFromTextLine(t: Phu_textline_t): boolean;
 begin
   if t.len = 0 then
-    result := false
+    Result := False
   else
   begin
     dec(t.len);
     t.l[t.len] := Chr(0);
     t.needsupdate := 4;
-    result := true;
+    Result := True;
   end;
 end;
 
@@ -215,7 +215,7 @@ begin
       w := l.f[Ord(c) - l.sc].width;
       if x + w > SCREENWIDTH then
         break;
-      V_DrawPatch(x, l.y, FG, l.f[Ord(c) - l.sc], false);
+      V_DrawPatch(x, l.y, FG, l.f[Ord(c) - l.sc], False);
       x := x + w;
     end
     else
@@ -228,7 +228,7 @@ begin
 
   // draw the cursor if requested
   if drawcursor and (x + l.f[Ord('_') - l.sc].width <= SCREENWIDTH) then
-    V_DrawPatch(x, l.y, FG, l.f[Ord('_') - l.sc], false);
+    V_DrawPatch(x, l.y, FG, l.f[Ord('_') - l.sc], False);
 end;
 
 // sorta called by HU_Erase and just better darn get things straight
@@ -273,7 +273,7 @@ var
 begin
   s.h := h;
   s._on := _on;
-  s.laston := true;
+  s.laston := True;
   s.cl := 0;
   for i := 0 to h - 1 do
     HUlib_initTextLine(@s.l[i], x, y - i * (font[0].height + 1),
@@ -314,7 +314,7 @@ var
   l: Phu_textline_t;
 begin
   if not s._on^ then
-    exit; // if not on, don't draw
+    Exit; // if not on, don't draw
 
   // draw everything
   for i := 0 to s.h - 1 do
@@ -326,7 +326,7 @@ begin
     l := @s.l[idx];
 
     // need a decision made here on whether to skip the draw
-    HUlib_drawTextLine(l, false); // no cursor, please
+    HUlib_drawTextLine(l, False); // no cursor, please
   end;
 end;
 
@@ -348,7 +348,7 @@ procedure HUlib_initIText(it: Phu_itext_t; x: integer; y: integer; font: Ppatch_
 begin
   it.lm := 0; // default left margin is start of text
   it._on := _on;
-  it.laston := true;
+  it.laston := True;
   HUlib_initTextLine(@it.l, x, y, font, startchar);
 end;
 
@@ -367,7 +367,7 @@ begin
 end;
 
 // wrapper function for handling general keyed input.
-// returns true if it ate the key
+// returns True if it ate the key
 function HUlib_keyInIText(it: Phu_itext_t; ch: byte): boolean;
 begin
   if (ch >= Ord(' ')) and (ch <= Ord('_')) then
@@ -377,17 +377,17 @@ begin
     HUlib_delCharFromIText(it)
   else if ch <> KEY_ENTER then
   begin
-    result := false; // did not eat key
-    exit;
+    Result := False; // did not eat key
+    Exit;
   end;
 
-  result := true; // ate the key
+  Result := True; // ate the key
 end;
 
 procedure HUlib_drawIText(it: Phu_itext_t);
 begin
   if it._on^ then
-    HUlib_drawTextLine(@it.l, true); // draw the line w/ cursor
+    HUlib_drawTextLine(@it.l, True); // draw the line w/ cursor
 end;
 
 procedure HUlib_eraseIText(it: Phu_itext_t);

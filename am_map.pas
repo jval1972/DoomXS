@@ -749,7 +749,7 @@ end;
 procedure AM_Ticker;
 begin
   if not automapactive then
-    exit;
+    Exit;
 
   Inc(amclock);
 
@@ -818,7 +818,7 @@ begin
   if outcode1 and outcode2 <> 0 then
   begin
     Result := False; // trivially outside
-    exit;
+    Exit;
   end;
 
   if ml.a.x < m_x then
@@ -834,7 +834,7 @@ begin
   if outcode1 and outcode2 <> 0 then
   begin
     Result := False; // trivially outside
-    exit;
+    Exit;
   end;
 
   // transform to frame-buffer coordinates.
@@ -849,7 +849,7 @@ begin
   if outcode1 and outcode2 <> 0 then
   begin
     Result := False; // trivially outside
-    exit;
+    Exit;
   end;
 
   while outcode1 or outcode2 <> 0 do
@@ -905,7 +905,7 @@ begin
     if outcode1 and outcode2 <> 0 then
     begin
       Result := False; // trivially outside
-      exit;
+      Exit;
     end;
   end;
 
@@ -928,7 +928,7 @@ begin
     (fl.b.x < 0) or (fl.b.x >= f_w) or (fl.b.y < 0) or (fl.b.y >= f_h) then
   begin
     I_Error('AM_drawFline(): fuck!');
-    exit;
+    Exit;
   end;
 
   dx := fl.b.x - fl.a.x;
@@ -955,7 +955,7 @@ begin
     begin
       PUTDOT(x, y, color);
       if x = fl.b.x then
-        exit;
+        Exit;
       if d >= 0 then
       begin
         y := y + sy;
@@ -972,7 +972,7 @@ begin
     begin
       PUTDOT(x, y, color);
       if y = fl.b.y then
-        exit;
+        Exit;
       if d >= 0 then
       begin
         x := x + sx;
@@ -1179,7 +1179,7 @@ begin
       AM_drawLineCharacter
       (@player_arrow, NUMPLYRLINES, 0, plr.mo.angle,
         WHITE, plr.mo.x, plr.mo.y);
-    exit;
+    Exit;
   end;
 
   their_color := -1;
@@ -1249,7 +1249,7 @@ end;
 procedure AM_Drawer;
 begin
   if not automapactive then
-    exit;
+    Exit;
 
   AM_clearFB(BACKGROUND);
   if grid then
@@ -1460,3 +1460,4 @@ begin
 end;
 
 end.
+

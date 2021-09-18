@@ -40,7 +40,7 @@ var
   language: Language_t = english;
 
 // Set if homebrew PWAD stuff has been added.
-  modifiedgame: boolean = false;
+  modifiedgame: boolean = False;
 
 implementation
 

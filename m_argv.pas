@@ -59,7 +59,7 @@ begin
     if strupper(check) = myargv[i] then
     begin
       Result := i;
-      exit;
+      Exit;
     end;
   Result := 0;
 end;

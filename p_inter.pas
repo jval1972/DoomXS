@@ -76,7 +76,7 @@ const
 // P_GiveAmmo
 // Num is the number of clip loads,
 // not the individual count (0= 1/2 clip).
-// Returns false if the ammo can't be picked up at all
+// Returns False if the ammo can't be picked up at all
 function P_GiveAmmo(player: Pplayer_t; ammo: ammotype_t; num: integer): boolean;
 var
   oldammo: integer;
@@ -84,7 +84,7 @@ begin
   if ammo = am_noammo then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if (Ord(ammo) < 0) or (Ord(ammo) > Ord(NUMAMMO)) then
@@ -93,7 +93,7 @@ begin
   if player.ammo[Ord(ammo)] = player.maxammo[Ord(ammo)] then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if num <> 0 then
@@ -120,7 +120,7 @@ begin
   if oldammo <> 0 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   // We were down to zero,
@@ -182,7 +182,7 @@ begin
     if player.weaponowned[Ord(weapon)] > 0 then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     player.bonuscount := player.bonuscount + BONUSADD;
@@ -197,7 +197,7 @@ begin
     if (player = @players[consoleplayer]) then
       S_StartSound(nil, Ord(sfx_wpnup));
     Result := False;
-    exit;
+    Exit;
   end;
 
   if weaponinfo[Ord(weapon)].ammo <> am_noammo then
@@ -225,13 +225,13 @@ begin
 end;
 
 // P_GiveBody
-// Returns false if the body isn't needed at all
+// Returns False if the body isn't needed at all
 function P_GiveBody(player: Pplayer_t; num: integer): boolean;
 begin
   if player.health >= MAXHEALTH then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   player.health := player.health + num;
@@ -243,7 +243,7 @@ begin
 end;
 
 // P_GiveArmor
-// Returns false if the armor is worse
+// Returns False if the armor is worse
 // than the current armor.
 function P_GiveArmor(player: Pplayer_t; armortype: integer): boolean;
 var
@@ -253,7 +253,7 @@ begin
   if player.armorpoints >= hits then
   begin
     Result := False;  // don't pick up
-    exit;
+    Exit;
   end;
 
   player.armortype := armortype;
@@ -266,7 +266,7 @@ end;
 procedure P_GiveCard(player: Pplayer_t; card: card_t);
 begin
   if player.cards[Ord(card)] then
-    exit;
+    Exit;
 
   player.bonuscount := BONUSADD;
   player.cards[Ord(card)] := True;
@@ -279,7 +279,7 @@ begin
   begin
     player.powers[power] := INVULNTICS;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if power = Ord(pw_invisibility) then
@@ -287,21 +287,21 @@ begin
     player.powers[power] := INVISTICS;
     player.mo.flags := player.mo.flags or MF_SHADOW;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if power = Ord(pw_infrared) then
   begin
     player.powers[power] := INFRATICS;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if power = Ord(pw_ironfeet) then
   begin
     player.powers[power] := IRONTICS;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if power = Ord(pw_strength) then
@@ -309,7 +309,7 @@ begin
     P_GiveBody(player, 100);
     player.powers[power] := 1;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if player.powers[power] <> 0 then
@@ -334,7 +334,7 @@ begin
 
   if (delta > toucher.height) or (delta < -8 * FRACUNIT) then
     // out of reach
-    exit;
+    Exit;
 
   sound := Ord(sfx_itemup);
   player := toucher.player;
@@ -342,7 +342,7 @@ begin
   // Dead thing touching.
   // Can happen with a sliding player corpse.
   if toucher.health <= 0 then
-    exit;
+    Exit;
 
   // Identify by sprite.
   case special.sprite of
@@ -350,14 +350,14 @@ begin
     SPR_ARM1:
     begin
       if not P_GiveArmor(player, 1) then
-        exit;
+        Exit;
       player.msg := GOTARMOR;
     end;
 
     SPR_ARM2:
     begin
       if not P_GiveArmor(player, 2) then
-        exit;
+        Exit;
       player.msg := GOTMEGA;
     end;
 
@@ -394,7 +394,7 @@ begin
     SPR_MEGA:
     begin
       if gamemode <> commercial then
-        exit;
+        Exit;
       player.health := 200;
       player.mo.health := player.health;
       P_GiveArmor(player, 2);
@@ -410,7 +410,7 @@ begin
         player.msg := GOTBLUECARD;
       P_GiveCard(player, it_bluecard);
       if netgame then
-        exit;
+        Exit;
     end;
 
     SPR_YKEY:
@@ -419,7 +419,7 @@ begin
         player.msg := GOTYELWCARD;
       P_GiveCard(player, it_yellowcard);
       if netgame then
-        exit;
+        Exit;
     end;
 
     SPR_RKEY:
@@ -428,7 +428,7 @@ begin
         player.msg := GOTREDCARD;
       P_GiveCard(player, it_redcard);
       if netgame then
-        exit;
+        Exit;
     end;
 
     SPR_BSKU:
@@ -437,7 +437,7 @@ begin
         player.msg := GOTBLUESKUL;
       P_GiveCard(player, it_blueskull);
       if netgame then
-        exit;
+        Exit;
     end;
 
     SPR_YSKU:
@@ -446,7 +446,7 @@ begin
         player.msg := GOTYELWSKUL;
       P_GiveCard(player, it_yellowskull);
       if netgame then
-        exit;
+        Exit;
     end;
 
     SPR_RSKU:
@@ -455,14 +455,14 @@ begin
         player.msg := GOTREDSKULL;
       P_GiveCard(player, it_redskull);
       if netgame then
-        exit;
+        Exit;
     end;
 
     // medikits, heals
     SPR_STIM:
     begin
       if not P_GiveBody(player, 10) then
-        exit;
+        Exit;
       player.msg := GOTSTIM;
     end;
 
@@ -470,7 +470,7 @@ begin
     begin
       oldhealth := player.health; // JVAL: Fixed the medikid message bug
       if not P_GiveBody(player, 25) then
-        exit;
+        Exit;
 
       if oldhealth < 25 then
         player.msg := GOTMEDINEED
@@ -482,7 +482,7 @@ begin
     SPR_PINV:
     begin
       if not P_GivePower(player, Ord(pw_invulnerability)) then
-        exit;
+        Exit;
       player.msg := GOTINVUL;
       sound := Ord(sfx_getpow);
     end;
@@ -490,7 +490,7 @@ begin
     SPR_PSTR:
     begin
       if not P_GivePower(player, Ord(pw_strength)) then
-        exit;
+        Exit;
       player.msg := GOTBERSERK;
       if player.readyweapon <> wp_fist then
         player.pendingweapon := wp_fist;
@@ -500,7 +500,7 @@ begin
     SPR_PINS:
     begin
       if not P_GivePower(player, Ord(pw_invisibility)) then
-        exit;
+        Exit;
       player.msg := GOTINVIS;
       sound := Ord(sfx_getpow);
     end;
@@ -508,7 +508,7 @@ begin
     SPR_SUIT:
     begin
       if not P_GivePower(player, Ord(pw_ironfeet)) then
-        exit;
+        Exit;
       player.msg := GOTSUIT;
       sound := Ord(sfx_getpow);
     end;
@@ -516,7 +516,7 @@ begin
     SPR_PMAP:
     begin
       if not P_GivePower(player, Ord(pw_allmap)) then
-        exit;
+        Exit;
       player.msg := GOTMAP;
       sound := Ord(sfx_getpow);
     end;
@@ -524,7 +524,7 @@ begin
     SPR_PVIS:
     begin
       if not P_GivePower(player, Ord(pw_infrared)) then
-        exit;
+        Exit;
       player.msg := GOTVISOR;
       sound := Ord(sfx_getpow);
     end;
@@ -535,12 +535,12 @@ begin
       if special.flags and MF_DROPPED <> 0 then
       begin
         if not P_GiveAmmo(player, am_clip, 0) then
-          exit;
+          Exit;
       end
       else
       begin
         if not P_GiveAmmo(player, am_clip, 1) then
-          exit;
+          Exit;
       end;
       player.msg := GOTCLIP;
     end;
@@ -548,49 +548,49 @@ begin
     SPR_AMMO:
     begin
       if not P_GiveAmmo(player, am_clip, 5) then
-        exit;
+        Exit;
       player.msg := GOTCLIPBOX;
     end;
 
     SPR_ROCK:
     begin
       if not P_GiveAmmo(player, am_misl, 1) then
-        exit;
+        Exit;
       player.msg := GOTROCKET;
     end;
 
     SPR_BROK:
     begin
       if not P_GiveAmmo(player, am_misl, 5) then
-        exit;
+        Exit;
       player.msg := GOTROCKBOX;
     end;
 
     SPR_CELL:
     begin
       if not P_GiveAmmo(player, am_cell, 1) then
-        exit;
+        Exit;
       player.msg := GOTCELL;
     end;
 
     SPR_CELP:
     begin
       if not P_GiveAmmo(player, am_cell, 5) then
-        exit;
+        Exit;
       player.msg := GOTCELLBOX;
     end;
 
     SPR_SHEL:
     begin
       if not P_GiveAmmo(player, am_shell, 1) then
-        exit;
+        Exit;
       player.msg := GOTSHELLS;
     end;
 
     SPR_SBOX:
     begin
       if not P_GiveAmmo(player, am_shell, 5) then
-        exit;
+        Exit;
       player.msg := GOTSHELLBOX;
     end;
 
@@ -611,7 +611,7 @@ begin
     SPR_BFUG:
     begin
       if not P_GiveWeapon(player, wp_bfg, False) then
-        exit;
+        Exit;
       player.msg := GOTBFG9000;
       sound := Ord(sfx_wpnup);
     end;
@@ -620,7 +620,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_chaingun,
         special.flags and MF_DROPPED <> 0) then
-        exit;
+        Exit;
       player.msg := GOTCHAINGUN;
       sound := Ord(sfx_wpnup);
     end;
@@ -628,7 +628,7 @@ begin
     SPR_CSAW:
     begin
       if not P_GiveWeapon(player, wp_chainsaw, False) then
-        exit;
+        Exit;
       player.msg := GOTCHAINSAW;
       sound := Ord(sfx_wpnup);
     end;
@@ -636,7 +636,7 @@ begin
     SPR_LAUN:
     begin
       if not P_GiveWeapon(player, wp_missile, False) then
-        exit;
+        Exit;
       player.msg := GOTLAUNCHER;
       sound := Ord(sfx_wpnup);
     end;
@@ -644,7 +644,7 @@ begin
     SPR_PLAS:
     begin
       if not P_GiveWeapon(player, wp_plasma, False) then
-        exit;
+        Exit;
       player.msg := GOTPLASMA;
       sound := Ord(sfx_wpnup);
     end;
@@ -653,7 +653,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_shotgun,
         special.flags and MF_DROPPED <> 0) then
-        exit;
+        Exit;
       player.msg := GOTSHOTGUN;
       sound := Ord(sfx_wpnup);
     end;
@@ -662,7 +662,7 @@ begin
     begin
       if not P_GiveWeapon(player, wp_supershotgun,
         special.flags and MF_DROPPED <> 0) then
-        exit;
+        Exit;
       player.msg := GOTSHOTGUN2;
       sound := Ord(sfx_wpnup);
     end;
@@ -750,7 +750,7 @@ begin
     MT_CHAINGUY:
       item := MT_CHAINGUN;
     else
-      exit;
+      Exit;
   end;
 
   mo := P_SpawnMobj(target.x, target.y, ONFLOORZ, item);
@@ -774,10 +774,10 @@ var
   thrust: fixed_t;
 begin
   if target.flags and MF_SHOOTABLE = 0 then
-    exit; // shouldn't happen...
+    Exit; // shouldn't happen...
 
   if target.health <= 0 then
-    exit;
+    Exit;
 
   if target.flags and MF_SKULLFLY <> 0 then
   begin
@@ -827,7 +827,7 @@ begin
     // ignore damage in GOD mode, or with INVUL power.
     if (damage < 1000) and ((player.cheats and CF_GODMODE <> 0) or
       (player.powers[Ord(pw_invulnerability)] <> 0)) then
-      exit;
+      Exit;
 
     if player.armortype <> 0 then
     begin
@@ -863,7 +863,7 @@ begin
   if target.health <= 0 then
   begin
     P_KillMobj(source, target);
-    exit;
+    Exit;
   end;
 
   if (P_Random < target.info.painchance) and

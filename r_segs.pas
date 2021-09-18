@@ -213,7 +213,7 @@ var
 //  by Kurt "kb1" Baumgardner ("kb")
 //
 //  [kb] When the rendered view is positioned, such that the viewer is
-//   looking almost parallel down a wall, the result of the scale
+//   looking almost parallel down a wall, the Result of the scale
 //   calculation in R_ScaleFromGlobalAngle becomes very large. And, the
 //   taller the wall, the larger that value becomes. If these large
 //   values were used as-is, subsequent calculations would overflow
@@ -290,7 +290,7 @@ begin
       frontsector.scaleindex := 0;
       height := height shr  7;
       // calculate adjustment
-      while true do
+      while True do
       begin
         height := height shr 1;
         if height <> 0 then
@@ -498,7 +498,7 @@ var
 begin
   // don't overflow and crash
   if ds_p = MAXDRAWSEGS then
-    exit;
+    Exit;
 
   sidedef := curline.sidedef;
   linedef := curline.linedef;
@@ -548,7 +548,7 @@ begin
   midtexture := 0;
   toptexture := 0;
   bottomtexture := 0;
-  maskedtexture := false;
+  maskedtexture := False;
   pds.maskedtexturecol := nil;
 
   if backsector = nil then
@@ -556,8 +556,8 @@ begin
     // single sided line
     midtexture := texturetranslation[sidedef.midtexture];
     // a single sided line is terminal, so it must mark ends
-    markfloor := true;
-    markceiling := true;
+    markfloor := True;
+    markceiling := True;
     if linedef.flags and ML_DONTPEGBOTTOM <> 0 then
     begin
       vtop := frontsector.floorheight + textureheight[sidedef.midtexture];
@@ -629,8 +629,8 @@ begin
        (backsector.floorheight >= frontsector.ceilingheight) then
     begin
       // closed door
-      markceiling := true;
-      markfloor := true;
+      markceiling := True;
+      markfloor := True;
     end
     else
     begin
@@ -679,7 +679,7 @@ begin
     if sidedef.midtexture <> 0 then
     begin
       // masked midtexture
-      maskedtexture := true;
+      maskedtexture := True;
       maskedtexturecol := PSmallIntArray(@openings[lastopening - rw_x]);
       pds.maskedtexturecol := maskedtexturecol;
       lastopening := lastopening + rw_stopx - rw_x;
@@ -735,11 +735,11 @@ begin
   //  and doesn't need to be marked.
 
   if frontsector.floorheight >= viewz then
-    markfloor := false; // above view plane
+    markfloor := False; // above view plane
 
   if (frontsector.ceilingheight <= viewz) and
      (frontsector.ceilingpic <> skyflatnum) then
-    markceiling := false; // below view plane
+    markceiling := False; // below view plane
 
   // calculate incremental stepping values for texture edges
   worldtop := _SHR(worldtop, WORLDBITS);
@@ -809,3 +809,7 @@ begin
 end;
 
 end.
+
+
+
+

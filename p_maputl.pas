@@ -98,7 +98,7 @@ begin
       Result := intval(line.dy > 0)
     else
       Result := intval(line.dy < 0);
-    exit;
+    Exit;
   end;
 
   if line.dy = 0 then
@@ -107,7 +107,7 @@ begin
       Result := intval(line.dx < 0)
     else
       Result := intval(line.dx > 0);
-    exit;
+    Exit;
   end;
 
   dx := x - line.v1.x;
@@ -193,7 +193,7 @@ begin
       Result := intval(line.dy > 0)
     else
       Result := intval(line.dy < 0);
-    exit;
+    Exit;
   end;
 
   if line.dy = 0 then
@@ -202,7 +202,7 @@ begin
       Result := intval(line.dx < 0)
     else
       Result := intval(line.dx > 0);
-    exit;
+    Exit;
   end;
 
   dx := x - line.x;
@@ -211,10 +211,10 @@ begin
   // try to quickly decide by looking at sign bits
   if (line.dy xor line.dx xor dx xor dy) and $80000000 <> 0 then
   begin //(left is negative)
-    result := (line.dy xor dx) and $80000000;
-    if result <> 0 then
-      result := 1;
-    exit;
+    Result := (line.dy xor dx) and $80000000;
+    if Result <> 0 then
+      Result := 1;
+    Exit;
   end;
 
   left := FixedMul(_SHR(line.dy, 8), _SHR(dx, 8));
@@ -271,7 +271,7 @@ begin
   begin
     // single sided line
     openrange := 0;
-    exit;
+    Exit;
   end;
 
   front := linedef.frontsector;
@@ -402,8 +402,8 @@ end;
 // BLOCK MAP ITERATORS
 // For each line/thing in the given mapblock,
 // call the passed PIT_* function.
-// If the function returns false,
-// exit with false without checking anything else.
+// If the function returns False,
+// Exit with False without checking anything else.
 
 // P_BlockLinesIterator
 // The validcount flags are used to avoid checking lines
@@ -419,7 +419,7 @@ begin
   if (x < 0) or (y < 0) or (x >= bmapwidth) or (y >= bmapheight) then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   offset := @blockmaplump[blockmap[y * bmapwidth + x]];
@@ -436,7 +436,7 @@ begin
     if not func(ld) then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
   end;
 
@@ -451,7 +451,7 @@ begin
   if (x < 0) or (y < 0) or (x >= bmapwidth) or (y >= bmapheight) then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   mobj := blocklinks[y * bmapwidth + x];
@@ -461,7 +461,7 @@ begin
     if not func(mobj) then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
     mobj := mobj.bnext;
   end;
@@ -483,7 +483,7 @@ var
 
 // A line is crossed if its endpoints
 // are on opposite sides of the trace.
-// Returns true if earlyout and a solid line hit.
+// Returns True if earlyout and a solid line hit.
 function PIT_AddLineIntercepts(ld: Pline_t): boolean;
 var
   s1: integer;
@@ -507,7 +507,7 @@ begin
   if s1 = s2 then
   begin
     Result := True; // line isn't crossed
-    exit;
+    Exit;
   end;
 
   // hit the line
@@ -517,14 +517,14 @@ begin
   if frac < 0 then
   begin
     Result := True; // behind source
-    exit;
+    Exit;
   end;
 
   // try to early out the check
   if earlyout and (frac < FRACUNIT) and (ld.backsector = nil) then
   begin
     Result := False; // stop checking
-    exit;
+    Exit;
   end;
 
   intercepts[intercept_p].frac := frac;
@@ -572,7 +572,7 @@ begin
   if s1 = s2 then
   begin
     Result := True; // line isn't crossed
-    exit;
+    Exit;
   end;
 
   dl.x := x1;
@@ -585,7 +585,7 @@ begin
   if frac < 0 then
   begin
     Result := True; // behind source
-    exit;
+    Exit;
   end;
 
   intercepts[intercept_p].frac := frac;
@@ -597,7 +597,7 @@ begin
 end;
 
 // P_TraverseIntercepts
-// Returns true if the traverser function returns true
+// Returns True if the traverser function returns True
 // for all lines.
 function P_TraverseIntercepts(func: traverser_t; maxfrac: fixed_t): boolean;
 var
@@ -624,13 +624,13 @@ begin
     if dist > maxfrac then
     begin
       Result := True; // checked everything in range
-      exit;
+      Exit;
     end;
 
     if not func(_in) then
     begin
       Result := False; // don't bother going farther
-      exit;
+      Exit;
     end;
     _in.frac := MAXINT;
   end;
@@ -641,7 +641,7 @@ end;
 // P_PathTraverse
 // Traces a line from x1,y1 to x2,y2,
 // calling the traverser function for each.
-// Returns true if the traverser function returns true
+// Returns True if the traverser function returns True
 // for all lines.
 function P_PathTraverse(x1, y1, x2, y2: fixed_t; flags: integer;
   trav: traverser_t): boolean;
@@ -742,7 +742,7 @@ begin
       if not P_BlockLinesIterator(mapx, mapy, PIT_AddLineIntercepts) then
       begin
         Result := False; // early out
-        exit;
+        Exit;
       end;
     end;
 
@@ -751,7 +751,7 @@ begin
       if not P_BlockThingsIterator(mapx, mapy, PIT_AddThingIntercepts) then
       begin
         Result := False;// early out
-        exit;
+        Exit;
       end;
     end;
 

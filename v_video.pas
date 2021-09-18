@@ -183,34 +183,34 @@ var
 function V_PreserveX(x: integer): integer;
 begin
   if x <= 0 then
-    result := 0
+    Result := 0
   else if x >= 320 then
-    result := SCREENWIDTH
+    Result := SCREENWIDTH
   else
-    result := preserveX[x];
+    Result := preserveX[x];
 end;
 
 // preserve y coordinates
 function V_PreserveY(y: integer): integer;
 begin
   if y <= 0 then
-    result := 0
+    Result := 0
   else if y >= 200 then
-    result := SCREENHEIGHT
+    Result := SCREENHEIGHT
   else
-    result := preserveY[y];
+    Result := preserveY[y];
 end;
 
 // preserve width coordinates
 function V_PreserveW(x: integer; w: integer): integer;
 begin
-  result := V_PreserveX(x + w) - V_PreserveX(x);
+  Result := V_PreserveX(x + w) - V_PreserveX(x);
 end;
 
 // preserve height coordinates
 function V_PreserveH(y: integer; h: integer): integer;
 begin
-  result := V_PreserveY(y + h) - V_PreserveY(y);
+  Result := V_PreserveY(y + h) - V_PreserveY(y);
 end;
 
 // V_CopyRect
@@ -283,9 +283,9 @@ end;
 function V_GetScreenWidth(scrn: integer): integer;
 begin
   if scrn in [0..3] then
-    result := SCREENWIDTH
+    Result := SCREENWIDTH
   else
-    result := 320;
+    Result := 320;
 end;
 
 procedure V_DrawPatch(x, y: integer; scrn: integer; patch: Ppatch_t; preserve: boolean);
@@ -553,3 +553,4 @@ begin
 end;
 
 end.
+

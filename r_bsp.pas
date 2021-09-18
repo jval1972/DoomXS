@@ -102,7 +102,7 @@ var
   begin
     if next = start then
       // Post just extended past the bottom of one post.
-      exit;
+      Exit;
     while next <> newend do
     begin
       // Remove a post.
@@ -137,7 +137,7 @@ begin
       end;
       solidsegs[next].first := first;
       solidsegs[next].last := last;
-      exit;
+      Exit;
     end;
 
     // There is a fragment above *start.
@@ -148,7 +148,7 @@ begin
 
   // Bottom contained in start?
   if last <= solidsegs[start].last then
-    exit;
+    Exit;
 
   next := start;
   while last >= solidsegs[next + 1].first - 1 do
@@ -163,7 +163,7 @@ begin
       // Adjust the clip size.
       solidsegs[start].last := solidsegs[next].last;
       crunch;
-      exit;
+      Exit;
     end;
   end;
 
@@ -198,7 +198,7 @@ begin
     begin
       // Post is entirely visible (above start).
       R_StoreWallRange(first, last);
-      exit;
+      Exit;
     end;
     // There is a fragment above *start.
     R_StoreWallRange(first, solidsegs[start].first - 1);
@@ -206,7 +206,7 @@ begin
 
   // Bottom contained in start?
   if last <= solidsegs[start].last then
-    exit;
+    Exit;
 
   while last >= solidsegs[start + 1].first - 1 do
   begin
@@ -215,7 +215,7 @@ begin
     Inc(start);
 
     if last <= solidsegs[start].last then
-      exit;
+      Exit;
   end;
 
   // There is a fragment after *next.
@@ -256,7 +256,7 @@ begin
 
   // Back side? I.e. backface culling?
   if span >= ANG180 then
-    exit;
+    Exit;
 
   // Global angle needed by segcalc.
   rw_angle1 := angle1;
@@ -270,7 +270,7 @@ begin
 
     // Totally off the left edge?
     if tspan >= span then
-      exit;
+      Exit;
 
     angle1 := clipangle;
   end;
@@ -282,7 +282,7 @@ begin
 
     // Totally off the left edge?
     if tspan >= span then
-      exit;
+      Exit;
 
     angle2 := -clipangle;
   end;
@@ -296,7 +296,7 @@ begin
 
   // Does not cross a pixel?
   if x1 = x2 then
-    exit;
+    Exit;
 
   backsector := line.backsector;
 
@@ -304,7 +304,7 @@ begin
   if backsector = nil then
   begin
     R_ClipSolidWallSegment(x1, x2 - 1);
-    exit;
+    Exit;
   end;
 
   // Closed door.
@@ -312,7 +312,7 @@ begin
     (backsector.floorheight >= frontsector.ceilingheight) then
   begin
     R_ClipSolidWallSegment(x1, x2 - 1);
-    exit;
+    Exit;
   end;
 
   // Window.
@@ -320,7 +320,7 @@ begin
     (backsector.floorheight <> frontsector.floorheight) then
   begin
     R_ClipPassWallSegment(x1, x2 - 1);
-    exit;
+    Exit;
   end;
 
   // Reject empty lines used for triggers
@@ -332,14 +332,14 @@ begin
     (backsector.floorpic = frontsector.floorpic) and
     (backsector.lightlevel = frontsector.lightlevel) and
     (curline.sidedef.midtexture = 0) then
-    exit;
+    Exit;
 
   R_ClipPassWallSegment(x1, x2 - 1);
 end;
 
 // R_CheckBBox
 // Checks BSP node/subtree bounding box.
-// Returns true
+// Returns True
 //  if some part of the bbox might be visible.
 const
   checkcoord: array[0..11, 0..3] of integer = (
@@ -400,7 +400,7 @@ begin
   if boxpos = 5 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   x1 := bspcoord[checkcoord[boxpos][0]];
@@ -418,7 +418,7 @@ begin
   if span >= ANG180 then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
 
   tspan := angle1 + clipangle;
@@ -431,7 +431,7 @@ begin
     if tspan >= span then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     angle1 := clipangle;
@@ -446,7 +446,7 @@ begin
     if tspan >= span then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
 
     angle2 := -clipangle;
@@ -464,7 +464,7 @@ begin
   if sx1 = sx2 then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   Dec(sx2);
@@ -538,7 +538,7 @@ begin
       R_Subsector(0)
     else
       R_Subsector(bspnum and not NF_SUBSECTOR);
-    exit;
+    Exit;
   end;
 
   bsp := @nodes[bspnum];
@@ -558,4 +558,6 @@ begin
 end;
 
 end.
+
+
 

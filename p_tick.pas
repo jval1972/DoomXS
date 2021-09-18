@@ -126,12 +126,12 @@ var
 begin
   // run the tic
   if paused then
-    exit;
+    Exit;
 
   // pause if in menu and at least one tic has been run
   if not netgame and menuactive and not demoplayback and
     (players[consoleplayer].viewz <> 1) then
-    exit;
+    Exit;
 
   for i := 0 to MAXPLAYERS - 1 do
     if playeringame[i] then
@@ -146,3 +146,4 @@ begin
 end;
 
 end.
+

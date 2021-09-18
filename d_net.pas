@@ -121,7 +121,7 @@ type
 procedure NetUpdate;
 
 // Broadcasts special packets to other players
-// to notify of game exit
+// to notify of game Exit
 procedure D_QuitNetGame;
 
 //How many ticks to run?
@@ -169,7 +169,7 @@ const
 var
   localcmds: array[0..(BACKUPTICS) - 1] of ticcmd_t;
   nettics: array[0..(MAXNETNODES) - 1] of integer;
-  nodeingame: array[0..(MAXNETNODES) - 1] of boolean; // set false as nodes leave game
+  nodeingame: array[0..(MAXNETNODES) - 1] of boolean; // set False as nodes leave game
   remoteresend: array[0..(MAXNETNODES) - 1] of boolean; // set when local needs tics
   resendto: array[0..(MAXNETNODES) - 1] of integer; // set when remote needs tics
   resendcount: array[0..(MAXNETNODES) - 1] of integer;
@@ -213,19 +213,19 @@ begin
   if (delta >= -64) and (delta <= 64) then
   begin
     Result := (maketic and not $ff) + low;
-    exit;
+    Exit;
   end;
 
   if delta > 64 then
   begin
     Result := (maketic and not $ff) - 256 + low;
-    exit;
+    Exit;
   end;
 
   if delta < -64 then
   begin
     Result := (maketic and not $ff) + 256 + low;
-    exit;
+    Exit;
   end;
 
   I_Error('ExpandTics(): strange value %d at maketic %d', [low, maketic]);
@@ -245,11 +245,11 @@ begin
   begin
     reboundstore := netbuffer^;
     reboundpacket := True;
-    exit;
+    Exit;
   end;
 
   if demoplayback then
-    exit;
+    Exit;
 
   if not netgame then
     I_Error('HSendPacket(): Tried to transmit to another node');
@@ -280,7 +280,7 @@ begin
 end;
 
 // HGetPacket
-// Returns false if no packet is waiting
+// Returns False if no packet is waiting
 function HGetPacket: boolean;
 var
   realretrans: integer;
@@ -293,19 +293,19 @@ begin
     doomcom.remotenode := 0;
     reboundpacket := False;
     Result := True;
-    exit;
+    Exit;
   end;
 
   if not netgame then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if demoplayback then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   doomcom.command := CMD_GET;
@@ -314,21 +314,21 @@ begin
   if doomcom.remotenode = -1 then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if doomcom.datalength <> NetbufferSize then
   begin
     fprintf(debugfile, 'bad packet length %d' + #13#10, [doomcom.datalength]);
     Result := False;
-    exit;
+    Exit;
   end;
 
   if NetbufferChecksum <> (netbuffer.checksum and NCMD_CHECKSUM) then
   begin
     fprintf(debugfile, 'bad packet checksum' + #13#10);
     Result := False;
-    exit;
+    Exit;
   end;
 
   if debugfile <> nil then
@@ -473,7 +473,7 @@ begin
   if newtics <= 0 then // nothing new to update
   begin
     GetPackets;
-    exit;
+    Exit;
   end;
 
   if skiptics <= newtics then
@@ -496,7 +496,7 @@ begin
     D_ProcessEvents;
 
     if I_GameFinished then
-      exit;
+      Exit;
 
     if maketic - gameticdiv >= BACKUPTICS div 2 - 1 then
       break;          // can't hold any more
@@ -507,7 +507,7 @@ begin
   end;
 
   if singletics then
-    exit;         // singletic update is syncronous
+    Exit;         // singletic update is syncronous
 
   // send the packet to the other nodes
   for i := 0 to doomcom.numnodes - 1 do
@@ -591,7 +591,7 @@ begin
         respawnparm := (netbuffer.retransmitfrom and $10) > 0;
         startmap := netbuffer.starttic and $3f;
         startepisode := _SHR(netbuffer.starttic, 6);
-        exit;
+        Exit;
       end;
     end; // while
   end
@@ -682,7 +682,7 @@ var
   i, j: integer;
 begin
   if not netgame or not usergame or (consoleplayer = -1) or demoplayback then
-    exit;
+    Exit;
 
   // send a bunch of packets for security
   netbuffer.player := consoleplayer;
@@ -723,7 +723,7 @@ begin
   NetUpdate;
 
   if I_GameFinished then
-    exit;
+    Exit;
 
   lowtic := MAXINT;
   for i := 0 to doomcom.numnodes - 1 do
@@ -792,7 +792,7 @@ begin
     if I_GetTime / ticdup - entertic >= 20 then
     begin
       M_Ticker;
-      exit;
+      Exit;
     end;
   end;
 
@@ -829,3 +829,5 @@ begin
 end;
 
 end.
+
+

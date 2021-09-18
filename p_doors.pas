@@ -190,7 +190,7 @@ begin
   if p = nil then
   begin
     Result := 0;
-    exit;
+    Exit;
   end;
 
   case line.special of
@@ -202,7 +202,7 @@ begin
         p.msg := PD_BLUEO;
         S_StartSound(nil, Ord(sfx_oof));
         Result := 0;
-        exit;
+        Exit;
       end;
     end;
 
@@ -214,7 +214,7 @@ begin
         p.msg := PD_REDO;
         S_StartSound(nil, Ord(sfx_oof));
         Result := 0;
-        exit;
+        Exit;
       end;
     end;
 
@@ -226,7 +226,7 @@ begin
         p.msg := PD_YELLOWO;
         S_StartSound(nil, Ord(sfx_oof));
         Result := 0;
-        exit;
+        Exit;
       end;
     end;
   end;
@@ -335,39 +335,39 @@ begin
     32:
     begin
       if player = nil then
-        exit;
+        Exit;
 
       if not player.cards[Ord(it_bluecard)] and not player.cards[Ord(it_blueskull)] then
       begin
         player.msg := PD_BLUEK;
         S_StartSound(nil, Ord(sfx_oof));
-        exit;
+        Exit;
       end;
     end;
     27, // Yellow Lock
     34:
     begin
       if player = nil then
-        exit;
+        Exit;
 
       if not player.cards[Ord(it_yellowcard)] and not player.cards[Ord(it_yellowskull)] then
       begin
         player.msg := PD_YELLOWK;
         S_StartSound(nil, Ord(sfx_oof));
-        exit;
+        Exit;
       end;
     end;
     28, // Red Lock
     33:
     begin
       if player = nil then
-        exit;
+        Exit;
 
       if not player.cards[Ord(it_redcard)] and not player.cards[Ord(it_redskull)] then
       begin
         player.msg := PD_REDK;
         S_StartSound(nil, Ord(sfx_oof));
-        exit;
+        Exit;
       end;
     end;
   end;
@@ -390,11 +390,11 @@ begin
         else
         begin
           if thing.player = nil then
-            exit; // JDC: bad guys never close doors
+            Exit; // JDC: bad guys never close doors
 
           door.direction := -1; // start going down immediately
         end;
-        exit;
+        Exit;
       end;
     end;
   end;
@@ -497,3 +497,4 @@ begin
 end;
 
 end.
+

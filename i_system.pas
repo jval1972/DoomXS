@@ -58,7 +58,7 @@ procedure I_StartFrame;
 function I_BaseTiccmd: Pticcmd_t;
 
 { Called by M_Responder when quit is selected. }
-{ Clean exit, displays sell blurb. }
+{ Clean Exit, displays sell blurb. }
 procedure I_Quit;
 
 procedure I_Destroy;
@@ -185,7 +185,7 @@ end;
 // I_Quit
 procedure I_Quit;
 begin
-  //  finished := true;
+  //  finished := True;
   PostMessage(hMainWnd, WM_DESTROY, 0, 0);
 end;
 
@@ -242,7 +242,7 @@ var
   dpifunc2: dpiproc2_t;
   dllinst: THandle;
 begin
-  result := false;
+  Result := False;
 
   dllinst := LoadLibrary('Shcore.dll');
   if dllinst <> 0 then
@@ -250,18 +250,18 @@ begin
     dpifunc2 := GetProcAddress(dllinst, 'SetProcessDpiAwareness');
     if assigned(dpifunc2) then
     begin
-      result := dpifunc2(2) = S_OK;
-      if not result then
-        result := dpifunc2(1) = S_OK;
+      Result := dpifunc2(2) = S_OK;
+      if not Result then
+        Result := dpifunc2(1) = S_OK;
     end;
     FreeLibrary(dllinst);
-    exit;
+    Exit;
   end;
 
   dllinst := LoadLibrary('user32');
   dpifunc := GetProcAddress(dllinst, 'SetProcessDPIAware');
   if assigned(dpifunc) then
-    result := dpifunc;
+    Result := dpifunc;
   FreeLibrary(dllinst);
 end;
 
@@ -273,12 +273,12 @@ begin
   if GetVersionEx(OSVersionInfo) then
     with OSVersionInfo do
     begin
-      result.major := dwMajorVersion;
-      result.minor := dwMinorVersion;
+      Result.major := dwMajorVersion;
+      Result.minor := dwMinorVersion;
       if dwPlatformId = VER_PLATFORM_WIN32_WINDOWS then
-        result.build := dwBuildNumber and $FFFF
+        Result.build := dwBuildNumber and $FFFF
       else
-        result.build := dwBuildNumber;
+        Result.build := dwBuildNumber;
     end;
 end;
 
@@ -287,3 +287,7 @@ initialization
     Freq := 1000;
 
 end.
+
+
+
+

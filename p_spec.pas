@@ -369,7 +369,7 @@ type
 
 // source animation definition
   animdef_t = record
-    istexture: boolean; // if false, it is a flat
+    istexture: boolean; // if False, it is a flat
     endname: string[8];
     startname: string[8];
     speed: integer;
@@ -607,7 +607,7 @@ begin
   if h = 0 then
   begin
     Result := currentheight;
-    exit;
+    Exit;
   end;
 
   Result := heightlist[0];
@@ -667,7 +667,7 @@ begin
     if sectors[i].tag = line.tag then
     begin
       Result := i;
-      exit;
+      Exit;
     end;
 
   Result := -1;
@@ -717,7 +717,7 @@ begin
       MT_TROOPSHOT,
       MT_HEADSHOT,
       MT_BRUISERSHOT:
-        exit;
+        Exit;
     end;
 
     case line.special of
@@ -730,7 +730,7 @@ begin
       88: // PLAT DOWN-WAIT-UP-STAY RETRIGGER
         ;
       else
-        exit;
+        Exit;
     end;
   end;
 
@@ -1228,7 +1228,7 @@ begin
     case line.special of
       46: ; // OPEN DOOR IMPACT
       else
-        exit;
+        Exit;
     end;
 
   case line.special of
@@ -1266,7 +1266,7 @@ begin
 
   // Falling, not all the way down yet?
   if player.mo.z <> sector.floorheight then
-    exit;
+    Exit;
 
   // Has hitten ground.
   case sector.special of
@@ -1590,3 +1590,5 @@ begin
 end;
 
 end.
+
+

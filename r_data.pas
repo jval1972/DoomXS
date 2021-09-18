@@ -342,7 +342,7 @@ begin
     if patchcount[x] = 0 then
     begin
       printf('R_GenerateLookup(): column without a patch (%s)' + #13#10, [texture.name]);
-      exit;
+      Exit;
     end; // I_Error ("R_GenerateLookup: column without a patch");
 
 
@@ -374,14 +374,14 @@ begin
 
   if lump > 0 then
   begin
-    result := PByteArray(integer(W_CacheLumpNum(lump, PU_CACHE)) + ofs);
-    exit;
+    Result := PByteArray(integer(W_CacheLumpNum(lump, PU_CACHE)) + ofs);
+    Exit;
   end;
 
   if texturecomposite[tex] = nil then
     R_GenerateComposite(tex);
 
-  result := PByteArray(integer(texturecomposite[tex]) + ofs);
+  Result := PByteArray(integer(texturecomposite[tex]) + ofs);
 end;
 
 // R_InitTextures
@@ -611,7 +611,7 @@ begin
   if i = -1 then
     I_Error('R_FlatNumForName(): %s not found', [name]);
 
-  result := i - firstflat;
+  Result := i - firstflat;
 end;
 
 // R_CheckTextureNumForName
@@ -625,19 +625,19 @@ begin
   // "NoTexture" marker.
   if name[1] = '-' then
   begin
-    result := 0;
-    exit;
+    Result := 0;
+    Exit;
   end;
 
   check := strupper(name);
   for i := 0 to numtextures - 1 do
     if strupper(char8tostring(textures[i].name)) = check then
     begin
-      result := i;
-      exit;
+      Result := i;
+      Exit;
     end;
 
-  result := -1;
+  Result := -1;
 end;
 
 // R_TextureNumForName
@@ -645,9 +645,9 @@ end;
 //  aborts with error message.
 function R_TextureNumForName(const name: string): integer;
 begin
-  result := R_CheckTextureNumForName(name);
+  Result := R_CheckTextureNumForName(name);
 
-  if result = -1 then
+  if Result = -1 then
     I_Error('R_TextureNumForName(): %s not found', [name]);
 end;
 
@@ -672,7 +672,7 @@ var
   sf: Pspriteframe_t;
 begin
   if demoplayback then
-    exit;
+    Exit;
 
   // Precache flats.
   flatpresent := malloc(numflats);
@@ -768,3 +768,5 @@ begin
 end;
 
 end.
+
+

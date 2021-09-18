@@ -159,7 +159,7 @@ begin
 
   jPresent := joyGetNumDevs > 0;
   if jPresent then
-    jPresent := joySetCapture(hMainWnd, JOYSTICKID1, 0, false) = JOYERR_NOERROR;
+    jPresent := joySetCapture(hMainWnd, JOYSTICKID1, 0, False) = JOYERR_NOERROR;
 
   // Get initial joystic position
   if jPresent then

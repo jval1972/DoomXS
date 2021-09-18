@@ -114,36 +114,36 @@ uses
 
 function HU_TITLE: string;
 begin
-  result := mapnames[(gameepisode - 1) * 9 + gamemap - 1];
+  Result := mapnames[(gameepisode - 1) * 9 + gamemap - 1];
 end;
 
 function HU_TITLE2: string;
 begin
-  result := mapnames2[gamemap - 1];
+  Result := mapnames2[gamemap - 1];
 end;
 
 function HU_TITLEP: string;
 begin
-  result := mapnamesp[gamemap - 1];
+  Result := mapnamesp[gamemap - 1];
 end;
 
 function HU_TITLET: string;
 begin
-  result := mapnamest[gamemap - 1];
+  Result := mapnamest[gamemap - 1];
 end;
 
 var
   plr: Pplayer_t;
   w_title: hu_textline_t;
   w_chat: hu_itext_t;
-  always_off: boolean = false;
+  always_off: boolean = False;
   chat_dest: array[0..MAXPLAYERS - 1] of char;
   w_inputbuffer: array[0..MAXPLAYERS - 1] of hu_itext_t;
 
   w_message: hu_stext_t;
   message_counter: integer;
 
-  headsupactive: boolean = false;
+  headsupactive: boolean = False;
 
 const
   HU_TITLEHEIGHT = 1;
@@ -151,7 +151,7 @@ const
 
 function HU_TITLEY: integer;
 begin
-  result := (200 - ST_HEIGHT) * SCREENHEIGHT div 200 - 1 - hu_font[0].height;
+  Result := (200 - ST_HEIGHT) * SCREENHEIGHT div 200 - 1 - hu_font[0].height;
 end;
 
 const
@@ -159,12 +159,12 @@ const
 
 function HU_INPUTX: integer;
 begin
-  result := HU_MSGX;
+  Result := HU_MSGX;
 end;
 
 function HU_INPUTY: integer;
 begin
-  result := HU_MSGY + HU_MSGHEIGHT * (hu_font[0].height + 1)
+  Result := HU_MSGY + HU_MSGHEIGHT * (hu_font[0].height + 1)
 end;
 
 const
@@ -274,9 +274,9 @@ const
 function ForeignTranslation(ch: char): char;
 begin
   if ch < #128 then
-    result := frenchKeyMap[Ord(ch)]
+    Result := frenchKeyMap[Ord(ch)]
   else
-    result := ch;
+    Result := ch;
 end;
 
 procedure HU_Init;
@@ -308,7 +308,7 @@ end;
 
 procedure HU_Stop;
 begin
-  headsupactive := false;
+  headsupactive := False;
 end;
 
 procedure HU_Start;
@@ -320,10 +320,10 @@ begin
     HU_Stop;
 
   plr := @players[consoleplayer];
-  message_on := false;
-  message_dontfuckwithme := false;
-  message_nottobefuckedwith := false;
-  chat_on := false;
+  message_on := False;
+  message_dontfuckwithme := False;
+  message_nottobefuckedwith := False;
+  chat_on := False;
 
   // create the message widget
   HUlib_initSText(@w_message,
@@ -362,7 +362,7 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
     HUlib_initIText(@w_inputbuffer[i], 0, 0, nil, 0, @always_off);
 
-  headsupactive := true;
+  headsupactive := True;
 end;
 
 procedure HU_Drawer;
@@ -370,7 +370,7 @@ begin
   HUlib_drawSText(@w_message);
   HUlib_drawIText(@w_chat);
   if automapactive then
-    HUlib_drawTextLine(@w_title, false);
+    HUlib_drawTextLine(@w_title, False);
 end;
 
 procedure HU_Erase;
@@ -391,8 +391,8 @@ begin
     dec(message_counter);
     if message_counter = 0 then
     begin
-      message_on := false;
-      message_nottobefuckedwith := false;
+      message_on := False;
+      message_nottobefuckedwith := False;
     end;
   end;
 
@@ -404,12 +404,12 @@ begin
     begin
       HUlib_addMessageToSText(@w_message, '', plr.msg);
       plr.msg := '';
-      message_on := true;
+      message_on := True;
       message_counter := HU_MSGTIMEOUT;
       message_nottobefuckedwith := message_dontfuckwithme;
-      message_dontfuckwithme := false;
+      message_dontfuckwithme := False;
     end;
-  end; // else message_on = false;
+  end; // else message_on = False;
 
   // check for incoming chat characters
   if netgame then
@@ -437,8 +437,8 @@ begin
                 player_names[i],
                 w_inputbuffer[i].l.l);
 
-              message_nottobefuckedwith := true;
-              message_on := true;
+              message_nottobefuckedwith := True;
+              message_on := True;
               message_counter := HU_MSGTIMEOUT;
               if gamemode = commercial then
                 S_StartSound(nil, Ord(sfx_radio))
@@ -477,17 +477,17 @@ function HU_dequeueChatChar: char;
 begin
   if head <> tail then
   begin
-    result := chatchars[tail];
+    Result := chatchars[tail];
     tail := (tail + 1) and (QUEUESIZE - 1);
   end
   else
-    result := #0;
+    Result := #0;
 end;
 
 var
   lastmessage: string;
-  shiftdown: boolean = false;
-  altdown: boolean = false;
+  shiftdown: boolean = False;
+  altdown: boolean = False;
   destination_keys: array[0..MAXPLAYERS - 1] of char;
   num_nobrainers: integer = 0;
 
@@ -498,21 +498,21 @@ var
   i: integer;
   numplayers: integer;
 begin
-  result := false;
+  Result := False;
 
   if ev.data1 = KEY_RSHIFT then
   begin
     shiftdown := ev.typ = ev_keydown;
-    exit;
+    Exit;
   end
   else if ev.data1 = KEY_RALT then
   begin
     altdown := ev.typ = ev_keydown;
-    exit;
+    Exit;
   end;
 
   if ev.typ <> ev_keydown then
-    exit;
+    Exit;
 
   numplayers := 0;
   for i := 0 to MAXPLAYERS - 1 do
@@ -523,14 +523,14 @@ begin
   begin
     if ev.data1 = HU_MSGREFRESH then
     begin
-      message_on := true;
+      message_on := True;
       message_counter := HU_MSGTIMEOUT;
-      result := true;
+      Result := True;
     end
     else if netgame and (ev.data1 = Ord(HU_INPUTTOGGLE)) then
     begin
-      result := true;
-      chat_on := true;
+      Result := True;
+      chat_on := True;
       HUlib_resetIText(@w_chat);
       HU_queueChatChar(Chr(HU_BROADCAST));
     end
@@ -542,8 +542,8 @@ begin
         begin
           if playeringame[i] and (i <> consoleplayer) then
           begin
-            result := true;
-            chat_on := true;
+            Result := True;
+            chat_on := True;
             HUlib_resetIText(@w_chat);
             HU_queueChatChar(Chr(i + 1));
             break;
@@ -574,7 +574,7 @@ begin
     begin
       c := Chr(Ord(c) - Ord('0'));
       if c > Chr(9) then
-        exit;
+        Exit;
       macromessage := chat_macros[Ord(c)];
 
       // kill last message with a '\n'
@@ -586,10 +586,10 @@ begin
       HU_queueChatChar(Chr(KEY_ENTER));
 
       // leave chat mode and notify that it was sent
-      chat_on := false;
+      chat_on := False;
       lastmessage := chat_macros[Ord(c)];
       plr.msg := lastmessage;
-      result := true;
+      Result := True;
     end
     else
     begin
@@ -597,12 +597,12 @@ begin
         c := ForeignTranslation(c);
       if shiftdown or ((c >= 'a') and (c <= 'z')) then
         c := shiftxform[Ord(c)];
-      result := HUlib_keyInIText(@w_chat, Ord(c));
-      if result then
+      Result := HUlib_keyInIText(@w_chat, Ord(c));
+      if Result then
         HU_queueChatChar(c);
       if Ord(c) = KEY_ENTER then
       begin
-        chat_on := false;
+        chat_on := False;
         if w_chat.l.len <> 0 then
         begin
           lastmessage := w_chat.l.l;
@@ -610,7 +610,7 @@ begin
         end
       end
       else if Ord(c) = KEY_ESCAPE then
-        chat_on := false;
+        chat_on := False;
     end;
   end;
 end;

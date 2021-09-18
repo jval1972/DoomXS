@@ -144,7 +144,7 @@ var
 begin
   sfx := @S_sfx[sfxid];
   if sfx.data <> nil then
-    exit;
+    Exit;
   // Get the sound data from the WAD, allocate lump
   //  in zone memory.
   sprintf(name, 'ds%s', [sfx.name]);
@@ -187,19 +187,19 @@ begin
   if pDS = nil then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if ChannelBuffers[channel] = nil then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   if not ChannelActive[channel] then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   ChannelBuffers[channel].GetStatus(status);
@@ -234,14 +234,14 @@ const
 
 function I_SepToDSPan(const sep: integer): integer;
 begin
-  result := DSBPAN_CENTER +
+  Result := DSBPAN_CENTER +
     (DSBPAN_RIGHT - DSBPAN_LEFT) * (sep * sep - 128 * 128) div
       (4 * 128 * 128);
 end;
 
 function I_VolToDSVol(const vol: integer): integer;
 begin
-  result := DSBVOLUME_MIN +
+  Result := DSBVOLUME_MIN +
     _SHR((DSBVOLUME_MAX - DSBVOLUME_MIN) * (vulumetrans[vol] + 1), vulumetransshift);
 end;
 
@@ -252,7 +252,7 @@ var
   dsb: LPDIRECTSOUNDBUFFER;
 begin
   if pDS = nil then
-    exit;
+    Exit;
 
   for channel := 0 to NUM_CHANNELS - 1 do
   begin
@@ -261,7 +261,7 @@ begin
       dsb := ChannelBuffers[channel];
       dsb.SetPan(I_SepToDSPan(sep));
       dsb.SetVolume(I_VolToDSVol(vol));
-      exit;
+      Exit;
     end;
   end;
 end;
@@ -274,7 +274,7 @@ begin
   begin
     Result := HandleCount;
     Inc(HandleCount);
-    exit;
+    Exit;
   end;
 
   ChannelActive[channel] := True;
@@ -319,7 +319,7 @@ var
 
   procedure I_ErrorStartSound(const procname: string);
   begin
-    I_Error('I_StartSound(): %s failed, result = %d', [procname, hres]);
+    I_Error('I_StartSound(): %s failed, Result = %d', [procname, hres]);
   end;
 
 begin
@@ -327,7 +327,7 @@ begin
   begin
     Result := HandleCount;
     Inc(HandleCount);
-    exit;
+    Exit;
   end;
 
   oldhandle := 0;
@@ -340,7 +340,7 @@ begin
       if (channelids[channel] = id) and not I_ChannelPlaying(channel) then
       begin
         Result := I_RestartChannel(channel, vol, sep);
-        exit;
+        Exit;
       end;
       if HandleCount - channelhandles[channel] > oldhandle then
       begin
@@ -388,7 +388,7 @@ var
   channel: integer;
 begin
   if pDS = nil then
-    exit;
+    Exit;
 
   for channel := 0 to NUM_CHANNELS - 1 do
   begin
@@ -407,7 +407,7 @@ begin
   if pDS = nil then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   for channel := 0 to NUM_CHANNELS - 1 do
@@ -415,7 +415,7 @@ begin
     if (channelhandles[channel] = handle) and I_ChannelPlaying(channel) then
     begin
       Result := True;
-      exit;
+      Exit;
     end;
   end;
   Result := False;
@@ -445,19 +445,19 @@ var
   i: integer;
 begin
   if M_CheckParm('-nosound') <> 0 then
-    exit;
+    Exit;
 
   hres := DirectSoundCreate(nil, pDS, nil);
   if hres <> DS_OK then
   begin
     pDS := nil;
-    printf('I_InitSound(): DirectSoundCreate Failed, result = %d', [hres]);
-    exit;
+    printf('I_InitSound(): DirectSoundCreate Failed, Result = %d', [hres]);
+    Exit;
   end;
 
   hres := pDS.SetCooperativeLevel(hMainWnd, DSSCL_PRIORITY);
   if hres <> DS_OK then
-    I_Error('I_InitSound(): DirectSound.SetCooperativeLevel Failed, result = %d',
+    I_Error('I_InitSound(): DirectSound.SetCooperativeLevel Failed, Result = %d',
       [hres]);
 
   SampleFormat.wFormatTag := WAVE_FORMAT_PCM;
@@ -477,14 +477,14 @@ begin
   hres := pDS.CreateSoundBuffer(dsbd, pDSBPrimary, nil);
   if hres <> DS_OK then
   begin
-    printf('I_InitSound(): Unable to access primary sound buffer, result = %d', [hres]);
+    printf('I_InitSound(): Unable to access primary sound buffer, Result = %d', [hres]);
     pDSBPrimary := nil;
   end
   else
   begin
     hres := pDSBPrimary.SetFormat(@SampleFormat);
     if hres <> DS_OK then
-      printf('I_InitSound(): Unable to set primary sound buffer format, result = %d',
+      printf('I_InitSound(): Unable to set primary sound buffer format, Result = %d',
         [hres]);
     pDSBPrimary.Play(0, 0, DSBPLAY_LOOPING);
   end;
@@ -497,3 +497,5 @@ begin
 end;
 
 end.
+
+

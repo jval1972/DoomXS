@@ -375,12 +375,12 @@ begin
   y := WI_TITLEY;
 
   // draw <LevelName>
-  V_DrawPatch((320 - lnames[wbs.last].width) div 2, y, SCN_FG, lnames[wbs.last], true);
+  V_DrawPatch((320 - lnames[wbs.last].width) div 2, y, SCN_FG, lnames[wbs.last], True);
 
   // draw "Finished!"
   y := y + (5 * lnames[wbs.last].height) div 4;
 
-  V_DrawPatch((320 - finished.width) div 2, y, SCN_FG, finished, true);
+  V_DrawPatch((320 - finished.width) div 2, y, SCN_FG, finished, True);
 end;
 
 // Draws "Entering <LevelName>"
@@ -391,12 +391,12 @@ begin
   y := WI_TITLEY;
 
   // draw "Entering"
-  V_DrawPatch((320 - entering.width) div 2, y, SCN_FG, entering, true);
+  V_DrawPatch((320 - entering.width) div 2, y, SCN_FG, entering, True);
 
   // draw level
   y := y + (5 * lnames[wbs.next].height) div 4;
 
-  V_DrawPatch((320 - lnames[wbs.next].width) div 2, y, SCN_FG, lnames[wbs.next], true);
+  V_DrawPatch((320 - lnames[wbs.next].width) div 2, y, SCN_FG, lnames[wbs.next], True);
 end;
 
 procedure WI_DrawOnLnode(n: integer; c: Ppatch_tPArray);
@@ -408,7 +408,7 @@ var
   bottom: integer;
   fits: boolean;
 begin
-  fits := false;
+  fits := False;
 
   i := 0;
   repeat
@@ -421,13 +421,13 @@ begin
        (right < 320) and
        (top >= 0) and
        (bottom < 200) then
-      fits := true
+      fits := True
     else
       inc(i);
   until not ((not fits) and (i <> 2));
 
   if fits and (i < 2) then
-    V_DrawPatch(lnodes[wbs.epsd][n].x, lnodes[wbs.epsd][n].y, SCN_FG, c[i], true)
+    V_DrawPatch(lnodes[wbs.epsd][n].x, lnodes[wbs.epsd][n].y, SCN_FG, c[i], True)
   else
     // DEBUG
     printf('WI_DrawOnLnode(): Could not place patch on level %d', [n + 1]);
@@ -439,10 +439,10 @@ var
   a: Pwianim_t;
 begin
   if gamemode = commercial then
-    exit;
+    Exit;
 
   if wbs.epsd > 2 then
-    exit;
+    Exit;
 
   for i := 0 to NUMANIMS[wbs.epsd] - 1 do
   begin
@@ -467,10 +467,10 @@ var
   a: Pwianim_t;
 begin
   if gamemode = commercial then
-    exit;
+    Exit;
 
   if wbs.epsd > 2 then
-    exit;
+    Exit;
 
   for i := 0 to NUMANIMS[wbs.epsd] - 1 do
   begin
@@ -520,17 +520,17 @@ var
   a: Pwianim_t;
 begin
   if gamemode = commercial then
-    exit;
+    Exit;
 
   if wbs.epsd > 2 then
-    exit;
+    Exit;
 
   for i := 0 to NUMANIMS[wbs.epsd] - 1 do
   begin
     a := @anims[wbs.epsd, i];
 
     if a.ctr >= 0 then
-      V_DrawPatch(a.loc.x, a.loc.y, SCN_FG, a.p[a.ctr], true);
+      V_DrawPatch(a.loc.x, a.loc.y, SCN_FG, a.p[a.ctr], True);
   end;
 end;
 
@@ -572,15 +572,15 @@ begin
   // if non-number, do not draw it
   if n = 1994 then
   begin
-    result := 0;
-    exit;
+    Result := 0;
+    Exit;
   end;
 
   // draw the new number
   while digits > 0 do
   begin
     x := x - fontwidth;
-    V_DrawPatch(x, y, SCN_FG, num[n mod 10], true);
+    V_DrawPatch(x, y, SCN_FG, num[n mod 10], True);
     n := n div 10;
     dec(digits);
   end;
@@ -589,18 +589,18 @@ begin
   if neg then
   begin
     x := x - 8;
-    V_DrawPatch(x, y, SCN_FG, wiminus, true);
+    V_DrawPatch(x, y, SCN_FG, wiminus, True);
   end;
 
-  result := x;
+  Result := x;
 end;
 
 procedure WI_DrawPercent(x, y: integer; p: integer);
 begin
   if p < 0 then
-    exit;
+    Exit;
 
-  V_DrawPatch(x, y, SCN_FG, percent, true);
+  V_DrawPatch(x, y, SCN_FG, percent, True);
   WI_DrawNum(x, y, p, -1);
 end;
 
@@ -612,7 +612,7 @@ var
   n: integer;
 begin
   if t < 0 then
-    exit;
+    Exit;
 
   if t <= 61 * 59 then
   begin
@@ -625,12 +625,12 @@ begin
 
       // draw
       if (_div = 60) or (t div _div <> 0) then
-        V_DrawPatch(x, y, SCN_FG, colon, true);
+        V_DrawPatch(x, y, SCN_FG, colon, True);
     until t div _div = 0;
   end
   else
     // "sucks"
-    V_DrawPatch(x - sucks.width, y, SCN_FG, sucks, true);
+    V_DrawPatch(x - sucks.width, y, SCN_FG, sucks, True);
 end;
 
 procedure WI_InitNoState;
@@ -655,7 +655,7 @@ begin
 end;
 
 var
-  snl_pointeron: boolean = false;
+  snl_pointeron: boolean = False;
 
 procedure WI_InitShowNextLoc;
 begin
@@ -692,7 +692,7 @@ begin
     if wbs.epsd > 2 then
     begin
       WI_DrawEL;
-      exit;
+      Exit;
     end;
 
     last := decide(wbs.last = 8, wbs.next - 1, wbs.last);
@@ -718,7 +718,7 @@ end;
 
 procedure WI_DrawNoState;
 begin
-  snl_pointeron := true;
+  snl_pointeron := True;
   WI_DrawShowNextLoc;
 end;
 
@@ -726,16 +726,16 @@ function WI_FragSum(playernum: integer): integer;
 var
   i: integer;
 begin
-  result := 0;
+  Result := 0;
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
     if playeringame[i] and (i <> playernum) then
-      result := result + plrs[playernum].frags[i];
+      Result := Result + plrs[playernum].frags[i];
   end;
 
   // JDC hack - negative frags.
-  result := result - plrs[playernum].frags[playernum];
+  Result := Result - plrs[playernum].frags[playernum];
 end;
 
 var
@@ -802,7 +802,7 @@ begin
     if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
-    stillticking := false;
+    stillticking := False;
 
     for i := 0 to MAXPLAYERS - 1 do
     begin
@@ -821,7 +821,7 @@ begin
               dm_frags[i, j] := 99
             else if dm_frags[i, j] < -99 then
               dm_frags[i, j] := -99;
-            stillticking := true;
+            stillticking := True;
           end;
         end;
         dm_totals[i] := WI_FragSum(i);
@@ -876,10 +876,10 @@ begin
   WI_DrawLF;
 
   // draw stat titles (top line)
-  V_DrawPatch(DM_TOTALSX - total.width div 2, DM_MATRIXY - WI_SPACINGY + 10, SCN_FG, total, true);
+  V_DrawPatch(DM_TOTALSX - total.width div 2, DM_MATRIXY - WI_SPACINGY + 10, SCN_FG, total, True);
 
-  V_DrawPatch(DM_KILLERSX, DM_KILLERSY, SCN_FG, killers, true);
-  V_DrawPatch(DM_VICTIMSX, DM_VICTIMSY, SCN_FG, victims, true);
+  V_DrawPatch(DM_KILLERSX, DM_KILLERSY, SCN_FG, killers, True);
+  V_DrawPatch(DM_VICTIMSX, DM_VICTIMSY, SCN_FG, victims, True);
 
   // draw P?
   x := DM_MATRIXX + DM_SPACINGX;
@@ -889,13 +889,13 @@ begin
   begin
     if playeringame[i] then
     begin
-      V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, SCN_FG, p[i], true);
-      V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, SCN_FG, p[i], true);
+      V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, SCN_FG, p[i], True);
+      V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, SCN_FG, p[i], True);
 
       if i = me then
       begin
-        V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, SCN_FG, bstar, true);
-        V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, SCN_FG, star, true);
+        V_DrawPatch(x - p[i].width div 2, DM_MATRIXY - WI_SPACINGY, SCN_FG, bstar, True);
+        V_DrawPatch(DM_MATRIXX - p[i].width div 2, y, SCN_FG, star, True);
       end;
     end
     else
@@ -938,9 +938,9 @@ var
 
 function NG_STATSX: integer;
 begin
-  result := 32 + star.width div 2;
+  Result := 32 + star.width div 2;
   if dofrags = 0 then
-    result := result + 32;
+    Result := Result + 32;
 end;
 
 procedure WI_InitNetgameStats;
@@ -1004,7 +1004,7 @@ begin
     if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
-    stillticking := false;
+    stillticking := False;
 
     for i := 0 to MAXPLAYERS - 1 do
     begin
@@ -1016,7 +1016,7 @@ begin
       if cnt_kills[i] >= (plrs[i].skills * 100) div wbs.maxkills then
         cnt_kills[i] := (plrs[i].skills * 100) div wbs.maxkills
       else
-        stillticking := true;
+        stillticking := True;
     end;
 
     if not stillticking then
@@ -1030,7 +1030,7 @@ begin
     if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
-    stillticking := false;
+    stillticking := False;
 
     for i := 0 to MAXPLAYERS - 1 do
     begin
@@ -1041,7 +1041,7 @@ begin
       if cnt_items[i] >= (plrs[i].sitems * 100) div wbs.maxitems then
         cnt_items[i] := (plrs[i].sitems * 100) div wbs.maxitems
       else
-        stillticking := true;
+        stillticking := True;
     end;
     if not stillticking then
     begin
@@ -1054,7 +1054,7 @@ begin
     if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
-    stillticking := false;
+    stillticking := False;
 
     for i := 0 to MAXPLAYERS - 1 do
     begin
@@ -1066,7 +1066,7 @@ begin
       if cnt_secret[i] >= (plrs[i].ssecret * 100) div wbs.maxsecret then
         cnt_secret[i] := (plrs[i].ssecret * 100) div wbs.maxsecret
       else
-        stillticking := true;
+        stillticking := True;
     end;
     if not stillticking then
     begin
@@ -1079,7 +1079,7 @@ begin
     if bcnt and 3 = 0 then
       S_StartSound(nil, Ord(sfx_pistol));
 
-    stillticking := false;
+    stillticking := False;
 
     for i := 0 to MAXPLAYERS - 1 do
     begin
@@ -1092,7 +1092,7 @@ begin
       if cnt_frags[i] >= fsum then
         cnt_frags[i] := fsum
       else
-        stillticking := true;
+        stillticking := True;
     end;
     if not stillticking then
     begin
@@ -1139,14 +1139,14 @@ begin
   WI_DrawLF;
 
   // draw stat titles (top line)
-  V_DrawPatch(NG_STATSX + NG_SPACINGX - kills.width, NG_STATSY, SCN_FG, kills, true);
+  V_DrawPatch(NG_STATSX + NG_SPACINGX - kills.width, NG_STATSY, SCN_FG, kills, True);
 
-  V_DrawPatch(NG_STATSX + 2 * NG_SPACINGX - items.width, NG_STATSY, SCN_FG, items, true);
+  V_DrawPatch(NG_STATSX + 2 * NG_SPACINGX - items.width, NG_STATSY, SCN_FG, items, True);
 
-  V_DrawPatch(NG_STATSX + 3 * NG_SPACINGX - secret.width, NG_STATSY, SCN_FG, secret, true);
+  V_DrawPatch(NG_STATSX + 3 * NG_SPACINGX - secret.width, NG_STATSY, SCN_FG, secret, True);
 
   if dofrags <> 0 then
-    V_DrawPatch(NG_STATSX + 4 * NG_SPACINGX - frags.width, NG_STATSY, SCN_FG, frags, true);
+    V_DrawPatch(NG_STATSX + 4 * NG_SPACINGX - frags.width, NG_STATSY, SCN_FG, frags, True);
 
   // draw stats
   y := NG_STATSY + kills.height;
@@ -1157,10 +1157,10 @@ begin
       continue;
 
     x := NG_STATSX;
-    V_DrawPatch(x - p[i].width, y, SCN_FG, p[i], true);
+    V_DrawPatch(x - p[i].width, y, SCN_FG, p[i], True);
 
     if i = me then
-      V_DrawPatch(x - p[i].width, y, SCN_FG, star, true);
+      V_DrawPatch(x - p[i].width, y, SCN_FG, star, True);
 
     x := x + NG_SPACINGX;
     WI_DrawPercent(x - pwidth, y + 10, cnt_kills[i]);
@@ -1312,21 +1312,21 @@ begin
 
   WI_DrawLF;
 
-  V_DrawPatch(SP_STATSX, SP_STATSY, SCN_FG, kills, true);
+  V_DrawPatch(SP_STATSX, SP_STATSY, SCN_FG, kills, True);
   WI_DrawPercent(320 - SP_STATSX, SP_STATSY, cnt_kills[0]);
 
-  V_DrawPatch(SP_STATSX, SP_STATSY + lh, SCN_FG, items, true);
+  V_DrawPatch(SP_STATSX, SP_STATSY + lh, SCN_FG, items, True);
   WI_DrawPercent(320 - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
 
-  V_DrawPatch(SP_STATSX, SP_STATSY + 2 * lh, SCN_FG, sp_secret, true);
+  V_DrawPatch(SP_STATSX, SP_STATSY + 2 * lh, SCN_FG, sp_secret, True);
   WI_DrawPercent(320 - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
 
-  V_DrawPatch(SP_TIMEX, SP_TIMEY, SCN_FG, time, true);
+  V_DrawPatch(SP_TIMEX, SP_TIMEY, SCN_FG, time, True);
   WI_DrawTime(160 - SP_TIMEX, SP_TIMEY, cnt_time);
 
   if wbs.epsd < 3 then
   begin
-    V_DrawPatch(160 + SP_TIMEX, SP_TIMEY, SCN_FG, par, true);
+    V_DrawPatch(160 + SP_TIMEX, SP_TIMEY, SCN_FG, par, True);
     WI_DrawTime(320 - SP_TIMEX, SP_TIMEY, cnt_par);
   end;
 end;
@@ -1348,19 +1348,19 @@ begin
       begin
         if not player.attackdown then
           acceleratestage := 1;
-        player.attackdown := true;
+        player.attackdown := True;
       end
       else
-        player.attackdown := false;
+        player.attackdown := False;
 
       if player.cmd.buttons and BT_USE <> 0 then
       begin
         if not player.usedown then
           acceleratestage := 1;
-        player.usedown := true;
+        player.usedown := True;
       end
       else
-        player.usedown := false;
+        player.usedown := False;
     end;
   end;
 end;
@@ -1375,9 +1375,9 @@ begin
   begin
     // intermission music
     if gamemode = commercial then
-      S_ChangeMusic(Ord(mus_dm2int), true)
+      S_ChangeMusic(Ord(mus_dm2int), True)
     else
-      S_ChangeMusic(Ord(mus_inter), true);
+      S_ChangeMusic(Ord(mus_inter), True);
   end;
 
   WI_CheckForAccelerate;
@@ -1423,7 +1423,7 @@ begin
 
   // background
   bg := W_CacheLumpName(name, PU_CACHE);
-  V_DrawPatch(0, 0, 1, bg, true);
+  V_DrawPatch(0, 0, 1, bg, True);
 
   if gamemode = commercial then
   begin
@@ -1696,3 +1696,7 @@ initialization
   anims[3] := nil;
 
 end.
+
+
+
+

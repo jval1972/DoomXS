@@ -44,7 +44,6 @@ implementation
 
 uses
   Messages,
-  
   d_main,
   i_input,
   i_system;
@@ -63,7 +62,7 @@ begin
         if wParam = SC_SCREENSAVE then
         begin
           Result := 0;
-          exit;
+          Exit;
         end;
       end;
       WM_ACTIVATE:
@@ -73,7 +72,7 @@ begin
       WM_CLOSE:
       begin
         Result := 0; // Preserve closing window by pressing Alt + F4
-        exit;
+        Exit;
       end;
       WM_DESTROY:
       begin
@@ -121,3 +120,4 @@ begin
 end;
 
 end.
+

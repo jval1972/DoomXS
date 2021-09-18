@@ -262,7 +262,7 @@ begin
     if activeplats[i] = nil then
     begin
       activeplats[i] := plat;
-      exit;
+      Exit;
     end;
 
   I_Error('P_AddActivePlat(): no more plats!');
@@ -278,10 +278,11 @@ begin
       activeplats[i].sector.specialdata := nil;
       P_RemoveThinker(@activeplats[i].thinker);
       activeplats[i] := nil;
-      exit;
+      Exit;
     end;
 
   I_Error('P_RemoveActivePlat(): can''t find plat!');
 end;
 
 end.
+

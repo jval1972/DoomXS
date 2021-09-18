@@ -111,7 +111,7 @@ var
   gamemap: integer;
 
   deathmatch: integer; // only if started as net death
-  netgame: boolean; // only true if packets are broadcast
+  netgame: boolean; // only True if packets are broadcast
   playeringame: array[0..MAXPLAYERS - 1] of boolean;
 
   consoleplayer: integer; // player taking events and displaying
@@ -129,7 +129,7 @@ var
 
   bodyqueslot: integer;
 
-  precache: boolean = true; // if true, load all graphics at start
+  precache: boolean = True; // if True, load all graphics at start
 
   respawnmonsters: boolean;
 
@@ -218,7 +218,7 @@ procedure G_DoSaveGame; forward;
 var
   sendsave: boolean;         // send a save event next tic
 
-  timingdemo: boolean;       // if true, exit with report on completion
+  timingdemo: boolean;       // if True, Exit with report on completion
   noblit: boolean;           // for comparative timing purposes
   starttime: integer;        // for comparative timing purposes
 
@@ -278,9 +278,9 @@ function G_CmdChecksum(cmd: Pticcmd_t): integer;
 var
   i: integer;
 begin
-  result := 0;
+  Result := 0;
   for i := 0 to sizeof(cmd^) div 4 - 2 do
-    result := result + PIntegerArray(cmd)[i];
+    Result := Result + PIntegerArray(cmd)[i];
 end;
 
 // G_BuildTiccmd
@@ -471,13 +471,13 @@ begin
   // special buttons
   if sendpause then
   begin
-    sendpause := false;
+    sendpause := False;
     cmd.buttons := BT_SPECIAL or BTS_PAUSE;
   end;
 
   if sendsave then
   begin
-    sendsave := false;
+    sendsave := False;
     cmd.buttons := BT_SPECIAL or BTS_SAVEGAME or _SHL(savegameslot, BTS_SAVESHIFT);
   end;
 end;
@@ -537,9 +537,9 @@ begin
   joyymove := 0;
   mousex := 0;
   mousey := 0;
-  sendpause := false;
-  sendsave := false;
-  paused := false;
+  sendpause := False;
+  sendsave := False;
+  paused := False;
   ZeroMemory(mousebuttons, SizeOf(mousebuttons));
   ZeroMemory(joybuttons, SizeOf(joybuttons));
 end;
@@ -561,8 +561,8 @@ begin
       if displayplayer = MAXPLAYERS then
         displayplayer := 0;
     until not (not playeringame[displayplayer] and (displayplayer <> consoleplayer));
-    result := true;
-    exit;
+    Result := True;
+    Exit;
   end;
 
   // any other key pops up menu if in demos
@@ -574,29 +574,29 @@ begin
        ((ev.typ = ev_joystick) and (ev.data1 <> 0)) then
     begin
       M_StartControlPanel;
-      result := true;
+      Result := True;
     end
     else
-      result := false;
-    exit;
+      Result := False;
+    Exit;
   end;
 
   if gamestate = GS_LEVEL then
   begin
     if HU_Responder(ev) then
     begin
-      result := true; // chat ate the event
-      exit;
+      Result := True; // chat ate the event
+      Exit;
     end;
     if ST_Responder(ev) then
     begin
-      result := true; // status window ate it
-      exit;
+      Result := True; // status window ate it
+      Exit;
     end;
     if AM_Responder(ev) then
     begin
-      result := true; // automap ate it
-      exit;
+      Result := True; // automap ate it
+      Exit;
     end;
   end;
 
@@ -604,8 +604,8 @@ begin
   begin
     if F_Responder(ev) then
     begin
-      result := true; // finale ate the event
-      exit;
+      Result := True; // finale ate the event
+      Exit;
     end;
   end;
 
@@ -614,21 +614,21 @@ begin
       begin
         if ev.data1 = KEY_PAUSE then
         begin
-          sendpause := true;
-          result := true;
-          exit;
+          sendpause := True;
+          Result := True;
+          Exit;
         end;
         if ev.data1 < NUMKEYS then
-          gamekeydown[ev.data1] := true;
-        result := true; // eat key down events
-        exit;
+          gamekeydown[ev.data1] := True;
+        Result := True; // eat key down events
+        Exit;
       end;
     ev_keyup:
       begin
         if ev.data1 < NUMKEYS then
-          gamekeydown[ev.data1] := false;
-        result := false; // always let key up events filter down
-        exit;
+          gamekeydown[ev.data1] := False;
+        Result := False; // always let key up events filter down
+        Exit;
       end;
     ev_mouse:
       begin
@@ -642,14 +642,14 @@ begin
         end
         else
         begin
-          mousebuttons[0] := false;
-          mousebuttons[1] := false;
-          mousebuttons[2] := false;
+          mousebuttons[0] := False;
+          mousebuttons[1] := False;
+          mousebuttons[2] := False;
           mousex := 0;
           mousey := 0;
         end;
-        result := true;    // eat events
-        exit;
+        Result := True;    // eat events
+        Exit;
       end;
     ev_joystick:
       begin
@@ -667,16 +667,16 @@ begin
         else
         begin
           for i := 0 to NUMJOYBUTTONS - 1 do
-            joybuttons[i] := false;
+            joybuttons[i] := False;
           joyxmove := 0;
           joyymove := 0;
         end;
-        result := true;    // eat events
-        exit;
+        Result := True;    // eat events
+        Exit;
       end;
   end;
 
-  result := false;
+  Result := False;
 end;
 
 // G_Ticker
@@ -855,8 +855,8 @@ begin
   p.itemcount := itemcount;
   p.secretcount := secretcount;
 
-  p.usedown := true;
-  p.attackdown := true;  // don't do anything immediately
+  p.usedown := True;
+  p.attackdown := True;  // don't do anything immediately
   p.playerstate := PST_LIVE;
   p.health := MAXHEALTH;
   p.readyweapon := wp_pistol;
@@ -870,7 +870,7 @@ begin
 end;
 
 // G_CheckSpot
-// Returns false if the player cannot be respawned
+// Returns False if the player cannot be respawned
 // at the given mapthing_t spot
 // because something is occupying it
 function G_CheckSpot(playernum: integer; mthing: Pmapthing_t): boolean;
@@ -889,11 +889,11 @@ begin
       if (players[i].mo.x = (mthing.x * FRACUNIT)) and
          (players[i].mo.y = (mthing.y * FRACUNIT)) then
       begin
-        result := false;
-        exit;
+        Result := False;
+        Exit;
       end;
-    result := true;
-    exit;
+    Result := True;
+    Exit;
   end;
 
   x := mthing.x * FRACUNIT;
@@ -901,8 +901,8 @@ begin
 
   if not P_CheckPosition(players[playernum].mo, x, y) then
   begin
-    result := false;
-    exit;
+    Result := False;
+    Exit;
   end;
 
   // flush an old corpse if needed
@@ -921,7 +921,7 @@ begin
   if players[consoleplayer].viewz <> 1 then
     S_StartSound(mo, Ord(sfx_telept));  // don't start sound on first frame
 
-  result := true;
+  Result := True;
 end;
 
 // G_DeathMatchSpawnPlayer
@@ -943,7 +943,7 @@ begin
     begin
       deathmatchstarts[i].typ := playernum + 1;
       P_SpawnPlayer(@deathmatchstarts[i]);
-      exit;
+      Exit;
     end;
   end;
 
@@ -970,13 +970,13 @@ begin
     if deathmatch <> 0 then
     begin
       G_DeathMatchSpawnPlayer(playernum);
-      exit;
+      Exit;
     end;
 
     if G_CheckSpot(playernum, @playerstarts[playernum]) then
     begin
       P_SpawnPlayer(@playerstarts[playernum]);
-      exit;
+      Exit;
     end;
 
     // try to spawn at one of the other players spots
@@ -987,7 +987,7 @@ begin
         playerstarts[i].typ := playernum + 1; // fake as other player
         P_SpawnPlayer(@playerstarts[i]);
         playerstarts[i].typ := i + 1; // restore
-        exit;
+        Exit;
       end;
       // he's going to be inside something.  Too bad.
     end;
@@ -1020,7 +1020,7 @@ var
 
 procedure G_ExitLevel;
 begin
-  secretexit := false;
+  secretexit := False;
   gameaction := ga_completed;
 end;
 
@@ -1029,9 +1029,9 @@ procedure G_SecretExitLevel;
 begin
   // IF NO WOLF3D LEVELS, NO SECRET EXIT!
   if (gamemode = commercial) and (W_CheckNumForName('map31') < 0) then
-    secretexit := false
+    secretexit := False
   else
-    secretexit := true;
+    secretexit := True;
   gameaction := ga_completed;
 end;
 
@@ -1054,12 +1054,12 @@ begin
       8:
         begin
           gameaction := ga_victory;
-          exit;
+          Exit;
         end;
       9:
         begin
           for i := 0 to MAXPLAYERS - 1 do
-            players[i].didsecret := true;
+            players[i].didsecret := True;
         end;
     end;
   end;
@@ -1127,8 +1127,8 @@ begin
   end;
 
   gamestate := GS_INTERMISSION;
-  viewactive := false;
-  automapactive := false;
+  viewactive := False;
+  automapactive := False;
 
   WI_Start(@wminfo);
 end;
@@ -1139,7 +1139,7 @@ begin
   gameaction := ga_worlddone;
 
   if secretexit then
-    players[consoleplayer].didsecret := true;
+    players[consoleplayer].didsecret := True;
 
   if gamemode = commercial then
   begin
@@ -1159,7 +1159,7 @@ begin
   gamemap := wminfo.next + 1;
   G_DoLoadLevel;
   gameaction := ga_nothing;
-  viewactive := true;
+  viewactive := True;
 end;
 
 // G_InitFromSavegame
@@ -1193,11 +1193,11 @@ begin
   sprintf(vcheck, 'version %d', [VERSION]);
 
   if len < Length(vcheck) then
-    exit; // bad version
+    Exit; // bad version
 
   for i := 0 to Length(vcheck) - 1 do
     if save_p[i] <> Ord(vcheck[i + 1]) then
-      exit; // bad version
+      Exit; // bad version
 
   save_p := @save_p[VERSIONSIZE];
 
@@ -1257,7 +1257,7 @@ procedure G_SaveGame(slot: integer; const description: string);
 begin
   savegameslot := slot;
   savedescription := description;
-  sendsave := true;
+  sendsave := True;
 end;
 
 procedure G_DoSaveGame;
@@ -1352,15 +1352,15 @@ procedure G_DoNewGame;
 var
   i: integer;
 begin
-  demoplayback := false;
-  netdemo := false;
-  netgame := false;
+  demoplayback := False;
+  netdemo := False;
+  netgame := False;
   deathmatch := 0;
   for i := 1 to MAXPLAYERS - 1 do
-    playeringame[i] := false;
-  respawnparm := false;
-  fastparm := false;
-  nomonsters := false;
+    playeringame[i] := False;
+  respawnparm := False;
+  fastparm := False;
+  nomonsters := False;
   consoleplayer := 0;
   G_InitNew(d_skill, d_episode, d_map);
   gameaction := ga_nothing;
@@ -1372,7 +1372,7 @@ var
 begin
   if paused then
   begin
-    paused := false;
+    paused := False;
     S_ResumeSound;
   end;
 
@@ -1410,9 +1410,9 @@ begin
   M_ClearRandom;
 
   if (skill = sk_nightmare) or respawnparm then
-    respawnmonsters := true
+    respawnmonsters := True
   else
-    respawnmonsters := false;
+    respawnmonsters := False;
 
   if fastparm or ((skill = sk_nightmare) and (gameskill <> sk_nightmare)) then
   begin
@@ -1435,16 +1435,16 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
     players[i].playerstate := PST_REBORN;
 
-  usergame := true;  // will be set false if a demo
-  paused := false;
-  demoplayback := false;
-  automapactive := false;
-  viewactive := true;
+  usergame := True;  // will be set False if a demo
+  paused := False;
+  demoplayback := False;
+  automapactive := False;
+  viewactive := True;
   gameepisode := episode;
   gamemap := map;
   gameskill := skill;
 
-  viewactive := true;
+  viewactive := True;
   demostarttic := 0;
 
   G_DoLoadLevel;
@@ -1460,7 +1460,7 @@ begin
   begin
     // end of demo data stream
     G_CheckDemoStatus;
-    exit;
+    Exit;
   end;
   cmd.forwardmove := demo_p[0];
   demo_p := @demo_p[1];
@@ -1498,7 +1498,7 @@ begin
   begin
     // no more space
     G_CheckDemoStatus;
-    exit;
+    Exit;
   end;
   G_ReadDemoTiccmd(cmd);  // make SURE it is exactly the same
 end;
@@ -1509,7 +1509,7 @@ var
   i: integer;
   maxsize: integer;
 begin
-  usergame := false;
+  usergame := False;
   demoname := name + '.lmp';
 
   i := M_CheckParm ('-maxdemo');
@@ -1521,7 +1521,7 @@ begin
   demobuffer := Z_Malloc(maxsize, PU_STATIC, nil);
   demoend := @demobuffer[maxsize];
 
-  demorecording := true;
+  demorecording := True;
 end;
 
 procedure G_BeginRecording;
@@ -1588,7 +1588,7 @@ begin
     fprintf(stderr, 'G_DoPlayDemo(): Demo is from a different game version = %d.%d!' + #13#10,
       [demo_p[0] div 100, demo_p[0] mod 100]);
     gameaction := ga_nothing;
-    exit;
+    Exit;
   end;
   demo_p := @demo_p[1];
 
@@ -1624,17 +1624,17 @@ begin
 
   if playeringame[1] then
   begin
-    netgame := true;
-    netdemo := true;
+    netgame := True;
+    netdemo := True;
   end;
 
   // don't spend a lot of time in loadlevel
-  precache := false;
+  precache := False;
   G_InitNew(skill, episode, map);
-  precache := true;
+  precache := True;
 
-  usergame := false;
-  demoplayback := true;
+  usergame := False;
+  demoplayback := True;
 end;
 
 // G_TimeDemo
@@ -1642,8 +1642,8 @@ procedure G_TimeDemo(const name: string);
 begin
   nodrawers := M_CheckParm('-nodraw') > 0;
   noblit := M_CheckParm('-noblit') > 0;
-  timingdemo := true;
-  singletics := true;
+  timingdemo := True;
+  singletics := True;
 
   defdemoname := name;
   gameaction := ga_playdemo;
@@ -1651,7 +1651,7 @@ end;
 
 // G_CheckDemoStatus
 //  Called after a death or level completion to allow demos to be cleaned up
-//  Returns true if a new demo loop action will take place
+//  Returns True if a new demo loop action will take place
 function G_CheckDemoStatus: boolean;
 var
   endtime: integer;
@@ -1669,19 +1669,19 @@ begin
       I_Quit;
 
     Z_ChangeTag(demobuffer, PU_CACHE);
-    demoplayback := false;
-    netdemo := false;
-    netgame := false;
+    demoplayback := False;
+    netdemo := False;
+    netgame := False;
     deathmatch := 0;
     for i := 1 to MAXPLAYERS - 1 do
-      playeringame[i] := false;
-    respawnparm := false;
-    fastparm := false;
-    nomonsters := false;
+      playeringame[i] := False;
+    respawnparm := False;
+    fastparm := False;
+    nomonsters := False;
     consoleplayer := 0;
     D_AdvanceDemo;
-    result := true;
-    exit;
+    Result := True;
+    Exit;
   end;
 
   if demorecording then
@@ -1691,11 +1691,11 @@ begin
 
     M_WriteFile(demoname, demobuffer, POperation(demo_p, demobuffer, '-', SizeOf(byte)));
     Z_Free(demobuffer);
-    demorecording := false;
+    demorecording := False;
     I_Error('G_CheckDemoStatus(): Demo %s recorded', [demoname]);
   end;
 
-  result := false;
+  Result := False;
 end;
 
 initialization
@@ -1703,4 +1703,8 @@ initialization
   joybuttons := @joyarray[0];
 
 end.
+
+
+
+
 
