@@ -69,13 +69,11 @@ uses
   mmsystem,
   z_memory,
   m_argv,
-  m_misc,
+  
   i_system,
   i_main,
-  s_sound,
-  w_wad,
-  doomdef,
-  doomstat;
+  
+  w_wad;
 
 // The number of internal mixing channels,
 //  the samples calculated for each mixing step,

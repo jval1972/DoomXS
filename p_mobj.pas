@@ -86,8 +86,7 @@ uses
   st_stuff,
   hu_stuff,
   s_sound,
-  info,
-  doomstat;
+  info;
 
 // P_SetMobjState
 // Returns true if the mobj is still present.

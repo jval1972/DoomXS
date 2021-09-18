@@ -29,8 +29,8 @@ unit p_tick;
 interface
 
 uses
-  p_local,
-  doomstat,
+  
+  
   d_think;
 
 // THINKERS
@@ -57,7 +57,7 @@ var
 implementation
 
 uses
-  d_delphi,
+  
   doomdef,
   d_player,
   g_game,

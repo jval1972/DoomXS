@@ -61,7 +61,7 @@ uses
   d_event,
   z_memory,
   m_rnd,
-  i_system,
+  
   w_wad,
   g_game,
   s_sound,

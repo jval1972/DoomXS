@@ -44,11 +44,10 @@ implementation
 
 uses
   Messages,
-  doomdef,
+  
   d_main,
   i_input,
-  i_system,
-  m_argv;
+  i_system;
 
 function WindowProc(hWnd: HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT; stdcall; export;
 begin

@@ -35,7 +35,7 @@ uses
   p_spec,
   r_defs,
   s_sound,
-  doomstat,
+  
   d_englsh,
   sounds;
 

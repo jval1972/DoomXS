@@ -96,10 +96,10 @@ uses
   m_menu,
   info,
   i_system,
-  i_sound,
+  
   i_video,
   i_io,
-  d_ticcmd,
+  
   d_player,
   d_net,
   g_game,

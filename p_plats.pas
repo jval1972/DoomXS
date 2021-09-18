@@ -50,12 +50,12 @@ procedure P_RemoveActivePlat(plat: Pplat_t);
 implementation
 
 uses
-  d_delphi,
+  
   doomdef,
   m_fixed,
   i_system,
   m_rnd,
-  p_mobj_h,
+  
   p_tick,
   p_floor,
   p_setup,

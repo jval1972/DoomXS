@@ -33,7 +33,7 @@ uses
   p_spec,
   r_defs,
   s_sound,
-  doomstat,
+  
   sounds;
 
 var
@@ -51,7 +51,7 @@ implementation
 
 uses
   m_fixed,
-  p_mobj_h,
+  
   p_tick,
   p_setup,
   p_floor;

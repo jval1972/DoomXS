@@ -45,9 +45,9 @@ var
 implementation
 
 uses
-  d_delphi,
+  
   doomdata,
-  p_local,
+  
   p_setup,
   p_lights,
   p_plats,

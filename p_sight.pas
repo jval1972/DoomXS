@@ -42,9 +42,9 @@ implementation
 
 uses
   d_delphi,
-  doomdef,
+  
   doomdata,
-  i_system,
+  
   p_local,
   p_setup,
   r_defs,

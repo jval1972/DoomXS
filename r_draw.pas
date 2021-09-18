@@ -108,11 +108,11 @@ implementation
 
 uses
   doomdef,
-  m_rnd,
-  p_tick,
+  
+  
   w_wad,
   z_memory,
-  i_system,
+  
   r_data,
   r_main,
   st_stuff,

@@ -30,7 +30,7 @@ interface
 
 uses
   // Some global defines, that configure the game.
-  doomdef,
+  
   // char8_t
   w_wad;
 

@@ -59,8 +59,7 @@ procedure Z_ChangeTag(ptr: pointer; tag: integer);
 implementation
 
 uses
-  d_delphi,
-  i_system;
+  d_delphi;
 
 type
   memmanageritem_t = record

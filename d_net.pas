@@ -147,8 +147,7 @@ uses
   i_io,
   d_main,
   d_event,
-  g_game,
-  doomstat;
+  g_game;
 
 const
   NCMD_EXIT = $80000000;

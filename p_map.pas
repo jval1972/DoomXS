@@ -32,7 +32,7 @@ uses
   m_bbox,
   m_rnd,
   i_system,
-  doomdef,
+  
   p_local,
   p_mobj_h,
   s_sound,
@@ -40,7 +40,7 @@ uses
   tables,
   d_player,
   r_defs,
-  doomstat,
+  
   sounds;
 
 function P_TeleportMove(thing: Pmobj_t; x, y: fixed_t): boolean;
@@ -95,7 +95,7 @@ uses
   doomdata,
   g_game,
   info_h,
-  i_io,
+  
   p_setup,
   p_maputl,
   p_inter,

@@ -56,7 +56,7 @@ uses
   r_defs,
   r_things,
 // Functions.
-  i_system,
+  
   z_memory,
   v_video,
   w_wad,

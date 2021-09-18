@@ -63,8 +63,7 @@ uses
   r_plane,
   r_things,
   r_draw,
-  r_sky,
-  doomstat;
+  r_sky;
 
 // R_ClearDrawSegs
 procedure R_ClearDrawSegs;

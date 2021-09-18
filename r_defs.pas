@@ -32,7 +32,7 @@ uses
   d_delphi,
   tables,
   // Screenwidth.
-  doomdef,
+  
   // Some more or less basic data types
   // we depend on.
   m_fixed,

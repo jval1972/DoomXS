@@ -32,7 +32,7 @@ uses
   m_fixed,
   d_player,
   d_think,
-  p_local,
+  
   p_mobj_h,
   r_defs;
 
@@ -331,7 +331,7 @@ implementation
 uses
   d_delphi,
   doomdef,
-  doomstat,
+  
   doomdata,
   i_system,
   i_io,

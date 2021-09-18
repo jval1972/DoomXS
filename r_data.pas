@@ -80,12 +80,12 @@ procedure R_SetupLevel;
 implementation
 
 uses
-  doomdef,
-  doomstat,
+  
+  
   d_think,
   g_game,
   i_system,
-  p_local,
+  
   p_setup,
   p_tick,
   p_mobj_h,

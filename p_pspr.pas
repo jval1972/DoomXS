@@ -98,7 +98,7 @@ uses
   d_items,
   m_rnd,
   p_local,
-  p_plats,
+  
   p_tick,
   p_mobj,
   p_enemy,

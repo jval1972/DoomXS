@@ -90,10 +90,10 @@ var
 implementation
 
 uses
-  doomdef,
-  doomstat,
+  
+  
   doomdata,
-  i_system,
+  
   r_main,
   r_data,
   r_bsp,

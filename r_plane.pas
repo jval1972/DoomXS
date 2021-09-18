@@ -73,8 +73,8 @@ implementation
 
 uses
   d_delphi,
-  doomstat,
-  d_player,
+  
+  
   tables,
   i_system,
   r_sky,

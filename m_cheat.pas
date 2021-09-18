@@ -46,8 +46,7 @@ function get_cheatseq_string(const A: string): string; overload;
 implementation
 
 uses
-  d_delphi,
-  i_system;
+  d_delphi;
 
 function get_cheatseq_string(const A: array of char): string;
 var

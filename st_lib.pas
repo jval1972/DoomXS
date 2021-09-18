@@ -144,13 +144,12 @@ procedure STlib_updateBinIcon(bi: Pst_binicon_t; refresh: boolean);
 implementation
 
 uses
-  doomdef,
+  
   z_memory,
   v_video,
   i_system,
   w_wad,
-  st_stuff,
-  am_map;  // automapactive
+  st_stuff;  // automapactive
 
 // Hack display negative frags.
 //  Loads and store the stminus lump.

@@ -61,15 +61,15 @@ uses
   Messages,
   d_delphi,
   mmsystem,
-  doomdef,
-  doomstat,
+  
+  
   m_argv,
-  m_misc,
+  
   i_system,
-  i_sound,
+  
   i_midi,
   s_sound,
-  w_wad,
+  
   z_memory;
 
 type

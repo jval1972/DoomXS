@@ -171,9 +171,8 @@ var
 implementation
 
 uses
-  i_system,
-  m_fixed,
-  m_bbox;
+  
+  m_fixed;
 
 // x and y translation tables for stretcing
 var

@@ -40,9 +40,7 @@ uses
   d_net,
   i_system,
   g_game,
-  m_argv,
-  r_main,
-  tables;
+  m_argv;
 
 var
   netget: PProcedure;

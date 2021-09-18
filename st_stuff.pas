@@ -76,13 +76,13 @@ uses
   d_delphi,
   tables,
   d_items,
-  i_system,
+  
   i_video,
   z_memory,
   w_wad,
   g_game,
   st_lib,
-  p_local,
+  
   p_inter,
   d_player,
   r_defs,

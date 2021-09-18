@@ -94,7 +94,7 @@ uses
   m_fixed,
   m_rnd,
   p_mobj_h,
-  p_local,
+  
   sounds,
   z_memory,
   w_wad,

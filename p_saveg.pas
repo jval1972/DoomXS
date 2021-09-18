@@ -56,7 +56,7 @@ implementation
 
 uses
   doomdef,
-  doomstat,
+  
   d_player,
   d_think,
   g_game,
@@ -64,7 +64,7 @@ uses
   info_h,
   info,
   i_system,
-  p_local,
+  
   p_pspr_h,
   p_setup,
   p_mobj_h,

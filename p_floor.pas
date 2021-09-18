@@ -34,7 +34,7 @@ uses
   m_fixed,
   r_defs,
   s_sound,
-  doomstat,
+  
   sounds;
 
 // FLOORS
@@ -55,7 +55,7 @@ uses
   doomdata,
   p_map,
   p_tick,
-  p_mobj_h,
+  
   p_setup,
   r_data;
 

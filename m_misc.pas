@@ -55,8 +55,7 @@ uses
   s_sound,
   v_video,
   w_wad,
-  z_memory,
-  doomstat;
+  z_memory;
 
 function M_WriteFile(const name: string; source: pointer; len: integer): boolean;
 var

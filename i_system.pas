@@ -30,8 +30,7 @@ interface
 
 uses
   d_delphi,
-  d_ticcmd,
-  d_event;
+  d_ticcmd;
 
 procedure I_Init;
 
