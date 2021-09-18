@@ -154,12 +154,6 @@ type
   mline_tArray = packed array[0..$FFFF] of mline_t;
   Pmline_tArray = ^mline_tArray;
 
-  islope_t = record
-    slp: fixed_t;
-    islp: fixed_t;
-  end;
-  Pislope_t = ^islope_t;
-
 // The vector graphics for the automap.
 //  A line drawing of the player pointing right,
 //   starting from the middle.
@@ -306,34 +300,6 @@ end;
 function CYMTOF(y: integer): integer;
 begin
   Result := f_y + (f_h - MTOF(y - m_y));
-end;
-
-procedure AM_getIslope(ml: Pmline_t; _is: Pislope_t);
-var
-  dx, dy: integer;
-begin
-  dx := ml.b.x - ml.a.x;
-  dy := ml.a.y - ml.b.y;
-
-  if dy = 0 then
-  begin
-    if dx < 0 then
-      _is.islp := -MAXINT
-    else
-      _is.islp := MAXINT;
-  end
-  else
-    _is.islp := FixedDiv(dx, dy);
-
-  if dx = 0 then
-  begin
-    if dy < 0 then
-      _is.slp := -MAXINT
-    else
-      _is.slp := MAXINT;
-  end
-  else
-    _is.slp := FixedDiv(dy, dx);
 end;
 
 procedure AM_activateNewScale;
