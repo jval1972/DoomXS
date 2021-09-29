@@ -450,7 +450,7 @@ begin
       if playeringame[i] then
       begin
         pnum := i;
-        break;
+        Break;
       end;
 
   plr := @players[pnum];
@@ -1060,7 +1060,7 @@ begin
     if (cheating <> 0) or (line.flags and ML_MAPPED <> 0) then
     begin
       if (line.flags and LINE_NEVERSEE <> 0) and (cheating = 0) then
-        continue;
+        Continue;
       if line.backsector = nil then
       begin
         AM_drawMline(@l, WALLCOLORS);
@@ -1189,10 +1189,10 @@ begin
     p := @players[i];
 
     if (deathmatch <> 0) and not singledemo and (p <> plr) then
-      continue;
+      Continue;
 
     if not playeringame[i] then
-      continue;
+      Continue;
 
     if p.powers[Ord(pw_invisibility)] <> 0 then
       color := 246 // *close* to black
@@ -1460,3 +1460,5 @@ begin
 end;
 
 end.
+
+

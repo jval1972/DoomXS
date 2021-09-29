@@ -4869,7 +4869,7 @@ const
   {$EXTERNALSYM DDENUMRET_CANCEL}
 
 (*
- * continue the enumeration
+ * Continue the enumeration
  *)
   DDENUMRET_OK                            = 1;
   {$EXTERNALSYM DDENUMRET_OK}

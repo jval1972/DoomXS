@@ -319,7 +319,7 @@ begin
         finished := True;
     end;
     if finished then
-      break;
+      Break;
     Inc(event);
     Dec(count);
     if count < 3 then
@@ -377,7 +377,7 @@ begin
       if midicaps.dwSupport and MIDICAPS_STREAM <> 0 then
       begin
         MidiDevice := i;
-        break;
+        Break;
       end;
     end;
   end;
@@ -744,3 +744,4 @@ begin
 end;
 
 end.
+

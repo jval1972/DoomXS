@@ -389,7 +389,7 @@ begin
     begin
       cmd.buttons := cmd.buttons or BT_CHANGE;
       cmd.buttons := cmd.buttons or _SHL(i, BT_WEAPONSHIFT);
-      break;
+      Break;
     end;
 
   // mouse
@@ -1703,3 +1703,4 @@ initialization
   joybuttons := @joyarray[0];
 
 end.
+

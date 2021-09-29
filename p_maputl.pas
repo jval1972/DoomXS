@@ -429,7 +429,7 @@ begin
     ld := @lines[offset^];
     Inc(offset);
     if ld.validcount = validcount then
-      continue; // line has already been checked
+      Continue; // line has already been checked
 
     ld.validcount := validcount;
 
@@ -532,7 +532,7 @@ begin
   intercepts[intercept_p].d.line := ld;
   Inc(intercept_p);
 
-  Result := True; // continue
+  Result := True; // Continue
 end;
 
 // PIT_AddThingIntercepts
@@ -731,7 +731,7 @@ begin
 
   // Step through map blocks.
   // count is present to prevent a round off error
-  // from skipping the break.
+  // from skipping the Break.
   mapx := xt1;
   mapy := yt1;
 
@@ -756,7 +756,7 @@ begin
     end;
 
     if (mapx = xt2) and (mapy = yt2) then
-      break;
+      Break;
 
     if _SHR(yintercept, FRACBITS) = mapy then
     begin
@@ -775,3 +775,5 @@ begin
 end;
 
 end.
+
+

@@ -655,7 +655,7 @@ begin
         myargv[index] := s.Strings(i);
         Inc(index);
         if index = MAXARGS then
-          break;
+          Break;
       end;
     myargc := index;
   finally
@@ -1058,3 +1058,4 @@ initialization
     wadfiles[i] := '';
 
 end.
+

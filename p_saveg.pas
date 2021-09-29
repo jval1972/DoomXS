@@ -88,7 +88,7 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
   begin
     if not playeringame[i] then
-      continue;
+      Continue;
 
     dest := Pplayer_t(save_p);
     memcpy(dest, @players[i], SizeOf(player_t));
@@ -110,7 +110,7 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
   begin
     if not playeringame[i] then
-      continue;
+      Continue;
 
     memcpy(@players[i], save_p, SizeOf(player_t));
     save_p := @save_p[SizeOf(player_t)];
@@ -174,7 +174,7 @@ begin
     for j := 0 to 1 do
     begin
       if li.sidenum[j] = -1 then
-        continue;
+        Continue;
 
       si := @sides[li.sidenum[j]];
 
@@ -245,7 +245,7 @@ begin
     for j := 0 to 1 do
     begin
       if li.sidenum[j] = -1 then
-        continue;
+        Continue;
       si := @sides[li.sidenum[j]];
       si.textureoffset := get[0] * FRACUNIT;
       get := @get[1];
@@ -406,7 +406,7 @@ begin
       while i < MAXCEILINGS do
       begin
         if activeceilings[i] = Pceiling_t(th) then
-          break;
+          Break;
         Inc(i);
       end;
 
@@ -420,7 +420,7 @@ begin
         ceiling.sector := Psector_t(pOperation(ceiling.sector, @sectors[0],
           '-', SizeOf(sectors[0])));
       end;
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_MoveCeiling then
@@ -432,7 +432,7 @@ begin
       save_p := @save_p[SizeOf(ceiling_t)];
       ceiling.sector := Psector_t(pOperation(ceiling.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_VerticalDoor then
@@ -444,7 +444,7 @@ begin
       save_p := @save_p[SizeOf(vldoor_t)];
       door.sector := Psector_t(pOperation(door.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_MoveFloor then
@@ -456,7 +456,7 @@ begin
       save_p := @save_p[SizeOf(floormove_t)];
       floor.sector := Psector_t(pOperation(floor.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_PlatRaise then
@@ -468,7 +468,7 @@ begin
       save_p := @save_p[SizeOf(plat_t)];
       plat.sector := Psector_t(pOperation(plat.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_LightFlash then
@@ -480,7 +480,7 @@ begin
       save_p := @save_p[SizeOf(lightflash_t)];
       flash.sector := Psector_t(pOperation(flash.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_StrobeFlash then
@@ -492,7 +492,7 @@ begin
       save_p := @save_p[SizeOf(strobe_t)];
       strobe.sector := Psector_t(POperation(strobe.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_Glow then
@@ -504,7 +504,7 @@ begin
       save_p := @save_p[SizeOf(glow_t)];
       glow.sector := Psector_t(pOperation(glow.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
     if @th.func.acp1 = @T_FireFlicker then
@@ -516,7 +516,7 @@ begin
       save_p := @save_p[SizeOf(fireflicker_t)];
       flicker.sector := Psector_t(pOperation(flicker.sector, @sectors[0],
         '-', SizeOf(sector_t)));
-      continue;
+      Continue;
     end;
 
   end;
@@ -647,3 +647,5 @@ begin
 end;
 
 end.
+
+

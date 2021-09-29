@@ -842,7 +842,7 @@ begin
       end;
     end;
 
-    // Now continue along the wall.
+    // Now Continue along the wall.
     // First calculate remainder.
     bestslidefrac := FRACUNIT - (bestslidefrac + $800);
 
@@ -1406,3 +1406,4 @@ begin
 end;
 
 end.
+

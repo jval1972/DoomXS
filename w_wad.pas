@@ -164,7 +164,7 @@ begin
   while i > 0 do
   begin
     if path[i] in ['/', '\'] then
-      break;
+      Break;
     dec(i);
   end;
   dest := '';
@@ -172,7 +172,7 @@ begin
   begin
     inc(i);
     if path[i] = '.' then
-      break
+      Break
     else
       dest := dest + toupper(path[i]);
   end;
@@ -546,3 +546,4 @@ begin
 end;
 
 end.
+

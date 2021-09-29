@@ -116,7 +116,7 @@ begin
   while i < doomcom.numnodes do
   begin
     if fromaddress.sin_addr.s_addr = sendaddress[i].sin_addr.s_addr then
-      break;
+      Break;
     inc(i);
   end;
 
@@ -250,3 +250,4 @@ begin
 end;
 
 end.
+

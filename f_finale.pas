@@ -231,7 +231,7 @@ begin
     while i < MAXPLAYERS do
     begin
       if players[i].cmd.buttons <> 0 then
-        break;
+        Break;
       inc(i);
     end;
     if i < MAXPLAYERS then
@@ -305,31 +305,31 @@ begin
   begin
 
     if i > len then
-      break;
+      Break;
 
     c := ch[i];
     inc(i);
     if c = #13 then
     begin
       cy := cy + 11;
-      continue;
+      Continue;
     end;
     if c = #10 then
     begin
       cx := 10;
-      continue;
+      Continue;
     end;
 
     c1 := Ord(toupper(c)) - Ord(HU_FONTSTART);
     if (c1 < 0) or (c1 > HU_FONTSIZE) then
     begin
       cx := cx + 4;
-      continue;
+      Continue;
     end;
 
     w := hu_font[c1].width;
     if cx + w > 320 then
-      break;
+      Break;
     V_DrawPatch(cx, cy, SCN_SCRF, hu_font[c1], False);
     cx := cx + w;
     dec(count);
@@ -533,7 +533,7 @@ begin
   begin
     c := ch[i];
     if c = #0 then
-      break;
+      Break;
     c1 := Ord(toupper(c)) - Ord(HU_FONTSTART);
     if (c1 < 0) or (c1 > HU_FONTSIZE) then
       width := width + 4
@@ -550,7 +550,7 @@ begin
   begin
     c := ch[i];
     if c = #0 then
-      break;
+      Break;
     c1 := Ord(toupper(c)) - Ord(HU_FONTSTART);
     if (c1 < 0) or (c1 > HU_FONTSIZE) then
       cx := cx + 4
@@ -778,3 +778,5 @@ initialization
   castorder[17].casttype := mobjtype_t(0);
 
 end.
+
+

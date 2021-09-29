@@ -132,7 +132,7 @@ begin
     begin
       // object removed itself
       psp.state := nil;
-      break;
+      Break;
     end;
 
     state := @states[Ord(stnum)];
@@ -150,7 +150,7 @@ begin
     begin
       state.action.acp2(player, psp);
       if psp.state = nil then
-        break;
+        Break;
     end;
 
     stnum := psp.state.nextstate;
@@ -658,7 +658,7 @@ begin
     P_AimLineAttack(mo.target, an, 16 * 64 * FRACUNIT);
 
     if linetarget = nil then
-      continue;
+      Continue;
 
     P_SpawnMobj(
       linetarget.x, linetarget.y, linetarget.z + _SHR(linetarget.height, 2),
@@ -724,3 +724,5 @@ begin
 end;
 
 end.
+
+

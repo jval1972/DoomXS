@@ -715,7 +715,7 @@ begin
   for i := 0 to numtextures - 1 do
   begin
     if texturepresent[i] = 0 then
-      continue;
+      Continue;
 
     texture := textures[i];
 
@@ -742,7 +742,7 @@ begin
   for i := 0 to numsprites - 1 do
   begin
     if spritepresent[i] = 0 then
-      continue;
+      Continue;
 
     for j := 0 to sprites[i].numframes - 1 do
     begin
@@ -765,3 +765,4 @@ begin
 end;
 
 end.
+

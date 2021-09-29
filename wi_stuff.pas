@@ -955,7 +955,7 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
   begin
     if not playeringame[i] then
-      continue;
+      Continue;
 
     cnt_kills[i] := 0;
     cnt_items[i] := 0;
@@ -985,7 +985,7 @@ begin
     for i := 0 to MAXPLAYERS - 1 do
     begin
       if not playeringame[i] then
-        continue;
+        Continue;
 
       cnt_kills[i] := (plrs[i].skills * 100) div wbs.maxkills;
       cnt_items[i] := (plrs[i].sitems * 100) div wbs.maxitems;
@@ -1008,7 +1008,7 @@ begin
     for i := 0 to MAXPLAYERS - 1 do
     begin
       if not playeringame[i] then
-        continue;
+        Continue;
 
       cnt_kills[i] := cnt_kills[i] + 2;
 
@@ -1034,7 +1034,7 @@ begin
     for i := 0 to MAXPLAYERS - 1 do
     begin
       if not playeringame[i] then
-        continue;
+        Continue;
 
       cnt_items[i] := cnt_items[i] + 2;
       if cnt_items[i] >= (plrs[i].sitems * 100) div wbs.maxitems then
@@ -1058,7 +1058,7 @@ begin
     for i := 0 to MAXPLAYERS - 1 do
     begin
       if not playeringame[i] then
-        continue;
+        Continue;
 
       cnt_secret[i] := cnt_secret[i] + 2;
 
@@ -1083,7 +1083,7 @@ begin
     for i := 0 to MAXPLAYERS - 1 do
     begin
       if not playeringame[i] then
-        continue;
+        Continue;
 
       cnt_frags[i] := cnt_frags[i] + 1;
 
@@ -1153,7 +1153,7 @@ begin
   for i := 0 to MAXPLAYERS - 1 do
   begin
     if not playeringame[i] then
-      continue;
+      Continue;
 
     x := NG_STATSX;
     V_DrawPatch(x - p[i].width, y, SCN_FG, p[i], True);
@@ -1695,3 +1695,4 @@ initialization
   anims[3] := nil;
 
 end.
+

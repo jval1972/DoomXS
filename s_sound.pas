@@ -343,7 +343,7 @@ begin
     if (channels[cnum].sfxinfo <> nil) and (channels[cnum].origin = origin) then
     begin
       S_StopChannel(cnum);
-      break;
+      Break;
     end;
 end;
 
@@ -401,7 +401,7 @@ begin
           if volume < 1 then
           begin
             S_StopChannel(cnum);
-            continue;
+            Continue;
           end
           else if volume > snd_SfxVolume then
             volume := snd_SfxVolume;
@@ -585,11 +585,11 @@ begin
   while cnum < numChannels do
   begin
     if channels[cnum].sfxinfo = nil then
-      break
+      Break
     else if (origin <> nil) and (channels[cnum].origin = origin) then
     begin
       S_StopChannel(cnum);
-      break;
+      Break;
     end;
     inc(cnum);
   end;
@@ -602,7 +602,7 @@ begin
     while cnum < numChannels do
     begin
       if channels[cnum].sfxinfo.priority >= sfxinfo.priority then
-        break;
+        Break;
       inc(cnum);
     end;
 
@@ -626,3 +626,5 @@ begin
 end;
 
 end.
+
+

@@ -352,7 +352,7 @@ const
     'you''re stuck on The Shores of Hell.' + #13#10 +
     'The only way out is through.' + #13#10 +
     ' ' + #13#10 +
-    'To continue the DOOM experience, play' + #13#10 +
+    'To Continue the DOOM experience, play' + #13#10 +
     'The Shores of Hell and its amazing' + #13#10 +
     'sequel, Inferno!' + #13#10;
 
@@ -615,7 +615,7 @@ const
   T6TEXT =
     'Time for a vacation. You''ve burst the' + #13#10 +
     'bowels of hell and by golly you''re ready' + #13#10 +
-    'for a break. You mutter to yourself,' + #13#10 +
+    'for a Break. You mutter to yourself,' + #13#10 +
     'Maybe someone else can kick Hell''s ass' + #13#10 +
     'next time around. Ahead lies a quiet town,' + #13#10 +
     'with peaceful flowing water, quaint' + #13#10 +
@@ -648,7 +648,7 @@ const
       'ATTENTION:  This version of DOOM has been modified.  If you would like to' + #13#10 +
       'get a copy of the original game, call 1-800-IDGAMES or see the readme file.' + #13#10 +
       '        You will not receive technical support for modified games.' + #13#10 +
-      '                      press enter to continue' + #13#10 +
+      '                      press enter to Continue' + #13#10 +
       '===========================================================================' + #13#10;
 
   MSG_SHAREWARE =
@@ -715,3 +715,5 @@ initialization
   doom2_endmsg[7] := 'you''re lucky i don''t smack' + #13#10 + 'you for thinking about leaving.';
 
 end.
+
+

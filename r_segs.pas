@@ -293,7 +293,7 @@ begin
         if height <> 0 then
           inc(frontsector.scaleindex)
         else
-          break;
+          Break;
       end;
     end;
 
@@ -806,3 +806,4 @@ begin
 end;
 
 end.
+

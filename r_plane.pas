@@ -214,7 +214,7 @@ begin
     if (height = visplanes[check].height) and
        (picnum = visplanes[check].picnum) and
        (lightlevel = visplanes[check].lightlevel) then
-      break;
+      Break;
     inc(check);
   end;
 
@@ -278,7 +278,7 @@ begin
   while x <= intrh do
   begin
     if pl.top[x] <> VISEND then
-      break
+      Break
     else
       inc(x);
   end;
@@ -357,7 +357,7 @@ begin
   begin
     pl := @visplanes[i];
     if pl.minx > pl.maxx then
-      continue;
+      Continue;
 
     // sky flat
     if pl.picnum = skyflatnum then
@@ -384,7 +384,7 @@ begin
           skycolfunc;
         end;
       end;
-      continue;
+      Continue;
     end;
 
     // regular flat
@@ -414,3 +414,5 @@ begin
 end;
 
 end.
+
+

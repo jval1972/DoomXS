@@ -335,7 +335,7 @@ begin
         if defaults[j].name = n then
         begin
           idx := j;
-          break;
+          Break;
         end;
 
       if idx > -1 then
@@ -471,7 +471,7 @@ begin
     lbmname[5] := Chr((i div 10) + Ord('0'));
     lbmname[6] := Chr((i mod 10) + Ord('0'));
     if not fexists(lbmname) then
-      break;  // file doesn't exist
+      Break;  // file doesn't exist
     inc(i);
   end;
 
@@ -486,3 +486,4 @@ begin
 end;
 
 end.
+

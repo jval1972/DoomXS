@@ -93,7 +93,7 @@ begin
         if @thinker.func.acp1 <> @P_MobjThinker then
         begin
           thinker := thinker.next;
-          continue;
+          Continue;
         end;
 
         m := Pmobj_t(thinker);
@@ -102,7 +102,7 @@ begin
         if m.typ <> MT_TELEPORTMAN then
         begin
           thinker := thinker.next;
-          continue;
+          Continue;
         end;
 
         sector := Psubsector_t(m.subsector).sector;
@@ -110,7 +110,7 @@ begin
         if sector <> @sectors[i] then
         begin
           thinker := thinker.next;
-          continue;
+          Continue;
         end;
 
         oldx := thing.x;
@@ -156,3 +156,4 @@ begin
 end;
 
 end.
+

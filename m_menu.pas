@@ -364,7 +364,7 @@ begin
     begin
       savegamestrings[i] := '';
       LoadMenu[i].status := 0;
-      continue;
+      Continue;
     end;
     SetLength(savegamestrings[i], SAVESTRINGSIZE);
     BlockRead(handle, (@savegamestrings[i][1])^, SAVESTRINGSIZE);
@@ -994,36 +994,36 @@ begin
   while True do
   begin
     if ch > len then
-      break;
+      Break;
 
     c := Ord(str[ch]);
     Inc(ch);
 
     if c = 0 then
-      break;
+      Break;
 
     if c = 10 then
     begin
       cx := x;
-      continue;
+      Continue;
     end;
 
     if c = 13 then
     begin
       cy := cy + 12;
-      continue;
+      Continue;
     end;
 
     c := Ord(toupper(Chr(c))) - Ord(HU_FONTSTART);
     if (c < 0) or (c >= HU_FONTSIZE) then
     begin
       cx := cx + 4;
-      continue;
+      Continue;
     end;
 
     w := hu_font[c].width;
     if cx + w > 320 then
-      break;
+      Break;
     V_DrawPatch(cx, cy, SCN_FG, hu_font[c], True);
     cx := cx + w;
   end;
@@ -1952,3 +1952,5 @@ begin
 end;
 
 end.
+
+

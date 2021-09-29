@@ -214,7 +214,7 @@ begin
     begin
       w := l.f[Ord(c) - l.sc].width;
       if x + w > SCREENWIDTH then
-        break;
+        Break;
       V_DrawPatch(x, l.y, FG, l.f[Ord(c) - l.sc], False);
       x := x + w;
     end
@@ -222,7 +222,7 @@ begin
     begin
       x := x + 4;
       if x >= SCREENWIDTH then
-        break;
+        Break;
     end;
   end;
 
@@ -399,3 +399,4 @@ begin
 end;
 
 end.
+

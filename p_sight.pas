@@ -181,7 +181,7 @@ begin
 
     // allready checked other side?
     if line.validcount = validcount then
-      continue;
+      Continue;
 
     line.validcount := validcount;
 
@@ -192,7 +192,7 @@ begin
 
     // line isn't crossed?
     if s1 = s2 then
-      continue;
+      Continue;
 
     divl.x := v1.x;
     divl.y := v1.y;
@@ -203,7 +203,7 @@ begin
 
     // line isn't crossed?
     if s1 = s2 then
-      continue;
+      Continue;
 
     // stop because it is not two sided anyway
     // might do this after updating validcount?
@@ -220,7 +220,7 @@ begin
     // no wall to block sight with?
     if (front.floorheight = back.floorheight) and
       (front.ceilingheight = back.ceilingheight) then
-      continue;
+      Continue;
 
     // possible occluder
     // because of ceiling height differences
@@ -363,3 +363,4 @@ begin
 end;
 
 end.
+

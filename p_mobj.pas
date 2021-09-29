@@ -600,7 +600,7 @@ begin
   while i < Ord(NUMMOBJTYPES) do
   begin
     if mthing.typ = mobjinfo[i].doomednum then
-      break;
+      Break;
     Inc(i);
   end;
 
@@ -732,7 +732,7 @@ begin
   while i < Ord(NUMMOBJTYPES) do
   begin
     if mthing.typ = mobjinfo[i].doomednum then
-      break;
+      Break;
     Inc(i);
   end;
 
@@ -924,3 +924,4 @@ begin
 end;
 
 end.
+

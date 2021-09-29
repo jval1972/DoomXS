@@ -147,7 +147,7 @@ begin
     begin
       numswitches := index div 2;
       switchlist[index] := -1;
-      break;
+      Break;
     end;
 
     if alphSwitchList[i].episode <= episode then
@@ -316,7 +316,7 @@ begin
     //UNUSED - Door Slide Open&Close
     // case 124:
     // EV_SlidingDoor (line, thing);
-    // break;
+    // Break;
 
     // SWITCHES
     7:
@@ -667,3 +667,4 @@ begin
 end;
 
 end.
+

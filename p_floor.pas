@@ -253,7 +253,7 @@ begin
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
     if sec.specialdata <> nil then
-      continue;
+      Continue;
 
     // new floor thinker
     Result := 1;
@@ -383,7 +383,7 @@ begin
               begin
                 floor.texture := sec.floorpic;
                 floor.newspecial := sec.special;
-                break;
+                Break;
               end;
             end
             else
@@ -393,7 +393,7 @@ begin
               begin
                 floor.texture := sec.floorpic;
                 floor.newspecial := sec.special;
-                break;
+                Break;
               end;
             end;
           end;
@@ -430,7 +430,7 @@ begin
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
     if sec.specialdata <> nil then
-      continue;
+      Continue;
 
     // new floor thinker
     Result := 1;
@@ -474,24 +474,24 @@ begin
       for i := 0 to sec.linecount - 1 do
       begin
         if sec.lines[i].flags and ML_TWOSIDED = 0 then
-          continue;
+          Continue;
 
         tsec := sec.lines[i].frontsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
 
         if secnum <> newsecnum then
-          continue;
+          Continue;
 
         tsec := sec.lines[i].backsector;
         newsecnum := pOperation(tsec, @sectors[0], '-', SizeOf(sector_t));
 
         if tsec.floorpic <> texture then
-          continue;
+          Continue;
 
         height := height + stairsize;
 
         if tsec.specialdata <> nil then
-          continue;
+          Continue;
 
         sec := tsec;
         secnum := newsecnum;
@@ -508,10 +508,12 @@ begin
         floor.typ := buildStair;
 
         ok := True;
-        break;
+        Break;
       end;
     until not ok;
   until secnum < 0;
 end;
 
 end.
+
+

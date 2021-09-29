@@ -214,7 +214,7 @@ begin
     for i := 0 to 127 do
     begin
       if buf[i] = #0 then
-        break;
+        Break;
       Result := Result + buf[i];
     end;
 end;
@@ -227,3 +227,4 @@ finalization
   StopPlaying;
 
 end.
+

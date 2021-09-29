@@ -148,7 +148,7 @@ begin
     secnum := P_FindSectorFromLineTag(line, secnum);
 
     if sec.specialdata <> nil then
-      continue;
+      Continue;
 
     // Find lowest & highest floors around sector
     Result := 1;
@@ -283,3 +283,4 @@ begin
 end;
 
 end.
+

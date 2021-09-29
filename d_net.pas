@@ -371,7 +371,7 @@ begin
   while HGetPacket do
   begin
     if netbuffer.checksum and NCMD_SETUP <> 0 then
-      continue;    // extra setup packet
+      Continue;    // extra setup packet
 
     netconsole := netbuffer.player and not PL_DRONE;
     netnode := doomcom.remotenode;
@@ -385,7 +385,7 @@ begin
     if netbuffer.checksum and NCMD_EXIT <> 0 then
     begin
       if not nodeingame[netnode] then
-        continue;
+        Continue;
       nodeingame[netnode] := False;
       playeringame[netconsole] := False;
       exitmsg := 'Player 1 left the game';
@@ -393,7 +393,7 @@ begin
       players[consoleplayer].msg := exitmsg;
       if demorecording then
         G_CheckDemoStatus;
-      continue;
+      Continue;
     end;
 
     // check for a remote game kill
@@ -416,13 +416,13 @@ begin
 
     // check for out of order / duplicated packet
     if realend = nettics[netnode] then
-      continue;
+      Continue;
 
     if realend < nettics[netnode] then
     begin
       fprintf(debugfile, 'out of order packet (%d + %d)' + #13#10,
         [realstart, netbuffer.numtics]);
-      continue;
+      Continue;
     end;
 
     // check for a missed packet
@@ -432,7 +432,7 @@ begin
       fprintf(debugfile, 'missed tics from %d (%d - %d)' + #13#10,
         [netnode, realstart, nettics[netnode]]);
       remoteresend[netnode] := True;
-      continue;
+      Continue;
     end;
 
     // update command store from the packet
@@ -499,7 +499,7 @@ begin
       Exit;
 
     if maketic - gameticdiv >= BACKUPTICS div 2 - 1 then
-      break;          // can't hold any more
+      Break;          // can't hold any more
 
     //printf ("mk:%i ",maketic);
     G_BuildTiccmd(@localcmds[maketic mod BACKUPTICS]);
@@ -580,7 +580,7 @@ begin
     begin
       CheckAbort;
       if not HGetPacket then
-        continue;
+        Continue;
       if netbuffer.checksum and NCMD_SETUP <> 0 then
       begin
         if netbuffer.player <> VERSION then
@@ -829,3 +829,5 @@ begin
 end;
 
 end.
+
+

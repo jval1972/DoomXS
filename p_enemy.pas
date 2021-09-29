@@ -241,12 +241,12 @@ begin
   begin
     check := sec.lines[i];
     if check.flags and ML_TWOSIDED = 0 then
-      continue;
+      Continue;
 
     P_LineOpening(check);
 
     if openrange <= 0 then
-      continue; // closed door
+      Continue; // closed door
 
     if sides[check.sidenum[0]].sector = sec then
       other := sides[check.sidenum[1]].sector
@@ -605,7 +605,7 @@ begin
       actor.lastlook := (actor.lastlook + 1) and 3;
 
     if not playeringame[actor.lastlook] then
-      continue;
+      Continue;
 
     if (c = 2) or (actor.lastlook = stop) then
     begin
@@ -618,10 +618,10 @@ begin
     player := @players[actor.lastlook];
 
     if player.health <= 0 then
-      continue;   // dead
+      Continue;   // dead
 
     if not P_CheckSight(actor, player.mo) then
-      continue;   // out of sight
+      Continue;   // out of sight
 
     if not allaround then
     begin
@@ -633,7 +633,7 @@ begin
         dist := P_AproxDistance(player.mo.x - actor.x, player.mo.y - actor.y);
         // if real close, react anyway
         if dist > MELEERANGE then
-          continue; // behind back
+          Continue; // behind back
       end;
     end;
 
@@ -1618,7 +1618,7 @@ begin
   while i < MAXPLAYERS do
   begin
     if playeringame[i] and (players[i].health > 0) then
-      break;
+      Break;
     Inc(i);
   end;
 
@@ -1936,3 +1936,5 @@ begin
 end;
 
 end.
+
+

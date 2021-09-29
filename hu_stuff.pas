@@ -417,7 +417,7 @@ begin
     for i := 0 to MAXPLAYERS - 1 do
     begin
       if not playeringame[i] then
-        continue;
+        Continue;
       c := Chr(players[i].cmd.chatchar);
       if (i <> consoleplayer) and (c <> #0) then
       begin
@@ -546,7 +546,7 @@ begin
             chat_on := True;
             HUlib_resetIText(@w_chat);
             HU_queueChatChar(Chr(i + 1));
-            break;
+            Break;
           end
           else if i = consoleplayer then
           begin
@@ -806,3 +806,5 @@ initialization
   destination_keys[3] := HUSTR_KEYRED;
 
 end.
+
+

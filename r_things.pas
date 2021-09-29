@@ -252,7 +252,7 @@ begin
     if maxframe = -1 then
     begin
       sprites[i].numframes := 0;
-      continue;
+      Continue;
     end;
 
     inc(maxframe);
@@ -812,7 +812,7 @@ begin
     if (ds.x1 > spr.x2) or
        (ds.x2 < spr.x1) or
        ((ds.silhouette = 0) and (ds.maskedtexturecol = nil)) then
-      continue; // does not cover sprite
+      Continue; // does not cover sprite
 
     r1 := decide(ds.x1 < spr.x1, spr.x1, ds.x1);
     r2 := decide(ds.x2 > spr.x2, spr.x2, ds.x2);
@@ -835,7 +835,7 @@ begin
       if ds.maskedtexturecol <> nil then
         R_RenderMaskedSegRange(ds, r1, r2);
       // seg is behind sprite
-      continue;
+      Continue;
     end;
 
     // clip this piece of the sprite
@@ -925,3 +925,4 @@ begin
 end;
 
 end.
+

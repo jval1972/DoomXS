@@ -211,11 +211,11 @@ begin
     initial := False;
     secnum := P_FindSectorFromLineTag(line, secnum);
     if secnum < 0 then
-      break;
+      Break;
 
     sec := @sectors[secnum];
     if sec.specialdata <> nil then
-      continue;
+      Continue;
 
     // new door thinker
     Result := 1;
@@ -290,3 +290,5 @@ begin
 end;
 
 end.
+
+

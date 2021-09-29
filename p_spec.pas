@@ -443,7 +443,7 @@ begin
       if R_CheckTextureNumForName(animdefs[i].startname) = -1 then
       begin
         Inc(i);
-        continue;
+        Continue;
       end;
 
       anims[lastanim].picnum := R_TextureNumForName(animdefs[i].endname);
@@ -454,7 +454,7 @@ begin
       if W_CheckNumForName(animdefs[i].startname) = -1 then
       begin
         Inc(i);
-        continue;
+        Continue;
       end;
 
       anims[lastanim].picnum := R_FlatNumForName(animdefs[i].endname);
@@ -596,7 +596,7 @@ begin
       if h >= MAX_ADJOINING_SECTORS then
       begin
         fprintf(stderr, 'Sector with more than 20 adjoining sectors' + #13#10);
-        break;
+        Break;
       end;
     end;
   end;
@@ -1413,7 +1413,7 @@ begin
 
     // ALREADY MOVING?  IF SO, KEEP GOING...
     if s1.specialdata <> nil then
-      continue;
+      Continue;
 
     Result := 1;
     s2 := getNextSector(s1.lines[0], s1);
@@ -1421,7 +1421,7 @@ begin
     begin
       if (s2.lines[i].flags and ML_TWOSIDED = 0) or
         (s2.lines[i].backsector = s1) then
-        continue;
+        Continue;
       s3 := s2.lines[i].backsector;
 
       //  Spawn rising slime
@@ -1449,7 +1449,7 @@ begin
       floor.sector := s1;
       floor.speed := FLOORSPEED div 2;
       floor.floordestheight := s3.floorheight;
-      break;
+      Break;
     end;
   end;
 end;
@@ -1493,7 +1493,7 @@ begin
   begin
     sector := @sectors[i];
     if sector.special = 0 then
-      continue;
+      Continue;
 
     case sector.special of
       1:
@@ -1588,3 +1588,5 @@ begin
 end;
 
 end.
+
+
