@@ -4,7 +4,7 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'DoomXS Launcher'
-  ClientHeight = 315
+  ClientHeight = 293
   ClientWidth = 480
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
