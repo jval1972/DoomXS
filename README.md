@@ -8,7 +8,14 @@ Raised static limits
 
 Low hardware requirements
 
+Support for DOOMWADDIR & DOOMWADPATH eviroment variables 
+
+Launcher app 
+
 ## Downloads
+
+[version 1.0.2.134 (20210930 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.2.134_bin.zip/download)
+
 [version 1.0.1.133 (20210930 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.1.133_bin.zip/download)
 
 ## Screenshots
