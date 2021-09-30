@@ -12,3 +12,4 @@ Low hardware requirements
 
 ![Screenshot 1](https://i.postimg.cc/4xn5wfFd/doomxs01.png "Screenshot 1")
 
+![Screenshot 2](https://i.postimg.cc/5tdCvbhD/doomxs02.png "Screenshot 2")
