@@ -8,6 +8,9 @@ Raised static limits
 
 Low hardware requirements
 
+## Downloads
+[version 1.0.1.133 (20210930 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.1.133_bin.zip/download)
+
 ## Screenshots
 
 ![Screenshot 1](https://i.postimg.cc/4xn5wfFd/doomxs01.png "Screenshot 1")
