@@ -96,7 +96,8 @@ uses
   i_input,
   i_io,
   d_net,
-  g_game;
+  g_game,
+  z_memory;
 
 var
   finished: boolean = False;
@@ -142,6 +143,7 @@ end;
 var
   basetime: int64 = 0;
   Freq: int64;
+  invFreq: double;
 
 function I_GetTime: integer;
 var
@@ -156,7 +158,7 @@ begin
   end;
   if basetime = 0 then
     basetime := _time;
-  Result := round(((_time - basetime) / Freq) * TICRATE);
+  Result := round((_time - basetime) * invFreq);
 end;
 
 procedure I_ClearInterface(var Dest: IInterface);
@@ -185,7 +187,6 @@ end;
 // I_Quit
 procedure I_Quit;
 begin
-  //  finished := True;
   PostMessage(hMainWnd, WM_DESTROY, 0, 0);
 end;
 
@@ -199,6 +200,7 @@ begin
   M_SaveDefaults;
   I_ShutdownGraphics;
   I_ShutdownIO;
+  Z_ShutDown;
   Halt(0);
 end;
 
@@ -285,5 +287,6 @@ end;
 initialization
   if not QueryPerformanceFrequency(Freq) then
     Freq := 1000;
+  invFreq := 1 / Freq * TICRATE;
 
 end.
