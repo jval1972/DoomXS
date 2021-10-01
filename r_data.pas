@@ -521,6 +521,8 @@ begin
 
   for i := 0 to numtextures - 1 do
     texturetranslation[i] := i;
+
+  FreeMem(patchlookup, nummappatches * SizeOf(integer));
 end;
 
 // R_InitFlats
