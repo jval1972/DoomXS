@@ -1428,8 +1428,7 @@ begin
   begin
     NUMCMAPS := 32;
     lnames :=
-      Ppatch_tPArray(
-        Z_Malloc(SizeOf(Ppatch_t) * NUMCMAPS, PU_STATIC, nil));
+        Z_Malloc(SizeOf(Ppatch_t) * NUMCMAPS, PU_STATIC, nil);
     for i := 0 to NUMCMAPS - 1 do
     begin
       name := 'CWILV' + IntToStrZfill(2, i);
@@ -1439,8 +1438,7 @@ begin
   else
   begin
     lnames :=
-      Ppatch_tPArray(
-        Z_Malloc(SizeOf(Ppatch_t) * NUMMAPS, PU_STATIC, nil));
+        Z_Malloc(SizeOf(Ppatch_t) * NUMMAPS, PU_STATIC, nil);
     for i := 0 to NUMMAPS - 1 do
     begin
       sprintf(name, 'WILV%d%d', [wbs.epsd, i]);
