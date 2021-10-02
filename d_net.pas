@@ -776,7 +776,7 @@ begin
   end; // demoplayback
 
   // wait for new tics if needed
-  while lowtic < gametic / ticdup + counts do
+  while lowtic < gametic div ticdup + counts do
   begin
     NetUpdate;
     lowtic := MAXINT;
@@ -785,11 +785,11 @@ begin
       if nodeingame[i] and (nettics[i] < lowtic) then
         lowtic := nettics[i];
 
-    if lowtic < gametic / ticdup then
+    if lowtic < gametic div ticdup then
       I_Error('TryRunTics(): lowtic < gametic');
 
     // don't stay in here forever -- give the menu a chance to work
-    if I_GetTime / ticdup - entertic >= 20 then
+    if I_GetTime div ticdup - entertic >= 20 then
     begin
       M_Ticker;
       Exit;
@@ -803,7 +803,7 @@ begin
 
     for i := 0 to ticdup - 1 do
     begin
-      if gametic / ticdup > lowtic then
+      if gametic div ticdup > lowtic then
         I_Error('TryRunTics(): gametic > lowtic');
       if advancedemo then
         D_DoAdvanceDemo;
