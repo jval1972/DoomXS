@@ -6,13 +6,15 @@
 
 Raised static limits
 
-Low hardware requirements
+Support for DOOMWADDIR & DOOMWADPATH eviroment variables
 
-Support for DOOMWADDIR & DOOMWADPATH eviroment variables 
+Low hardware requirements
 
 Launcher app 
 
 ## Downloads
+
+[version 1.0.3.136 (20211003 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.3.136_bin.zip/download)
 
 [version 1.0.2.134 (20210930 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.2.134_bin.zip/download)
 

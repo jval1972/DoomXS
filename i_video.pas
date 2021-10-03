@@ -135,8 +135,7 @@ begin
     destrect.Right := SCREENWIDTH;
     destrect.Bottom := SCREENHEIGHT;
   end;
-  if g_pDDSPrimary.Blt(@destrect, g_pDDScreen, @srcrect, DDBLTFAST_DONOTWAIT or DDBLTFAST_NOCOLORKEY, nil) = DDERR_SURFACELOST then
-
+  if g_pDDSPrimary.Blt(@destrect, g_pDDScreen, @srcrect, DDBLTFAST_WAIT or DDBLTFAST_NOCOLORKEY, nil) = DDERR_SURFACELOST then
     g_pDDSPrimary._Restore;
 end;
 
