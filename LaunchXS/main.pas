@@ -16,6 +16,7 @@ type
     Label5: TLabel;
     KeyboardRadioGroup: TRadioGroup;
     DetailCheckBox: TCheckBox;
+    SmoothDisplayCheckBox: TCheckBox;
     ScreenblocksTrackBar: TTrackBar;
     SFXTrackBar: TTrackBar;
     MusicTrackBar: TTrackBar;
@@ -27,6 +28,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure ScreenblocksTrackBarChange(Sender: TObject);
     procedure DetailCheckBoxClick(Sender: TObject);
+    procedure SmoothDisplayCheckBoxClick(Sender: TObject);
     procedure SFXTrackBarChange(Sender: TObject);
     procedure MusicTrackBarChange(Sender: TObject);
     procedure ChannelsTrackBarChange(Sender: TObject);
@@ -89,6 +91,7 @@ begin
       'joyb_speed=2'#13#10 +
       'screenblocks=10'#13#10 +
       'detaillevel=0'#13#10 +
+      'smoothdisplay=1'#13#10 +
       'snd_channels=8'#13#10 +
       'usegamma=0'#13#10 +
       'chatmacro0=No'#13#10 +
@@ -112,7 +115,10 @@ end;
 
 procedure TForm1.SetDefault(const defname: string; const defvalue: integer);
 begin
-  defaults.Values[defname] := IntToStr(defvalue);
+  if defaults.IndexOfName(defname) < 0 then
+    defaults.Add(defname + '=' + IntToStr(defvalue))
+  else
+    defaults.Values[defname] := IntToStr(defvalue);
 end;
 
 function TForm1.GetDefault(const defname: string): integer;
@@ -135,6 +141,7 @@ begin
   else
     KeyboardRadioGroup.ItemIndex := 2;
   DetailCheckBox.Checked := GetDefault('detaillevel') = 1;
+  SmoothDisplayCheckBox.Checked := GetDefault('smoothdisplay') = 1;
   ScreenblocksTrackBar.Position := GetDefault('screenblocks');
   SFXTrackBar.Position := GetDefault('sfx_volume');
   MusicTrackBar.Position := GetDefault('music_volume');
@@ -163,6 +170,11 @@ begin
   else
     SetDefault('detaillevel', 0);
 
+  if SmoothDisplayCheckBox.Checked then
+    SetDefault('smoothdisplay', 1)
+  else
+    SetDefault('smoothdisplay', 0);
+
   SetDefault('screenblocks', ScreenblocksTrackBar.Position);
   SetDefault('sfx_volume', SFXTrackBar.Position);
   SetDefault('music_volume', MusicTrackBar.Position);
@@ -175,6 +187,11 @@ begin
 end;
 
 procedure TForm1.DetailCheckBoxClick(Sender: TObject);
+begin
+  FromControls;
+end;
+
+procedure TForm1.SmoothDisplayCheckBoxClick(Sender: TObject);
 begin
   FromControls;
 end;

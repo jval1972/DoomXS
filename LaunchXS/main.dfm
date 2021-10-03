@@ -1130,7 +1130,7 @@ object Form1: TForm1
       Width = 97
       Height = 17
       Caption = 'Low detail'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = DetailCheckBoxClick
     end
     object ScreenblocksTrackBar: TTrackBar
@@ -1141,8 +1141,19 @@ object Form1: TForm1
       Max = 11
       Min = 3
       Position = 9
-      TabOrder = 1
+      TabOrder = 0
       OnChange = ScreenblocksTrackBarChange
+    end
+    object SmoothDisplayCheckBox: TCheckBox
+      Left = 24
+      Top = 80
+      Width = 97
+      Height = 17
+      Caption = 'Smooth Display'
+      Checked = True
+      State = cbChecked
+      TabOrder = 2
+      OnClick = SmoothDisplayCheckBoxClick
     end
   end
   object KeyboardRadioGroup: TRadioGroup
