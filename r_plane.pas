@@ -317,26 +317,26 @@ procedure R_MakeSpans(x: integer; t1: integer; b1: integer; t2: integer; b2: int
 begin
   while (t1 < t2) and (t1 <= b1) do
   begin
-    if (t1 >= 0) and (t1 <= Length(spanstart)) then
+    if (t1 >= 0) and (t1 < viewheight) then
       R_MapPlane(t1, spanstart[t1], x - 1);
     inc(t1);
   end;
   while (b1 > b2) and (b1 >= t1) do
   begin
-    if (b1 >= 0) and (b1 <= Length(spanstart)) then
+    if (b1 >= 0) and (b1 < viewheight) then
       R_MapPlane(b1, spanstart[b1], x - 1);
     dec(b1);
   end;
 
   while (t2 < t1) and (t2 <= b2) do
   begin
-    if (t2 >= 0) and (t2 <= Length(spanstart)) then
+    if (t2 >= 0) and (t2 < viewheight) then
       spanstart[t2] := x;
     inc(t2);
   end;
   while (b2 > b1) and (b2 >= t2) do
   begin
-    if (b2 >= 0) and (b2 <= Length(spanstart)) then
+    if (b2 >= 0) and (b2 < viewheight) then
       spanstart[b2] := x;
     dec(b2);
   end;
