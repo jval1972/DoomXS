@@ -77,6 +77,7 @@ var
   startmap: integer;
   advancedemo: boolean;
   basedefault: string;  // default file
+  smoothdisplay: integer = 1;
 
 implementation
 
@@ -284,6 +285,9 @@ end;
 
 //  D_DoomLoop
 procedure D_DoomLoop;
+var
+  entertic: int64;
+  wait64: Int64;
 begin
   if demorecording then
     G_BeginRecording;
@@ -292,6 +296,7 @@ begin
 
   while True do
   begin
+    entertic := I_GetTime64;
     // frame syncronous IO operations
     I_StartFrame;
     if I_GameFinished then
@@ -308,14 +313,35 @@ begin
       G_Ticker;
       Inc(gametic);
       Inc(maketic);
+
+      S_UpdateSounds(players[consoleplayer].mo);// move positional sounds
+
+      // Update display, next frame, with current state.
+      D_Display;
     end
     else
+    begin
       TryRunTics; // will run at least one tic
 
-    S_UpdateSounds(players[consoleplayer].mo);// move positional sounds
+      S_UpdateSounds(players[consoleplayer].mo);// move positional sounds
 
-    // Update display, next frame, with current state.
-    D_Display;
+      // Update display, next frame, with current state.
+      D_Display;
+
+      if smoothdisplay = 1 then
+        while True do
+        begin
+          wait64 := I_GetTime64 - entertic;
+          if wait64 < 32768 then
+            D_Display;
+          if wait64 > 65000 then
+            Break
+          else if wait64 > 63000 then
+            I_WaitVBL(0)
+          else
+            I_WaitVBL(1);
+        end;
+    end;
   end;
 end;
 

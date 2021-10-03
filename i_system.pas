@@ -37,6 +37,7 @@ procedure I_Init;
 { Called by D_DoomLoop, }
 { returns current time in tics. }
 function I_GetTime: integer;
+function I_GetTime64: integer;
 
 procedure I_ClearInterface(var Dest: IInterface);
 
@@ -144,6 +145,7 @@ var
   basetime: int64 = 0;
   Freq: int64;
   invFreq: double;
+  invFreq64: double;
 
 function I_GetTime: integer;
 var
@@ -159,6 +161,22 @@ begin
   if basetime = 0 then
     basetime := _time;
   Result := round((_time - basetime) * invFreq);
+end;
+
+function I_GetTime64: integer;
+var
+  _time: int64;
+begin
+  if Freq = 1000 then
+    _time := GetTickCount
+  else
+  begin
+    if not QueryPerformanceCounter(_time) then
+      _time := GetTickCount;
+  end;
+  if basetime = 0 then
+    basetime := _time;
+  Result := round((_time - basetime) * invFreq64);
 end;
 
 procedure I_ClearInterface(var Dest: IInterface);
@@ -288,5 +306,6 @@ initialization
   if not QueryPerformanceFrequency(Freq) then
     Freq := 1000;
   invFreq := 1 / Freq * TICRATE;
+  invFreq64 := 1 / Freq * TICRATE * 65536;
 
 end.

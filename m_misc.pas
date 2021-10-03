@@ -111,7 +111,7 @@ type
   end;
 
 const
-  NUMDEFAULTS = 37;
+  NUMDEFAULTS = 38;
 
   defaults: array[0..NUMDEFAULTS - 1] of default_t = (
     (name: 'mouse_sensitivity';
@@ -219,6 +219,10 @@ const
     (name: 'detaillevel';
      location: @detailLevel;
      defaultivalue: 0;
+     _type: tInteger),
+    (name: 'smoothdisplay';
+     location: @smoothdisplay;
+     defaultivalue: 1;
      _type: tInteger),
 
     (name: 'snd_channels';
