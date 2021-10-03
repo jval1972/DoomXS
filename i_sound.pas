@@ -462,9 +462,9 @@ begin
   SampleFormat.nChannels := 1;
   SampleFormat.cbSize := 0;
   SampleFormat.nBlockAlign := 1;
-  SampleFormat.nSamplesPerSec := 11025;
-  SampleFormat.nAvgBytesPerSec := 11025;
-  SampleFormat.wBitsPerSample := 8;
+  SampleFormat.nSamplesPerSec := 44100;
+  SampleFormat.nAvgBytesPerSec := 44100;
+  SampleFormat.wBitsPerSample := 16;
 
   ZeroMemory(@dsbd, SizeOf(DSBUFFERDESC));
   dsbd.dwSize := SizeOf(DSBUFFERDESC);

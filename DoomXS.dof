@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=-iwad doom.wad -fullscreen
+RunParams=-iwad doom2.wad -fullscreen
 HostApplication=
 Launcher=
 UseLauncher=0
@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=2
-Build=134
+Build=135
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Jim Valavanis
 FileDescription=DoomXS
-FileVersion=1.0.2.134
+FileVersion=1.0.2.135
 InternalName=Doom
 LegalCopyright=Copyright (c) 2021, Jim Valavanis
 LegalTrademarks=Copyright (c) 2021, Jim Valavanis
