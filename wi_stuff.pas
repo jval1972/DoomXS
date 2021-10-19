@@ -1427,8 +1427,7 @@ begin
   if gamemode = commercial then
   begin
     NUMCMAPS := 32;
-    lnames :=
-        Z_Malloc(SizeOf(Ppatch_t) * NUMCMAPS, PU_STATIC, nil);
+    lnames := Z_Malloc(SizeOf(Ppatch_t) * NUMCMAPS, PU_STATIC, nil);
     for i := 0 to NUMCMAPS - 1 do
     begin
       name := 'CWILV' + IntToStrZfill(2, i);
@@ -1437,22 +1436,16 @@ begin
   end
   else
   begin
-    lnames :=
-        Z_Malloc(SizeOf(Ppatch_t) * NUMMAPS, PU_STATIC, nil);
+    lnames := Z_Malloc(SizeOf(Ppatch_t) * NUMMAPS, PU_STATIC, nil);
     for i := 0 to NUMMAPS - 1 do
     begin
       sprintf(name, 'WILV%d%d', [wbs.epsd, i]);
       lnames[i] := W_CacheLumpName(name, PU_STATIC);
     end;
 
-    // you are here
-    yah[0] := W_CacheLumpName('WIURH0', PU_STATIC);
-
-    // you are here (alt.)
-    yah[1] := W_CacheLumpName('WIURH1', PU_STATIC);
-
-    // splat
-    splat := W_CacheLumpName('WISPLAT', PU_STATIC);
+    yah[0] := W_CacheLumpName('WIURH0', PU_STATIC); // you are here
+    yah[1] := W_CacheLumpName('WIURH1', PU_STATIC); // you are here (alt.)
+    splat := W_CacheLumpName('WISPLAT', PU_STATIC); // splat
 
     if wbs.epsd < 3 then
     begin
@@ -1469,10 +1462,7 @@ begin
             a.p[i] := W_CacheLumpName(name, PU_STATIC);
           end
           else
-          begin
-          // HACK ALERT!
-            a.p[i] := anims[1, 4].p[i];
-          end;
+            a.p[i] := anims[1, 4].p[i]; // HACK ALERT!
         end;
       end;
     end;
@@ -1488,23 +1478,12 @@ begin
     num[i] := W_CacheLumpName(name, PU_STATIC);
   end;
 
-  // percent sign
-  percent := W_CacheLumpName('WIPCNT', PU_STATIC);
-
-  // "finished"
-  finished := W_CacheLumpName('WIF', PU_STATIC);
-
-  // "entering"
-  entering := W_CacheLumpName('WIENTER', PU_STATIC);
-
-  // "kills"
-  kills := W_CacheLumpName('WIOSTK', PU_STATIC);
-
-  // "scrt"
-  secret := W_CacheLumpName('WIOSTS', PU_STATIC);
-
-  // "secret"
-  sp_secret := W_CacheLumpName('WISCRT2', PU_STATIC);
+  percent := W_CacheLumpName('WIPCNT', PU_STATIC); // percent sign
+  finished := W_CacheLumpName('WIF', PU_STATIC); // "finished"
+  entering := W_CacheLumpName('WIENTER', PU_STATIC); // "entering"
+  kills := W_CacheLumpName('WIOSTK', PU_STATIC); // "kills"
+  secret := W_CacheLumpName('WIOSTS', PU_STATIC); // "scrt"
+  sp_secret := W_CacheLumpName('WISCRT2', PU_STATIC); // "secret"
 
   // Yuck.
   if language = french then
@@ -1518,35 +1497,16 @@ begin
   else
     items := W_CacheLumpName('WIOSTI', PU_STATIC);
 
-  // "frgs"
-  frags := W_CacheLumpName('WIFRGS', PU_STATIC);
-
-  // ":"
-  colon := W_CacheLumpName('WICOLON', PU_STATIC);
-
-  // "time"
-  time := W_CacheLumpName('WITIME', PU_STATIC);
-
-  // "sucks"
-  sucks := W_CacheLumpName('WISUCKS', PU_STATIC);
-
-  // "par"
-  par := W_CacheLumpName('WIPAR', PU_STATIC);
-
-  // "killers" (vertical)
-  killers := W_CacheLumpName('WIKILRS', PU_STATIC);
-
-  // "victims" (horiz)
-  victims := W_CacheLumpName('WIVCTMS', PU_STATIC);
-
-  // "total"
-  total := W_CacheLumpName('WIMSTT', PU_STATIC);
-
-  // your face
-  star := W_CacheLumpName('STFST01', PU_STATIC);
-
-  // dead face
-  bstar := W_CacheLumpName('STFDEAD0', PU_STATIC);
+  frags := W_CacheLumpName('WIFRGS', PU_STATIC); // "frgs"
+  colon := W_CacheLumpName('WICOLON', PU_STATIC); // ":"
+  time := W_CacheLumpName('WITIME', PU_STATIC); // "time"
+  sucks := W_CacheLumpName('WISUCKS', PU_STATIC); // "sucks"
+  par := W_CacheLumpName('WIPAR', PU_STATIC); // "par"
+  killers := W_CacheLumpName('WIKILRS', PU_STATIC); // "killers" (vertical)
+  victims := W_CacheLumpName('WIVCTMS', PU_STATIC); // "victims" (horiz)
+  total := W_CacheLumpName('WIMSTT', PU_STATIC); // "total"
+  star := W_CacheLumpName('STFST01', PU_STATIC); // your face
+  bstar := W_CacheLumpName('STFDEAD0', PU_STATIC); // dead face
 
   for i := 0 to MAXPLAYERS - 1 do
   begin
