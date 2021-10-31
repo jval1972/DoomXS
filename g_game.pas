@@ -93,6 +93,7 @@ var
   key_use: integer;
   key_strafe: integer;
   key_speed: integer;
+  autorun_mode: integer;
 
   usemouse: integer;
   mousebfire: integer;
@@ -308,6 +309,8 @@ begin
             ((usemouse <> 0) and mousebuttons[mousebstrafe]) or
             ((usejoystick <> 0) and joybuttons[joybstrafe]);
   speed := intval(gamekeydown[key_speed] or joybuttons[joybspeed]);
+  if autorun_mode <> 0 then
+    speed := 1 - speed;
 
   fwd := 0;
   side := 0;
