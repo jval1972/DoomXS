@@ -40,6 +40,7 @@ type
   private
     { Private declarations }
     defaults: TStringList;
+    in_startup: boolean;
     procedure SetDefault(const defname: string; const defvalue: integer);
     function GetDefault(const defname: string): integer;
     procedure ToControls;
@@ -108,7 +109,9 @@ begin
       'chatmacro8=I''ll take care of it.'#13#10 +
       'chatmacro9=Yes';
 
+  in_startup := True;
   ToControls;
+  in_startup := False;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -154,6 +157,8 @@ end;
 
 procedure TForm1.FromControls;
 begin
+  if in_startup then
+    Exit;
   if KeyboardRadioGroup.ItemIndex = 0 then
   begin
     SetDefault('key_up', 173);
