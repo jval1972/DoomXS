@@ -14,6 +14,8 @@ Launcher app
 
 ## Downloads
 
+[version 1.0.5.138 (20211031 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.5.138_bin.zip/download)
+
 [version 1.0.4.137 (20211004 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.4.137_bin.zip/download)
 
 [version 1.0.3.136 (20211003 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.3.136_bin.zip/download)
