@@ -1206,7 +1206,7 @@ begin
     Exit;
   end;
 
-  if devparm and (ch = KEY_F1) then
+  if (devparm and (ch = KEY_F1)) or (ch = KEY_PRNT) then
   begin
     G_ScreenShot;
     Result := True;

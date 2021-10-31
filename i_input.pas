@@ -51,17 +51,14 @@ uses
 function TranslateKey(keycode: integer): integer;
 begin
   case keycode of
-    VK_LEFT,
-    VK_NUMPAD4: Result := KEY_LEFTARROW;
-    VK_RIGHT,
-    VK_NUMPAD6: Result := KEY_RIGHTARROW;
-    VK_DOWN,
-    VK_NUMPAD2: Result := KEY_DOWNARROW;
-    VK_UP,
-    VK_NUMPAD8: Result := KEY_UPARROW;
+    VK_LEFT, VK_NUMPAD4: Result := KEY_LEFTARROW;
+    VK_RIGHT, VK_NUMPAD6: Result := KEY_RIGHTARROW;
+    VK_DOWN, VK_NUMPAD2: Result := KEY_DOWNARROW;
+    VK_UP, VK_NUMPAD8: Result := KEY_UPARROW;
     VK_ESCAPE: Result := KEY_ESCAPE;
     VK_RETURN: Result := KEY_ENTER;
     VK_TAB: Result := KEY_TAB;
+    VK_SNAPSHOT: result := KEY_PRNT;
     VK_F1: Result := KEY_F1;
     VK_F2: Result := KEY_F2;
     VK_F3: Result := KEY_F3;
