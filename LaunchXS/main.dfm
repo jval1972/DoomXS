@@ -1117,7 +1117,7 @@ object Form1: TForm1
     Height = 105
     Caption = ' Graphics '
     TabOrder = 0
-    object Label5: TLabel
+    object Label1: TLabel
       Left = 16
       Top = 24
       Width = 71
@@ -1170,30 +1170,39 @@ object Form1: TForm1
   end
   object Button1: TButton
     Left = 360
-    Top = 136
+    Top = 184
     Width = 97
     Height = 25
     Caption = 'Save and Run'
     Default = True
-    TabOrder = 3
+    TabOrder = 4
     OnClick = Button1Click
   end
   object Button2: TButton
     Left = 360
-    Top = 168
+    Top = 216
     Width = 97
     Height = 25
     Caption = 'Save'
-    TabOrder = 4
+    TabOrder = 5
     OnClick = Button2Click
   end
   object Button3: TButton
     Left = 360
-    Top = 200
+    Top = 248
     Width = 97
     Height = 25
     Caption = 'Exit'
-    TabOrder = 5
+    TabOrder = 6
     OnClick = Button3Click
+  end
+  object AutorunModeCheckBox: TCheckBox
+    Left = 360
+    Top = 136
+    Width = 89
+    Height = 17
+    Caption = 'Autorun mode'
+    TabOrder = 3
+    OnClick = AutorunModeCheckBoxClick
   end
 end

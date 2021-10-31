@@ -10,13 +10,14 @@ type
   TForm1 = class(TForm)
     SoundGroupBox: TGroupBox;
     InputGroupBox: TGroupBox;
+    Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    Label5: TLabel;
     KeyboardRadioGroup: TRadioGroup;
     DetailCheckBox: TCheckBox;
     SmoothDisplayCheckBox: TCheckBox;
+    AutorunModeCheckBox: TCheckBox;
     ScreenblocksTrackBar: TTrackBar;
     SFXTrackBar: TTrackBar;
     MusicTrackBar: TTrackBar;
@@ -35,6 +36,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure AutorunModeCheckBoxClick(Sender: TObject);
   private
     { Private declarations }
     defaults: TStringList;
@@ -80,6 +82,7 @@ begin
       'key_use=32'#13#10 +
       'key_strafe=184'#13#10 +
       'key_speed=182'#13#10 +
+      'autorun_mode=0'#13#10 +
       'use_mouse=1'#13#10 +
       'mouseb_fire=0'#13#10 +
       'mouseb_strafe=1'#13#10 +
@@ -146,6 +149,7 @@ begin
   SFXTrackBar.Position := GetDefault('sfx_volume');
   MusicTrackBar.Position := GetDefault('music_volume');
   ChannelsTrackBar.Position := GetDefault('snd_channels');
+  AutorunModeCheckBox.Checked := GetDefault('autorun_mode') = 1;
 end;
 
 procedure TForm1.FromControls;
@@ -179,6 +183,11 @@ begin
   SetDefault('sfx_volume', SFXTrackBar.Position);
   SetDefault('music_volume', MusicTrackBar.Position);
   SetDefault('snd_channels', ChannelsTrackBar.Position);
+
+  if AutorunModeCheckBox.Checked then
+    SetDefault('autorun_mode', 1)
+  else
+    SetDefault('autorun_mode', 0);
 end;
 
 procedure TForm1.ScreenblocksTrackBarChange(Sender: TObject);
@@ -247,6 +256,11 @@ end;
 procedure TForm1.Button3Click(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TForm1.AutorunModeCheckBoxClick(Sender: TObject);
+begin
+  FromControls;
 end;
 
 end.
