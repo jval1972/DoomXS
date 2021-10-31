@@ -467,19 +467,20 @@ begin
   I_ReadScreen(linear);
 
   // find a file name to save it to
-  lbmname := 'DOOM00.pcx';
+  lbmname := 'DOOM000.pcx';
 
   i := 0;
-  while i < 100 do
+  while i < 1000 do
   begin
-    lbmname[5] := Chr((i div 10) + Ord('0'));
-    lbmname[6] := Chr((i mod 10) + Ord('0'));
+    lbmname[5] := Chr((i div 100) + Ord('0'));
+    lbmname[6] := Chr(((i mod 100) div 10) + Ord('0'));
+    lbmname[7] := Chr((i mod 10) + Ord('0'));
     if not fexists(lbmname) then
       Break;  // file doesn't exist
     inc(i);
   end;
 
-  if i = 100 then
+  if i = 1000 then
     I_Error('M_ScreenShot(): Couldn''t create a PCX');
 
   // save the pcx file
