@@ -543,7 +543,7 @@ type
     // IDirectSoundBuffer8 methods
     function SetFX(dwEffectsCount: DWORD; pDSFXDesc: PDSEffectDesc; pdwResultCodes: PDWORD): HResult; stdcall;
     function AcquireResources(dwFlags, dwEffectsCount, pdwResultCodes: PDWORD): HResult; stdcall;
-    function GetObjectInPath(const rguidObject: TGUID; dwIndex: DWORD; const rguidInterface: TGUID; out ppObject: Pointer): HResult; stdcall; //todo: Should this be (out Untyped) ? 
+    function GetObjectInPath(const rguidObject: TGUID; dwIndex: DWORD; const rguidInterface: TGUID; out ppObject: Pointer): HResult; stdcall; //todo: Should this be (out Untyped) ?
   end;
 
   IID_IDirectSoundBuffer8 = IDirectSoundBuffer8;
@@ -1312,7 +1312,7 @@ type
   IID_IDirectSoundFXWavesReverb = IDirectSoundFXWavesReverb;
   {$EXTERNALSYM IID_IDirectSoundFXWavesReverb}
 
-  
+
   //
   // IDirectSoundCaptureFXAec
   //

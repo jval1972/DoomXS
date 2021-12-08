@@ -194,7 +194,7 @@ const
   KEY_F12 = $80 + $58;
 
   KEY_PRNT = $80 + $59;
-  
+
   KEY_BACKSPACE = 127;
   KEY_PAUSE = $ff;
 

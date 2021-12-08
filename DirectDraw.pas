@@ -95,7 +95,7 @@ interface
 uses
   Windows;
 
-  
+
 (*==========================================================================;
  *
  *  Copyright (C) Microsoft Corporation.  All Rights Reserved.
@@ -198,7 +198,7 @@ type
   {$HPPEMIT 'DECLARE_DINTERFACE_TYPE(IDirectDrawClipper);'}
   {$HPPEMIT 'DECLARE_DINTERFACE_TYPE(IDirectDrawColorControl);'}
   {$HPPEMIT 'DECLARE_DINTERFACE_TYPE(IDirectDrawGammaControl);'}
-  
+
   IDirectDraw = interface;
   {$EXTERNALSYM IDirectDraw}
   IDirectDraw2 = interface;

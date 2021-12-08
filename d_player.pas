@@ -44,7 +44,7 @@ uses
   m_fixed,
   doomdef;
 
-// Player states. 
+// Player states.
 type
   playerstate_t = (
     PST_LIVE,   // Playing or camping.
