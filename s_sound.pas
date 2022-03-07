@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -143,8 +143,8 @@ var
 // Internals.
 function S_getChannel(origin: pointer; sfxinfo: Psfxinfo_t): integer; forward;
 
-function S_AdjustSoundParams(listener: Pmobj_t; source:Pmobj_t;
-  vol: Pinteger; sep: Pinteger; pitch:Pinteger): boolean; forward;
+function S_AdjustSoundParams(listener: Pmobj_t; source: Pmobj_t;
+  vol: Pinteger; sep: Pinteger; pitch: Pinteger): boolean; forward;
 
 procedure S_StopChannel(cnum: integer); forward;
 
@@ -517,7 +517,7 @@ end;
 //  from the norm of a sound effect to be played.
 // If the sound is not audible, returns a 0.
 // Otherwise, modifies parameters and returns 1.
-function S_AdjustSoundParams(listener: Pmobj_t; source:Pmobj_t;
+function S_AdjustSoundParams(listener: Pmobj_t; source: Pmobj_t;
   vol: Pinteger; sep: Pinteger; pitch: Pinteger): boolean;
 var
   approx_dist: fixed_t;
@@ -625,5 +625,4 @@ begin
 end;
 
 end.
-
 
