@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -1659,7 +1659,7 @@ begin
   //MainDef
   MainDef.numitems := Ord(main_end);
   MainDef.prevMenu := nil;
-  MainDef.menuitems := Pmenuitem_tArray(@MainMenu);
+  MainDef.menuitems := @MainMenu;
   MainDef.routine := @M_DrawMainMenu;  // draw routine
   MainDef.x := 97;
   MainDef.y := 64;
@@ -1691,7 +1691,7 @@ begin
   //EpiDef
   EpiDef.numitems := Ord(ep_end); // # of menu items
   EpiDef.prevMenu := @MainDef; // previous menu
-  EpiDef.menuitems := Pmenuitem_tArray(@EpisodeMenu);  // menu items
+  EpiDef.menuitems := @EpisodeMenu;  // menu items
   EpiDef.routine := @M_DrawEpisode;  // draw routine
   EpiDef.x := 48;
   EpiDef.y := 63; // x,y of menu
@@ -1728,7 +1728,7 @@ begin
   //NewDef
   NewDef.numitems := Ord(newg_end); // # of menu items
   NewDef.prevMenu := @EpiDef; // previous menu
-  NewDef.menuitems := Pmenuitem_tArray(@NewGameMenu);  // menu items
+  NewDef.menuitems := @NewGameMenu;  // menu items
   NewDef.routine := @M_DrawNewGame;  // draw routine
   NewDef.x := 48;
   NewDef.y := 63; // x,y of menu
@@ -1780,7 +1780,7 @@ begin
   //OptionsDef
   OptionsDef.numitems := Ord(opt_end); // # of menu items
   OptionsDef.prevMenu := @MainDef; // previous menu
-  OptionsDef.menuitems := Pmenuitem_tArray(@OptionsMenu);  // menu items
+  OptionsDef.menuitems := @OptionsMenu;  // menu items
   OptionsDef.routine := @M_DrawOptions;  // draw routine
   OptionsDef.x := 60;
   OptionsDef.y := 37; // x,y of menu
@@ -1797,7 +1797,7 @@ begin
   //ReadDef1
   ReadDef1.numitems := Ord(read1_end); // # of menu items
   ReadDef1.prevMenu := @MainDef; // previous menu
-  ReadDef1.menuitems := Pmenuitem_tArray(@ReadMenu1);  // menu items
+  ReadDef1.menuitems := @ReadMenu1;  // menu items
   ReadDef1.routine := @M_DrawReadThis1;  // draw routine
   ReadDef1.x := 280;
   ReadDef1.y := 185; // x,y of menu
@@ -1814,7 +1814,7 @@ begin
   //ReadDef2
   ReadDef2.numitems := Ord(read2_end); // # of menu items
   ReadDef2.prevMenu := @ReadDef1; // previous menu
-  ReadDef2.menuitems := Pmenuitem_tArray(@ReadMenu2);  // menu items
+  ReadDef2.menuitems := @ReadMenu2;  // menu items
   ReadDef2.routine := @M_DrawReadThis2;  // draw routine
   ReadDef2.x := 330;
   ReadDef2.y := 175; // x,y of menu
@@ -1846,7 +1846,7 @@ begin
   //SoundDef
   SoundDef.numitems := Ord(sound_end); // # of menu items
   SoundDef.prevMenu := @OptionsDef; // previous menu
-  SoundDef.menuitems := Pmenuitem_tArray(@SoundMenu);  // menu items
+  SoundDef.menuitems := @SoundMenu;  // menu items
   SoundDef.routine := @M_DrawSound;  // draw routine
   SoundDef.x := 80;
   SoundDef.y := 64; // x,y of menu
@@ -1888,7 +1888,7 @@ begin
   //LoadDef
   LoadDef.numitems := Ord(load_end); // # of menu items
   LoadDef.prevMenu := @MainDef; // previous menu
-  LoadDef.menuitems := Pmenuitem_tArray(@LoadMenu);  // menu items
+  LoadDef.menuitems := @LoadMenu;  // menu items
   LoadDef.routine := @M_DrawLoad;  // draw routine
   LoadDef.x := 80;
   LoadDef.y := 54; // x,y of menu
@@ -1930,7 +1930,7 @@ begin
   //SaveDef
   SaveDef.numitems := Ord(load_end); // # of menu items
   SaveDef.prevMenu := @MainDef; // previous menu
-  SaveDef.menuitems := Pmenuitem_tArray(@SaveMenu);  // menu items
+  SaveDef.menuitems := @SaveMenu;  // menu items
   SaveDef.routine := M_DrawSave;  // draw routine
   SaveDef.x := 80;
   SaveDef.y := 54; // x,y of menu
@@ -1952,5 +1952,4 @@ begin
 end;
 
 end.
-
 
