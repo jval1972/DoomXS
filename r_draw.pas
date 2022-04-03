@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -129,12 +129,6 @@ uses
 var
   ylookup: array[0..SCREENHEIGHT - 1] of PByteArray;
   columnofs: array[0..SCREENWIDTH - 1] of integer;
-
-{// Color tables for different players,
-//  translate a limited part to another
-//  (color ramps used for  suit colors).
-//
-  translations: array[0..2,0..255] of byte;}
 
 procedure R_ClampDC;
 begin
