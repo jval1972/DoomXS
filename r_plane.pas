@@ -185,10 +185,10 @@ begin
 
   if lastvisplane > maxvisplane then
   begin
-    visplanes[lastvisplane].top := Pvisindex_tArray(
-      Z_Malloc((SCREENWIDTH + 2) * SizeOf(visindex_t), PU_LEVEL, nil));
-    visplanes[lastvisplane].bottom := Pvisindex_tArray(
-      Z_Malloc((SCREENWIDTH + 2) * SizeOf(visindex_t), PU_LEVEL, nil));
+    visplanes[lastvisplane].top :=
+      Z_Malloc((SCREENWIDTH + 2) * SizeOf(visindex_t), PU_LEVEL, nil);
+    visplanes[lastvisplane].bottom :=
+      Z_Malloc((SCREENWIDTH + 2) * SizeOf(visindex_t), PU_LEVEL, nil);
     maxvisplane := lastvisplane;
   end;
 
