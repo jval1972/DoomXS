@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -42,12 +42,19 @@ function FixedMul(const a, b: fixed_t): fixed_t;
 
 function FixedDiv(const a, b: fixed_t): fixed_t;
 
-function FixedDiv2(const a, b: fixed_t): fixed_t;
-
 implementation
 
 uses
   d_delphi;
+
+function FixedDiv2(const a, b: fixed_t): fixed_t; assembler;
+asm
+  mov ebx, b
+  mov edx, eax
+  sal eax, 16
+  sar edx, 16
+  idiv ebx
+end;
 
 function FixedMul(const a, b: fixed_t): fixed_t; assembler;
 asm
@@ -66,15 +73,6 @@ begin
   end
   else
     Result := FixedDiv2(a, b);
-end;
-
-function FixedDiv2(const a, b: fixed_t): fixed_t; assembler;
-asm
-  mov ebx, b
-  mov edx, eax
-  sal eax, 16
-  sar edx, 16
-  idiv ebx
 end;
 
 end.
