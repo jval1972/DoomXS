@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -368,7 +368,7 @@ begin
       //  i.e. colormaps[0] is used.
       // Because of this hack, sky is not affected
       //  by INVUL inverse mapping.
-      dc_colormap := Plighttable_tArray(colormaps);
+      dc_colormap := colormaps;
       dc_texturemid := skytexturemid;
       for x := pl.minx to pl.maxx do
       begin
