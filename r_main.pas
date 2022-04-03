@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -617,7 +617,7 @@ begin
       else if level >= NUMCOLORMAPS then
         level := NUMCOLORMAPS - 1;
 
-      zlight[i][j] := Plighttable_tArray(integer(colormaps) + level * 256);
+      zlight[i][j] := @colormaps[level * 256];
     end;
   end;
 end;
@@ -727,7 +727,7 @@ begin
       if level >= NUMCOLORMAPS then
         level := NUMCOLORMAPS - 1;
 
-      scalelight[i][j] := Plighttable_tArray(integer(colormaps) + level * 256);
+      scalelight[i][j] := @colormaps[level * 256];
     end;
   end;
 end;
@@ -808,8 +808,7 @@ begin
 
   if player.fixedcolormap <> 0 then
   begin
-    fixedcolormap := Plighttable_tArray(
-      integer(colormaps) + player.fixedcolormap * 256 * SizeOf(lighttable_t));
+    fixedcolormap := @colormaps[player.fixedcolormap * 256 * SizeOf(lighttable_t)];
 
     walllights := @scalelightfixed;
 

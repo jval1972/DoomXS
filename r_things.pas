@@ -567,7 +567,7 @@ begin
   else if fixedcolormap <> nil then
     vis.colormap := fixedcolormap // fixed map
   else if thing.frame and FF_FULLBRIGHT <> 0 then
-    vis.colormap := Plighttable_tArray(colormaps) // full bright
+    vis.colormap := colormaps // full bright
   else
   begin
     // diminished light
