@@ -459,11 +459,6 @@ begin
       Result := False;
       Exit;
     end;
-    if mobj.bnext = mobj then
-    begin
-      Result := True;
-      Exit;
-    end;
     mobj := mobj.bnext;
   end;
 
