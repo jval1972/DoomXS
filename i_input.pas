@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -35,6 +35,10 @@ procedure I_ProcessInput;
 procedure I_ShutDownInput;
 
 procedure I_SynchronizeInput(active: boolean);
+
+function I_GetCapsLock: boolean;
+
+procedure I_SetCapsLock(const bState: boolean);
 
 implementation
 
@@ -277,6 +281,26 @@ end;
 procedure I_SynchronizeInput(active: boolean);
 begin
   input_active := active;
+end;
+
+function I_GetCapsLock: boolean;
+begin
+  result := GetKeyState(VK_CAPITAL) and 1 <> 0;
+end;
+
+procedure I_SetCapsLock(const bState: boolean);
+var
+  keyState: TKeyboardState;
+begin
+  GetKeyboardState(keyState);
+  if bState <> (keyState[VK_CAPITAL] and 1 <> 0) then
+  begin
+    // Simulate a key press
+    keybd_event(VK_CAPITAL, $3A, KEYEVENTF_EXTENDEDKEY, 0);
+
+    // Simulate a key release
+    keybd_event(VK_CAPITAL, $3A, KEYEVENTF_EXTENDEDKEY or KEYEVENTF_KEYUP, 0);
+  end;
 end;
 
 end.

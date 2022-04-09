@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -172,6 +172,7 @@ uses
   info,
   i_system,
   i_io,
+  i_input,
   m_argv,
   m_misc,
   m_menu,
@@ -309,7 +310,7 @@ begin
             ((usemouse <> 0) and mousebuttons[mousebstrafe]) or
             ((usejoystick <> 0) and joybuttons[joybstrafe]);
   speed := intval(gamekeydown[key_speed] or joybuttons[joybspeed]);
-  if autorun_mode <> 0 then
+  if I_GetCapsLock then
     speed := 1 - speed;
 
   fwd := 0;
@@ -528,6 +529,8 @@ begin
       players[i].playerstate := PST_REBORN;
     ZeroMemory(@players[i].frags, SizeOf(players[i].frags));
   end;
+
+  I_SetCapsLock(autorun_mode <> 0);
 
   P_SetupLevel(gameepisode, gamemap, 0, gameskill);
   displayplayer := consoleplayer;    // view the guy you are playing
