@@ -285,7 +285,7 @@ begin
     begin
       no.children[j] := mn.children[j];
       for k := 0 to 3 do
-        no.bbox[j, k] := smallint(mn.bbox[j, k]) * FRACUNIT;
+        no.bbox[j, k] := mn.bbox[j, k] * FRACUNIT;
     end;
     Inc(mn);
   end;
@@ -330,12 +330,6 @@ begin
     if spawn then
     begin
       // Do spawn all other stuff.
-      mt.x := smallint(mt.x);
-      mt.y := smallint(mt.y);
-      mt.angle := smallint(mt.angle);
-      mt.typ := smallint(mt.typ);
-      mt.options := smallint(mt.options);
-
       P_SpawnMapThing(mt);
     end;
     Inc(mt);
@@ -366,12 +360,12 @@ begin
   for i := 0 to numlines - 1 do
   begin
     ld := @lines[i];
-    ld.flags := smallint(mld.flags);
-    ld.special := smallint(mld.special);
-    ld.tag := smallint(mld.tag);
-    ld.v1 := @vertexes[smallint(mld.v1)];
+    ld.flags := mld.flags;
+    ld.special := mld.special;
+    ld.tag := mld.tag;
+    ld.v1 := @vertexes[mld.v1];
     v1 := ld.v1;
-    ld.v2 := @vertexes[smallint(mld.v2)];
+    ld.v2 := @vertexes[mld.v2];
     v2 := ld.v2;
     ld.dx := v2.x - v1.x;
     ld.dy := v2.y - v1.y;
@@ -410,8 +404,8 @@ begin
       ld.bbox[BOXTOP] := v1.y;
     end;
 
-    ld.sidenum[0] := smallint(mld.sidenum[0]);
-    ld.sidenum[1] := smallint(mld.sidenum[1]);
+    ld.sidenum[0] := mld.sidenum[0];
+    ld.sidenum[1] := mld.sidenum[1];
 
     if ld.sidenum[0] <> -1 then
       ld.frontsector := sides[ld.sidenum[0]].sector
@@ -448,12 +442,12 @@ begin
   for i := 0 to numsides - 1 do
   begin
     sd := @sides[i];
-    sd.textureoffset := smallint(msd.textureoffset) * FRACUNIT;
-    sd.rowoffset := smallint(msd.rowoffset) * FRACUNIT;
+    sd.textureoffset := msd.textureoffset * FRACUNIT;
+    sd.rowoffset := msd.rowoffset * FRACUNIT;
     sd.toptexture := R_TextureNumForName(msd.toptexture);
     sd.bottomtexture := R_TextureNumForName(msd.bottomtexture);
     sd.midtexture := R_TextureNumForName(msd.midtexture);
-    sd.sector := @sectors[smallint(msd.sector)];
+    sd.sector := @sectors[msd.sector];
     Inc(msd);
   end;
 
