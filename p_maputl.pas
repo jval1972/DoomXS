@@ -122,11 +122,9 @@ begin
     Result := 1; // back side
 end;
 
-
 // P_BoxOnLineSide
 // Considers the line to be infinite
 // Returns side 0 or 1, -1 if box crosses the line.
-
 function P_BoxOnLineSide(tmbox: Pfixed_tArray; ld: Pline_t): integer;
 var
   p1: integer;
@@ -176,10 +174,8 @@ begin
     Result := -1;
 end;
 
-
 // P_PointOnDivlineSide
 // Returns 0 or 1.
-
 function P_PointOnDivlineSide(x: fixed_t; y: fixed_t; line: Pdivline_t): integer;
 var
   dx: fixed_t;
