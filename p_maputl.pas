@@ -116,10 +116,7 @@ begin
   left := FixedMul(_SHR(line.dy, FRACBITS), dx);
   right := FixedMul(dy, _SHR(line.dx, FRACBITS));
 
-  if right < left then
-    Result := 0  // front side
-  else
-    Result := 1; // back side
+  Result := intval(right >= left);
 end;
 
 // P_BoxOnLineSide
