@@ -216,10 +216,7 @@ begin
   left := FixedMul(_SHR(line.dy, 8), _SHR(dx, 8));
   right := FixedMul(_SHR(dy, 8), _SHR(line.dx, 8));
 
-  if right < left then
-    Result := 0  // front side
-  else
-    Result := 1; // back side
+  Result := intval(right >= left);
 end;
 
 
