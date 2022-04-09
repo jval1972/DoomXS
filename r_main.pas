@@ -401,10 +401,7 @@ end;
 
 function R_PointToAngle2(x1: fixed_t; y1: fixed_t; x2: fixed_t; y2: fixed_t): angle_t;
 begin
-  viewx := x1;
-  viewy := y1;
-
-  Result := R_PointToAngle(x2, y2);
+  result := R_PointToAngle(x2 - x1 + viewx, y2 - y1 + viewy);
 end;
 
 function R_PointToDist(x: fixed_t; y: fixed_t): fixed_t;
