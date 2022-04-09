@@ -108,6 +108,7 @@ uses
   am_map,
   p_setup,
   r_draw,
+  r_intrpl,
   r_main;
 
 // D_PostEvent
@@ -288,6 +289,7 @@ procedure D_DoomLoop;
 var
   entertic: int64;
   wait64: Int64;
+  ret: Boolean;
 begin
   if demorecording then
     G_BeginRecording;
@@ -326,14 +328,28 @@ begin
       S_UpdateSounds(players[consoleplayer].mo);// move positional sounds
 
       // Update display, next frame, with current state.
-      D_Display;
-
-      if smoothdisplay = 1 then
+      if (smoothdisplay <> 0) and (gamestate = GS_LEVEL) then
+      begin
+        R_StoreInterpolationData;
+        interpolationstarttime := I_GetTime64;
+        ret := R_Interpolate;
+        D_Display;
+        while ret do
+        begin
+          ret := R_Interpolate;
+          if ret then
+            D_Display;
+        end;
+        R_RestoreInterpolationData;
+      end
+      else
+      begin
+        D_Display;
         while True do
         begin
           wait64 := I_GetTime64 - entertic;
           if wait64 < 32768 then
-            D_Display;
+            I_FinishUpdate;
           if wait64 > 65000 then
             Break
           else if wait64 > 63000 then
@@ -341,6 +357,7 @@ begin
           else
             I_WaitVBL(1);
         end;
+      end;
     end;
   end;
 end;

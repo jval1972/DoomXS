@@ -107,7 +107,8 @@ uses
   i_midi in 'i_midi.pas',
   DirectDraw in 'DirectDraw.pas',
   DirectSound in 'DirectSound.pas',
-  DXTypes in 'DXTypes.pas';
+  DXTypes in 'DXTypes.pas',
+  r_intrpl in 'r_intrpl.pas';
 
 var
   Saved8087CW: Word;

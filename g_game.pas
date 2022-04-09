@@ -198,6 +198,7 @@ uses
   r_data,
   r_sky,
   r_defs,
+  r_intrpl,
   r_main,
   r_draw,
   tables;
@@ -532,6 +533,7 @@ begin
 
   I_SetCapsLock(autorun_mode <> 0);
 
+  R_ResetInterpolationBuffer;
   P_SetupLevel(gameepisode, gamemap, 0, gameskill);
   displayplayer := consoleplayer;    // view the guy you are playing
   starttime := I_GetTime;
