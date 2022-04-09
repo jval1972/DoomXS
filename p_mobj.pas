@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -229,7 +229,7 @@ begin
   until (xmove = 0) and (ymove = 0);
 
   // slow down
-  if (player <> nil) and ((player.cheats and CF_NOMOMENTUM) <> 0) then
+  if (player <> nil) and (player.cheats and CF_NOMOMENTUM <> 0) then
   begin
     // debug option for no sliding at all
     mo.momx := 0;
