@@ -1103,9 +1103,9 @@ object Form1: TForm1
       Top = 88
       Width = 150
       Height = 33
-      Max = 15
-      Min = 3
-      Position = 8
+      Max = 64
+      Min = 8
+      Position = 32
       TabOrder = 2
       OnChange = ChannelsTrackBarChange
     end
