@@ -1149,7 +1149,7 @@ object Form1: TForm1
       Top = 80
       Width = 97
       Height = 17
-      Caption = 'Smooth Display'
+      Caption = 'Uncapped framerate'
       Checked = True
       State = cbChecked
       TabOrder = 2
