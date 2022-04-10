@@ -96,14 +96,15 @@ begin
   istruct.realsize := 0;
 end;
 
-procedure R_InterpolationCalcI(const pi: Piitem_t);
 const
   DIFF_THRESHOLD = 32 * FRACUNIT;
+
+procedure R_InterpolationCalcI(const pi: Piitem_t; const thres: integer = DIFF_THRESHOLD);
 var
   diff: integer;
 begin
   diff := pi.inext - pi.iprev;
-  if Abs(diff) > DIFF_THRESHOLD then
+  if Abs(diff) > thres then
     exit;
   if diff <> 0 then
     pi.address^ := pi.iprev + Round(diff * ffrac);
@@ -143,17 +144,17 @@ begin
 
   // Interpolate player
   player := @players[displayplayer];
+  pmo := player.mo;
+  R_AddInterpolationItem(@pmo.angle);
+  R_AddInterpolationItem(@pmo.x);
+  R_AddInterpolationItem(@pmo.y);
+  R_AddInterpolationItem(@pmo.z);
   R_AddInterpolationItem(@player.viewz);
   for i := 0 to Ord(NUMPSPRITES) - 1 do
   begin
     R_AddInterpolationItem(@player.psprites[i].sx);
     R_AddInterpolationItem(@player.psprites[i].sy);
   end;
-  pmo := player.mo;
-  R_AddInterpolationItem(@pmo.x);
-  R_AddInterpolationItem(@pmo.y);
-  R_AddInterpolationItem(@pmo.z);
-  R_AddInterpolationItem(@pmo.angle);
 
   // Interpolate Sectors
   sec := @sectors[0];
@@ -222,8 +223,24 @@ begin
   end;
 
   Result := True;
-  pi := @istruct.items[0];
-  for i := 0 to istruct.numitems - 1 do
+  // Prevent player teleport innterpolation
+  if (istruct.items[1].lastaddress = istruct.items[1].address) and
+    (istruct.items[2].lastaddress = istruct.items[2].address) and
+    (istruct.items[3].lastaddress = istruct.items[3].address) then
+  begin
+    if (Abs(istruct.items[1].iprev - istruct.items[1].inext) < DIFF_THRESHOLD) and
+      (Abs(istruct.items[2].iprev - istruct.items[2].inext) < DIFF_THRESHOLD) and
+      (Abs(istruct.items[3].iprev - istruct.items[3].inext) < DIFF_THRESHOLD) then
+    begin
+      R_InterpolationCalcI(@istruct.items[0], MAXINT);
+      R_InterpolationCalcI(@istruct.items[1]);
+      R_InterpolationCalcI(@istruct.items[2]);
+      R_InterpolationCalcI(@istruct.items[3]);
+      R_InterpolationCalcI(@istruct.items[4]);
+    end;
+  end;
+  pi := @istruct.items[5];
+  for i := 5 to istruct.numitems - 1 do
   begin
     if pi.address = pi.lastaddress then
       R_InterpolationCalcI(pi);
