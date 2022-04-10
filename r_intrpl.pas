@@ -223,7 +223,7 @@ begin
   end;
 
   Result := True;
-  // Prevent player teleport innterpolation
+  // Prevent player teleport interpolation
   if (istruct.items[1].lastaddress = istruct.items[1].address) and
     (istruct.items[2].lastaddress = istruct.items[2].address) and
     (istruct.items[3].lastaddress = istruct.items[3].address) then
