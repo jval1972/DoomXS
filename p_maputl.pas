@@ -204,9 +204,7 @@ begin
   // try to quickly decide by looking at sign bits
   if (line.dy xor line.dx xor dx xor dy) and $80000000 <> 0 then
   begin //(left is negative)
-    Result := (line.dy xor dx) and $80000000;
-    if Result <> 0 then
-      Result := 1;
+    Result := intval((line.dy xor dx) and $80000000 <> 0);
     Exit;
   end;
 
@@ -622,7 +620,7 @@ begin
       Result := False; // don't bother going farther
       Exit;
     end;
-    _in.frac := MAXINT;
+    intr.frac := MAXINT;
   end;
 
   Result := True;  // everything was traversed
