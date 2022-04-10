@@ -71,14 +71,9 @@ var
 
 procedure I_ShutdownGraphics;
 begin
-  if g_pDD <> nil then
-  begin
-    if g_pDDSPrimary <> nil then
-    begin
-      I_ClearInterface(IInterface(g_pDDSPrimary));
-    end;
-    I_ClearInterface(IInterface(g_pDD));
-  end;
+  I_ClearInterface(IInterface(g_pDDSPrimary));
+  I_ClearInterface(IInterface(g_pDDScreen));
+  I_ClearInterface(IInterface(g_pDD));
 end;
 
 function I_NativeWidth: integer;
