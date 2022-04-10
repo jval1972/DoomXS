@@ -17,7 +17,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
@@ -306,7 +306,6 @@ begin
   end;
 end;
 
-
 procedure R_RenderSegLoop;
 var
   angle: angle_t;
@@ -478,11 +477,9 @@ begin
   end;
 end;
 
-//
 // R_StoreWallRange
 // A wall segment will be drawn
 //  between start and stop pixels (inclusive).
-//
 procedure R_StoreWallRange(start: integer; stop: integer);
 var
   hyp: fixed_t;
