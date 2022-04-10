@@ -322,7 +322,9 @@ begin
   while rw_x < rw_stopx do
   begin
     // mark floor / ceiling areas
-    yl := (topfrac + HEIGHTUNIT - 1) div HEIGHTUNIT;
+    yl := (topfrac + (HEIGHTUNIT - 1)) shr HEIGHTBITS;
+    if yl > viewheight then
+      yl := viewheight + 1;
 
     // no space above wall?
     if yl <= ceilingclip[rw_x] then
@@ -343,13 +345,14 @@ begin
       end;
       // SoM: this should be set here
       if bottom > viewheight then
-        bottom := viewheight
+        ceilingclip[rw_x] := viewheight
       else if bottom < 0 then
-        bottom := -1;
-      ceilingclip[rw_x] := bottom;
+        ceilingclip[rw_x] := -1
+      else
+        ceilingclip[rw_x] := bottom;
     end;
 
-    yh := bottomfrac div HEIGHTUNIT;
+    yh := bottomfrac shr HEIGHTBITS;
 
     if yh >= floorclip[rw_x] then
       yh := floorclip[rw_x] - 1;
@@ -366,11 +369,12 @@ begin
         floorplane.bottom[rw_x] := bottom;
       end;
       // SoM: this should be set here to prevent overdraw
-      if top > viewheight then
-        top := viewheight
+      if top > 32767 then
+        floorclip[rw_x] := -1
       else if top < -1 then
-        top := -1;
-      floorclip[rw_x] := top;
+        floorclip[rw_x] := -1
+      else
+        floorclip[rw_x] := top;
     end;
 
     // texturecolumn and lighting are independent of wall tiers
@@ -379,12 +383,14 @@ begin
       // calculate texture offset
       angle := (rw_centerangle + xtoviewangle[rw_x]) shr ANGLETOFINESHIFT;
       texturecolumn := rw_offset - FixedMul(finetangent[angle], rw_distance);
-      texturecolumn := texturecolumn div FRACUNIT;
+      texturecolumn := texturecolumn shr FRACBITS;
       // calculate lighting
       index := _SHR(rw_scale, LIGHTSCALESHIFT) * 320 div SCREENWIDTH;
 
-      if index >=  MAXLIGHTSCALE then
-        index := MAXLIGHTSCALE - 1;
+      if index >= MAXLIGHTSCALE then
+        index := MAXLIGHTSCALE - 1
+      else if index < 0 then
+        index := 0;
 
       dc_colormap := walllights[index];
       dc_x := rw_x;
@@ -409,7 +415,7 @@ begin
       if toptexture <> 0 then
       begin
         // top wall
-        mid := _SHR(pixhigh, HEIGHTBITS);
+        mid := pixhigh shr HEIGHTBITS;
         pixhigh := pixhigh + pixhighstep;
 
         if mid >= floorclip[rw_x] then
@@ -422,22 +428,41 @@ begin
           dc_texturemid := rw_toptexturemid;
           dc_source := R_GetColumn(toptexture, texturecolumn);
           colfunc;
-          ceilingclip[rw_x] := mid;
+          if mid > viewheight then
+            ceilingclip[rw_x] := viewheight
+          else if mid < 0 then
+            ceilingclip[rw_x] := -1
+          else
+            ceilingclip[rw_x] := mid;
         end
         else
-          ceilingclip[rw_x] := yl - 1;
+        begin
+          if yl - 1 > viewheight then
+            ceilingclip[rw_x] := viewheight
+          else if yl < 1 then
+            ceilingclip[rw_x] := -1
+          else
+            ceilingclip[rw_x] := yl - 1;
+        end;
       end
       else
       begin
         // no top wall
         if markceiling then
-          ceilingclip[rw_x] := yl - 1;
+        begin
+          if yl - 1 > viewheight then
+            ceilingclip[rw_x] := viewheight
+          else if yl < 1 then
+            ceilingclip[rw_x] := -1
+          else
+            ceilingclip[rw_x] := yl - 1;
+        end;
       end;
 
       if bottomtexture <> 0 then
       begin
         // bottom wall
-        mid := _SHR(pixlow + HEIGHTUNIT - 1, HEIGHTBITS);
+        mid := (pixlow + HEIGHTUNIT - 1) shr HEIGHTBITS;
         pixlow := pixlow + pixlowstep;
 
         // no space above wall?
@@ -451,16 +476,35 @@ begin
           dc_texturemid := rw_bottomtexturemid;
           dc_source := R_GetColumn(bottomtexture, texturecolumn);
           colfunc;
-          floorclip[rw_x] := mid;
+          if mid > 32767 then
+            floorclip[rw_x] := -1
+          else if mid < -1 then
+            floorclip[rw_x] := -1
+          else
+            floorclip[rw_x] := mid;
         end
         else
-          floorclip[rw_x] := yh + 1;
+        begin
+          if yh + 1 > 32767 then
+            floorclip[rw_x] := -1
+          else if yh + 1 < -1 then
+            floorclip[rw_x] := -1
+          else
+            floorclip[rw_x] := yh + 1;
+        end;
       end
       else
       begin
         // no bottom wall
         if markfloor then
-          floorclip[rw_x] := yh + 1;
+        begin
+          if yh + 1 > 32767 then
+            floorclip[rw_x] := -1
+          else if yh + 1 < -1 then
+            floorclip[rw_x] := -1
+          else
+            floorclip[rw_x] := yh + 1;
+        end;
       end;
 
       if maskedtexture then
@@ -741,10 +785,10 @@ begin
   worldbottom := _SHR(worldbottom, WORLDBITS);
 
   topstep := -FixedMul(rw_scalestep, worldtop);
-  topfrac := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldtop, rw_scale);
+  topfrac := centeryfrac shr WORLDBITS - int64(worldtop) * int64(rw_scale) div FRACUNIT;
 
   bottomstep := -FixedMul(rw_scalestep, worldbottom);
-  bottomfrac := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldbottom, rw_scale);
+  bottomfrac := centeryfrac shr WORLDBITS - int64(worldbottom) * int64(rw_scale) div FRACUNIT;
 
   if backsector <> nil then
   begin
@@ -753,13 +797,13 @@ begin
 
     if worldhigh < worldtop then
     begin
-      pixhigh := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldhigh, rw_scale);
+      pixhigh := centeryfrac shr WORLDBITS - int64(worldhigh) * int64(rw_scale) div FRACUNIT;
       pixhighstep := -FixedMul(rw_scalestep, worldhigh);
     end;
 
     if worldlow > worldbottom then
     begin
-      pixlow := _SHR(centeryfrac, WORLDBITS) - FixedMul(worldlow, rw_scale);
+      pixlow := centeryfrac shr WORLDBITS - int64(worldlow) * int64(rw_scale) div FRACUNIT;
       pixlowstep := -FixedMul(rw_scalestep, worldlow);
     end;
   end;
