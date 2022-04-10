@@ -91,6 +91,7 @@ implementation
 
 uses
   doomdata,
+  doomdef,
   r_main,
   r_data,
   r_bsp,
@@ -104,7 +105,7 @@ uses
 // R_RenderMaskedSegRange
 procedure R_RenderMaskedSegRange(ds: Pdrawseg_t; x1, x2: integer);
 var
-  index: LongWord;
+  index: integer;
   col: Pcolumn_t;
   lightnum: integer;
   texnum: integer;
@@ -171,7 +172,7 @@ begin
     begin
       if fixedcolormap = nil then
       begin
-        index := _SHR(spryscale, LIGHTSCALESHIFT);
+        index := _SHR(spryscale, LIGHTSCALESHIFT) * 320 div SCREENWIDTH;
 
         if index >=  MAXLIGHTSCALE then
           index := MAXLIGHTSCALE - 1;
@@ -309,7 +310,7 @@ end;
 procedure R_RenderSegLoop;
 var
   angle: angle_t;
-  index: LongWord;
+  index: integer;
   yl: integer;
   yh: integer;
   mid: integer;
@@ -324,7 +325,7 @@ begin
     yl := (topfrac + HEIGHTUNIT - 1) div HEIGHTUNIT;
 
     // no space above wall?
-    if yl < ceilingclip[rw_x] + 1 then
+    if yl <= ceilingclip[rw_x] then
       yl := ceilingclip[rw_x] + 1;
 
     if markceiling then
@@ -380,7 +381,7 @@ begin
       texturecolumn := rw_offset - FixedMul(finetangent[angle], rw_distance);
       texturecolumn := texturecolumn div FRACUNIT;
       // calculate lighting
-      index := _SHR(rw_scale, LIGHTSCALESHIFT);
+      index := _SHR(rw_scale, LIGHTSCALESHIFT) * 320 div SCREENWIDTH;
 
       if index >=  MAXLIGHTSCALE then
         index := MAXLIGHTSCALE - 1;
