@@ -240,9 +240,7 @@ begin
     Result.top[i] := VISEND;
 end;
 
-//
 // R_CheckPlane
-//
 function R_CheckPlane(pl: Pvisplane_t; start: integer; stop: integer): Pvisplane_t;
 var
   intrl: integer;
@@ -294,7 +292,6 @@ begin
   end;
 
   // make a new visplane
-
   if lastvisplane = MAXVISPLANES then
     I_Error('R_CheckPlane(): no more visplanes');
 
@@ -414,5 +411,4 @@ begin
 end;
 
 end.
-
 
