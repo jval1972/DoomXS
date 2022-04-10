@@ -157,6 +157,9 @@ var
   fracstep: fixed_t;
   b: byte;
 begin
+  if dc_yl > dc_yh then
+    Exit;
+
   R_ClampDC;
 
   count := dc_yh - dc_yl;
@@ -216,6 +219,9 @@ var
   frac: fixed_t;
   fracstep: fixed_t;
 begin
+  if dc_yl > dc_yh then
+    Exit;
+
   R_ClampDC;
 
   count := dc_yh - dc_yl;
@@ -278,6 +284,9 @@ var
   i: integer;
   dest: PByteArray;
 begin
+  if dc_yl > dc_yh then
+    Exit;
+
   R_ClampDC;
 
   // Adjust borders. Low...
@@ -332,6 +341,9 @@ var
   fracstep: fixed_t;
   i: integer;
 begin
+  if dc_yl > dc_yh then
+    Exit;
+
   R_ClampDC;
 
   count := dc_yh - dc_yl;
