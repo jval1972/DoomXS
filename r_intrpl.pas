@@ -62,7 +62,7 @@ uses
 
 type
   // Interpolation item
-  //  Holds information about the previous and next values and interpolation type
+  //  Holds information about the previous and next values
   iitem_t = record
     lastaddress: PInteger;
     address: PInteger;
