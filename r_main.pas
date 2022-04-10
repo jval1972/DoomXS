@@ -160,7 +160,7 @@ var
   setsizeneeded: boolean;
 
 var
-  MAX_RWSCALE: integer = 64 * FRACUNIT ;
+  MAX_RWSCALE: integer = 64 * FRACUNIT;
 
 implementation
 
