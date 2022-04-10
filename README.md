@@ -8,11 +8,15 @@ Raised static limits
 
 Support for DOOMWADDIR & DOOMWADPATH eviroment variables
 
+Uncapped framerate
+
 Low hardware requirements
 
 Launcher app 
 
 ## Downloads
+
+[version 1.0.6.142 (20220410 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.6.142_bin.zip/download)
 
 [version 1.0.5.138 (20211031 - win32)](https://sourceforge.net/projects/doomxs/files/DoomXS_1.0/DoomXS_1.0.5.138_bin.zip/download)
 
