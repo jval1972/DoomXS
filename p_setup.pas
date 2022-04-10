@@ -374,13 +374,10 @@ begin
       ld.slopetype := ST_VERTICAL
     else if ld.dy = 0 then
       ld.slopetype := ST_HORIZONTAL
+    else if FixedDiv(ld.dy, ld.dx) > 0 then
+      ld.slopetype := ST_POSITIVE
     else
-    begin
-      if FixedDiv(ld.dy, ld.dx) > 0 then
-        ld.slopetype := ST_POSITIVE
-      else
-        ld.slopetype := ST_NEGATIVE;
-    end;
+      ld.slopetype := ST_NEGATIVE;
 
     if v1.x < v2.x then
     begin
