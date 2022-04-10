@@ -1176,13 +1176,13 @@ end;
 var
   usething: Pmobj_t;
 
-function PTR_UseTraverse(_in: Pintercept_t): boolean;
+function PTR_UseTraverse(intr: Pintercept_t): boolean;
 var
   side: integer;
 begin
-  if _in.d.line.special = 0 then
+  if intr.d.line.special = 0 then
   begin
-    P_LineOpening(_in.d.line);
+    P_LineOpening(intr.d.line);
     if openrange <= 0 then
     begin
       S_StartSound(usething, Ord(sfx_noway));
@@ -1196,12 +1196,12 @@ begin
   end;
 
   side := 0;
-  if P_PointOnLineSide(usething.x, usething.y, _in.d.line) = 1 then
+  if P_PointOnLineSide(usething.x, usething.y, intr.d.line) = 1 then
     side := 1;
 
   //  return False;    // don't use back side
 
-  P_UseSpecialLine(usething, _in.d.line, side);
+  P_UseSpecialLine(usething, intr.d.line, side);
 
   // can't use for than one special line in a row
   Result := False;
