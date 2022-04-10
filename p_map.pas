@@ -1373,7 +1373,7 @@ begin
 
   nofit := True;
 
-  if crushchange and ((leveltime and 3) = 0) then
+  if crushchange and (leveltime and 3 = 0) then
   begin
     P_DamageMobj(thing, nil, nil, 10);
 
