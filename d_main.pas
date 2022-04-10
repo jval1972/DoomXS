@@ -42,8 +42,7 @@ var
 procedure D_ProcessEvents;
 procedure D_DoAdvanceDemo;
 
-
-procedure D_AddFile(_file: string);
+procedure D_AddFile(const fn: string);
 
 // D_DoomMain()
 // Not a globally visible function, just included for source reference,
@@ -476,14 +475,14 @@ var
   title: string;
 
 // D_AddFile
-procedure D_AddFile(_file: string);
+procedure D_AddFile(const fn: string);
 var
   i: integer;
 begin
   for i := 0 to MAXWADFILES - 1 do
     if wadfiles[i] = '' then
     begin
-      wadfiles[i] := _file;
+      wadfiles[i] := fn;
       numwadfiles := i + 1;
       Exit;
     end;
