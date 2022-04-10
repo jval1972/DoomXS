@@ -391,9 +391,8 @@ begin
     light := _SHR(pl.lightlevel, LIGHTSEGSHIFT) + extralight;
 
     if light >= LIGHTLEVELS then
-      light := LIGHTLEVELS - 1;
-
-    if light < 0 then
+      light := LIGHTLEVELS - 1
+    else if light < 0 then
       light := 0;
 
     planezlight := @zlight[light];
