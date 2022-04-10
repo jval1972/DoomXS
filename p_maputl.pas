@@ -592,9 +592,9 @@ var
   i: integer;
   dist: fixed_t;
   scan: integer;
-  _in: Pintercept_t;
+  intr: Pintercept_t;
 begin
-  _in := nil; // shut up compiler warning
+  intr := nil; // shut up compiler warning
 
   for i := 0 to intercept_p - 1 do
   begin
@@ -605,7 +605,7 @@ begin
       if intercepts[scan].frac < dist then
       begin
         dist := intercepts[scan].frac;
-        _in := @intercepts[scan];
+        intr := @intercepts[scan];
       end;
     end;
 
@@ -615,7 +615,7 @@ begin
       Exit;
     end;
 
-    if not func(_in) then
+    if not func(intr) then
     begin
       Result := False; // don't bother going farther
       Exit;
