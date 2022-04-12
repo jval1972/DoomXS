@@ -458,8 +458,6 @@ function R_ScaleFromGlobalAngle(visangle: angle_t): fixed_t;
 var
   anglea: angle_t;
   angleb: angle_t;
-  sinea: integer;
-  sineb: integer;
   num: fixed_t;
   den: integer;
 begin
@@ -467,10 +465,8 @@ begin
   angleb := ANG90 + (visangle - rw_normalangle);
 
   // both sines are always positive
-  sinea := finesine[anglea shr ANGLETOFINESHIFT];
-  sineb := finesine[angleb shr ANGLETOFINESHIFT];
-  num := FixedMul(projectiony, sineb);
-  den := FixedMul(rw_distance, sinea);
+  num := FixedMul(projectiony, finesine[angleb shr ANGLETOFINESHIFT]);
+  den := FixedMul(rw_distance, finesine[anglea shr ANGLETOFINESHIFT]);
 
   if den > _SHR(num, 16) then
   begin
