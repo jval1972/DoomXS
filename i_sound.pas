@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit i_sound;
 
 interface
@@ -371,7 +371,7 @@ begin
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Lock()');
 
-  memcpy(p, pointer(integer(S_sfx[id].data) + 8), s);
+  memcpy(p, pointer(PCAST(S_sfx[id].data) + 8), s);
   hres := dsb.Unlock(p, s, p2, s2);
   if hres <> DS_OK then
     I_ErrorStartSound('SoundBuffer.Unlock()');

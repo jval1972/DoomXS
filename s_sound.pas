@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit s_sound;
 
 interface
@@ -547,7 +547,7 @@ begin
   else
     angle := angle + ($ffffffff - listener.angle);
 
-  angle := angle shr ANGLETOFINESHIFT;
+  angle := _SHRW(angle, ANGLETOFINESHIFT);
 
   // stereo separation
   sep^ := NORM_SEP - (FixedMul(S_STEREO_SWING, finesine[angle]) div FRACUNIT);

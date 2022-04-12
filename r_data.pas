@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_data;
 
 interface
@@ -198,7 +198,7 @@ var
 begin
   while patch.topdelta <> $ff do
   begin
-    source := PByteArray(integer(patch) + 3);
+    source := PByteArray(PCAST(patch) + 3);
 
     count := patch.len;
     position := originy + patch.topdelta;
@@ -215,7 +215,7 @@ begin
     if count > 0 then
       memcpy(@cache[position], source, count);
 
-    patch := Pcolumn_t(integer(patch) + patch.len + 4);
+    patch := Pcolumn_t(PCAST(patch) + patch.len + 4);
   end;
 end;
 
@@ -266,7 +266,7 @@ begin
       // Column does not have multiple patches?
       if collump[x] < 0 then
       begin
-        patchcol := Pcolumn_t(integer(realpatch) + realpatch.columnofs[x - x1]);
+        patchcol := Pcolumn_t(PCAST(realpatch) + realpatch.columnofs[x - x1]);
         R_DrawColumnInCache(
           patchcol, @block[colofs[x]], patch.originy, texture.height);
       end;
@@ -371,14 +371,14 @@ begin
 
   if lump > 0 then
   begin
-    Result := PByteArray(integer(W_CacheLumpNum(lump, PU_CACHE)) + ofs);
+    Result := PByteArray(PCAST(W_CacheLumpNum(lump, PU_CACHE)) + ofs);
     Exit;
   end;
 
   if texturecomposite[tex] = nil then
     R_GenerateComposite(tex);
 
-  Result := PByteArray(integer(texturecomposite[tex]) + ofs);
+  Result := PByteArray(PCAST(texturecomposite[tex]) + ofs);
 end;
 
 // R_InitTextures
@@ -411,7 +411,7 @@ begin
   ZeroMemory(@name, SizeOf(name));
   names := W_CacheLumpName('PNAMES', PU_STATIC);
   nummappatches := PInteger(names)^;
-  name_p := PByteArray(integer(names) + 4);
+  name_p := PByteArray(PCAST(names) + 4);
 
   GetMem(patchlookup, nummappatches * SizeOf(integer));
 
@@ -430,7 +430,7 @@ begin
   maptex := maptex1;
   numtextures1 := maptex[0];
   maxoff := W_LumpLength(W_GetNumForName('TEXTURE1'));
-  directory := PintegerArray(integer(maptex) + SizeOf(integer));
+  directory := PintegerArray(PCAST(maptex) + SizeOf(integer));
 
   if W_CheckNumForName('TEXTURE2') <> -1 then
   begin
@@ -461,7 +461,7 @@ begin
       // Start looking in second texture file.
       maptex := maptex2;
       maxoff := maxoff2;
-      directory := PIntegerArray(integer(maptex) + SizeOf(integer));
+      directory := PIntegerArray(PCAST(maptex) + SizeOf(integer));
     end;
 
     offset := directory[0];
@@ -469,7 +469,7 @@ begin
     if offset > maxoff then
       I_Error('R_InitTextures(): bad texture directory');
 
-    mtexture := Pmaptexture_t(integer(maptex) + offset);
+    mtexture := Pmaptexture_t(PCAST(maptex) + offset);
 
     textures[i] :=
       Z_Malloc(

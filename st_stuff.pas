@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit st_stuff;
 
 interface
@@ -935,7 +935,7 @@ begin
   if palette <> st_palette then
   begin
     st_palette := palette;
-    pal := PByteArray(integer(W_CacheLumpNum(lu_palette, PU_CACHE)) + palette * 768);
+    pal := PByteArray(PCAST(W_CacheLumpNum(lu_palette, PU_CACHE)) + palette * 768);
     I_SetPalette(pal);
   end;
 end;

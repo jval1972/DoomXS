@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit v_video;
 
 interface
@@ -252,9 +252,9 @@ begin
     for row := desty to desty + desth - 1 do
     begin
       fracx := 0;
-      dest := PByteArray(integer(screens[destscrn]) + SCREENWIDTH * row + destx);
+      dest := PByteArray(PCAST(screens[destscrn]) + SCREENWIDTH * row + destx);
       // Source is a 320 width screen
-      src := PByteArray(integer(screens[srcscrn]) + 320 * (fracy div FRACUNIT) + srcx);
+      src := PByteArray(PCAST(screens[srcscrn]) + 320 * (fracy div FRACUNIT) + srcx);
       for col := 0 to destw - 1 do
       begin
         dest[col] := src[fracx div FRACUNIT];
@@ -266,14 +266,14 @@ begin
   end
   else
   begin
-    src := PByteArray(integer(screens[srcscrn]) + SCREENWIDTH * srcy + srcx);
-    dest := PByteArray(integer(screens[destscrn]) + SCREENWIDTH * desty + destx);
+    src := PByteArray(PCAST(screens[srcscrn]) + SCREENWIDTH * srcy + srcx);
+    dest := PByteArray(PCAST(screens[destscrn]) + SCREENWIDTH * desty + destx);
 
     while height > 0 do
     begin
       memcpy(dest, src, width);
-      src := PByteArray(integer(src) + SCREENWIDTH);
-      dest := PByteArray(integer(dest) + SCREENWIDTH);
+      src := PByteArray(PCAST(src) + SCREENWIDTH);
+      dest := PByteArray(PCAST(dest) + SCREENWIDTH);
       dec(height);
     end;
   end;
@@ -313,29 +313,29 @@ begin
     col := 0;
 
     swidth := V_GetScreenWidth(scrn);
-    desttop := PByte(integer(screens[scrn]) + y * swidth + x);
+    desttop := PByte(PCAST(screens[scrn]) + y * swidth + x);
 
     w := patch.width;
 
     while col < w do
     begin
-      column := Pcolumn_t(integer(patch) + patch.columnofs[col]);
+      column := Pcolumn_t(PCAST(patch) + patch.columnofs[col]);
 
     // step through the posts in a column
       while column.topdelta <> $ff do
       begin
-        source := PByte(integer(column) + 3);
-        dest := PByte(integer(desttop) + column.topdelta * swidth);
+        source := PByte(PCAST(column) + 3);
+        dest := PByte(PCAST(desttop) + column.topdelta * swidth);
         count := column.len;
 
         while count > 0 do
         begin
           dest^ := source^;
           inc(source);
-          dest := PByte(integer(dest) + swidth);
+          dest := PByte(PCAST(dest) + swidth);
           dec(count);
         end;
-        column := Pcolumn_t(integer(column) + column.len + 4);
+        column := Pcolumn_t(PCAST(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);
@@ -362,17 +362,17 @@ begin
 
     col := 0;
     swidth := V_GetScreenWidth(scrn);
-    desttop := PByte(integer(screens[scrn]) + y * swidth + x);
+    desttop := PByte(PCAST(screens[scrn]) + y * swidth + x);
 
     while col < pw do
     begin
-      column := Pcolumn_t(integer(patch) + patch.columnofs[fracx div FRACUNIT]);
+      column := Pcolumn_t(PCAST(patch) + patch.columnofs[fracx div FRACUNIT]);
 
     // step through the posts in a column
       while column.topdelta <> $ff do
       begin
-        source := PByte(integer(column) + 3);
-        dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
+        source := PByte(PCAST(column) + 3);
+        dest := PByte(PCAST(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
         count := column.len;
         fracy := 0;
         lasty := 0;
@@ -389,7 +389,7 @@ begin
             dec(count);
           end;
         end;
-        column := Pcolumn_t(integer(column) + column.len + 4);
+        column := Pcolumn_t(PCAST(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);
@@ -429,19 +429,19 @@ begin
     col := 0;
 
     swidth := V_GetScreenWidth(scrn);
-    desttop := PByte(integer(screens[scrn]) + y * swidth + x);
+    desttop := PByte(PCAST(screens[scrn]) + y * swidth + x);
 
     w := patch.width;
 
     while col < w do
     begin
-      column := Pcolumn_t(integer(patch) + patch.columnofs[w - 1 - col]);
+      column := Pcolumn_t(PCAST(patch) + patch.columnofs[w - 1 - col]);
 
     // step through the posts in a column
       while column.topdelta <> $ff do
       begin
-        source := PByte(integer(column) + 3);
-        dest := PByte(integer(desttop) + column.topdelta * swidth);
+        source := PByte(PCAST(column) + 3);
+        dest := PByte(PCAST(desttop) + column.topdelta * swidth);
         count := column.len;
 
         while count > 0 do
@@ -451,7 +451,7 @@ begin
           inc(dest, swidth);
           dec(count);
         end;
-        column := Pcolumn_t(integer(column) + column.len + 4);
+        column := Pcolumn_t(PCAST(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);
@@ -476,7 +476,7 @@ begin
     fracystep := FRACUNIT * patch.height div ph;
 
     col := 0;
-    desttop := PByte(integer(screens[scrn]) + y * SCREENWIDTH + x);
+    desttop := PByte(PCAST(screens[scrn]) + y * SCREENWIDTH + x);
 
     w := patch.width;
 
@@ -487,13 +487,13 @@ begin
         w1 := w - 1
       else if w1 < 0 then
         w := 0;
-      column := Pcolumn_t(integer(patch) + patch.columnofs[w1]);
+      column := Pcolumn_t(PCAST(patch) + patch.columnofs[w1]);
 
     // step through the posts in a column
       while column.topdelta <> $ff do
       begin
-        source := PByte(integer(column) + 3);
-        dest := PByte(integer(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
+        source := PByte(PCAST(column) + 3);
+        dest := PByte(PCAST(desttop) + ((column.topdelta * SCREENHEIGHT) div 200) * SCREENWIDTH);
         count := column.len;
         fracy := 0;
         lasty := 0;
@@ -501,7 +501,7 @@ begin
         while count > 0 do
         begin
           dest^ := source^;
-          dest := PByte(integer(dest) + SCREENWIDTH);
+          dest := PByte(PCAST(dest) + SCREENWIDTH);
           fracy := fracy + fracystep;
           if fracy div FRACUNIT > lasty then
           begin
@@ -510,7 +510,7 @@ begin
             dec(count);
           end;
         end;
-        column := Pcolumn_t(integer(column) + column.len + 4);
+        column := Pcolumn_t(PCAST(column) + column.len + 4);
       end;
       inc(col);
       inc(desttop);

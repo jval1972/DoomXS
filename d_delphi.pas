@@ -23,10 +23,17 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit d_delphi;
 
 interface
+
+type
+  {$IFDEF WIN32}
+  PCAST = LongWord;
+  {$ELSE}
+  PCAST = QWORD;
+  {$ENDIF}
 
 const
   MAXSHORT = smallint($7fff);
@@ -186,6 +193,8 @@ function _SHLW(const x: LongWord; const bits: LongWord): LongWord;
 
 function _SHR(const x: integer; const bits: integer): integer;
 
+function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
+
 function StringVal(const Str: PChar): string;
 
 procedure ZeroMemory(const P: Pointer; Count: integer);
@@ -292,15 +301,15 @@ end;
 
 function incp(var p: pointer; const size: integer = 1): pointer;
 begin
-  Result := Pointer(integer(p) + size);
+  Result := Pointer(PCAST(p) + size);
   p := Result;
 end;
 
 function pOperation(const p1, p2: pointer; const op: char; size: integer): integer;
 begin
   case op of
-    '+': Result := (integer(p1) + integer(p2)) div size;
-    '-': Result := (integer(p1) - integer(p2)) div size;
+    '+': Result := (PCAST(p1) + PCAST(p2)) div size;
+    '-': Result := (PCAST(p1) - PCAST(p2)) div size;
     else
       Result := 0;
   end;
@@ -567,6 +576,11 @@ function _SHR(const x: integer; const bits: integer): integer; assembler;
 asm
   mov ecx, edx
   sar eax, cl
+end;
+
+function _SHRW(const x: LongWord; const bits: LongWord): LongWord;
+begin
+  result := x shr bits;
 end;
 
 function StringVal(const Str: PChar): string;

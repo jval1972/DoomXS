@@ -19,7 +19,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
@@ -1110,11 +1110,11 @@ procedure AM_rotate(x: Pfixed_t; y: Pfixed_t; a: angle_t);
 var
   tmpx: fixed_t;
 begin
-  tmpx := FixedMul(x^, finecosine[a shr ANGLETOFINESHIFT]) -
-    FixedMul(y^, finesine[a shr ANGLETOFINESHIFT]);
+  tmpx := FixedMul(x^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]) -
+    FixedMul(y^, finesine[_SHRW(a, ANGLETOFINESHIFT)]);
 
-  y^ := FixedMul(x^, finesine[a shr ANGLETOFINESHIFT]) +
-    FixedMul(y^, finecosine[a shr ANGLETOFINESHIFT]);
+  y^ := FixedMul(x^, finesine[_SHRW(a, ANGLETOFINESHIFT)]) +
+    FixedMul(y^, finecosine[_SHRW(a, ANGLETOFINESHIFT)]);
 
   x^ := tmpx;
 end;

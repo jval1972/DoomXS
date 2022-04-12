@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit p_mobj;
 
 interface
@@ -854,7 +854,7 @@ begin
     an := an + _SHLW(P_Random - P_Random, 20);
 
   th.angle := an;
-  an := an shr ANGLETOFINESHIFT;
+  an := _SHRW(an, ANGLETOFINESHIFT);
   th.momx := FixedMul(th.info.speed, finecosine[an]);
   th.momy := FixedMul(th.info.speed, finesine[an]);
 
@@ -915,7 +915,7 @@ begin
   th.target := source;
 
   th.angle := an;
-  an := an shr ANGLETOFINESHIFT;
+  an := _SHRW(an, ANGLETOFINESHIFT);
   th.momx := FixedMul(th.info.speed, finecosine[an]);
   th.momy := FixedMul(th.info.speed, finesine[an]);
   th.momz := FixedMul(th.info.speed, slope);

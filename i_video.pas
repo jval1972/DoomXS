@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit i_video;
 
 interface
@@ -144,7 +144,7 @@ var
 begin
   dest := @curpal[0];
   src := palette;
-  while integer(src) < integer(@palette[256 * 3]) do
+  while PCAST(src) < PCAST(@palette[256 * 3]) do
   begin
     dest^ := (LongWord(gammatable[usegamma, src[0]]) shl 16) or
       (LongWord(gammatable[usegamma, src[1]]) shl 8) or

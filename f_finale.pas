@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit f_finale;
 
 interface
@@ -600,14 +600,14 @@ var
   desttop: PByte;
   count: integer;
 begin
-  column := Pcolumn_t(integer(patch) + patch.columnofs[col]);
-  desttop := PByte(integer(screens[scr]) + x);
+  column := Pcolumn_t(PCAST(patch) + patch.columnofs[col]);
+  desttop := PByte(PCAST(screens[scr]) + x);
 
   // step through the posts in a column
   while column.topdelta <> $ff do
   begin
-    source := PByte(integer(column) + 3);
-    dest := PByte(integer(desttop) + column.topdelta * 320);
+    source := PByte(PCAST(column) + 3);
+    dest := PByte(PCAST(desttop) + column.topdelta * 320);
     count := column.len;
 
     while count > 0 do
@@ -617,7 +617,7 @@ begin
       inc(dest, 320);
       dec(count);
     end;
-    column := Pcolumn_t(integer(column) + column.len + 4);
+    column := Pcolumn_t(PCAST(column) + column.len + 4);
   end;
 end;
 

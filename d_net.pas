@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit d_net;
 
 interface
@@ -446,7 +446,7 @@ begin
       dest := @netcmds[netconsole][nettics[netnode] mod BACKUPTICS];
       nettics[netnode] := nettics[netnode] + 1;
       dest^ := src^;
-      src := Pticcmd_t(pointer(integer(src) + SizeOf(ticcmd_t)));
+      src := Pticcmd_t(pointer(PCAST(src) + SizeOf(ticcmd_t)));
     end;
   end;
 end;

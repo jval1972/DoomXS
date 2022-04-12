@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit p_telept;
 
 interface
@@ -38,6 +38,7 @@ function EV_Teleport(line: Pline_t; side: integer; thing: Pmobj_t): integer;
 implementation
 
 uses
+  d_delphi,
   doomdef,
   doomstat,
   d_think,
@@ -132,7 +133,7 @@ begin
         // spawn teleport fog at source and destination
         fog := P_SpawnMobj(oldx, oldy, oldz, MT_TFOG);
         S_StartSound(fog, Ord(sfx_telept));
-        an := m.angle shr ANGLETOFINESHIFT;
+        an := _SHRW(m.angle, ANGLETOFINESHIFT);
         fog := P_SpawnMobj(m.x + 20 * finecosine[an], m.y +
           20 * finesine[an], thing.z, MT_TFOG);
 

@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit g_game;
 
 interface
@@ -921,7 +921,7 @@ begin
 
   // spawn a teleport fog
   ss := R_PointInSubsector(x, y);
-  an := (ANG45 * (mthing.angle div 45)) shr ANGLETOFINESHIFT;
+  an := _SHRW(ANG45 * (mthing.angle div 45), ANGLETOFINESHIFT);
 
   mo := P_SpawnMobj(x + 20 * finecosine[an], y + 20 * finesine[an],
           ss.sector.floorheight, MT_TFOG);
@@ -1283,12 +1283,12 @@ begin
   sprintf(name, fmt, [savegameslot]);
   description := savedescription;
 
-  save_p := PByteArray(integer(screens[1]) + $4000);
+  save_p := PByteArray(PCAST(screens[1]) + $4000);
   savebuffer := save_p;
 
   memcpy(save_p, @description[1], SAVESTRINGSIZE);
 
-  save_p := PByteArray(integer(save_p) + SAVESTRINGSIZE);
+  save_p := PByteArray(PCAST(save_p) + SAVESTRINGSIZE);
   name2 := '';
 
   sprintf(name2, 'version %d', [VERSION]);
@@ -1327,7 +1327,7 @@ begin
   save_p[0] := $1d; // consistancy marker
   save_p := @save_p[1];
 
-  len := integer(save_p) - integer(savebuffer);
+  len := PCAST(save_p) - PCAST(savebuffer);
   if len > SAVEGAMESIZE then
     I_Error('G_DoSaveGame(): Savegame buffer overrun');
   M_WriteFile(name, savebuffer, len);
@@ -1500,9 +1500,9 @@ begin
   demo_p[0] := cmd.buttons;
   demo_p := @demo_p[1];
 
-  demo_p := PByteArray(integer(demo_p) - 4);
+  demo_p := PByteArray(PCAST(demo_p) - 4);
 
-  if integer(demo_p) > integer(demoend) - 16 then
+  if PCAST(demo_p) > PCAST(demoend) - 16 then
   begin
     // no more space
     G_CheckDemoStatus;

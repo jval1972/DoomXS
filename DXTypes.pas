@@ -28,7 +28,7 @@
 {                                                                              }
 {******************************************************************************}
 unit DXTypes;
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 interface
 
 uses Windows;

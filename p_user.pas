@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit p_user;
 
 interface
@@ -72,7 +72,7 @@ var
 // Moves the given origin along a given angle.
 procedure P_Thrust(player: Pplayer_t; angle: angle_t; const move: fixed_t);
 begin
-  angle := angle shr ANGLETOFINESHIFT;
+  angle := _SHRW(angle, ANGLETOFINESHIFT);
 
   player.mo.momx := player.mo.momx + FixedMul(move, finecosine[angle]);
   player.mo.momy := player.mo.momy + FixedMul(move, finesine[angle]);

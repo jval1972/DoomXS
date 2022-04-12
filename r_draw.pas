@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_draw;
 
 interface
@@ -374,8 +374,7 @@ procedure R_InitTranslationTables;
 var
   i: integer;
 begin
-  translationtables := Z_Malloc(256 * 3 + 255, PU_STATIC, nil);
-  translationtables := PByteArray((integer(translationtables) + 255 ) and (not 255));
+  translationtables := Z_Malloc(256 * 3, PU_STATIC, nil);
 
   // translate just the 16 green colors
   for i := 0 to 255 do
@@ -499,7 +498,7 @@ begin
 
   // Preclaculate all row offsets.
   for i := 0 to height - 1 do
-    ylookup[i] := PByteArray(integer(screens[SCN_FG]) + (i + viewwindowy) * SCREENWIDTH);
+    ylookup[i] := PByteArray(PCAST(screens[SCN_FG]) + (i + viewwindowy) * SCREENWIDTH);
 end;
 
 // R_FillBackScreen
@@ -534,7 +533,7 @@ begin
   begin
     for x := 0 to 320 div 64 - 1 do
     begin
-      memcpy(dest, PByteArray(integer(src) + _SHL(y and 63, 6)), 64);
+      memcpy(dest, PByteArray(PCAST(src) + _SHL(y and 63, 6)), 64);
       dest := @dest[64];
     end;
   end;
@@ -602,7 +601,7 @@ begin
   //  is not optiomal, e.g. byte by byte on
   //  a 32bit CPU, as GNU GCC/Linux libc did
   //  at one point.
-  memcpy(Pointer(integer(screens[SCN_FG]) + ofs), Pointer(integer(screens[SCN_BG]) + ofs), count);
+  memcpy(Pointer(PCAST(screens[SCN_FG]) + ofs), Pointer(PCAST(screens[SCN_BG]) + ofs), count);
 end;
 
 end.

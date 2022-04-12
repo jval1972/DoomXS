@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit p_inter;
 
 interface
@@ -810,7 +810,7 @@ begin
       thrust := thrust * 4;
     end;
 
-    ang := ang shr ANGLETOFINESHIFT;
+    ang := _SHRW(ang, ANGLETOFINESHIFT);
     target.momx := target.momx + FixedMul(thrust, finecosine[ang]);
     target.momy := target.momy + FixedMul(thrust, finesine[ang]);
   end;

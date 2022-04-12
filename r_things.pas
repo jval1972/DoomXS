@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_things;
 
 interface
@@ -356,7 +356,7 @@ begin
 
     if dc_yl <= dc_yh then
     begin
-      dc_source := PByteArray(integer(column) + 3);
+      dc_source := PByteArray(PCAST(column) + 3);
       dc_texturemid := basetexturemid - (column.topdelta * FRACUNIT);
 
       // Drawn by either R_DrawColumn
@@ -388,7 +388,7 @@ begin
   else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
     colfunc := R_DrawTranslatedColumn;
-    dc_translation := PByteArray(integer(translationtables) - 256 +
+    dc_translation := PByteArray(PCAST(translationtables) - 256 +
       ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
@@ -402,7 +402,7 @@ begin
   begin
     dc_x := i;
     texturecolumn := frac div FRACUNIT;
-    column := Pcolumn_t(integer(patch) + patch.columnofs[texturecolumn]);
+    column := Pcolumn_t(PCAST(patch) + patch.columnofs[texturecolumn]);
     R_DrawMaskedColumn(column);
     frac := frac + vis.xiscale;
   end;
@@ -430,7 +430,7 @@ begin
   else if vis.mobjflags and MF_TRANSLATION <> 0 then
   begin
     colfunc := R_DrawTranslatedColumn;
-    dc_translation := PByteArray(integer(translationtables) - 256 +
+    dc_translation := PByteArray(PCAST(translationtables) - 256 +
       ( _SHR((vis.mobjflags and MF_TRANSLATION), (MF_TRANSSHIFT - 8)) ));
   end;
 
@@ -444,7 +444,7 @@ begin
   begin
     dc_x := i;
     texturecolumn := frac div FRACUNIT;
-    column := Pcolumn_t(integer(patch) + patch.columnofs[texturecolumn]);
+    column := Pcolumn_t(PCAST(patch) + patch.columnofs[texturecolumn]);
     R_DrawMaskedColumn(column);
     frac := frac + fracstep;
   end;

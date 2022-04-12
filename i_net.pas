@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit i_net;
 
 interface
@@ -234,7 +234,7 @@ begin
 // build message to receive
   insocket := UDPsocket;
   BindToLocalPort(insocket,htons(DOOMPORT));
-  ioctlsocket(insocket, FIONBIO, trueval);
+  ioctlsocket(insocket, integer(FIONBIO), trueval);
 
   sendsocket := UDPsocket;
 end;

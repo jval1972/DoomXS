@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_bsp;
 
 interface
@@ -53,6 +53,7 @@ var
 implementation
 
 uses
+  d_delphi,
   doomdata,
   m_fixed,
   tables,
@@ -289,13 +290,13 @@ begin
 
   // The seg is in the view range,
   // but not necessarily visible.
-  angle1 := (angle1 + ANG90) shr ANGLETOFINESHIFT;
-  angle2 := (angle2 + ANG90) shr ANGLETOFINESHIFT;
+  angle1 := _SHRW(angle1 + ANG90, ANGLETOFINESHIFT);
+  angle2 := _SHRW(angle2 + ANG90, ANGLETOFINESHIFT);
   x1 := viewangletox[angle1];
   x2 := viewangletox[angle2];
 
   // Does not cross a pixel?
-  if x1 = x2 then
+  if x1 >= x2 then
     Exit;
 
   backsector := line.backsector;
@@ -455,8 +456,8 @@ begin
   // Find the first clippost
   //  that touches the source post
   //  (adjacent pixels are touching).
-  angle1 := (angle1 + ANG90) shr ANGLETOFINESHIFT;
-  angle2 := (angle2 + ANG90) shr ANGLETOFINESHIFT;
+  angle1 := _SHRW(angle1 + ANG90, ANGLETOFINESHIFT);
+  angle2 := _SHRW(angle2 + ANG90, ANGLETOFINESHIFT);
   sx1 := viewangletox[angle1];
   sx2 := viewangletox[angle2];
 

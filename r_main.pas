@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_main;
 
 interface
@@ -421,7 +421,7 @@ begin
     dy := temp;
   end;
 
-  angle := (tantoangle[FixedDiv(dy, dx) shr DBITS] + ANG90) shr ANGLETOFINESHIFT;
+  angle := _SHRW(tantoangle[_SHRW(FixedDiv(dy, dx), DBITS)] + ANG90, ANGLETOFINESHIFT);
 
   // use as cosine
   Result := FixedDiv(dx, finesine[angle]);
@@ -458,8 +458,6 @@ function R_ScaleFromGlobalAngle(visangle: angle_t): fixed_t;
 var
   anglea: angle_t;
   angleb: angle_t;
-  sinea: integer;
-  sineb: integer;
   num: fixed_t;
   den: integer;
 begin
@@ -467,10 +465,8 @@ begin
   angleb := ANG90 + (visangle - rw_normalangle);
 
   // both sines are always positive
-  sinea := finesine[anglea shr ANGLETOFINESHIFT];
-  sineb := finesine[angleb shr ANGLETOFINESHIFT];
-  num := FixedMul(projectiony, sineb);
-  den := FixedMul(rw_distance, sinea);
+  num := FixedMul(projectiony, finesine[_SHRW(angleb, ANGLETOFINESHIFT)]); // JVAL For correct aspect
+  den := FixedMul(rw_distance, finesine[_SHRW(anglea, ANGLETOFINESHIFT)]);
 
   if den > _SHR(num, 16) then
   begin
@@ -536,7 +532,7 @@ begin
   //  so FIELDOFVIEW angles covers SCREENWIDTH.
   // JVAL: Widescreen support
   if relative_aspect = 1.0 then
-    fov := ANG90 shr ANGLETOFINESHIFT
+    fov := _SHRW(ANG90, ANGLETOFINESHIFT)
   else
     fov := Round(arctan(relative_aspect) * FINEANGLES / D_PI);
   focallength := FixedDiv(centerxfrac, finetangent[FINEANGLES div 4 + fov div 2]);
@@ -550,7 +546,7 @@ begin
     else
     begin
       t := FixedMul(finetangent[i], focallength);
-      t := (centerxfrac - t + FRACUNIT - 1) div FRACUNIT;
+      t := (centerxfrac - t + (FRACUNIT - 1)) div FRACUNIT;
 
       if t < -1 then
         t := -1
@@ -657,7 +653,7 @@ begin
   end
   else
   begin
-    scaledviewwidth := setblocks * (SCREENWIDTH div 10);
+    scaledviewwidth := setblocks * (SCREENWIDTH div 10) and not 7;
     if setblocks = 10 then
       viewheight := V_PreserveY(200 - ST_HEIGHT)
     else
@@ -696,16 +692,16 @@ begin
     screenheightarray[i] := viewheight;
 
   // planes
+  dy := centeryfrac + FRACUNIT div 2;
   for i := 0 to viewheight - 1 do
   begin
-    dy := ((i - viewheight div 2) * FRACUNIT) + FRACUNIT div 2;
-    dy := abs(dy);
-    yslope[i] := FixedDiv(projectiony, dy); // JVAL for correct aspect
+    dy := dy - FRACUNIT;
+    yslope[i] := FixedDiv(projectiony, abs(dy)); // JVAL for correct aspect
   end;
 
   for i := 0 to viewwidth - 1 do
   begin
-    cosadj := abs(finecosine[xtoviewangle[i] shr ANGLETOFINESHIFT]);
+    cosadj := abs(finecosine[_SHRW(xtoviewangle[i], ANGLETOFINESHIFT)]);
     distscale[i] := FixedDiv(FRACUNIT, cosadj);
   end;
 
@@ -757,7 +753,6 @@ end;
 function R_PointInSubsector(x: fixed_t; y: fixed_t): Psubsector_t;
 var
   node: Pnode_t;
-  side: integer;
   nodenum: integer;
 begin
   // single subsector is a special case
@@ -773,10 +768,9 @@ begin
   begin
     node := @nodes[nodenum];
     if R_PointOnSide(x, y, node) then
-      side := 1
+      nodenum := node.children[1]
     else
-      side := 0;
-    nodenum := node.children[side];
+      nodenum := node.children[0]
   end;
 
   Result := @subsectors[nodenum and not NF_SUBSECTOR];
@@ -797,8 +791,8 @@ begin
 
   viewz := player.viewz;
 
-  viewsin := finesine[viewangle shr ANGLETOFINESHIFT];
-  viewcos := finecosine[viewangle shr ANGLETOFINESHIFT];
+  viewsin := finesine[_SHRW(viewangle, ANGLETOFINESHIFT)];
+  viewcos := finecosine[_SHRW(viewangle, ANGLETOFINESHIFT)];
 
   // JVAL: Widescreen support
   planerelativeaspect := 320 / 200 * SCREENHEIGHT / SCREENWIDTH * relative_aspect;

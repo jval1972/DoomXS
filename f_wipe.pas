@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit f_wipe;
 
 interface
@@ -140,8 +140,8 @@ begin
           dy := 8 * vy;
         if (yy[i] + dy) div FRACUNIT >= SCREENHEIGHT then
           dy := SCREENHEIGHT * FRACUNIT - yy[i];
-        s := PByteArray(integer(wipe_scr_end) + i * SCREENHEIGHT + yy[i] div FRACUNIT);
-        d := PByteArray(integer(screens[SCN_FG]) + yy[i] div FRACUNIT * SCREENWIDTH + i);
+        s := PByteArray(PCAST(wipe_scr_end) + i * SCREENHEIGHT + yy[i] div FRACUNIT);
+        d := PByteArray(PCAST(screens[SCN_FG]) + yy[i] div FRACUNIT * SCREENWIDTH + i);
         idx := 0;
         for j := 0 to dy div FRACUNIT do //- 1 do
         begin
@@ -149,8 +149,8 @@ begin
           idx := idx + SCREENWIDTH;
         end;
         yy[i] := yy[i] + dy;
-        s := PByteArray(integer(wipe_scr_start) + i * SCREENHEIGHT);
-        d := PByteArray(integer(screens[SCN_FG]) + yy[i] div FRACUNIT * SCREENWIDTH + i);
+        s := PByteArray(PCAST(wipe_scr_start) + i * SCREENHEIGHT);
+        d := PByteArray(PCAST(screens[SCN_FG]) + yy[i] div FRACUNIT * SCREENWIDTH + i);
 
         idx := 0;
         for j := 0 to SCREENHEIGHT - yy[i] div FRACUNIT - 1 do
