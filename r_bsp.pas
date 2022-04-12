@@ -17,13 +17,13 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_bsp;
 
 interface
@@ -289,8 +289,8 @@ begin
 
   // The seg is in the view range,
   // but not necessarily visible.
-  angle1 := (angle1 + ANG90) shr ANGLETOFINESHIFT;
-  angle2 := (angle2 + ANG90) shr ANGLETOFINESHIFT;
+  angle1 := (angle1 + ANG90) div ANGLETOFINEUNIT;
+  angle2 := (angle2 + ANG90) div ANGLETOFINEUNIT;
   x1 := viewangletox[angle1];
   x2 := viewangletox[angle2];
 
@@ -455,8 +455,8 @@ begin
   // Find the first clippost
   //  that touches the source post
   //  (adjacent pixels are touching).
-  angle1 := (angle1 + ANG90) shr ANGLETOFINESHIFT;
-  angle2 := (angle2 + ANG90) shr ANGLETOFINESHIFT;
+  angle1 := (angle1 + ANG90) div ANGLETOFINEUNIT;
+  angle2 := (angle2 + ANG90) div ANGLETOFINEUNIT;
   sx1 := viewangletox[angle1];
   sx2 := viewangletox[angle2];
 

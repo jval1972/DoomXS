@@ -14,7 +14,7 @@
 {*  Latest version can be downloaded from:                                    *}
 {*     http://clootie.narod.ru/delphi                                         *}
 {*                                                                            *}
-{******************************************************************************)
+{******************************************************************************}
 {                                                                              }
 { The contents of this file are subject to the Mozilla Public License Version  }
 { 1.1 (the "License"); you may not use this file except in compliance with the }
@@ -27,8 +27,8 @@
 { The Original Code is DXTypes.pas.                                            }
 {                                                                              }
 {******************************************************************************}
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit DXTypes;
-
 interface
 
 uses Windows;

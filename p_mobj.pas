@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit p_mobj;
 
 interface
@@ -487,8 +487,8 @@ var
   st: Pstate_t;
   info: Pmobjinfo_t;
 begin
-  mobj := Z_Malloc(SizeOf(mobj^), PU_LEVEL, nil);
-  ZeroMemory(mobj, SizeOf(mobj^));
+  mobj := Z_Malloc(SizeOf(mobj_t), PU_LEVEL, nil);
+  ZeroMemory(mobj, SizeOf(mobj_t));
   info := @mobjinfo[Ord(typ)];
 
   mobj.typ := typ;

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="C:\lazarus\fpc\3.2.0\bin\i386-win32\fpc.exe" Date="1357352246"/>
+  <Params Value=" -Twin32 -Pi386 -MDelphi -Scghi -CX -O3 -XX -WG -l -vewnhibq -FiG:\DelphiDoom_Release\DoomXS\src\lib\i386-win32 -FuG:\DelphiDoom_Release\DoomXS\src\ -FUG:\DelphiDoom_Release\DoomXS\src\lib\i386-win32\ -FEG:\DelphiDoom_Release\DoomXS\bin\ -oG:\DelphiDoom_Release\DoomXS\bin\DoomXSL.exe DoomXSL.lpr"/>
+</CONFIG>

@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_segs;
 
 interface
@@ -286,11 +286,11 @@ begin
     begin
       frontsector.cachedheight := height;
       frontsector.scaleindex := 0;
-      height := height shr  7;
+      height := _SHR(height, 7);
       // calculate adjustment
       while True do
       begin
-        height := height shr 1;
+        height := _SHR(height, 1);
         if height <> 0 then
           inc(frontsector.scaleindex)
         else
@@ -322,7 +322,7 @@ begin
   while rw_x < rw_stopx do
   begin
     // mark floor / ceiling areas
-    yl := (topfrac + (HEIGHTUNIT - 1)) shr HEIGHTBITS;
+    yl := (topfrac + (HEIGHTUNIT - 1)) div HEIGHTUNIT;
     if yl > viewheight then
       yl := viewheight + 1;
 
@@ -352,7 +352,7 @@ begin
         ceilingclip[rw_x] := bottom;
     end;
 
-    yh := bottomfrac shr HEIGHTBITS;
+    yh := bottomfrac div HEIGHTUNIT;
 
     if yh >= floorclip[rw_x] then
       yh := floorclip[rw_x] - 1;
@@ -381,9 +381,9 @@ begin
     if segtextured then
     begin
       // calculate texture offset
-      angle := (rw_centerangle + xtoviewangle[rw_x]) shr ANGLETOFINESHIFT;
+      angle := (rw_centerangle + xtoviewangle[rw_x]) div ANGLETOFINEUNIT;
       texturecolumn := rw_offset - FixedMul(finetangent[angle], rw_distance);
-      texturecolumn := texturecolumn shr FRACBITS;
+      texturecolumn := texturecolumn div FRACUNIT;
       // calculate lighting
       index := _SHR(rw_scale, LIGHTSCALESHIFT) * 320 div SCREENWIDTH;
 
@@ -415,7 +415,7 @@ begin
       if toptexture <> 0 then
       begin
         // top wall
-        mid := pixhigh shr HEIGHTBITS;
+        mid := pixhigh div HEIGHTUNIT;
         pixhigh := pixhigh + pixhighstep;
 
         if mid >= floorclip[rw_x] then
@@ -462,7 +462,7 @@ begin
       if bottomtexture <> 0 then
       begin
         // bottom wall
-        mid := (pixlow + HEIGHTUNIT - 1) shr HEIGHTBITS;
+        mid := (pixlow + HEIGHTUNIT - 1) div HEIGHTUNIT;
         pixlow := pixlow + pixlowstep;
 
         // no space above wall?
@@ -554,7 +554,7 @@ begin
 
   distangle := ANG90 - offsetangle;
   hyp := R_PointToDist(curline.v1.x, curline.v1.y);
-  sineval := finesine[distangle shr ANGLETOFINESHIFT];
+  sineval := finesine[distangle div ANGLETOFINEUNIT];
   rw_distance := FixedMul(hyp, sineval);
 
   rw_x := start;
@@ -738,7 +738,7 @@ begin
     if offsetangle > ANG90 then
       offsetangle := ANG90;
 
-    sineval := finesine[offsetangle shr ANGLETOFINESHIFT];
+    sineval := finesine[offsetangle div ANGLETOFINEUNIT];
     rw_offset := FixedMul(hyp, sineval);
 
     if rw_normalangle - rw_angle1 < ANG180 then
@@ -781,29 +781,29 @@ begin
     markceiling := False; // below view plane
 
   // calculate incremental stepping values for texture edges
-  worldtop := _SHR(worldtop, WORLDBITS);
-  worldbottom := _SHR(worldbottom, WORLDBITS);
+  worldtop := worldtop div WORLDUNIT;
+  worldbottom := worldbottom div WORLDUNIT;
 
   topstep := -FixedMul(rw_scalestep, worldtop);
-  topfrac := centeryfrac shr WORLDBITS - int64(worldtop) * int64(rw_scale) div FRACUNIT;
+  topfrac := centeryfrac div WORLDUNIT - int64(worldtop) * int64(rw_scale) div FRACUNIT;
 
   bottomstep := -FixedMul(rw_scalestep, worldbottom);
-  bottomfrac := centeryfrac shr WORLDBITS - int64(worldbottom) * int64(rw_scale) div FRACUNIT;
+  bottomfrac := centeryfrac div WORLDUNIT - int64(worldbottom) * int64(rw_scale) div FRACUNIT;
 
   if backsector <> nil then
   begin
-    worldhigh := _SHR(worldhigh, WORLDBITS);
-    worldlow := _SHR(worldlow, WORLDBITS);
+    worldhigh := worldhigh div WORLDUNIT;
+    worldlow := worldlow div WORLDUNIT;
 
     if worldhigh < worldtop then
     begin
-      pixhigh := centeryfrac shr WORLDBITS - int64(worldhigh) * int64(rw_scale) div FRACUNIT;
+      pixhigh := centeryfrac div WORLDUNIT - int64(worldhigh) * int64(rw_scale) div FRACUNIT;
       pixhighstep := -FixedMul(rw_scalestep, worldhigh);
     end;
 
     if worldlow > worldbottom then
     begin
-      pixlow := centeryfrac shr WORLDBITS - int64(worldlow) * int64(rw_scale) div FRACUNIT;
+      pixlow := centeryfrac div WORLDUNIT - int64(worldlow) * int64(rw_scale) div FRACUNIT;
       pixlowstep := -FixedMul(rw_scalestep, worldlow);
     end;
   end;

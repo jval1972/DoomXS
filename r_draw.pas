@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_draw;
 
 interface
@@ -356,7 +356,7 @@ begin
     //  used with PLAY sprites.
     // Thus the "green" ramp of the player 0 sprite
     //  is mapped to gray, red, black/indigo.
-    dest^ := dc_colormap[dc_translation[dc_source[frac div FRACUNIT]]];
+    dest^ := dc_colormap[dc_translation[dc_source[(frac div FRACUNIT) and 127]]];
     inc(dest, SCREENWIDTH);
 
     frac := frac + fracstep;
@@ -435,7 +435,7 @@ begin
     ds_ystep := ds_ystep * 2;
     while count > 0 do
     begin
-      spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
+      spot := (LongWord(yfrac) div 1024) and (63 * 64) + (LongWord(xfrac) div FRACUNIT) and 63;
       b := ds_colormap[ds_source[spot]];
       dest^ := b;
       inc(dest);
@@ -457,7 +457,7 @@ begin
   while count >= 0 do
   begin
     // Current texture index in u,v.
-    spot := (yfrac div 1024) and (63 * 64) + (xfrac div FRACUNIT) and 63;
+    spot := (LongWord(yfrac) div 1024) and (63 * 64) + (LongWord(xfrac) div FRACUNIT) and 63;
 
     // Lookup pixel from flat texture tile,
     //  re-index using light/colormap.

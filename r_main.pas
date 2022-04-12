@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_main;
 
 interface
@@ -421,7 +421,7 @@ begin
     dy := temp;
   end;
 
-  angle := (tantoangle[FixedDiv(dy, dx) shr DBITS] + ANG90) shr ANGLETOFINESHIFT;
+  angle := (tantoangle[FixedDiv(dy, dx) div DUNIT] + ANG90) div ANGLETOFINEUNIT;
 
   // use as cosine
   Result := FixedDiv(dx, finesine[angle]);
@@ -467,8 +467,8 @@ begin
   angleb := ANG90 + (visangle - rw_normalangle);
 
   // both sines are always positive
-  sinea := finesine[anglea shr ANGLETOFINESHIFT];
-  sineb := finesine[angleb shr ANGLETOFINESHIFT];
+  sinea := finesine[anglea div ANGLETOFINEUNIT];
+  sineb := finesine[angleb div ANGLETOFINEUNIT];
   num := FixedMul(projectiony, sineb);
   den := FixedMul(rw_distance, sinea);
 
@@ -536,7 +536,7 @@ begin
   //  so FIELDOFVIEW angles covers SCREENWIDTH.
   // JVAL: Widescreen support
   if relative_aspect = 1.0 then
-    fov := ANG90 shr ANGLETOFINESHIFT
+    fov := ANG90 div ANGLETOFINEUNIT
   else
     fov := Round(arctan(relative_aspect) * FINEANGLES / D_PI);
   focallength := FixedDiv(centerxfrac, finetangent[FINEANGLES div 4 + fov div 2]);
@@ -568,7 +568,7 @@ begin
     an := 0;
     while viewangletox[an] > x do
       inc(an);
-    xtoviewangle[x] := _SHLW(an, ANGLETOFINESHIFT) - ANG90;
+    xtoviewangle[x] := (an * ANGLETOFINEUNIT) - ANG90;
   end;
 
   // Take out the fencepost cases from viewangletox.
@@ -705,7 +705,7 @@ begin
 
   for i := 0 to viewwidth - 1 do
   begin
-    cosadj := abs(finecosine[xtoviewangle[i] shr ANGLETOFINESHIFT]);
+    cosadj := abs(finecosine[xtoviewangle[i] div ANGLETOFINEUNIT]);
     distscale[i] := FixedDiv(FRACUNIT, cosadj);
   end;
 
@@ -797,8 +797,8 @@ begin
 
   viewz := player.viewz;
 
-  viewsin := finesine[viewangle shr ANGLETOFINESHIFT];
-  viewcos := finecosine[viewangle shr ANGLETOFINESHIFT];
+  viewsin := finesine[viewangle div ANGLETOFINEUNIT];
+  viewcos := finecosine[viewangle div ANGLETOFINEUNIT];
 
   // JVAL: Widescreen support
   planerelativeaspect := 320 / 200 * SCREENHEIGHT / SCREENWIDTH * relative_aspect;

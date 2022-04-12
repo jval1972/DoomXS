@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit g_game;
 
 interface
@@ -921,7 +921,7 @@ begin
 
   // spawn a teleport fog
   ss := R_PointInSubsector(x, y);
-  an := (ANG45 * (mthing.angle div 45)) shr ANGLETOFINESHIFT;
+  an := (ANG45 * (mthing.angle div 45)) div ANGLETOFINEUNIT;
 
   mo := P_SpawnMobj(x + 20 * finecosine[an], y + 20 * finesine[an],
           ss.sector.floorheight, MT_TFOG);

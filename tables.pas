@@ -17,13 +17,13 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit tables;
 
 interface
@@ -40,6 +40,7 @@ const
 
 // 0x100000000 to 0x2000
   ANGLETOFINESHIFT = 19;
+  ANGLETOFINEUNIT = 1 shl ANGLETOFINESHIFT;
 
 type
   angle_t = LongWord;
@@ -52,6 +53,7 @@ const
   SLOPERANGE = 2048;
   SLOPEBITS = 11;
   DBITS = FRACBITS - SLOPEBITS;
+  DUNIT = 1 shl DBITS;
 
 var
 // Effective size is 10240.
@@ -85,7 +87,7 @@ begin
     Result := SLOPERANGE
   else
   begin
-    ans := _SHL(num, 3) div _SHR(den, 8);
+    ans := (num * 8) div (den div 256);
     if ans < SLOPERANGE then
       Result := ans
     else

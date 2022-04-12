@@ -26,7 +26,7 @@
 
 program DoomXS;
 
-{$R *.RES}
+{$IFNDEF FPC}{$R *.RES}{$ENDIF}
 
 uses
   am_map in 'am_map.pas',

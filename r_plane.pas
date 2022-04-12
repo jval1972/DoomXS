@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //  Site: https://sourceforge.net/projects/doomxs/
 //------------------------------------------------------------------------------
-
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 unit r_plane;
 
 interface
@@ -128,7 +128,7 @@ begin
   ds_ystep := Round(viewcos * slope / FRACUNIT);
 
   len := FixedMul(distance, distscale[x1]);
-  angle := (viewangle + xtoviewangle[x1]) shr ANGLETOFINESHIFT;
+  angle := (viewangle + xtoviewangle[x1]) div ANGLETOFINEUNIT;
   ds_xfrac := viewx + FixedMul(finecosine[angle], len);
   ds_yfrac := -viewy - FixedMul(finesine[angle], len);
 
@@ -170,7 +170,7 @@ begin
   lastopening := 0;
 
   // left to right mapping
-  angle := (viewangle - ANG90) shr ANGLETOFINESHIFT;
+  angle := (viewangle - ANG90) div ANGLETOFINEUNIT;
 
   // scale will be unit scale at SCREENWIDTH/2 distance
   basexscale := FixedDiv(finecosine[angle], centerxfrac);
