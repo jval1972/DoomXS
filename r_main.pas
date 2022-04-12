@@ -299,7 +299,6 @@ begin
   Result := left <= right;
 end;
 
-//
 // R_PointToAngle
 // To get a global angle from cartesian coordinates,
 //  the coordinates are flipped until they are in
@@ -307,8 +306,6 @@ end;
 //  the y (<=x) is scaled and divided by x to get a
 //  tangent (slope) value which is looked up in the
 //  tantoangle[] table.
-
-//
 function R_PointToAngle(x: fixed_t; y: fixed_t): angle_t;
 begin
   x := x - viewx;
@@ -427,18 +424,14 @@ begin
   Result := FixedDiv(dx, finesine[angle]);
 end;
 
-//
 // R_InitPointToAngle
-//
 procedure R_InitPointToAngle;
 var
   i: integer;
   t: integer;
   f: single;
 begin
-//
 // slope (tangent) to angle lookup
-//
   for i := 0 to SLOPERANGE do
   begin
     f := arctan(i / SLOPERANGE) / (d_PI * 2);
@@ -447,13 +440,11 @@ begin
   end;
 end;
 
-//
 // R_ScaleFromGlobalAngle
 // Returns the texture mapping scale
 //  for the current line (horizontal span)
 //  at the given angle.
 // rw_distance must be calculated first.
-//
 function R_ScaleFromGlobalAngle(visangle: angle_t): fixed_t;
 var
   anglea: angle_t;
@@ -481,9 +472,7 @@ begin
     Result := 64 * FRACUNIT;
 end;
 
-//
 // R_InitTables
-//
 procedure R_InitTables;
 var
   i: integer;
@@ -512,9 +501,7 @@ begin
   finecosine := Pfixed_tArray(@finesine[FINEANGLES div 4]);
 end;
 
-//
 // R_InitTextureMapping
-//
 procedure R_InitTextureMapping;
 var
   i: integer;
@@ -578,11 +565,9 @@ begin
   clipangle := xtoviewangle[0];
 end;
 
-//
 // R_InitLightTables
 // Only inits the zlight table,
 //  because the scalelight table changes with view size.
-//
 const
   DISTMAP = 2;
 
@@ -615,12 +600,10 @@ begin
   end;
 end;
 
-//
 // R_SetViewSize
 // Do not really change anything here,
 //  because it might be in the middle of a refresh.
 // The change will take effect next refresh.
-//
 var
   setblocks: integer;
   setdetail: integer;
@@ -632,9 +615,7 @@ begin
   setdetail := detail;
 end;
 
-//
 // R_ExecuteSetViewSize
-//
 procedure R_ExecuteSetViewSize;
 var
   cosadj: fixed_t;
@@ -725,9 +706,7 @@ begin
   end;
 end;
 
-//
 // R_Init
-//
 procedure R_Init;
 begin
   R_InitData;
@@ -747,9 +726,7 @@ begin
   printf(#13#10 + 'R_InitTranslationsTables');
 end;
 
-//
 // R_PointInSubsector
-//
 function R_PointInSubsector(x: fixed_t; y: fixed_t): Psubsector_t;
 var
   node: Pnode_t;
@@ -778,9 +755,7 @@ begin
   Result := @subsectors[nodenum and not NF_SUBSECTOR];
 end;
 
-//
 // R_SetupFrame
-//
 procedure R_SetupFrame(player: Pplayer_t);
 var
   i: integer;
@@ -814,9 +789,7 @@ begin
   inc(validcount);
 end;
 
-//
 // R_RenderView
-//
 procedure R_RenderPlayerView(player: Pplayer_t);
 begin
   R_SetupFrame(player);
