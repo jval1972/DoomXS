@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="3">
+      <Unit0>
+        <Filename Value="DoomXSL.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="16"/>
+        <CursorPos X="27" Y="26"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="r_things.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="496"/>
+        <CursorPos X="31" Y="510"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="d_englsh.pas"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit2>
+    </Units>
+    <JumpHistory Count="5" HistoryIndex="4">
+      <Position1>
+        <Filename Value="DoomXSL.lpr"/>
+      </Position1>
+      <Position2>
+        <Filename Value="DoomXSL.lpr"/>
+        <Caret Line="126" Column="5" TopLine="92"/>
+      </Position2>
+      <Position3>
+        <Filename Value="DoomXSL.lpr"/>
+        <Caret Line="19" Column="34"/>
+      </Position3>
+      <Position4>
+        <Filename Value="r_things.pas"/>
+        <Caret Line="510" Column="68" TopLine="494"/>
+      </Position4>
+      <Position5>
+        <Filename Value="DoomXSL.lpr"/>
+        <Caret Line="26" Column="27" TopLine="16"/>
+      </Position5>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1" ActiveMode="default">
+        <Mode0 Name="default">
+          <local>
+            <CommandLineParams Value="-iwad doomu.wad"/>
+            <LaunchingApplication PathPlusParams="C:\WINDOWS\system32\cmd.exe /C ${TargetCmdLine}"/>
+          </local>
+        </Mode0>
+      </Modes>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
