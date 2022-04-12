@@ -9,7 +9,7 @@
         <Filename Value="DoomXS.dpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="34"/>
+        <CursorPos X="28" Y="6"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
@@ -17,7 +17,7 @@
       <Unit1>
         <Filename Value="am_map.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
@@ -53,8 +53,8 @@
       <Unit6>
         <Filename Value="d_delphi.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="551"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="548"/>
         <CursorPos X="21" Y="485"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
@@ -238,8 +238,11 @@
       <Unit32>
         <Filename Value="m_misc.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="183"/>
+        <CursorPos X="21" Y="200"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit32>
       <Unit33>
@@ -579,10 +582,30 @@
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit80>
     </Units>
-    <JumpHistory Count="1">
+    <JumpHistory Count="6" HistoryIndex="5">
       <Position1>
         <Filename Value="am_map.pas"/>
       </Position1>
+      <Position2>
+        <Filename Value="DoomXS.dpr"/>
+        <Caret Line="126" TopLine="92"/>
+      </Position2>
+      <Position3>
+        <Filename Value="m_misc.pas"/>
+        <Caret Line="200" Column="21" TopLine="183"/>
+      </Position3>
+      <Position4>
+        <Filename Value="DoomXS.dpr"/>
+        <Caret Line="126" TopLine="92"/>
+      </Position4>
+      <Position5>
+        <Filename Value="DoomXS.dpr"/>
+        <Caret Line="29" Column="27" TopLine="2"/>
+      </Position5>
+      <Position6>
+        <Filename Value="DoomXS.dpr"/>
+        <Caret Line="126" TopLine="92"/>
+      </Position6>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

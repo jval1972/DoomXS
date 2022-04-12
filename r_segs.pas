@@ -547,7 +547,10 @@ begin
 
   // calculate rw_distance for scale calculation
   rw_normalangle := curline.angle + ANG90;
-  offsetangle := abs(rw_normalangle - rw_angle1);
+//  offsetangle := abs(rw_normalangle - rw_angle1);
+  offsetangle := rw_normalangle - rw_angle1;
+  if offsetangle > ANG180 then
+    offsetangle := LongWord($FFFFFFFF) - offsetangle + 1;
 
   if offsetangle > ANG90 then
     offsetangle := ANG90;
