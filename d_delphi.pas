@@ -476,7 +476,7 @@ begin
       end;
     end;
 end;
-
+{$IFDEF FPC}function GetEnvironmentVariable(lpName: PChar; lpBuffer: PChar; nSize: DWORD): DWORD; stdcall; external 'kernel32.dll' name 'GetEnvironmentVariableA';{$ENDIF}
 function getenv(const env: string): string;
 var
   buf: array[0..2047] of char;
