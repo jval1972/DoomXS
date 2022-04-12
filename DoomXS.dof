@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=-iwad doomu.wad -nomonsters -warp 4 5
+RunParams=
 HostApplication=
 Launcher=
 UseLauncher=0
