@@ -730,7 +730,6 @@ end;
 function R_PointInSubsector(x: fixed_t; y: fixed_t): Psubsector_t;
 var
   node: Pnode_t;
-  side: integer;
   nodenum: integer;
 begin
   // single subsector is a special case
@@ -746,10 +745,9 @@ begin
   begin
     node := @nodes[nodenum];
     if R_PointOnSide(x, y, node) then
-      side := 1
+      nodenum := node.children[1]
     else
-      side := 0;
-    nodenum := node.children[side];
+      nodenum := node.children[0];
   end;
 
   Result := @subsectors[nodenum and not NF_SUBSECTOR];
