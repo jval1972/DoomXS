@@ -733,7 +733,7 @@ begin
     offsetangle := rw_normalangle - rw_angle1;
 
     if offsetangle > ANG180 then
-      offsetangle := -offsetangle;
+      offsetangle := LongWord($FFFFFFFF) - offsetangle + 1;
 
     if offsetangle > ANG90 then
       offsetangle := ANG90;
@@ -741,7 +741,7 @@ begin
     sineval := finesine[offsetangle shr ANGLETOFINESHIFT];
     rw_offset := FixedMul(hyp, sineval);
 
-    if rw_normalangle - rw_angle1 < ANG180 then
+    if LongWord(rw_normalangle - rw_angle1) < ANG180 then
       rw_offset := -rw_offset;
 
     rw_offset := rw_offset + sidedef.textureoffset + curline.offset;
