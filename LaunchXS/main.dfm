@@ -1147,7 +1147,7 @@ object Form1: TForm1
     object SmoothDisplayCheckBox: TCheckBox
       Left = 24
       Top = 80
-      Width = 97
+      Width = 225
       Height = 17
       Caption = 'Uncapped framerate'
       Checked = True
