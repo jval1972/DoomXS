@@ -233,7 +233,7 @@ var
   demo_p: PByteArray;
   demoend: PByteArray;
 
-  consistancy: array[0..MAXPLAYERS - 1] of array[0..BACKUPTICS - 1] of smallint;
+  consistency: array[0..MAXPLAYERS - 1] of array[0..BACKUPTICS - 1] of smallint;
 
   savebuffer: PByteArray;
 
@@ -305,7 +305,7 @@ begin
 
   memcpy(cmd, base, SizeOf(cmd^));
 
-  cmd.consistancy := consistancy[consoleplayer][maketic mod BACKUPTICS];
+  cmd.consistency := consistency[consoleplayer][maketic mod BACKUPTICS];
 
   strafe := gamekeydown[key_strafe] or
             ((usemouse <> 0) and mousebuttons[mousebstrafe]) or
@@ -729,8 +729,8 @@ begin
     end;
   end;
 
-  // get commands, check consistancy,
-  // and build new consistancy check
+  // get commands, check consistency,
+  // and build new consistency check
   buf := (gametic div ticdup) mod BACKUPTICS;
 
   for i := 0 to MAXPLAYERS - 1 do
@@ -758,13 +758,13 @@ begin
       if netgame and not netdemo and (gametic mod ticdup = 0) then
       begin
         if (gametic > BACKUPTICS) and
-           (consistancy[i][buf] <> cmd.consistancy) then
+           (consistency[i][buf] <> cmd.consistency) then
           I_Error('G_Ticker(): consistency failure (%d should be %d)',
-            [cmd.consistancy, consistancy[i][buf]]);
+            [cmd.consistency, consistency[i][buf]]);
         if players[i].mo <> nil then
-          consistancy[i][buf] := players[i].mo.x
+          consistency[i][buf] := players[i].mo.x
         else
-          consistancy[i][buf] := rndindex;
+          consistency[i][buf] := rndindex;
       end;
     end;
   end;
@@ -1324,7 +1324,7 @@ begin
   P_ArchiveThinkers;
   P_ArchiveSpecials;
 
-  save_p[0] := $1d; // consistancy marker
+  save_p[0] := $1d; // consistency marker
   save_p := @save_p[1];
 
   len := integer(save_p) - integer(savebuffer);
